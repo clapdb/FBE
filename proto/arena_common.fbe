@@ -1,0 +1,29 @@
+package arena_common
+
+// This fbe is used to test arena and template-based FBE package import
+
+enum Optr: byte {
+  EQ = 0;
+  GT;
+  LT;
+  GE;
+  LE;
+}
+
+variant Expr {
+  bool;
+  int32;
+  string;
+}
+
+struct Alias {
+  string name;
+  Optr optr;
+  Expr expr;
+}
+
+struct Expression {
+  string[] keys;
+  Alias[] aliases;
+  Alias<int32> alias_int;
+}

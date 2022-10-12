@@ -52,7 +52,7 @@ inline void create_dir(const fs::path& path) {
         fs::permissions(path, fs::perms::owner_all, code);
         return;
     }
-    throw std::filesystem::filesystem_error("create dir failed", code);
+    // the folder exists
 }
 
 inline auto read_all(const fs::path& path) -> std::string {
@@ -175,7 +175,7 @@ inline auto contains(const std::string& src, char ch) -> bool {
     return src.find(ch) != std::string ::npos;
 }
 inline auto count_char(const std::string& src, char ch) -> std::size_t {
-    return std::count_if(src.cbegin(), src.cend(), [ch](char c){ return c = ch; });
+    return std::count_if(src.cbegin(), src.cend(), [ch](char c){ return c == ch; });
 }
 
 int yyerror(const char* msg);

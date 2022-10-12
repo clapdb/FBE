@@ -1,0 +1,14 @@
+package arena
+
+import arena_common
+
+struct Item {
+  arena_common.Optr optr;
+  arena_common.Alias alias;
+  arena_common.Expression[] expressions;
+  arena_common.Alias<int32> aliases_int;
+}
+
+struct Item2 {
+  bytes bytes_v;
+}
