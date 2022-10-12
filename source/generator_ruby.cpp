@@ -5459,13 +5459,13 @@ void GeneratorRuby::GenerateSender(const std::shared_ptr<Package>& p, bool final
     if (p->import)
     {
         for (const auto& import : p->import->imports)
-            WriteLineIndent("@_" + CppCommon::StringUtils::ToLower(*import) + "_sender = " + ConvertTitle(*import) + "::" + sender + ".new(self.buffer)");
+            WriteLineIndent("@_" + to_lower(*import) + "_sender = " + ConvertTitle(*import) + "::" + sender + ".new(self.buffer)");
     }
     if (p->body)
     {
         for (const auto& s : p->body->structs)
             if (s->message)
-                WriteLineIndent("@_" + CppCommon::StringUtils::ToLower(*s->name) + "_model = " + ConvertTitle(*s->name) + model + ".new(self.buffer)");
+                WriteLineIndent("@_" + to_lower(*s->name) + "_model = " + ConvertTitle(*s->name) + model + ".new(self.buffer)");
     }
     Indent(-1);
     WriteLineIndent("end");
@@ -5478,9 +5478,9 @@ void GeneratorRuby::GenerateSender(const std::shared_ptr<Package>& p, bool final
         for (const auto& import : p->import->imports)
         {
             WriteLine();
-            WriteLineIndent("def " + CppCommon::StringUtils::ToLower(*import) + "_sender");
+            WriteLineIndent("def " + to_lower(*import) + "_sender");
             Indent(1);
-            WriteLineIndent("@_" + CppCommon::StringUtils::ToLower(*import) + "_sender");
+            WriteLineIndent("@_" + to_lower(*import) + "_sender");
             Indent(-1);
             WriteLineIndent("end");
         }
@@ -5496,9 +5496,9 @@ void GeneratorRuby::GenerateSender(const std::shared_ptr<Package>& p, bool final
             if (s->message)
             {
                 WriteLine();
-                WriteLineIndent("def " + CppCommon::StringUtils::ToLower(*s->name) + "_model");
+                WriteLineIndent("def " + to_lower(*s->name) + "_model");
                 Indent(1);
-                WriteLineIndent("@_" + CppCommon::StringUtils::ToLower(*s->name) + "_model");
+                WriteLineIndent("@_" + to_lower(*s->name) + "_model");
                 Indent(-1);
                 WriteLineIndent("end");
             }
@@ -5517,9 +5517,9 @@ void GeneratorRuby::GenerateSender(const std::shared_ptr<Package>& p, bool final
         {
             if (s->message)
             {
-                WriteLineIndent("if value.is_a?(" + ConvertTitle(*s->name) + ") && (value.fbe_type == " + CppCommon::StringUtils::ToLower(*s->name) + "_model.fbe_type)");
+                WriteLineIndent("if value.is_a?(" + ConvertTitle(*s->name) + ") && (value.fbe_type == " + to_lower(*s->name) + "_model.fbe_type)");
                 Indent(1);
-                WriteLineIndent("return send_" + CppCommon::StringUtils::ToLower(*s->name) + "(value)");
+                WriteLineIndent("return send_" + to_lower(*s->name) + "(value)");
                 Indent(-1);
                 WriteLineIndent("end");
             }
@@ -5529,7 +5529,7 @@ void GeneratorRuby::GenerateSender(const std::shared_ptr<Package>& p, bool final
     {
         for (const auto& import : p->import->imports)
         {
-            WriteLineIndent("result = @_" + CppCommon::StringUtils::ToLower(*import) + "_sender.send(value)");
+            WriteLineIndent("result = @_" + to_lower(*import) + "_sender.send(value)");
             WriteLineIndent("if result > 0");
             Indent(1);
             WriteLineIndent("return result");
@@ -5547,12 +5547,12 @@ void GeneratorRuby::GenerateSender(const std::shared_ptr<Package>& p, bool final
             if (s->message)
             {
                 WriteLine();
-                WriteLineIndent("def send_" + CppCommon::StringUtils::ToLower(*s->name) + "(value)");
+                WriteLineIndent("def send_" + to_lower(*s->name) + "(value)");
                 Indent(1);
                 WriteLineIndent("# Serialize the value into the FBE stream");
-                WriteLineIndent("serialized = " + CppCommon::StringUtils::ToLower(*s->name) + "_model.serialize(value)");
+                WriteLineIndent("serialized = " + to_lower(*s->name) + "_model.serialize(value)");
                 WriteLineIndent("raise RuntimeError, \"" + package + "." + ConvertTitle(*s->name) + " serialization failed!\" if serialized <= 0");
-                WriteLineIndent("raise RuntimeError, \"" + package + "." + ConvertTitle(*s->name) + " validation failed!\" unless " + CppCommon::StringUtils::ToLower(*s->name) + "_model.verify");
+                WriteLineIndent("raise RuntimeError, \"" + package + "." + ConvertTitle(*s->name) + " validation failed!\" unless " + to_lower(*s->name) + "_model.verify");
                 WriteLine();
                 WriteLineIndent("# Log the value");
                 WriteLineIndent("if logging?");
@@ -5609,7 +5609,7 @@ void GeneratorRuby::GenerateReceiver(const std::shared_ptr<Package>& p, bool fin
     if (p->import)
     {
         for (const auto& import : p->import->imports)
-            WriteLineIndent("@_" + CppCommon::StringUtils::ToLower(*import) + "_receiver = " + ConvertTitle(*import) + "::" + receiver + ".new(self.buffer)");
+            WriteLineIndent("@_" + to_lower(*import) + "_receiver = " + ConvertTitle(*import) + "::" + receiver + ".new(self.buffer)");
     }
     if (p->body)
     {
@@ -5617,8 +5617,8 @@ void GeneratorRuby::GenerateReceiver(const std::shared_ptr<Package>& p, bool fin
         {
             if (s->message)
             {
-                WriteLineIndent("@_" + CppCommon::StringUtils::ToLower(*s->name) + "_value = " + ConvertTitle(*s->name) + ".new");
-                WriteLineIndent("@_" + CppCommon::StringUtils::ToLower(*s->name) + "_model = " + ConvertTitle(*s->name) + model + ".new");
+                WriteLineIndent("@_" + to_lower(*s->name) + "_value = " + ConvertTitle(*s->name) + ".new");
+                WriteLineIndent("@_" + to_lower(*s->name) + "_model = " + ConvertTitle(*s->name) + model + ".new");
             }
         }
     }
@@ -5633,15 +5633,15 @@ void GeneratorRuby::GenerateReceiver(const std::shared_ptr<Package>& p, bool fin
         for (const auto& import : p->import->imports)
         {
             WriteLine();
-            WriteLineIndent("def " + CppCommon::StringUtils::ToLower(*import) + "_receiver");
+            WriteLineIndent("def " + to_lower(*import) + "_receiver");
             Indent(1);
-            WriteLineIndent("@_" + CppCommon::StringUtils::ToLower(*import) + "_receiver");
+            WriteLineIndent("@_" + to_lower(*import) + "_receiver");
             Indent(-1);
             WriteLineIndent("end");
             WriteLine();
-            WriteLineIndent("def " + CppCommon::StringUtils::ToLower(*import) + "_receiver=(receiver)");
+            WriteLineIndent("def " + to_lower(*import) + "_receiver=(receiver)");
             Indent(1);
-            WriteLineIndent("@_" + CppCommon::StringUtils::ToLower(*import) + "_receiver = receiver");
+            WriteLineIndent("@_" + to_lower(*import) + "_receiver = receiver");
             Indent(-1);
             WriteLineIndent("end");
         }
@@ -5661,7 +5661,7 @@ void GeneratorRuby::GenerateReceiver(const std::shared_ptr<Package>& p, bool fin
             {
                 WriteLine();
                 WriteLineIndent("# noinspection RubyUnusedLocalVariable");
-                WriteLineIndent("def on_receive_" + CppCommon::StringUtils::ToLower(*s->name) + "(value)");
+                WriteLineIndent("def on_receive_" + to_lower(*s->name) + "(value)");
                 WriteLineIndent("end");
             }
         }
@@ -5689,13 +5689,13 @@ void GeneratorRuby::GenerateReceiver(const std::shared_ptr<Package>& p, bool fin
                 WriteLineIndent("when " + ConvertTitle(*s->name) + model + "::TYPE");
                 Indent(1);
                 WriteLineIndent("# Deserialize the value from the FBE stream");
-                WriteLineIndent("@_" + CppCommon::StringUtils::ToLower(*s->name) + "_model.attach_buffer(buffer, offset)");
-                WriteLineIndent("unless @_" + CppCommon::StringUtils::ToLower(*s->name) + "_model.verify");
+                WriteLineIndent("@_" + to_lower(*s->name) + "_model.attach_buffer(buffer, offset)");
+                WriteLineIndent("unless @_" + to_lower(*s->name) + "_model.verify");
                 Indent(1);
                 WriteLineIndent("return false");
                 Indent(-1);
                 WriteLineIndent("end");
-                WriteLineIndent("_, deserialized = @_" + CppCommon::StringUtils::ToLower(*s->name) + "_model.deserialize(@_" + CppCommon::StringUtils::ToLower(*s->name) + "_value)");
+                WriteLineIndent("_, deserialized = @_" + to_lower(*s->name) + "_model.deserialize(@_" + to_lower(*s->name) + "_value)");
                 WriteLineIndent("if deserialized <= 0");
                 Indent(1);
                 WriteLineIndent("return false");
@@ -5705,13 +5705,13 @@ void GeneratorRuby::GenerateReceiver(const std::shared_ptr<Package>& p, bool fin
                 WriteLineIndent("# Log the value");
                 WriteLineIndent("if logging?");
                 Indent(1);
-                WriteLineIndent("message = @_" + CppCommon::StringUtils::ToLower(*s->name) + "_value.to_s");
+                WriteLineIndent("message = @_" + to_lower(*s->name) + "_value.to_s");
                 WriteLineIndent("on_receive_log(message)");
                 Indent(-1);
                 WriteLineIndent("end");
                 WriteLine();
                 WriteLineIndent("# Call receive handler with deserialized value");
-                WriteLineIndent("on_receive_" + CppCommon::StringUtils::ToLower(*s->name) + "(@_" + CppCommon::StringUtils::ToLower(*s->name) + "_value)");
+                WriteLineIndent("on_receive_" + to_lower(*s->name) + "(@_" + to_lower(*s->name) + "_value)");
                 WriteLineIndent("true");
                 Indent(-1);
             }
@@ -5727,7 +5727,7 @@ void GeneratorRuby::GenerateReceiver(const std::shared_ptr<Package>& p, bool fin
         WriteLine();
         for (const auto& import : p->import->imports)
         {
-            WriteLineIndent("if !" + CppCommon::StringUtils::ToLower(*import) + "_receiver.nil? && " + CppCommon::StringUtils::ToLower(*import) + "_receiver.on_receive(type, buffer, offset, size)");
+            WriteLineIndent("if !" + to_lower(*import) + "_receiver.nil? && " + to_lower(*import) + "_receiver.on_receive(type, buffer, offset, size)");
             Indent(1);
             WriteLineIndent("return true");
             Indent(-1);
@@ -5767,13 +5767,13 @@ void GeneratorRuby::GenerateProxy(const std::shared_ptr<Package>& p, bool final)
     if (p->import)
     {
         for (const auto& import : p->import->imports)
-            WriteLineIndent("@_" + CppCommon::StringUtils::ToLower(*import) + "_proxy = " + ConvertTitle(*import) + "::" + proxy + ".new(self.buffer)");
+            WriteLineIndent("@_" + to_lower(*import) + "_proxy = " + ConvertTitle(*import) + "::" + proxy + ".new(self.buffer)");
     }
     if (p->body)
     {
         for (const auto& s : p->body->structs)
             if (s->message)
-                WriteLineIndent("@_" + CppCommon::StringUtils::ToLower(*s->name) + "_model = " + ConvertTitle(*s->name) + model + ".new");
+                WriteLineIndent("@_" + to_lower(*s->name) + "_model = " + ConvertTitle(*s->name) + model + ".new");
     }
     Indent(-1);
     WriteLineIndent("end");
@@ -5786,15 +5786,15 @@ void GeneratorRuby::GenerateProxy(const std::shared_ptr<Package>& p, bool final)
         for (const auto& import : p->import->imports)
         {
             WriteLine();
-            WriteLineIndent("def " + CppCommon::StringUtils::ToLower(*import) + "_proxy");
+            WriteLineIndent("def " + to_lower(*import) + "_proxy");
             Indent(1);
-            WriteLineIndent("@_" + CppCommon::StringUtils::ToLower(*import) + "_proxy");
+            WriteLineIndent("@_" + to_lower(*import) + "_proxy");
             Indent(-1);
             WriteLineIndent("end");
             WriteLine();
-            WriteLineIndent("def " + CppCommon::StringUtils::ToLower(*import) + "_proxy=(proxy)");
+            WriteLineIndent("def " + to_lower(*import) + "_proxy=(proxy)");
             Indent(1);
-            WriteLineIndent("@_" + CppCommon::StringUtils::ToLower(*import) + "_proxy = proxy");
+            WriteLineIndent("@_" + to_lower(*import) + "_proxy = proxy");
             Indent(-1);
             WriteLineIndent("end");
         }
@@ -5814,7 +5814,7 @@ void GeneratorRuby::GenerateProxy(const std::shared_ptr<Package>& p, bool final)
             {
                 WriteLine();
                 WriteLineIndent("# noinspection RubyUnusedLocalVariable");
-                WriteLineIndent("def on_proxy_" + CppCommon::StringUtils::ToLower(*s->name) + "(model, type, buffer, offset, size)");
+                WriteLineIndent("def on_proxy_" + to_lower(*s->name) + "(model, type, buffer, offset, size)");
                 WriteLineIndent("end");
             }
         }
@@ -5842,22 +5842,22 @@ void GeneratorRuby::GenerateProxy(const std::shared_ptr<Package>& p, bool final)
                 WriteLineIndent("when " + ConvertTitle(*s->name) + model + "::TYPE");
                 Indent(1);
                 WriteLineIndent("# Attach the FBE stream to the proxy model");
-                WriteLineIndent("@_" + CppCommon::StringUtils::ToLower(*s->name) + "_model.attach_buffer(buffer, offset)");
-                WriteLineIndent("unless @_" + CppCommon::StringUtils::ToLower(*s->name) + "_model.verify");
+                WriteLineIndent("@_" + to_lower(*s->name) + "_model.attach_buffer(buffer, offset)");
+                WriteLineIndent("unless @_" + to_lower(*s->name) + "_model.verify");
                 Indent(1);
                 WriteLineIndent("return false");
                 Indent(-1);
                 WriteLineIndent("end");
                 WriteLine();
-                WriteLineIndent("fbe_begin = @_" + CppCommon::StringUtils::ToLower(*s->name) + "_model.model.get_begin");
+                WriteLineIndent("fbe_begin = @_" + to_lower(*s->name) + "_model.model.get_begin");
                 WriteLineIndent("if fbe_begin == 0");
                 Indent(1);
                 WriteLineIndent("return false");
                 Indent(-1);
                 WriteLineIndent("end");
                 WriteLineIndent("# Call proxy handler");
-                WriteLineIndent("on_proxy_" + CppCommon::StringUtils::ToLower(*s->name) + "(@_" + CppCommon::StringUtils::ToLower(*s->name) + "_model, type, buffer, offset, size)");
-                WriteLineIndent("@_" + CppCommon::StringUtils::ToLower(*s->name) + "_model.model.get_end(fbe_begin)");
+                WriteLineIndent("on_proxy_" + to_lower(*s->name) + "(@_" + to_lower(*s->name) + "_model, type, buffer, offset, size)");
+                WriteLineIndent("@_" + to_lower(*s->name) + "_model.model.get_end(fbe_begin)");
                 WriteLineIndent("true");
                 Indent(-1);
             }
@@ -5873,7 +5873,7 @@ void GeneratorRuby::GenerateProxy(const std::shared_ptr<Package>& p, bool final)
         WriteLine();
         for (const auto& import : p->import->imports)
         {
-            WriteLineIndent("if !" + CppCommon::StringUtils::ToLower(*import) + "_proxy.nil? && " + CppCommon::StringUtils::ToLower(*import) + "_proxy.on_receive(type, buffer, offset, size)");
+            WriteLineIndent("if !" + to_lower(*import) + "_proxy.nil? && " + to_lower(*import) + "_proxy.on_receive(type, buffer, offset, size)");
             Indent(1);
             WriteLineIndent("return true");
             Indent(-1);

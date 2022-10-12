@@ -8263,7 +8263,7 @@ std::string GeneratorCSharp::ConvertEnumConstantSuffix(const std::string& type)
 
 std::string GeneratorCSharp::ConvertBaseTypeName(const std::string& type)
 {
-    return CppCommon::StringUtils::ToUpper(type);
+    return to_upper(type);
 }
 
 std::string GeneratorCSharp::ConvertTypeName(const std::string& type, bool optional)

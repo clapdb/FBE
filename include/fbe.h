@@ -96,6 +96,16 @@ inline auto trim(const std::string &s) -> std::string
     return (wsback<=wsfront ? std::string() : std::string(wsfront,wsback));
 }
 
+inline auto to_lower(std::string& src) -> std::string& {
+    std::transform(src.cbegin(), src.cend(), src.begin(), [](unsigned char c) {return std::tolower(c);});
+    return src;
+}
+
+inline auto to_upper(std::string& src) -> std::string& {
+    std::transform(src.cbegin(), src.cend(), src.begin(), [](unsigned char c) {return std::toupper(c);});
+    return src;
+}
+
 int yyerror(const char* msg);
 int yyerror(const std::string& msg);
 
