@@ -8067,7 +8067,7 @@ std::string GeneratorGo::ConvertEnumConstant(const std::string& name, const std:
     if (type.empty())
     {
         // Fill flags values
-        std::vector<std::string> flags = CppCommon::StringUtils::Split(value, '|', true);
+        std::vector<std::string> flags = split(value, '|', true);
 
         // Generate flags combination
         if (!flags.empty())
@@ -8522,7 +8522,7 @@ std::string GeneratorGo::ConvertConstant(const std::string& type, const std::str
     if (!IsGoType(type))
     {
         // Fill flags values
-        std::vector<std::string> flags = CppCommon::StringUtils::Split(value, '|', true);
+        std::vector<std::string> flags = split(value, '|', true);
 
         // Generate flags combination
         if (flags.size() > 1)

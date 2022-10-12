@@ -8203,7 +8203,7 @@ std::string GeneratorCSharp::ConvertEnumConstant(const std::string& type, const 
     std::string result = value;
 
     // Fill flags values
-    std::vector<std::string> flags = CppCommon::StringUtils::Split(result, '|', true);
+    std::vector<std::string> flags = split(result, '|', true);
 
     // Generate flags combination
     if (flags.size() > 1)
@@ -8559,7 +8559,7 @@ std::string GeneratorCSharp::ConvertConstant(const std::string& domain, const st
     if (!IsKnownType(type))
     {
         // Fill flags values
-        std::vector<std::string> flags = CppCommon::StringUtils::Split(value, '|', true);
+        std::vector<std::string> flags = split(value, '|', true);
 
         // Generate flags combination
         if (flags.size() > 1)

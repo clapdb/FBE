@@ -120,6 +120,56 @@ inline auto endswith(const std::string& src, const std::string& postfix) -> bool
     return src.ends_with(postfix);
 }
 
+inline auto split(std::string_view str, std::string_view delimiter, bool skip_empty) -> std::vector<std::string> {
+    std::vector<std::string> tokens;
+
+    size_t pos_current;
+    size_t pos_last = 0;
+    size_t length;
+
+    while (true)
+    {
+        pos_current = str.find(delimiter, pos_last);
+        if (pos_current == std::string::npos)
+            pos_current = str.size();
+
+        length = pos_current - pos_last;
+        if (!skip_empty || (length != 0))
+            tokens.emplace_back(str.substr(pos_last, length));
+
+        if (pos_current == str.size())
+            break;
+        else
+            pos_last = pos_current + delimiter.size();
+    }
+    return tokens;
+}
+
+inline auto split(std::string_view str, char delimiter, bool skip_empty) -> std::vector<std::string> {
+    std::vector<std::string> tokens;
+
+    size_t pos_current;
+    size_t pos_last = 0;
+    size_t length;
+
+    while (true)
+    {
+        pos_current = str.find(delimiter, pos_last);
+        if (pos_current == std::string::npos)
+            pos_current = str.size();
+
+        length = pos_current - pos_last;
+        if (!skip_empty || (length != 0))
+            tokens.emplace_back(str.substr(pos_last, length));
+
+        if (pos_current == str.size())
+            break;
+        else
+            pos_last = pos_current + 1;
+    }
+
+    return tokens;
+}
 int yyerror(const char* msg);
 int yyerror(const std::string& msg);
 

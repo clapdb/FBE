@@ -12163,7 +12163,7 @@ std::string GeneratorCpp::ConvertConstant(const std::string& type, const std::st
 
     bool first = true;
     std::string result;
-    auto items = CppCommon::StringUtils::Split(value, "|");
+    auto items = split(value, '|', true);
     for (auto& item : items)
     {
         bool pkg = (CppCommon::StringUtils::CountAll(item, ".") > 1);

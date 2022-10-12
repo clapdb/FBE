@@ -12422,7 +12422,7 @@ std::string GeneratorJavaScript::ConvertEnumConstant(const std::string& name, co
     else if (type.empty())
     {
         // Fill flags values
-        std::vector<std::string> flags = CppCommon::StringUtils::Split(value, '|', true);
+        std::vector<std::string> flags = split(value, '|', true);
 
         // Generate flags combination
         if (!flags.empty())

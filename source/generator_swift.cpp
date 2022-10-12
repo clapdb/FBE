@@ -7856,7 +7856,7 @@ std::string GeneratorSwift::ConvertEnumConstant(const std::string& base, const s
     if (type.empty())
     {
         // Fill flags values
-        std::vector<std::string> flags = CppCommon::StringUtils::Split(value, '|', true);
+        std::vector<std::string> flags = split(value, '|', true);
 
         // Generate flags combination
         if (!flags.empty())
@@ -8288,7 +8288,7 @@ std::string GeneratorSwift::ConvertConstant(const std::string& domain, const std
     if (!IsKnownType(type))
     {
         // Fill flags values
-        std::vector<std::string> flags = CppCommon::StringUtils::Split(value, '|', true);
+        std::vector<std::string> flags = split(value, '|', true);
 
         // Generate flags combination
         if (flags.size() > 1)
