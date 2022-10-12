@@ -43,6 +43,15 @@ inline auto unique_name() -> std::string  {
     return lexical_cast<std::string>((random_generator())());
 }
 
+inline void create_dir(const fs::path& path) {
+    std::error_code code;
+    if (fs::create_directories(path, code)) {
+        fs::permissions(path, fs::perms::owner_all, code);
+        return;
+    }
+    throw std::filesystem::filesystem_error("create dir failed", code);
+}
+
 int yyerror(const char* msg);
 int yyerror(const std::string& msg);
 
