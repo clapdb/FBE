@@ -17,7 +17,7 @@ E [Ee][+-]?{D}+
 #include "generator_ruby.h"
 #include "generator_swift.h"
 
-#include <OptionParser.h>
+#include <cpp-optparse/OptionParser.h>
 
 void yycount();
 int yychar(char c);
