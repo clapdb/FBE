@@ -30,6 +30,8 @@
 #include <string>
 #include <vector>
 
+namespace fs = std::filesystem;
+
 int yyerror(const char* msg);
 int yyerror(const std::string& msg);
 

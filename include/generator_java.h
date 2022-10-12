@@ -83,13 +83,13 @@ private:
 
     void GenerateContainers(const std::shared_ptr<Package>& p, bool final);
     void GeneratePackage(const std::shared_ptr<Package>& p);
-    void GenerateEnum(const std::shared_ptr<Package>& p, const std::shared_ptr<EnumType>& e, const std::filesystem::path& path);
-    void GenerateEnumClass(const std::shared_ptr<Package>& p, const std::shared_ptr<EnumType>& e, const std::filesystem::path& path);
+    void GenerateEnum(const std::shared_ptr<Package>& p, const std::shared_ptr<EnumType>& e, const fs::path& path);
+    void GenerateEnumClass(const std::shared_ptr<Package>& p, const std::shared_ptr<EnumType>& e, const fs::path& path);
     void GenerateEnumJson(const std::shared_ptr<Package>& p, const std::shared_ptr<EnumType>& e);
-    void GenerateFlags(const std::shared_ptr<Package>& p, const std::shared_ptr<FlagsType>& e, const std::filesystem::path& path);
-    void GenerateFlagsClass(const std::shared_ptr<Package>& p, const std::shared_ptr<FlagsType>& e, const std::filesystem::path& path);
+    void GenerateFlags(const std::shared_ptr<Package>& p, const std::shared_ptr<FlagsType>& e, const fs::path& path);
+    void GenerateFlagsClass(const std::shared_ptr<Package>& p, const std::shared_ptr<FlagsType>& e, const fs::path& path);
     void GenerateFlagsJson(const std::shared_ptr<Package>& p, const std::shared_ptr<FlagsType>& e);
-    void GenerateStruct(const std::shared_ptr<Package>& p, const std::shared_ptr<StructType>& s, const std::filesystem::path& path);
+    void GenerateStruct(const std::shared_ptr<Package>& p, const std::shared_ptr<StructType>& s, const fs::path& path);
     void GenerateStructFieldModel(const std::shared_ptr<Package>& p, const std::shared_ptr<StructType>& s);
     void GenerateStructModel(const std::shared_ptr<Package>& p, const std::shared_ptr<StructType>& s);
     void GenerateStructFinalModel(const std::shared_ptr<Package>& p, const std::shared_ptr<StructType>& s);

@@ -8,13 +8,13 @@
 
 namespace FBE {
 
-void GeneratorCpp::GenerateFBEPtr_Header(const std::filesystem::path& path)
+void GeneratorCpp::GenerateFBEPtr_Header(const fs::path& path)
 {
     // Create package path
     CppCommon::Directory::CreateTree(path);
 
     // Generate the common file
-    std::filesystem::path common = path / "fbe_ptr.h";
+    fs::path common = path / "fbe_ptr.h";
     WriteBegin();
 
     // Generate common header
@@ -1398,13 +1398,13 @@ inline void FieldModelCustomMap<TKey, TValue, TKStruct, TValueStruct>::set(const
     Write(code);
 }
 
-void GeneratorCpp::GenerateFBECustomModels_Header(const std::filesystem::path& path)
+void GeneratorCpp::GenerateFBECustomModels_Header(const fs::path& path)
 {
     // Create package path
     CppCommon::Directory::CreateTree(path);
 
     // Generate the field models file
-    std::filesystem::path common = path / "fbe_custom_models.h";
+    fs::path common = path / "fbe_custom_models.h";
     WriteBegin();
 
     // Generate field models header
@@ -1440,13 +1440,13 @@ void GeneratorCpp::GenerateFBECustomModels_Header(const std::filesystem::path& p
     Store(common);
 }
 
-void GeneratorCpp::GenerateFBECustomModels_Inline(const std::filesystem::path& path)
+void GeneratorCpp::GenerateFBECustomModels_Inline(const fs::path& path)
 {
     // Create package path
     CppCommon::Directory::CreateTree(path);
 
     // Generate the field models file
-    std::filesystem::path common = path / "fbe_custom_models.inl";
+    fs::path common = path / "fbe_custom_models.inl";
     WriteBegin();
 
     // Generate field models inline
@@ -1476,7 +1476,7 @@ void GeneratorCpp::GenerateFBECustomModels_Inline(const std::filesystem::path& p
 
 void GeneratorCpp::GeneratePtrPackage_Header(const std::shared_ptr<Package>& p)
 {
-    std::filesystem::path output = _output;
+    fs::path output = _output;
 
     // Create package path
     CppCommon::Directory::CreateTree(output);
@@ -1486,7 +1486,7 @@ void GeneratorCpp::GeneratePtrPackage_Header(const std::shared_ptr<Package>& p)
     WriteBegin();
 
     // Generate package header
-    GenerateHeader(std::filesystem::path(_input).filename().string());
+    GenerateHeader(fs::path(_input).filename().string());
 
     // Generate imports
     GenerateImports(p);
@@ -1535,7 +1535,7 @@ void GeneratorCpp::GeneratePtrPackage_Header(const std::shared_ptr<Package>& p)
 
 void GeneratorCpp::GeneratePtrPackage_Source(const std::shared_ptr<Package>& p)
 {
-    std::filesystem::path output = _output;
+    fs::path output = _output;
 
     // Create package path
     CppCommon::Directory::CreateTree(output);
@@ -1545,7 +1545,7 @@ void GeneratorCpp::GeneratePtrPackage_Source(const std::shared_ptr<Package>& p)
     WriteBegin();
 
     // Generate package source
-    GenerateSource(std::filesystem::path(_input).filename().string());
+    GenerateSource(fs::path(_input).filename().string());
 
     // Generate imports
     GenerateImports(*p->name + "_ptr.h");
@@ -1615,7 +1615,7 @@ void GeneratorCpp::GeneratePtrPackage_Source(const std::shared_ptr<Package>& p)
 
 void GeneratorCpp::GeneratePtrPackageModels_Header(const std::shared_ptr<Package>& p)
 {
-    std::filesystem::path output = _output;
+    fs::path output = _output;
 
     // Create package path
     CppCommon::Directory::CreateTree(output);
@@ -1625,7 +1625,7 @@ void GeneratorCpp::GeneratePtrPackageModels_Header(const std::shared_ptr<Package
     WriteBegin();
 
     // Generate package models header
-    GenerateHeader(std::filesystem::path(_input).filename().string());
+    GenerateHeader(fs::path(_input).filename().string());
 
     // Generate imports
     GenerateImports("fbe_custom_models.h");
@@ -1686,7 +1686,7 @@ void GeneratorCpp::GeneratePtrPackageModels_Header(const std::shared_ptr<Package
 
 void GeneratorCpp::GeneratePtrPackageModels_Source(const std::shared_ptr<Package>& p)
 {
-    std::filesystem::path output = _output;
+    fs::path output = _output;
 
     // Create package path
     CppCommon::Directory::CreateTree(output);
@@ -1696,7 +1696,7 @@ void GeneratorCpp::GeneratePtrPackageModels_Source(const std::shared_ptr<Package
     WriteBegin();
 
     // Generate package models source
-    GenerateSource(std::filesystem::path(_input).filename().string());
+    GenerateSource(fs::path(_input).filename().string());
 
     // Generate imports
     GenerateImports(*p->name + "_ptr_models.h");

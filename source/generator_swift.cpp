@@ -119,18 +119,18 @@ void GeneratorSwift::GenerateImports(const std::shared_ptr<Package>& p)
 
 void GeneratorSwift::GenerateFBEPackage(const std::string& domain, const std::string& package)
 {
-    std::filesystem::path path = std::filesystem::path(_output) / CreatePackagePath(domain, package);
+    fs::path path = fs::path(_output) / CreatePackagePath(domain, package);
 
     // Create FBE package path
     CppCommon::Directory::CreateTree(path);
 
-    std::filesystem::path packagePath = std::filesystem::path(_output) / package;
+    fs::path packagePath = fs::path(_output) / package;
 
     // Create FBE package path
     CppCommon::Directory::CreateTree(packagePath);
 
     // Generate the file
-    std::filesystem::path file = packagePath / "Package.swift";
+    fs::path file = packagePath / "Package.swift";
     WriteBegin();
 
     std::string code = R"CODE(// swift-tools-version:5.1
@@ -172,10 +172,10 @@ let package = Package(
 
 void GeneratorSwift::GenerateFBEUUIDGenerator(const std::string& domain, const std::string& package)
 {
-    std::filesystem::path path = std::filesystem::path(_output) / CreatePackagePath(domain, package);
+    fs::path path = fs::path(_output) / CreatePackagePath(domain, package);
 
     // Generate the file
-    std::filesystem::path file = path / "UUIDGenerator.swift";
+    fs::path file = path / "UUIDGenerator.swift";
     WriteBegin();
 
     // Generate headers
@@ -238,10 +238,10 @@ extension UUID: Comparable {
 
 void GeneratorSwift::GenerateFBEBuffer(const std::string& domain, const std::string& package)
 {
-    std::filesystem::path path = std::filesystem::path(_output) / CreatePackagePath(domain, package);
+    fs::path path = fs::path(_output) / CreatePackagePath(domain, package);
 
     // Generate the file
-    std::filesystem::path file = path / "Buffer.swift";
+    fs::path file = path / "Buffer.swift";
     WriteBegin();
 
     // Generate headers
@@ -722,10 +722,10 @@ public extension Buffer {
 
 void GeneratorSwift::GenerateFBEModel(const std::string& domain, const std::string& package)
 {
-    std::filesystem::path path = std::filesystem::path(_output) / CreatePackagePath(domain, package);
+    fs::path path = fs::path(_output) / CreatePackagePath(domain, package);
 
     // Generate the file
-    std::filesystem::path file = path / "Model.swift";
+    fs::path file = path / "Model.swift";
     WriteBegin();
 
     // Generate headers
@@ -783,10 +783,10 @@ open class Model {
 
 void GeneratorSwift::GenerateFBEFieldModel(const std::string& domain, const std::string& package)
 {
-    std::filesystem::path path = std::filesystem::path(_output) / CreatePackagePath(domain, package);
+    fs::path path = fs::path(_output) / CreatePackagePath(domain, package);
 
     // Generate the file
-    std::filesystem::path file = path / "FieldModel.swift";
+    fs::path file = path / "FieldModel.swift";
     WriteBegin();
 
     // Generate headers
@@ -897,10 +897,10 @@ public extension FieldModel {
 
 void GeneratorSwift::GenerateFBEFieldModel(const std::string& domain, const std::string& package, const std::string& name, const std::string& type, const std::string& base, const std::string& size, const std::string& defaults)
 {
-    std::filesystem::path path = std::filesystem::path(_output) / CreatePackagePath(domain, package);
+    fs::path path = fs::path(_output) / CreatePackagePath(domain, package);
 
     // Generate the file
-    std::filesystem::path file = path / ("FieldModel" + name + ".swift");
+    fs::path file = path / ("FieldModel" + name + ".swift");
     WriteBegin();
 
     // Generate headers
@@ -967,10 +967,10 @@ public class FieldModel_NAME_: FieldModel {
 
 void GeneratorSwift::GenerateFBEFieldModelDecimal(const std::string& domain, const std::string& package)
 {
-    std::filesystem::path path = std::filesystem::path(_output) / CreatePackagePath(domain, package);
+    fs::path path = fs::path(_output) / CreatePackagePath(domain, package);
 
     // Generate the file
-    std::filesystem::path file = path / "FieldModelDecimal.swift";
+    fs::path file = path / "FieldModelDecimal.swift";
     WriteBegin();
 
     // Generate headers
@@ -1089,10 +1089,10 @@ public class FieldModelDecimal: FieldModel {
 
 void GeneratorSwift::GenerateFBEFieldModelTimestamp(const std::string& domain, const std::string& package)
 {
-    std::filesystem::path path = std::filesystem::path(_output) / CreatePackagePath(domain, package);
+    fs::path path = fs::path(_output) / CreatePackagePath(domain, package);
 
     // Generate the file
-    std::filesystem::path file = path / "FieldModelTimestamp.swift";
+    fs::path file = path / "FieldModelTimestamp.swift";
     WriteBegin();
 
     // Generate headers
@@ -1149,10 +1149,10 @@ public class FieldModelTimestamp: FieldModel {
 
 void GeneratorSwift::GenerateFBEFieldModelBytes(const std::string& domain, const std::string& package)
 {
-    std::filesystem::path path = std::filesystem::path(_output) / CreatePackagePath(domain, package);
+    fs::path path = fs::path(_output) / CreatePackagePath(domain, package);
 
     // Generate the file
-    std::filesystem::path file = path / "FieldModelData.swift";
+    fs::path file = path / "FieldModelData.swift";
     WriteBegin();
 
     // Generate headers
@@ -1271,10 +1271,10 @@ public class FieldModelData: FieldModel {
 
 void GeneratorSwift::GenerateFBEFieldModelString(const std::string& domain, const std::string& package)
 {
-    std::filesystem::path path = std::filesystem::path(_output) / CreatePackagePath(domain, package);
+    fs::path path = fs::path(_output) / CreatePackagePath(domain, package);
 
     // Generate the file
-    std::filesystem::path file = path / "FieldModelString.swift";
+    fs::path file = path / "FieldModelString.swift";
     WriteBegin();
 
     // Generate headers
@@ -1392,17 +1392,17 @@ public class FieldModelString: FieldModel {
 void GeneratorSwift::GenerateFBEFieldModelOptional(const std::string& domain, const std::shared_ptr<Package>& p, const std::string& name, const std::string& type, const std::string& model)
 {
     std::string package = ConvertPackage(p);
-    std::filesystem::path path = (std::filesystem::path(_output) / CreatePackagePath(domain, package)) / "Fbe";
+    fs::path path = (fs::path(_output) / CreatePackagePath(domain, package)) / "Fbe";
 
     // Create package path
     CppCommon::Directory::CreateTree(path);
 
     // Generate the file
-    std::filesystem::path file = path / ("FieldModelOptional" + name + ".swift");
+    fs::path file = path / ("FieldModelOptional" + name + ".swift");
     WriteBegin();
 
     // Generate headers
-    GenerateHeader(std::filesystem::path(_input).filename().string());
+    GenerateHeader(fs::path(_input).filename().string());
     GenerateImports("", "Foundation");
     GenerateImports(domain, "Fbe");
     GenerateImports(p);
@@ -1581,17 +1581,17 @@ public class FieldModelOptional_NAME_: FieldModel {
 void GeneratorSwift::GenerateFBEFieldModelArray(const std::string& domain, const std::shared_ptr<Package>& p, const std::string& name, const std::string& type, const std::string& base, bool optional, const std::string& model)
 {
     std::string package = ConvertPackage(p);
-    std::filesystem::path path = (std::filesystem::path(_output) / CreatePackagePath(domain, package)) / "Fbe";
+    fs::path path = (fs::path(_output) / CreatePackagePath(domain, package)) / "Fbe";
 
     // Create package path
     CppCommon::Directory::CreateTree(path);
 
     // Generate the file
-    std::filesystem::path file = path / ("FieldModelArray" + name + ".swift");
+    fs::path file = path / ("FieldModelArray" + name + ".swift");
     WriteBegin();
 
     // Generate headers
-    GenerateHeader(std::filesystem::path(_input).filename().string());
+    GenerateHeader(fs::path(_input).filename().string());
     GenerateImports("", "Foundation");
     GenerateImports(domain, "Fbe");
     GenerateImports(p);
@@ -1734,17 +1734,17 @@ class FieldModelArray_NAME_: FieldModel {
 void GeneratorSwift::GenerateFBEFieldModelVector(const std::string& domain, const std::shared_ptr<Package>& p, const std::string& name, const std::string& type, const std::string& model)
 {
     std::string package = ConvertPackage(p);
-    std::filesystem::path path = (std::filesystem::path(_output) / CreatePackagePath(domain, package)) / "Fbe";
+    fs::path path = (fs::path(_output) / CreatePackagePath(domain, package)) / "Fbe";
 
     // Create package path
     CppCommon::Directory::CreateTree(path);
 
     // Generate the file
-    std::filesystem::path file = path / ("FieldModelVector" + name + ".swift");
+    fs::path file = path / ("FieldModelVector" + name + ".swift");
     WriteBegin();
 
     // Generate headers
-    GenerateHeader(std::filesystem::path(_input).filename().string());
+    GenerateHeader(fs::path(_input).filename().string());
     GenerateImports("", "Foundation");
     GenerateImports(domain, "Fbe");
     GenerateImports(p);
@@ -1934,17 +1934,17 @@ class FieldModelVector_NAME_: FieldModel {
 void GeneratorSwift::GenerateFBEFieldModelMap(const std::string& domain, const std::shared_ptr<Package>& p, const std::string& key_name, const std::string& key_type, const std::string& key_model, const std::string& value_name, const std::string& value_type, const std::string& value_model)
 {
     std::string package = ConvertPackage(p);
-    std::filesystem::path path = (std::filesystem::path(_output) / CreatePackagePath(domain, package)) / "Fbe";
+    fs::path path = (fs::path(_output) / CreatePackagePath(domain, package)) / "Fbe";
 
     // Create package path
     CppCommon::Directory::CreateTree(path);
 
     // Generate the file
-    std::filesystem::path file = path / ("FieldModelMap" + key_name + value_name + ".swift");
+    fs::path file = path / ("FieldModelMap" + key_name + value_name + ".swift");
     WriteBegin();
 
     // Generate headers
-    GenerateHeader(std::filesystem::path(_input).filename().string());
+    GenerateHeader(fs::path(_input).filename().string());
     GenerateImports("", "Foundation");
     GenerateImports(domain, "Fbe");
     GenerateImports(p);
@@ -2153,17 +2153,17 @@ class FieldModelMap_KEY_NAME__VALUE_NAME_: FieldModel {
 
 void GeneratorSwift::GenerateFBEFieldModelEnumFlags(const std::string& domain, const std::string& package, const std::string& name, const std::string& type)
 {
-    std::filesystem::path path = (std::filesystem::path(_output) / CreatePackagePath(domain, package)) / "Fbe";
+    fs::path path = (fs::path(_output) / CreatePackagePath(domain, package)) / "Fbe";
 
     // Create package path
     CppCommon::Directory::CreateTree(path);
 
     // Generate the file
-    std::filesystem::path file = path / ("FieldModel" + name + ".swift");
+    fs::path file = path / ("FieldModel" + name + ".swift");
     WriteBegin();
 
     // Generate headers
-    GenerateHeader(std::filesystem::path(_input).filename().string());
+    GenerateHeader(fs::path(_input).filename().string());
     GenerateImports(domain, "Fbe");
 
     std::string code = R"CODE(
@@ -2221,10 +2221,10 @@ public class FieldModel_NAME_: FieldModel {
 
 void GeneratorSwift::GenerateFBESize(const std::string& domain, const std::string& package)
 {
-    std::filesystem::path path = std::filesystem::path(_output) / CreatePackagePath(domain, package);
+    fs::path path = fs::path(_output) / CreatePackagePath(domain, package);
 
     // Generate the file
-    std::filesystem::path file = path / "Size.swift";
+    fs::path file = path / "Size.swift";
     WriteBegin();
 
     // Generate headers
@@ -2256,10 +2256,10 @@ public class Size {
 
 void GeneratorSwift::GenerateFBEFinalModel(const std::string& domain, const std::string& package)
 {
-    std::filesystem::path path = std::filesystem::path(_output) / CreatePackagePath(domain, package);
+    fs::path path = fs::path(_output) / CreatePackagePath(domain, package);
 
     // Generate the file
-    std::filesystem::path file = path / "FinalModel.swift";
+    fs::path file = path / "FinalModel.swift";
     WriteBegin();
 
     // Generate headers
@@ -2362,10 +2362,10 @@ public extension FinalModel {
 
 void GeneratorSwift::GenerateFBEFinalModel(const std::string& domain, const std::string& package, const std::string& name, const std::string& type, const std::string& base, const std::string& size, const std::string& defaults)
 {
-    std::filesystem::path path = std::filesystem::path(_output) / CreatePackagePath(domain, package);
+    fs::path path = fs::path(_output) / CreatePackagePath(domain, package);
 
     // Generate the file
-    std::filesystem::path file = path / ("FinalModel" + name + ".swift");
+    fs::path file = path / ("FinalModel" + name + ".swift");
     WriteBegin();
 
     // Generate headers
@@ -2443,10 +2443,10 @@ public class FinalModel_NAME_: FinalModel {
 
 void GeneratorSwift::GenerateFBEFinalModelDecimal(const std::string& domain, const std::string& package)
 {
-    std::filesystem::path path = std::filesystem::path(_output) / CreatePackagePath(domain, package);
+    fs::path path = fs::path(_output) / CreatePackagePath(domain, package);
 
     // Generate the file
-    std::filesystem::path file = path / "FinalModelDecimal.swift";
+    fs::path file = path / "FinalModelDecimal.swift";
     WriteBegin();
 
     // Generate headers
@@ -2579,10 +2579,10 @@ public class FinalModelDecimal: FinalModel {
 
 void GeneratorSwift::GenerateFBEFinalModelTimestamp(const std::string& domain, const std::string& package)
 {
-    std::filesystem::path path = std::filesystem::path(_output) / CreatePackagePath(domain, package);
+    fs::path path = fs::path(_output) / CreatePackagePath(domain, package);
 
     // Generate the file
-    std::filesystem::path file = path / "FinalModelTimestamp.swift";
+    fs::path file = path / "FinalModelTimestamp.swift";
     WriteBegin();
 
     // Generate headers
@@ -2657,10 +2657,10 @@ public class FinalModelTimestamp: FinalModel {
 
 void GeneratorSwift::GenerateFBEFinalModelBytes(const std::string& domain, const std::string& package)
 {
-    std::filesystem::path path = std::filesystem::path(_output) / CreatePackagePath(domain, package);
+    fs::path path = fs::path(_output) / CreatePackagePath(domain, package);
 
     // Generate the file
-    std::filesystem::path file = path / "FinalModelData.swift";
+    fs::path file = path / "FinalModelData.swift";
     WriteBegin();
 
     // Generate headers
@@ -2748,10 +2748,10 @@ public class FinalModelData: FinalModel {
 
 void GeneratorSwift::GenerateFBEFinalModelString(const std::string& domain, const std::string& package)
 {
-    std::filesystem::path path = std::filesystem::path(_output) / CreatePackagePath(domain, package);
+    fs::path path = fs::path(_output) / CreatePackagePath(domain, package);
 
     // Generate the file
-    std::filesystem::path file = path / "FinalModelString.swift";
+    fs::path file = path / "FinalModelString.swift";
     WriteBegin();
 
     // Generate headers
@@ -2836,17 +2836,17 @@ public class FinalModelString: FinalModel {
 void GeneratorSwift::GenerateFBEFinalModelOptional(const std::string& domain, const std::shared_ptr<Package>& p, const std::string& name, const std::string& type, const std::string& model)
 {
     std::string package = ConvertPackage(p);
-    std::filesystem::path path = (std::filesystem::path(_output) / CreatePackagePath(domain, package)) / "Fbe";
+    fs::path path = (fs::path(_output) / CreatePackagePath(domain, package)) / "Fbe";
 
     // Create package path
     CppCommon::Directory::CreateTree(path);
 
     // Generate the file
-    std::filesystem::path file = path / ("FinalModelOptional" + name + ".swift");
+    fs::path file = path / ("FinalModelOptional" + name + ".swift");
     WriteBegin();
 
     // Generate headers
-    GenerateHeader(std::filesystem::path(_input).filename().string());
+    GenerateHeader(fs::path(_input).filename().string());
     GenerateImports("", "Foundation");
     GenerateImports(domain, "Fbe");
     GenerateImports(p);
@@ -2969,17 +2969,17 @@ class FinalModelOptional_NAME_: FinalModel {
 void GeneratorSwift::GenerateFBEFinalModelArray(const std::string& domain, const std::shared_ptr<Package>& p, const std::string& name, const std::string& type, const std::string& base, bool optional, const std::string& model)
 {
     std::string package = ConvertPackage(p);
-    std::filesystem::path path = (std::filesystem::path(_output) / CreatePackagePath(domain, package)) / "Fbe";
+    fs::path path = (fs::path(_output) / CreatePackagePath(domain, package)) / "Fbe";
 
     // Create package path
     CppCommon::Directory::CreateTree(path);
 
     // Generate the file
-    std::filesystem::path file = path / ("FinalModelArray" + name + ".swift");
+    fs::path file = path / ("FinalModelArray" + name + ".swift");
     WriteBegin();
 
     // Generate headers
-    GenerateHeader(std::filesystem::path(_input).filename().string());
+    GenerateHeader(fs::path(_input).filename().string());
     GenerateImports("", "Foundation");
     GenerateImports(domain, "Fbe");
     GenerateImports(p);
@@ -3117,17 +3117,17 @@ class FinalModelArray_NAME_: FinalModel {
 void GeneratorSwift::GenerateFBEFinalModelVector(const std::string& domain, const std::shared_ptr<Package>& p, const std::string& name, const std::string& type, const std::string& model)
 {
     std::string package = ConvertPackage(p);
-    std::filesystem::path path = (std::filesystem::path(_output) / CreatePackagePath(domain, package)) / "Fbe";
+    fs::path path = (fs::path(_output) / CreatePackagePath(domain, package)) / "Fbe";
 
     // Create package path
     CppCommon::Directory::CreateTree(path);
 
     // Generate the file
-    std::filesystem::path file = path / ("FinalModelVector" + name + ".swift");
+    fs::path file = path / ("FinalModelVector" + name + ".swift");
     WriteBegin();
 
     // Generate headers
-    GenerateHeader(std::filesystem::path(_input).filename().string());
+    GenerateHeader(fs::path(_input).filename().string());
     GenerateImports("", "Foundation");
     GenerateImports(domain, "Fbe");
     GenerateImports(p);
@@ -3248,17 +3248,17 @@ class FinalModelVector_NAME_: FinalModel {
 void GeneratorSwift::GenerateFBEFinalModelMap(const std::string& domain, const std::shared_ptr<Package>& p, const std::string& key_name, const std::string& key_type, const std::string& key_model, const std::string& value_name, const std::string& value_type, const std::string& value_model)
 {
     std::string package = ConvertPackage(p);
-    std::filesystem::path path = (std::filesystem::path(_output) / CreatePackagePath(domain, package)) / "Fbe";
+    fs::path path = (fs::path(_output) / CreatePackagePath(domain, package)) / "Fbe";
 
     // Create package path
     CppCommon::Directory::CreateTree(path);
 
     // Generate the file
-    std::filesystem::path file = path / ("FinalModelMap" + key_name + value_name + ".swift");
+    fs::path file = path / ("FinalModelMap" + key_name + value_name + ".swift");
     WriteBegin();
 
     // Generate headers
-    GenerateHeader(std::filesystem::path(_input).filename().string());
+    GenerateHeader(fs::path(_input).filename().string());
     GenerateImports("", "Foundation");
     GenerateImports(domain, "Fbe");
     GenerateImports(p);
@@ -3402,17 +3402,17 @@ class FinalModelMap_KEY_NAME__VALUE_NAME_: FinalModel {
 
 void GeneratorSwift::GenerateFBEFinalModelEnumFlags(const std::string& domain, const std::string& package, const std::string& name, const std::string& type)
 {
-    std::filesystem::path path = (std::filesystem::path(_output) / CreatePackagePath(domain, package)) / "Fbe";
+    fs::path path = (fs::path(_output) / CreatePackagePath(domain, package)) / "Fbe";
 
     // Create package path
     CppCommon::Directory::CreateTree(path);
 
     // Generate the file
-    std::filesystem::path file = path / ("FinalModel" + name + ".swift");
+    fs::path file = path / ("FinalModel" + name + ".swift");
     WriteBegin();
 
     // Generate headers
-    GenerateHeader(std::filesystem::path(_input).filename().string());
+    GenerateHeader(fs::path(_input).filename().string());
     GenerateImports(domain, "Fbe");
 
     std::string code = R"CODE(
@@ -3484,10 +3484,10 @@ public class FinalModel_NAME_: FinalModel {
 
 void GeneratorSwift::GenerateFBESender(const std::string& domain, const std::string& package)
 {
-    std::filesystem::path path = std::filesystem::path(_output) / CreatePackagePath(domain, package);
+    fs::path path = fs::path(_output) / CreatePackagePath(domain, package);
 
     // Generate the file
-    std::filesystem::path file = path / "SenderProtocol.swift";
+    fs::path file = path / "SenderProtocol.swift";
     WriteBegin();
 
     // Generate headers
@@ -3554,10 +3554,10 @@ public extension SenderProtocol {
 
 void GeneratorSwift::GenerateFBEReceiver(const std::string& domain, const std::string& package)
 {
-    std::filesystem::path path = std::filesystem::path(_output) / CreatePackagePath(domain, package);
+    fs::path path = fs::path(_output) / CreatePackagePath(domain, package);
 
     // Generate the file
-    std::filesystem::path file = path / "ReceiverProtocol.swift";
+    fs::path file = path / "ReceiverProtocol.swift";
     WriteBegin();
 
     // Generate headers
@@ -3834,10 +3834,10 @@ public extension ReceiverProtocol {
 
 void GeneratorSwift::GenerateFBEReceiverListener(const std::string& domain, const std::string& package)
 {
-    std::filesystem::path path = std::filesystem::path(_output) / CreatePackagePath(domain, package);
+    fs::path path = fs::path(_output) / CreatePackagePath(domain, package);
 
     // Generate the file
-    std::filesystem::path file = path / "Listeners.swift";
+    fs::path file = path / "Listeners.swift";
     WriteBegin();
 
     // Generate headers
@@ -3890,10 +3890,10 @@ public extension SenderListener {
 
 void GeneratorSwift::GenerateFBEClient(const std::string& domain, const std::string& package)
 {
-    std::filesystem::path path = std::filesystem::path(_output) / CreatePackagePath(domain, package);
+    fs::path path = fs::path(_output) / CreatePackagePath(domain, package);
 
     // Generate the file
-    std::filesystem::path file = path / "ClientProtocol.swift";
+    fs::path file = path / "ClientProtocol.swift";
     WriteBegin();
 
     // Generate headers
@@ -4197,7 +4197,7 @@ void GeneratorSwift::GenerateContainers(const std::shared_ptr<Package>& p, bool 
 {
     std::string domain = ConvertDomain(p);
     std::string package = ConvertPackage(p);
-    std::filesystem::path path = std::filesystem::path(_output) / CreatePackagePath(domain, package);
+    fs::path path = fs::path(_output) / CreatePackagePath(domain, package);
 
     // Create package path
     CppCommon::Directory::CreateTree(path);
@@ -4251,18 +4251,18 @@ void GeneratorSwift::GeneratePackage(const std::shared_ptr<Package>& p)
 {
     std::string domain = ConvertDomain(p);
     std::string package = ConvertPackage(p);
-    std::filesystem::path path = std::filesystem::path(_output) / CreatePackagePath(domain, package);
+    fs::path path = fs::path(_output) / CreatePackagePath(domain, package);
 
     // Create package path
     CppCommon::Directory::CreateTree(path);
 
-    std::filesystem::path packagePath = std::filesystem::path(_output) / package;
+    fs::path packagePath = fs::path(_output) / package;
 
     // Create FBE package path
     CppCommon::Directory::CreateTree(packagePath);
 
     // Generate the file
-    std::filesystem::path file = packagePath / "Package.swift";
+    fs::path file = packagePath / "Package.swift";
     WriteBegin();
 
     std::string code = R"CODE(// swift-tools-version:5.1
@@ -4360,16 +4360,16 @@ let package = Package(
     }
 }
 
-void GeneratorSwift::GenerateEnum(const std::shared_ptr<Package>& p, const std::shared_ptr<EnumType>& e, const std::filesystem::path& path)
+void GeneratorSwift::GenerateEnum(const std::shared_ptr<Package>& p, const std::shared_ptr<EnumType>& e, const fs::path& path)
 {
     std::string enum_name = *e->name + "Enum";
 
     // Generate the output file
-    std::filesystem::path output = path / (enum_name + ".swift");
+    fs::path output = path / (enum_name + ".swift");
     WriteBegin();
 
     // Generate enum header
-    GenerateHeader(std::filesystem::path(_input).filename().string());
+    GenerateHeader(fs::path(_input).filename().string());
     GenerateImports("", "Foundation");
 
     std::string enum_type = (e->base && !e->base->empty()) ? *e->base : "int32";
@@ -4505,17 +4505,17 @@ void GeneratorSwift::GenerateEnum(const std::shared_ptr<Package>& p, const std::
         GenerateFBEFinalModelEnumFlags(domain, package, *e->name, enum_type);
 }
 
-void GeneratorSwift::GenerateEnumClass(const std::shared_ptr<Package>& p, const std::shared_ptr<EnumType>& e, const std::filesystem::path& path)
+void GeneratorSwift::GenerateEnumClass(const std::shared_ptr<Package>& p, const std::shared_ptr<EnumType>& e, const fs::path& path)
 {
     std::string enum_name = *e->name;
     std::string enum_type_name = *e->name + "Enum";
 
     // Generate the output file
-    std::filesystem::path output = path / (enum_name + ".swift");
+    fs::path output = path / (enum_name + ".swift");
     WriteBegin();
 
     // Generate enum class header
-    GenerateHeader(std::filesystem::path(_input).filename().string());
+    GenerateHeader(fs::path(_input).filename().string());
     GenerateImports("", "Foundation");
 
     std::string enum_type = (e->base && !e->base->empty()) ? *e->base : "int32";
@@ -4650,16 +4650,16 @@ void GeneratorSwift::GenerateEnumClass(const std::shared_ptr<Package>& p, const 
     Store(output);
 }
 
-void GeneratorSwift::GenerateFlags(const std::shared_ptr<Package>& p, const std::shared_ptr<FlagsType>& f, const std::filesystem::path& path)
+void GeneratorSwift::GenerateFlags(const std::shared_ptr<Package>& p, const std::shared_ptr<FlagsType>& f, const fs::path& path)
 {
     std::string flags_name = *f->name + "Enum";
 
     // Generate the output file
-    std::filesystem::path output = path / (flags_name + ".swift");
+    fs::path output = path / (flags_name + ".swift");
     WriteBegin();
 
     // Generate flags header
-    GenerateHeader(std::filesystem::path(_input).filename().string());
+    GenerateHeader(fs::path(_input).filename().string());
     GenerateImports("", "Foundation");
 
     std::string flags_type = (f->base && !f->base->empty()) ? *f->base : "int32";
@@ -4829,17 +4829,17 @@ void GeneratorSwift::GenerateFlags(const std::shared_ptr<Package>& p, const std:
         GenerateFBEFinalModelEnumFlags(domain, package, *f->name, flags_type);
 }
 
-void GeneratorSwift::GenerateFlagsClass(const std::shared_ptr<Package>& p, const std::shared_ptr<FlagsType>& f, const std::filesystem::path& path)
+void GeneratorSwift::GenerateFlagsClass(const std::shared_ptr<Package>& p, const std::shared_ptr<FlagsType>& f, const fs::path& path)
 {
     std::string flags_name = *f->name;
     std::string flags_type_name = *f->name + "Enum";
 
     // Generate the output file
-    std::filesystem::path output = path / (flags_name + ".swift");
+    fs::path output = path / (flags_name + ".swift");
     WriteBegin();
 
     // Generate flags class header
-    GenerateHeader(std::filesystem::path(_input).filename().string());
+    GenerateHeader(fs::path(_input).filename().string());
     GenerateImports("", "Foundation");
 
     std::string flags_type = (f->base && !f->base->empty()) ? *f->base : "int32";
@@ -5026,18 +5026,18 @@ void GeneratorSwift::GenerateFlagsClass(const std::shared_ptr<Package>& p, const
     Store(output);
 }
 
-void GeneratorSwift::GenerateStruct(const std::shared_ptr<Package>& p, const std::shared_ptr<StructType>& s, const std::filesystem::path& path)
+void GeneratorSwift::GenerateStruct(const std::shared_ptr<Package>& p, const std::shared_ptr<StructType>& s, const fs::path& path)
 {
     std::string domain = ConvertDomain(p);
     std::string package = ConvertPackage(p);
     bool first;
 
     // Generate the output file
-    std::filesystem::path output = path / (*s->name + ".swift");
+    fs::path output = path / (*s->name + ".swift");
     WriteBegin();
 
     // Generate struct header
-    GenerateHeader(std::filesystem::path(_input).filename().string());
+    GenerateHeader(fs::path(_input).filename().string());
     GenerateImports("", "Foundation");
     GenerateImports(domain, "Fbe");
     GenerateImports(p);
@@ -5506,17 +5506,17 @@ void GeneratorSwift::GenerateStructFieldModel(const std::shared_ptr<Package>& p,
     std::string package = ConvertPackage(p);
     std::string struct_name = *s->name;
 
-    std::filesystem::path path = (std::filesystem::path(_output) / CreatePackagePath(domain, package)) / "Fbe";
+    fs::path path = (fs::path(_output) / CreatePackagePath(domain, package)) / "Fbe";
 
     // Create package path
     CppCommon::Directory::CreateTree(path);
 
     // Generate the file
-    std::filesystem::path file = path / ("FieldModel" + *s->name + ".swift");
+    fs::path file = path / ("FieldModel" + *s->name + ".swift");
     WriteBegin();
 
     // Generate headers
-    GenerateHeader(std::filesystem::path(_input).filename().string());
+    GenerateHeader(fs::path(_input).filename().string());
     GenerateImports("", "Foundation");
     GenerateImports(domain, "Fbe");
     GenerateImports(p);
@@ -5981,17 +5981,17 @@ void GeneratorSwift::GenerateStructModel(const std::shared_ptr<Package>& p, cons
     std::string package = ConvertPackage(p);
     std::string struct_name = *s->name;
 
-    std::filesystem::path path = (std::filesystem::path(_output) / CreatePackagePath(domain, package)) / "Fbe";
+    fs::path path = (fs::path(_output) / CreatePackagePath(domain, package)) / "Fbe";
 
     // Create package path
     CppCommon::Directory::CreateTree(path);
 
     // Generate the file
-    std::filesystem::path file = path / (*s->name + "Model.swift");
+    fs::path file = path / (*s->name + "Model.swift");
     WriteBegin();
 
     // Generate headers
-    GenerateHeader(std::filesystem::path(_input).filename().string());
+    GenerateHeader(fs::path(_input).filename().string());
     GenerateImports(domain, "Fbe");
 
     // Generate struct model begin
@@ -6128,17 +6128,17 @@ void GeneratorSwift::GenerateStructFinalModel(const std::shared_ptr<Package>& p,
     std::string package = ConvertPackage(p);
     std::string struct_name = *s->name;
 
-    std::filesystem::path path = (std::filesystem::path(_output) / CreatePackagePath(domain, package)) / "Fbe";
+    fs::path path = (fs::path(_output) / CreatePackagePath(domain, package)) / "Fbe";
 
     // Create package path
     CppCommon::Directory::CreateTree(path);
 
     // Generate the file
-    std::filesystem::path file = path / ("FinalModel" + *s->name + ".swift");
+    fs::path file = path / ("FinalModel" + *s->name + ".swift");
     WriteBegin();
 
     // Generate headers
-    GenerateHeader(std::filesystem::path(_input).filename().string());
+    GenerateHeader(fs::path(_input).filename().string());
     GenerateImports(domain, "Fbe");
     GenerateImports(p);
 
@@ -6385,17 +6385,17 @@ void GeneratorSwift::GenerateStructModelFinal(const std::shared_ptr<Package>& p,
     std::string package = ConvertPackage(p);
     std::string struct_name = *s->name;
 
-    std::filesystem::path path = (std::filesystem::path(_output) / CreatePackagePath(domain, package)) / "Fbe";
+    fs::path path = (fs::path(_output) / CreatePackagePath(domain, package)) / "Fbe";
 
     // Create package path
     CppCommon::Directory::CreateTree(path);
 
     // Generate the file
-    std::filesystem::path file = path / (*s->name + "FinalModel.swift");
+    fs::path file = path / (*s->name + "FinalModel.swift");
     WriteBegin();
 
     // Generate headers
-    GenerateHeader(std::filesystem::path(_input).filename().string());
+    GenerateHeader(fs::path(_input).filename().string());
     GenerateImports(domain, "Fbe");
 
     // Generate struct model final begin
@@ -6529,17 +6529,17 @@ void GeneratorSwift::GenerateProtocolVersion(const std::shared_ptr<Package>& p)
     std::string domain = ConvertDomain(p);
     std::string package = ConvertPackage(p);
 
-    std::filesystem::path path = (std::filesystem::path(_output) / CreatePackagePath(domain, package)) / "Fbe";
+    fs::path path = (fs::path(_output) / CreatePackagePath(domain, package)) / "Fbe";
 
     // Create package path
     CppCommon::Directory::CreateTree(path);
 
     // Generate the file
-    std::filesystem::path file = path / ("ProtocolVersion.swift");
+    fs::path file = path / ("ProtocolVersion.swift");
     WriteBegin();
 
     // Generate headers
-    GenerateHeader(std::filesystem::path(_input).filename().string());
+    GenerateHeader(fs::path(_input).filename().string());
 
     // Generate protocol version class
     WriteLineIndent("// Fast Binary Encoding " + domain + package + " protocol version");
@@ -6565,7 +6565,7 @@ void GeneratorSwift::GenerateSender(const std::shared_ptr<Package>& p, bool fina
     std::string domain = ConvertDomain(p);
     std::string package = ConvertPackage(p);
 
-    std::filesystem::path path = (std::filesystem::path(_output) / CreatePackagePath(domain, package)) / "Fbe";
+    fs::path path = (fs::path(_output) / CreatePackagePath(domain, package)) / "Fbe";
 
     // Create package path
     CppCommon::Directory::CreateTree(path);
@@ -6574,11 +6574,11 @@ void GeneratorSwift::GenerateSender(const std::shared_ptr<Package>& p, bool fina
     std::string model = (final ? "FinalModel" : "Model");
 
     // Generate the file
-    std::filesystem::path file = path / (sender + ".swift");
+    fs::path file = path / (sender + ".swift");
     WriteBegin();
 
     // Generate headers
-    GenerateHeader(std::filesystem::path(_input).filename().string());
+    GenerateHeader(fs::path(_input).filename().string());
     GenerateImports(domain, "Fbe");
     GenerateImports("", "Foundation");
     GenerateImports(p);
@@ -6764,7 +6764,7 @@ void GeneratorSwift::GenerateReceiver(const std::shared_ptr<Package>& p, bool fi
     std::string domain = ConvertDomain(p);
     std::string package = ConvertPackage(p);
 
-    std::filesystem::path path = (std::filesystem::path(_output) / CreatePackagePath(domain, package)) / "Fbe";
+    fs::path path = (fs::path(_output) / CreatePackagePath(domain, package)) / "Fbe";
 
     // Create package path
     CppCommon::Directory::CreateTree(path);
@@ -6774,11 +6774,11 @@ void GeneratorSwift::GenerateReceiver(const std::shared_ptr<Package>& p, bool fi
     std::string model = (final ? "FinalModel" : "Model");
 
     // Generate the file
-    std::filesystem::path file = path / (receiver + ".swift");
+    fs::path file = path / (receiver + ".swift");
     WriteBegin();
 
     // Generate headers
-    GenerateHeader(std::filesystem::path(_input).filename().string());
+    GenerateHeader(fs::path(_input).filename().string());
     GenerateImports("", "Foundation");
     GenerateImports(domain, "Fbe");
     GenerateImports(p);
@@ -6958,7 +6958,7 @@ void GeneratorSwift::GenerateReceiverListener(const std::shared_ptr<Package>& p,
     std::string domain = ConvertDomain(p);
     std::string package = ConvertPackage(p);
 
-    std::filesystem::path path = (std::filesystem::path(_output) / CreatePackagePath(domain, package)) / "Fbe";
+    fs::path path = (fs::path(_output) / CreatePackagePath(domain, package)) / "Fbe";
 
     // Create package path
     CppCommon::Directory::CreateTree(path);
@@ -6966,11 +6966,11 @@ void GeneratorSwift::GenerateReceiverListener(const std::shared_ptr<Package>& p,
     std::string listener = (final ? "FinalReceiverListener" : "ReceiverListener");
 
     // Generate the file
-    std::filesystem::path file = path / (listener + ".swift");
+    fs::path file = path / (listener + ".swift");
     WriteBegin();
 
     // Generate headers
-    GenerateHeader(std::filesystem::path(_input).filename().string());
+    GenerateHeader(fs::path(_input).filename().string());
     GenerateImports(domain, "Fbe");
     GenerateImports(p);
 
@@ -7045,7 +7045,7 @@ void GeneratorSwift::GenerateProxy(const std::shared_ptr<Package>& p, bool final
     std::string domain = ConvertDomain(p);
     std::string package = ConvertPackage(p);
 
-    std::filesystem::path path = (std::filesystem::path(_output) / CreatePackagePath(domain, package)) / "Fbe";
+    fs::path path = (fs::path(_output) / CreatePackagePath(domain, package)) / "Fbe";
 
     // Create package path
     CppCommon::Directory::CreateTree(path);
@@ -7055,11 +7055,11 @@ void GeneratorSwift::GenerateProxy(const std::shared_ptr<Package>& p, bool final
     std::string model = (final ? "FinalModel" : "Model");
 
     // Generate the file
-    std::filesystem::path file = path / (proxy + ".swift");
+    fs::path file = path / (proxy + ".swift");
     WriteBegin();
 
     // Generate headers
-    GenerateHeader(std::filesystem::path(_input).filename().string());
+    GenerateHeader(fs::path(_input).filename().string());
     GenerateImports("", "Foundation");
     GenerateImports(domain, "Fbe");
     GenerateImports(p);
@@ -7216,7 +7216,7 @@ void GeneratorSwift::GenerateProxyListener(const std::shared_ptr<Package>& p, bo
     std::string domain = ConvertDomain(p);
     std::string package = ConvertPackage(p);
 
-    std::filesystem::path path = (std::filesystem::path(_output) / CreatePackagePath(domain, package)) / "Fbe";
+    fs::path path = (fs::path(_output) / CreatePackagePath(domain, package)) / "Fbe";
 
     // Create package path
     CppCommon::Directory::CreateTree(path);
@@ -7225,11 +7225,11 @@ void GeneratorSwift::GenerateProxyListener(const std::shared_ptr<Package>& p, bo
     std::string model = (final ? "FinalModel" : "Model");
 
     // Generate the file
-    std::filesystem::path file = path / (listener + ".swift");
+    fs::path file = path / (listener + ".swift");
     WriteBegin();
 
     // Generate headers
-    GenerateHeader(std::filesystem::path(_input).filename().string());
+    GenerateHeader(fs::path(_input).filename().string());
     GenerateImports(domain, "Fbe");
     GenerateImports("", "Foundation");
     GenerateImports(p);
@@ -7302,7 +7302,7 @@ void GeneratorSwift::GenerateClient(const std::shared_ptr<Package>& p, bool fina
     std::string domain = ConvertDomain(p);
     std::string package = ConvertPackage(p);
 
-    std::filesystem::path path = (std::filesystem::path(_output) / CreatePackagePath(domain, package)) / "Fbe";
+    fs::path path = (fs::path(_output) / CreatePackagePath(domain, package)) / "Fbe";
 
     // Create package path
     CppCommon::Directory::CreateTree(path);
@@ -7312,11 +7312,11 @@ void GeneratorSwift::GenerateClient(const std::shared_ptr<Package>& p, bool fina
     std::string model = (final ? "FinalModel" : "Model");
 
     // Generate the file
-    std::filesystem::path file = path / (client + ".swift");
+    fs::path file = path / (client + ".swift");
     WriteBegin();
 
     // Generate headers
-    GenerateHeader(std::filesystem::path(_input).filename().string());
+    GenerateHeader(fs::path(_input).filename().string());
     GenerateImports("", "Foundation");
     GenerateImports(domain, "Fbe");
     GenerateImports(p);
@@ -7631,9 +7631,9 @@ bool GeneratorSwift::IsUnsignedType(const std::string& type)
     return ((type == "byte") || (type == "uint8") || (type == "uint16") || (type == "uint32") || (type == "uint64"));
 }
 
-std::filesystem::path GeneratorSwift::CreatePackagePath(const std::string& domain, const std::string& package)
+fs::path GeneratorSwift::CreatePackagePath(const std::string& domain, const std::string& package)
 {
-    return std::filesystem::path(package) / "Source" / (domain + package);
+    return fs::path(package) / "Source" / (domain + package);
 }
 
 std::string GeneratorSwift::ConvertEnumBase(const std::string& type)

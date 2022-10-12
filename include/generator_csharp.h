@@ -66,7 +66,7 @@ private:
     void GenerateFBEReceiver();
     void GenerateFBEClient();
     void GenerateFBEJson();
-    void GenerateFBE(const std::string& domain, const std::filesystem::path& path);
+    void GenerateFBE(const std::string& domain, const fs::path& path);
 
     void GeneratePackage(const std::string& domain, const std::shared_ptr<Package>& p);
     void GenerateEnum(const std::string& domain, const std::shared_ptr<Package>& p, const std::shared_ptr<EnumType>& e);

@@ -14,7 +14,7 @@
 
 namespace FBE {
 
-void Generator::Store(const std::filesystem::path& filename)
+void Generator::Store(const fs::path& filename)
 {
     std::string previous;
 
@@ -32,7 +32,7 @@ void Generator::Store(const std::filesystem::path& filename)
         return;
 
     // Store the buffer into unique file
-    std::filesystem::path unique = filename.parent() / std::filesystem::path::unique();
+    fs::path unique = filename.parent() / fs::path::unique();
     CppCommon::File::WriteAllText(unique, _buffer);
 
 #if defined(_WIN32) || defined(_WIN64) || defined(__CYGWIN__)
@@ -48,7 +48,7 @@ void Generator::Store(const std::filesystem::path& filename)
         try
         {
             // Rename the unique file inside a loop with retries
-            std::filesystem::path::Rename(unique, filename);
+            fs::path::Rename(unique, filename);
             return;
         }
         catch (const CppCommon::FileSystemException& ex)
@@ -64,7 +64,7 @@ void Generator::Store(const std::filesystem::path& filename)
     throwex CppCommon::FileSystemException("Cannot generate the output file!").Attach(filename);
 #else
     // Rename the unique file inside a loop with retries
-    std::filesystem::path::Rename(unique, filename);
+    fs::path::Rename(unique, filename);
 #endif
 }
 

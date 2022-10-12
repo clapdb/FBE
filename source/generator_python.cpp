@@ -38,10 +38,10 @@ void GeneratorPython::GenerateFooter()
 
 }
 
-void GeneratorPython::GenerateInit(const std::filesystem::path& path)
+void GeneratorPython::GenerateInit(const fs::path& path)
 {
     // Open the init file
-    std::filesystem::path init = path / "__init__.py";
+    fs::path init = path / "__init__.py";
     WriteBegin();
 
     // Generate init header
@@ -55,10 +55,10 @@ void GeneratorPython::GenerateInit(const std::filesystem::path& path)
     Store(init);
 }
 
-void GeneratorPython::GenerateFBE(const std::filesystem::path& path)
+void GeneratorPython::GenerateFBE(const fs::path& path)
 {
     // Generate the common file
-    std::filesystem::path common = path / "fbe.py";
+    fs::path common = path / "fbe.py";
     WriteBegin();
 
     // Generate common header
@@ -2775,7 +2775,7 @@ void GeneratorPython::GenerateImports(const std::shared_ptr<Package>& p)
 
 void GeneratorPython::GeneratePackage(const std::shared_ptr<Package>& p)
 {
-    std::filesystem::path output = _output;
+    fs::path output = _output;
 
     // Create package path
     CppCommon::Directory::CreateTree(output);
@@ -2791,7 +2791,7 @@ void GeneratorPython::GeneratePackage(const std::shared_ptr<Package>& p)
     WriteBegin();
 
     // Generate package header
-    GenerateHeader(std::filesystem::path(_input).filename().string());
+    GenerateHeader(fs::path(_input).filename().string());
     GenerateImports(p);
 
     // Generate namespace
