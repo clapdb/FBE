@@ -34,7 +34,7 @@ struct KeyWriter
 {
     static bool to_json_key(TWriter& writer, const T& key)
     {
-        return writer.Key(std::to_string(key));
+        return writer.Key(std::to_string(key).data());
     }
 };
 
