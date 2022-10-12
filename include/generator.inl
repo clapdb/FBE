@@ -67,7 +67,13 @@ inline void Generator::WriteEnd()
 
 inline std::string Generator::EndLine()
 {
-    return CppCommon::Environment::EndLine();
+#if defined(unix) || defined(__unix) || defined(__unix__) || defined(__APPLE__)
+    return "\n";
+#elif defined(_WIN32) || defined(_WIN64)
+    return "\r\n";
+#else
+    #error Unsupported platform
+#endif
 }
 
 } // namespace FBE
