@@ -1,0 +1,11 @@
+package simple
+
+struct Simple {
+  string info;
+  Simple* simple;
+  int32 depth;
+  Simple*[] spv;
+  Simple[] sv;
+  Simple*<int32> spm;
+  Simple<int32> sm;
+}

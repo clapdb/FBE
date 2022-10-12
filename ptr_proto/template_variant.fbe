@@ -1,0 +1,19 @@
+package template_variant
+
+import enums
+import variants
+
+struct Line {
+  variants.V v;
+  variants.V[] vv;
+  variants.V{string} vm;
+  variants.V? vo;
+}
+
+struct Line2 {
+  variants.V{enums.EnumInt8} vm;
+}
+
+struct Line3 {
+  variants.Value value;
+}

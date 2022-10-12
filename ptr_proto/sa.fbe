@@ -1,0 +1,34 @@
+package sa
+
+enum Sex {
+  male;
+  female;
+}
+
+enum MyFLags {
+  flag0 = 0x00;
+  flag1 = 0x01;
+  flag2 = 0x02;
+}
+
+struct Extra {
+  string name;
+  string detail;
+  Sex sex;
+  MyFLags flag;
+} 
+
+struct Simple {
+  string name;
+  int32 depth;
+  Extra[1] sa;
+  Sex sex;
+}
+
+struct Complex {
+  string name;
+  Sex? sex;
+  MyFLags? flag;
+  Extra? extra;
+  int64[] nums;
+}

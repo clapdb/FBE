@@ -1,0 +1,24 @@
+package extra
+
+// Protocol version
+version 1.0
+
+struct Info {
+  string info;
+  Extra* extra;
+  Extra*[] extras;
+  Extra*[] extras1;
+}
+
+struct Extra {
+  int64 num;
+  string data;
+  Info *info;
+  Info *info2;
+  Info info3;
+  Info[] infov; // vector
+  Info*[] infopv;
+  Info() infol; // list
+  Info*() infopl; // list
+
+}

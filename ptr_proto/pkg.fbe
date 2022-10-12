@@ -1,0 +1,15 @@
+package pkg
+
+import osa
+
+struct Info {
+  string info;
+  osa.Sex sex;
+  osa.MyFLags flag;
+  osa.Extra extra;
+}
+
+struct Detail {
+  osa.Extra[] extrav;
+  osa.Extra<int32> extram;
+}
