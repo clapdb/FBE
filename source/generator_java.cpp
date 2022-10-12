@@ -7215,8 +7215,8 @@ bool GeneratorJava::IsPrimitiveType(const std::string& type, bool optional)
 std::string GeneratorJava::CreatePackagePath(const std::string& domain, const std::string& package)
 {
     std::string result = domain;
-    replace_all(result, ".", std::string(1, fs::path::separator()));
-    return result + fs::path::separator() + package;
+    replace_all(result, ".", std::string(1, fs::path::preferred_separator));
+    return result + fs::path::preferred_separator + package;
 }
 
 std::string GeneratorJava::ConvertEnumBase(const std::string& type)

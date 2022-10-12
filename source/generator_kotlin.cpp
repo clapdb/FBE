@@ -8096,8 +8096,8 @@ bool GeneratorKotlin::IsUnsignedType(const std::string& type)
 std::string GeneratorKotlin::CreatePackagePath(const std::string& domain, const std::string& package)
 {
     std::string result = domain;
-    replace_all(result, ".", std::string(1, fs::path::separator()));
-    return result + fs::path::separator() + package;
+    replace_all(result, ".", std::string(1, fs::path::preferred_separator));
+    return result + fs::path::preferred_separator + package;
 }
 
 std::string GeneratorKotlin::ConvertEnumBase(const std::string& type)
