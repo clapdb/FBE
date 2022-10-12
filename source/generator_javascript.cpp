@@ -38,10 +38,10 @@ void GeneratorJavaScript::GenerateFooter()
 
 }
 
-void GeneratorJavaScript::GenerateBig(const CppCommon::Path& path)
+void GeneratorJavaScript::GenerateBig(const std::filesystem::path& path)
 {
     // Generate the common file
-    CppCommon::Path common = path / "big.js";
+    std::filesystem::path common = path / "big.js";
     WriteBegin();
 
     // Generate common header
@@ -1018,10 +1018,10 @@ void GeneratorJavaScript::GenerateBig(const CppCommon::Path& path)
     Store(common);
 }
 
-void GeneratorJavaScript::GenerateInt64(const CppCommon::Path& path)
+void GeneratorJavaScript::GenerateInt64(const std::filesystem::path& path)
 {
     // Generate the common file
-    CppCommon::Path common = path / "int64.js";
+    std::filesystem::path common = path / "int64.js";
     WriteBegin();
 
     // Generate common header
@@ -2870,10 +2870,10 @@ exports.UInt64 = UInt64
     Store(common);
 }
 
-void GeneratorJavaScript::GenerateUUID(const CppCommon::Path& path)
+void GeneratorJavaScript::GenerateUUID(const std::filesystem::path& path)
 {
     // Generate the common file
-    CppCommon::Path common = path / "uuid.js";
+    std::filesystem::path common = path / "uuid.js";
     WriteBegin();
 
     // Generate common header
@@ -3197,10 +3197,10 @@ exports.UUID = UUID
     Store(common);
 }
 
-void GeneratorJavaScript::GenerateIEEE754(const CppCommon::Path& path)
+void GeneratorJavaScript::GenerateIEEE754(const std::filesystem::path& path)
 {
     // Generate the common file
-    CppCommon::Path common = path / "ieee754.js";
+    std::filesystem::path common = path / "ieee754.js";
     WriteBegin();
 
     // Generate common header
@@ -3331,10 +3331,10 @@ exports.ieee754write = ieee754write
     Store(common);
 }
 
-void GeneratorJavaScript::GenerateUTF8(const CppCommon::Path& path)
+void GeneratorJavaScript::GenerateUTF8(const std::filesystem::path& path)
 {
     // Generate the common file
-    CppCommon::Path common = path / "utf8.js";
+    std::filesystem::path common = path / "utf8.js";
     WriteBegin();
 
     // Generate common header
@@ -3583,10 +3583,10 @@ exports.utf8decode = utf8decode
     Store(common);
 }
 
-void GeneratorJavaScript::GenerateFBE(const CppCommon::Path& path)
+void GeneratorJavaScript::GenerateFBE(const std::filesystem::path& path)
 {
     // Generate the common file
-    CppCommon::Path common = path / "fbe.js";
+    std::filesystem::path common = path / "fbe.js";
     WriteBegin();
 
     // Generate common header
@@ -8685,7 +8685,7 @@ void GeneratorJavaScript::GenerateImports(const std::shared_ptr<Package>& p)
 
 void GeneratorJavaScript::GeneratePackage(const std::shared_ptr<Package>& p)
 {
-    CppCommon::Path output = _output;
+    std::filesystem::path output = _output;
 
     // Create package path
     CppCommon::Directory::CreateTree(output);
@@ -8703,7 +8703,7 @@ void GeneratorJavaScript::GeneratePackage(const std::shared_ptr<Package>& p)
     WriteBegin();
 
     // Generate package header
-    GenerateHeader(CppCommon::Path(_input).filename().string());
+    GenerateHeader(std::filesystem::path(_input).filename().string());
 
     // Generate eslint deflations
     WriteLine();

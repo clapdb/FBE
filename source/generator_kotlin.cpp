@@ -124,7 +124,7 @@ void GeneratorKotlin::GenerateImports(const std::shared_ptr<Package>& p)
 
 void GeneratorKotlin::GenerateFBEPackage(const std::string& domain, const std::string& package)
 {
-    CppCommon::Path path = CppCommon::Path(_output) / CreatePackagePath(domain, package);
+    std::filesystem::path path = std::filesystem::path(_output) / CreatePackagePath(domain, package);
 
     // Create FBE package path
     CppCommon::Directory::CreateTree(path);
@@ -132,10 +132,10 @@ void GeneratorKotlin::GenerateFBEPackage(const std::string& domain, const std::s
 
 void GeneratorKotlin::GenerateFBEUUIDGenerator(const std::string& domain, const std::string& package)
 {
-    CppCommon::Path path = CppCommon::Path(_output) / CreatePackagePath(domain, package);
+    std::filesystem::path path = std::filesystem::path(_output) / CreatePackagePath(domain, package);
 
     // Generate the file
-    CppCommon::Path file = path / "UUIDGenerator.kt";
+    std::filesystem::path file = path / "UUIDGenerator.kt";
     WriteBegin();
 
     // Generate headers
@@ -230,10 +230,10 @@ object UUIDGenerator
 
 void GeneratorKotlin::GenerateFBEBuffer(const std::string& domain, const std::string& package)
 {
-    CppCommon::Path path = CppCommon::Path(_output) / CreatePackagePath(domain, package);
+    std::filesystem::path path = std::filesystem::path(_output) / CreatePackagePath(domain, package);
 
     // Generate the file
-    CppCommon::Path file = path / "Buffer.kt";
+    std::filesystem::path file = path / "Buffer.kt";
     WriteBegin();
 
     // Generate headers
@@ -627,10 +627,10 @@ class Buffer
 
 void GeneratorKotlin::GenerateFBEModel(const std::string& domain, const std::string& package)
 {
-    CppCommon::Path path = CppCommon::Path(_output) / CreatePackagePath(domain, package);
+    std::filesystem::path path = std::filesystem::path(_output) / CreatePackagePath(domain, package);
 
     // Generate the file
-    CppCommon::Path file = path / "Model.kt";
+    std::filesystem::path file = path / "Model.kt";
     WriteBegin();
 
     // Generate headers
@@ -688,10 +688,10 @@ open class Model
 
 void GeneratorKotlin::GenerateFBEFieldModel(const std::string& domain, const std::string& package)
 {
-    CppCommon::Path path = CppCommon::Path(_output) / CreatePackagePath(domain, package);
+    std::filesystem::path path = std::filesystem::path(_output) / CreatePackagePath(domain, package);
 
     // Generate the file
-    CppCommon::Path file = path / "FieldModel.kt";
+    std::filesystem::path file = path / "FieldModel.kt";
     WriteBegin();
 
     // Generate headers
@@ -771,10 +771,10 @@ abstract class FieldModel protected constructor(protected var _buffer: Buffer, p
 
 void GeneratorKotlin::GenerateFBEFieldModel(const std::string& domain, const std::string& package, const std::string& name, const std::string& type, const std::string& base, const std::string& size, const std::string& defaults)
 {
-    CppCommon::Path path = CppCommon::Path(_output) / CreatePackagePath(domain, package);
+    std::filesystem::path path = std::filesystem::path(_output) / CreatePackagePath(domain, package);
 
     // Generate the file
-    CppCommon::Path file = path / ("FieldModel" + name + ".kt");
+    std::filesystem::path file = path / ("FieldModel" + name + ".kt");
     WriteBegin();
 
     // Generate headers
@@ -829,10 +829,10 @@ class FieldModel_NAME_(buffer: Buffer, offset: Long) : FieldModel(buffer, offset
 
 void GeneratorKotlin::GenerateFBEFieldModelDecimal(const std::string& domain, const std::string& package)
 {
-    CppCommon::Path path = CppCommon::Path(_output) / CreatePackagePath(domain, package);
+    std::filesystem::path path = std::filesystem::path(_output) / CreatePackagePath(domain, package);
 
     // Generate the file
-    CppCommon::Path file = path / "FieldModelDecimal.kt";
+    std::filesystem::path file = path / "FieldModelDecimal.kt";
     WriteBegin();
 
     // Generate headers
@@ -939,10 +939,10 @@ class FieldModelDecimal(buffer: Buffer, offset: Long) : FieldModel(buffer, offse
 
 void GeneratorKotlin::GenerateFBEFieldModelDate(const std::string& domain, const std::string& package)
 {
-    CppCommon::Path path = CppCommon::Path(_output) / CreatePackagePath(domain, package);
+    std::filesystem::path path = std::filesystem::path(_output) / CreatePackagePath(domain, package);
 
     // Generate the file
-    CppCommon::Path file = path / "FieldModelDate.kt";
+    std::filesystem::path file = path / "FieldModelDate.kt";
     WriteBegin();
 
     // Generate headers
@@ -994,10 +994,10 @@ class FieldModelDate(buffer: Buffer, offset: Long) : FieldModel(buffer, offset)
 
 void GeneratorKotlin::GenerateFBEFieldModelTimestamp(const std::string& domain, const std::string& package)
 {
-    CppCommon::Path path = CppCommon::Path(_output) / CreatePackagePath(domain, package);
+    std::filesystem::path path = std::filesystem::path(_output) / CreatePackagePath(domain, package);
 
     // Generate the file
-    CppCommon::Path file = path / "FieldModelTimestamp.kt";
+    std::filesystem::path file = path / "FieldModelTimestamp.kt";
     WriteBegin();
 
     // Generate headers
@@ -1049,10 +1049,10 @@ class FieldModelTimestamp(buffer: Buffer, offset: Long) : FieldModel(buffer, off
 
 void GeneratorKotlin::GenerateFBEFieldModelBytes(const std::string& domain, const std::string& package)
 {
-    CppCommon::Path path = CppCommon::Path(_output) / CreatePackagePath(domain, package);
+    std::filesystem::path path = std::filesystem::path(_output) / CreatePackagePath(domain, package);
 
     // Generate the file
-    CppCommon::Path file = path / "FieldModelBytes.kt";
+    std::filesystem::path file = path / "FieldModelBytes.kt";
     WriteBegin();
 
     // Generate headers
@@ -1157,10 +1157,10 @@ class FieldModelBytes(buffer: Buffer, offset: Long) : FieldModel(buffer, offset)
 
 void GeneratorKotlin::GenerateFBEFieldModelString(const std::string& domain, const std::string& package)
 {
-    CppCommon::Path path = CppCommon::Path(_output) / CreatePackagePath(domain, package);
+    std::filesystem::path path = std::filesystem::path(_output) / CreatePackagePath(domain, package);
 
     // Generate the file
-    CppCommon::Path file = path / "FieldModelString.kt";
+    std::filesystem::path file = path / "FieldModelString.kt";
     WriteBegin();
 
     // Generate headers
@@ -1267,17 +1267,17 @@ class FieldModelString(buffer: Buffer, offset: Long) : FieldModel(buffer, offset
 
 void GeneratorKotlin::GenerateFBEFieldModelOptional(const std::string& domain, const std::string& package, const std::string& name, const std::string& type, const std::string& model)
 {
-    CppCommon::Path path = (CppCommon::Path(_output) / CreatePackagePath(domain, package)) / "fbe";
+    std::filesystem::path path = (std::filesystem::path(_output) / CreatePackagePath(domain, package)) / "fbe";
 
     // Create package path
     CppCommon::Directory::CreateTree(path);
 
     // Generate the file
-    CppCommon::Path file = path / ("FieldModelOptional" + name + ".kt");
+    std::filesystem::path file = path / ("FieldModelOptional" + name + ".kt");
     WriteBegin();
 
     // Generate headers
-    GenerateHeader(CppCommon::Path(_input).filename().string());
+    GenerateHeader(std::filesystem::path(_input).filename().string());
     GenerateImports(domain, package + ".fbe");
 
     std::string code = R"CODE(
@@ -1433,17 +1433,17 @@ class FieldModelOptional_NAME_(buffer: _DOMAIN_fbe.Buffer, offset: Long) : _DOMA
 
 void GeneratorKotlin::GenerateFBEFieldModelArray(const std::string& domain, const std::string& package, const std::string& name, const std::string& type, const std::string& base, bool optional, const std::string& model)
 {
-    CppCommon::Path path = (CppCommon::Path(_output) / CreatePackagePath(domain, package)) / "fbe";
+    std::filesystem::path path = (std::filesystem::path(_output) / CreatePackagePath(domain, package)) / "fbe";
 
     // Create package path
     CppCommon::Directory::CreateTree(path);
 
     // Generate the file
-    CppCommon::Path file = path / ("FieldModelArray" + name + ".kt");
+    std::filesystem::path file = path / ("FieldModelArray" + name + ".kt");
     WriteBegin();
 
     // Generate headers
-    GenerateHeader(CppCommon::Path(_input).filename().string());
+    GenerateHeader(std::filesystem::path(_input).filename().string());
     GenerateImports(domain, package + ".fbe");
 
     std::string code = R"CODE(
@@ -1595,17 +1595,17 @@ class FieldModelArray_NAME_(buffer: _DOMAIN_fbe.Buffer, offset: Long, val size: 
 
 void GeneratorKotlin::GenerateFBEFieldModelVector(const std::string& domain, const std::string& package, const std::string& name, const std::string& type, const std::string& model)
 {
-    CppCommon::Path path = (CppCommon::Path(_output) / CreatePackagePath(domain, package)) / "fbe";
+    std::filesystem::path path = (std::filesystem::path(_output) / CreatePackagePath(domain, package)) / "fbe";
 
     // Create package path
     CppCommon::Directory::CreateTree(path);
 
     // Generate the file
-    CppCommon::Path file = path / ("FieldModelVector" + name + ".kt");
+    std::filesystem::path file = path / ("FieldModelVector" + name + ".kt");
     WriteBegin();
 
     // Generate headers
-    GenerateHeader(CppCommon::Path(_input).filename().string());
+    GenerateHeader(std::filesystem::path(_input).filename().string());
     GenerateImports(domain, package + ".fbe");
 
     std::string code = R"CODE(
@@ -1847,17 +1847,17 @@ class FieldModelVector_NAME_(buffer: _DOMAIN_fbe.Buffer, offset: Long) : _DOMAIN
 
 void GeneratorKotlin::GenerateFBEFieldModelMap(const std::string& domain, const std::string& package, const std::string& key_name, const std::string& key_type, const std::string& key_model, const std::string& value_name, const std::string& value_type, const std::string& value_model)
 {
-    CppCommon::Path path = (CppCommon::Path(_output) / CreatePackagePath(domain, package)) / "fbe";
+    std::filesystem::path path = (std::filesystem::path(_output) / CreatePackagePath(domain, package)) / "fbe";
 
     // Create package path
     CppCommon::Directory::CreateTree(path);
 
     // Generate the file
-    CppCommon::Path file = path / ("FieldModelMap" + key_name + value_name + ".kt");
+    std::filesystem::path file = path / ("FieldModelMap" + key_name + value_name + ".kt");
     WriteBegin();
 
     // Generate headers
-    GenerateHeader(CppCommon::Path(_input).filename().string());
+    GenerateHeader(std::filesystem::path(_input).filename().string());
     GenerateImports(domain, package + ".fbe");
 
     std::string code = R"CODE(
@@ -2087,17 +2087,17 @@ class FieldModelMap_KEY_NAME__VALUE_NAME_(buffer: _DOMAIN_fbe.Buffer, offset: Lo
 
 void GeneratorKotlin::GenerateFBEFieldModelEnumFlags(const std::string& domain, const std::string& package, const std::string& name, const std::string& type)
 {
-    CppCommon::Path path = (CppCommon::Path(_output) / CreatePackagePath(domain, package)) / "fbe";
+    std::filesystem::path path = (std::filesystem::path(_output) / CreatePackagePath(domain, package)) / "fbe";
 
     // Create package path
     CppCommon::Directory::CreateTree(path);
 
     // Generate the file
-    CppCommon::Path file = path / ("FieldModel" + name + ".kt");
+    std::filesystem::path file = path / ("FieldModel" + name + ".kt");
     WriteBegin();
 
     // Generate headers
-    GenerateHeader(CppCommon::Path(_input).filename().string());
+    GenerateHeader(std::filesystem::path(_input).filename().string());
     GenerateImports(domain, package + ".fbe");
 
     std::string code = R"CODE(
@@ -2148,10 +2148,10 @@ class FieldModel_NAME_(buffer: _DOMAIN_fbe.Buffer, offset: Long) : _DOMAIN_fbe.F
 
 void GeneratorKotlin::GenerateFBESize(const std::string& domain, const std::string& package)
 {
-    CppCommon::Path path = CppCommon::Path(_output) / CreatePackagePath(domain, package);
+    std::filesystem::path path = std::filesystem::path(_output) / CreatePackagePath(domain, package);
 
     // Generate the file
-    CppCommon::Path file = path / "Size.kt";
+    std::filesystem::path file = path / "Size.kt";
     WriteBegin();
 
     // Generate headers
@@ -2185,10 +2185,10 @@ class Size
 
 void GeneratorKotlin::GenerateFBEFinalModel(const std::string& domain, const std::string& package)
 {
-    CppCommon::Path path = CppCommon::Path(_output) / CreatePackagePath(domain, package);
+    std::filesystem::path path = std::filesystem::path(_output) / CreatePackagePath(domain, package);
 
     // Generate the file
-    CppCommon::Path file = path / "FinalModel.kt";
+    std::filesystem::path file = path / "FinalModel.kt";
     WriteBegin();
 
     // Generate headers
@@ -2268,10 +2268,10 @@ abstract class FinalModel protected constructor(protected var _buffer: Buffer, p
 
 void GeneratorKotlin::GenerateFBEFinalModel(const std::string& domain, const std::string& package, const std::string& name, const std::string& type, const std::string& base, const std::string& size, const std::string& defaults)
 {
-    CppCommon::Path path = CppCommon::Path(_output) / CreatePackagePath(domain, package);
+    std::filesystem::path path = std::filesystem::path(_output) / CreatePackagePath(domain, package);
 
     // Generate the file
-    CppCommon::Path file = path / ("FinalModel" + name + ".kt");
+    std::filesystem::path file = path / ("FinalModel" + name + ".kt");
     WriteBegin();
 
     // Generate headers
@@ -2341,10 +2341,10 @@ class FinalModel_NAME_(buffer: Buffer, offset: Long) : FinalModel(buffer, offset
 
 void GeneratorKotlin::GenerateFBEFinalModelDecimal(const std::string& domain, const std::string& package)
 {
-    CppCommon::Path path = CppCommon::Path(_output) / CreatePackagePath(domain, package);
+    std::filesystem::path path = std::filesystem::path(_output) / CreatePackagePath(domain, package);
 
     // Generate the file
-    CppCommon::Path file = path / "FinalModelDecimal.kt";
+    std::filesystem::path file = path / "FinalModelDecimal.kt";
     WriteBegin();
 
     // Generate headers
@@ -2466,10 +2466,10 @@ class FinalModelDecimal(buffer: Buffer, offset: Long) : FinalModel(buffer, offse
 
 void GeneratorKotlin::GenerateFBEFinalModelDate(const std::string& domain, const std::string& package)
 {
-    CppCommon::Path path = CppCommon::Path(_output) / CreatePackagePath(domain, package);
+    std::filesystem::path path = std::filesystem::path(_output) / CreatePackagePath(domain, package);
 
     // Generate the file
-    CppCommon::Path file = path / "FinalModelDate.kt";
+    std::filesystem::path file = path / "FinalModelDate.kt";
     WriteBegin();
 
     // Generate headers
@@ -2536,10 +2536,10 @@ class FinalModelDate(buffer: Buffer, offset: Long) : FinalModel(buffer, offset)
 
 void GeneratorKotlin::GenerateFBEFinalModelTimestamp(const std::string& domain, const std::string& package)
 {
-    CppCommon::Path path = CppCommon::Path(_output) / CreatePackagePath(domain, package);
+    std::filesystem::path path = std::filesystem::path(_output) / CreatePackagePath(domain, package);
 
     // Generate the file
-    CppCommon::Path file = path / "FinalModelTimestamp.kt";
+    std::filesystem::path file = path / "FinalModelTimestamp.kt";
     WriteBegin();
 
     // Generate headers
@@ -2606,10 +2606,10 @@ class FinalModelTimestamp(buffer: Buffer, offset: Long) : FinalModel(buffer, off
 
 void GeneratorKotlin::GenerateFBEFinalModelBytes(const std::string& domain, const std::string& package)
 {
-    CppCommon::Path path = CppCommon::Path(_output) / CreatePackagePath(domain, package);
+    std::filesystem::path path = std::filesystem::path(_output) / CreatePackagePath(domain, package);
 
     // Generate the file
-    CppCommon::Path file = path / "FinalModelBytes.kt";
+    std::filesystem::path file = path / "FinalModelBytes.kt";
     WriteBegin();
 
     // Generate headers
@@ -2691,10 +2691,10 @@ class FinalModelBytes(buffer: Buffer, offset: Long) : FinalModel(buffer, offset)
 
 void GeneratorKotlin::GenerateFBEFinalModelString(const std::string& domain, const std::string& package)
 {
-    CppCommon::Path path = CppCommon::Path(_output) / CreatePackagePath(domain, package);
+    std::filesystem::path path = std::filesystem::path(_output) / CreatePackagePath(domain, package);
 
     // Generate the file
-    CppCommon::Path file = path / "FinalModelString.kt";
+    std::filesystem::path file = path / "FinalModelString.kt";
     WriteBegin();
 
     // Generate headers
@@ -2778,17 +2778,17 @@ class FinalModelString(buffer: Buffer, offset: Long) : FinalModel(buffer, offset
 
 void GeneratorKotlin::GenerateFBEFinalModelOptional(const std::string& domain, const std::string& package, const std::string& name, const std::string& type, const std::string& model)
 {
-    CppCommon::Path path = (CppCommon::Path(_output) / CreatePackagePath(domain, package)) / "fbe";
+    std::filesystem::path path = (std::filesystem::path(_output) / CreatePackagePath(domain, package)) / "fbe";
 
     // Create package path
     CppCommon::Directory::CreateTree(path);
 
     // Generate the file
-    CppCommon::Path file = path / ("FinalModelOptional" + name + ".kt");
+    std::filesystem::path file = path / ("FinalModelOptional" + name + ".kt");
     WriteBegin();
 
     // Generate headers
-    GenerateHeader(CppCommon::Path(_input).filename().string());
+    GenerateHeader(std::filesystem::path(_input).filename().string());
     GenerateImports(domain, package + ".fbe");
 
     std::string code = R"CODE(
@@ -2891,17 +2891,17 @@ class FinalModelOptional_NAME_(buffer: _DOMAIN_fbe.Buffer, offset: Long) : _DOMA
 
 void GeneratorKotlin::GenerateFBEFinalModelArray(const std::string& domain, const std::string& package, const std::string& name, const std::string& type, const std::string& base, bool optional, const std::string& model)
 {
-    CppCommon::Path path = (CppCommon::Path(_output) / CreatePackagePath(domain, package)) / "fbe";
+    std::filesystem::path path = (std::filesystem::path(_output) / CreatePackagePath(domain, package)) / "fbe";
 
     // Create package path
     CppCommon::Directory::CreateTree(path);
 
     // Generate the file
-    CppCommon::Path file = path / ("FinalModelArray" + name + ".kt");
+    std::filesystem::path file = path / ("FinalModelArray" + name + ".kt");
     WriteBegin();
 
     // Generate headers
-    GenerateHeader(CppCommon::Path(_input).filename().string());
+    GenerateHeader(std::filesystem::path(_input).filename().string());
     GenerateImports(domain, package + ".fbe");
 
     std::string code = R"CODE(
@@ -3095,17 +3095,17 @@ class FinalModelArray_NAME_(buffer: _DOMAIN_fbe.Buffer, offset: Long, private va
 
 void GeneratorKotlin::GenerateFBEFinalModelVector(const std::string& domain, const std::string& package, const std::string& name, const std::string& type, const std::string& model)
 {
-    CppCommon::Path path = (CppCommon::Path(_output) / CreatePackagePath(domain, package)) / "fbe";
+    std::filesystem::path path = (std::filesystem::path(_output) / CreatePackagePath(domain, package)) / "fbe";
 
     // Create package path
     CppCommon::Directory::CreateTree(path);
 
     // Generate the file
-    CppCommon::Path file = path / ("FinalModelVector" + name + ".kt");
+    std::filesystem::path file = path / ("FinalModelVector" + name + ".kt");
     WriteBegin();
 
     // Generate headers
-    GenerateHeader(CppCommon::Path(_input).filename().string());
+    GenerateHeader(std::filesystem::path(_input).filename().string());
     GenerateImports(domain, package + ".fbe");
 
     std::string code = R"CODE(
@@ -3325,17 +3325,17 @@ class FinalModelVector_NAME_(buffer: _DOMAIN_fbe.Buffer, offset: Long) : _DOMAIN
 
 void GeneratorKotlin::GenerateFBEFinalModelMap(const std::string& domain, const std::string& package, const std::string& key_name, const std::string& key_type, const std::string& key_model, const std::string& value_name, const std::string& value_type, const std::string& value_model)
 {
-    CppCommon::Path path = (CppCommon::Path(_output) / CreatePackagePath(domain, package)) / "fbe";
+    std::filesystem::path path = (std::filesystem::path(_output) / CreatePackagePath(domain, package)) / "fbe";
 
     // Create package path
     CppCommon::Directory::CreateTree(path);
 
     // Generate the file
-    CppCommon::Path file = path / ("FinalModelMap" + key_name + value_name + ".kt");
+    std::filesystem::path file = path / ("FinalModelMap" + key_name + value_name + ".kt");
     WriteBegin();
 
     // Generate headers
-    GenerateHeader(CppCommon::Path(_input).filename().string());
+    GenerateHeader(std::filesystem::path(_input).filename().string());
     GenerateImports(domain, package + ".fbe");
 
     std::string code = R"CODE(
@@ -3545,17 +3545,17 @@ class FinalModelMap_KEY_NAME__VALUE_NAME_(buffer: _DOMAIN_fbe.Buffer, offset: Lo
 
 void GeneratorKotlin::GenerateFBEFinalModelEnumFlags(const std::string& domain, const std::string& package, const std::string& name, const std::string& type)
 {
-    CppCommon::Path path = (CppCommon::Path(_output) / CreatePackagePath(domain, package)) / "fbe";
+    std::filesystem::path path = (std::filesystem::path(_output) / CreatePackagePath(domain, package)) / "fbe";
 
     // Create package path
     CppCommon::Directory::CreateTree(path);
 
     // Generate the file
-    CppCommon::Path file = path / ("FinalModel" + name + ".kt");
+    std::filesystem::path file = path / ("FinalModel" + name + ".kt");
     WriteBegin();
 
     // Generate headers
-    GenerateHeader(CppCommon::Path(_input).filename().string());
+    GenerateHeader(std::filesystem::path(_input).filename().string());
     GenerateImports(domain, package + ".fbe");
 
     std::string code = R"CODE(
@@ -3621,10 +3621,10 @@ class FinalModel_NAME_(buffer: _DOMAIN_fbe.Buffer, offset: Long) : _DOMAIN_fbe.F
 
 void GeneratorKotlin::GenerateFBESender(const std::string& domain, const std::string& package)
 {
-    CppCommon::Path path = CppCommon::Path(_output) / CreatePackagePath(domain, package);
+    std::filesystem::path path = std::filesystem::path(_output) / CreatePackagePath(domain, package);
 
     // Generate the file
-    CppCommon::Path file = path / "Sender.kt";
+    std::filesystem::path file = path / "Sender.kt";
     WriteBegin();
 
     // Generate headers
@@ -3686,10 +3686,10 @@ abstract class Sender : ISenderListener
 
 void GeneratorKotlin::GenerateFBESenderListener(const std::string& domain, const std::string& package)
 {
-    CppCommon::Path path = CppCommon::Path(_output) / CreatePackagePath(domain, package);
+    std::filesystem::path path = std::filesystem::path(_output) / CreatePackagePath(domain, package);
 
     // Generate the file
-    CppCommon::Path file = path / "ISenderListener.kt";
+    std::filesystem::path file = path / "ISenderListener.kt";
     WriteBegin();
 
     // Generate headers
@@ -3722,10 +3722,10 @@ interface ISenderListener
 
 void GeneratorKotlin::GenerateFBEReceiver(const std::string& domain, const std::string& package)
 {
-    CppCommon::Path path = CppCommon::Path(_output) / CreatePackagePath(domain, package);
+    std::filesystem::path path = std::filesystem::path(_output) / CreatePackagePath(domain, package);
 
     // Generate the file
-    CppCommon::Path file = path / "Receiver.kt";
+    std::filesystem::path file = path / "Receiver.kt";
     WriteBegin();
 
     // Generate headers
@@ -4019,10 +4019,10 @@ abstract class Receiver : IReceiverListener
 
 void GeneratorKotlin::GenerateFBEReceiverListener(const std::string& domain, const std::string& package)
 {
-    CppCommon::Path path = CppCommon::Path(_output) / CreatePackagePath(domain, package);
+    std::filesystem::path path = std::filesystem::path(_output) / CreatePackagePath(domain, package);
 
     // Generate the file
-    CppCommon::Path file = path / "IReceiverListener.kt";
+    std::filesystem::path file = path / "IReceiverListener.kt";
     WriteBegin();
 
     // Generate headers
@@ -4053,10 +4053,10 @@ interface IReceiverListener
 
 void GeneratorKotlin::GenerateFBEClient(const std::string& domain, const std::string& package)
 {
-    CppCommon::Path path = CppCommon::Path(_output) / CreatePackagePath(domain, package);
+    std::filesystem::path path = std::filesystem::path(_output) / CreatePackagePath(domain, package);
 
     // Generate the file
-    CppCommon::Path file = path / "Client.kt";
+    std::filesystem::path file = path / "Client.kt";
     WriteBegin();
 
     // Generate headers
@@ -4371,10 +4371,10 @@ abstract class Client : IClientListener
 
 void GeneratorKotlin::GenerateFBEClientListener(const std::string& domain, const std::string& package)
 {
-    CppCommon::Path path = CppCommon::Path(_output) / CreatePackagePath(domain, package);
+    std::filesystem::path path = std::filesystem::path(_output) / CreatePackagePath(domain, package);
 
     // Generate the file
-    CppCommon::Path file = path / "IClientListener.kt";
+    std::filesystem::path file = path / "IClientListener.kt";
     WriteBegin();
 
     // Generate headers
@@ -4403,10 +4403,10 @@ interface IClientListener : ISenderListener, IReceiverListener
 
 void GeneratorKotlin::GenerateFBEJson(const std::string& domain, const std::string& package)
 {
-    CppCommon::Path path = CppCommon::Path(_output) / CreatePackagePath(domain, package);
+    std::filesystem::path path = std::filesystem::path(_output) / CreatePackagePath(domain, package);
 
     // Generate the file
-    CppCommon::Path file = path / "Json.kt";
+    std::filesystem::path file = path / "Json.kt";
     WriteBegin();
 
     // Generate headers
@@ -4636,7 +4636,7 @@ object Json
 void GeneratorKotlin::GenerateContainers(const std::shared_ptr<Package>& p, bool final)
 {
     std::string domain = (p->domain && !p->domain->empty()) ? (*p->domain + ".") : "";
-    CppCommon::Path path = CppCommon::Path(_output) / CreatePackagePath(domain, *p->name);
+    std::filesystem::path path = std::filesystem::path(_output) / CreatePackagePath(domain, *p->name);
 
     // Create package path
     CppCommon::Directory::CreateTree(path);
@@ -4688,7 +4688,7 @@ void GeneratorKotlin::GenerateContainers(const std::shared_ptr<Package>& p, bool
 void GeneratorKotlin::GeneratePackage(const std::shared_ptr<Package>& p)
 {
     std::string domain = (p->domain && !p->domain->empty()) ? (*p->domain + ".") : "";
-    CppCommon::Path path = CppCommon::Path(_output) / CreatePackagePath(domain, *p->name);
+    std::filesystem::path path = std::filesystem::path(_output) / CreatePackagePath(domain, *p->name);
 
     // Create package path
     CppCommon::Directory::CreateTree(path);
@@ -4745,16 +4745,16 @@ void GeneratorKotlin::GeneratePackage(const std::shared_ptr<Package>& p)
         GenerateJson(p);
 }
 
-void GeneratorKotlin::GenerateEnum(const std::shared_ptr<Package>& p, const std::shared_ptr<EnumType>& e, const CppCommon::Path& path)
+void GeneratorKotlin::GenerateEnum(const std::shared_ptr<Package>& p, const std::shared_ptr<EnumType>& e, const std::filesystem::path& path)
 {
     std::string enum_name = *e->name + "Enum";
 
     // Generate the output file
-    CppCommon::Path output = path / (enum_name + ".kt");
+    std::filesystem::path output = path / (enum_name + ".kt");
     WriteBegin();
 
     // Generate enum header
-    GenerateHeader(CppCommon::Path(_input).filename().string());
+    GenerateHeader(std::filesystem::path(_input).filename().string());
     GenerateImports(p);
 
     std::string enum_type = (e->base && !e->base->empty()) ? *e->base : "int32";
@@ -4893,17 +4893,17 @@ void GeneratorKotlin::GenerateEnum(const std::shared_ptr<Package>& p, const std:
         GenerateFBEFinalModelEnumFlags(domain, *p->name, *e->name, enum_type);
 }
 
-void GeneratorKotlin::GenerateEnumClass(const std::shared_ptr<Package>& p, const std::shared_ptr<EnumType>& e, const CppCommon::Path& path)
+void GeneratorKotlin::GenerateEnumClass(const std::shared_ptr<Package>& p, const std::shared_ptr<EnumType>& e, const std::filesystem::path& path)
 {
     std::string enum_name = *e->name;
     std::string enum_type_name = *e->name + "Enum";
 
     // Generate the output file
-    CppCommon::Path output = path / (enum_name + ".kt");
+    std::filesystem::path output = path / (enum_name + ".kt");
     WriteBegin();
 
     // Generate enum class header
-    GenerateHeader(CppCommon::Path(_input).filename().string());
+    GenerateHeader(std::filesystem::path(_input).filename().string());
     GenerateImports(p);
 
     std::string enum_type = (e->base && !e->base->empty()) ? *e->base : "int32";
@@ -5042,17 +5042,17 @@ void GeneratorKotlin::GenerateEnumJson(const std::shared_ptr<Package>& p, const 
     std::string enum_name = domain + package + "." + *e->name;
     std::string adapter_name = *e->name + "Json";
 
-    CppCommon::Path path = (CppCommon::Path(_output) / CreatePackagePath(domain, package)) / "fbe";
+    std::filesystem::path path = (std::filesystem::path(_output) / CreatePackagePath(domain, package)) / "fbe";
 
     // Create package path
     CppCommon::Directory::CreateTree(path);
 
     // Generate the output file
-    CppCommon::Path output = path / (adapter_name + ".kt");
+    std::filesystem::path output = path / (adapter_name + ".kt");
     WriteBegin();
 
     // Generate headers
-    GenerateHeader(CppCommon::Path(_input).filename().string());
+    GenerateHeader(std::filesystem::path(_input).filename().string());
     GenerateImports(domain, package + ".fbe");
 
     std::string enum_type = (e->base && !e->base->empty()) ? *e->base : "int32";
@@ -5092,16 +5092,16 @@ void GeneratorKotlin::GenerateEnumJson(const std::shared_ptr<Package>& p, const 
     Store(output);
 }
 
-void GeneratorKotlin::GenerateFlags(const std::shared_ptr<Package>& p, const std::shared_ptr<FlagsType>& f, const CppCommon::Path& path)
+void GeneratorKotlin::GenerateFlags(const std::shared_ptr<Package>& p, const std::shared_ptr<FlagsType>& f, const std::filesystem::path& path)
 {
     std::string flags_name = *f->name + "Enum";
 
     // Generate the output file
-    CppCommon::Path output = path / (flags_name + ".kt");
+    std::filesystem::path output = path / (flags_name + ".kt");
     WriteBegin();
 
     // Generate flags header
-    GenerateHeader(CppCommon::Path(_input).filename().string());
+    GenerateHeader(std::filesystem::path(_input).filename().string());
     GenerateImports(p);
 
     std::string flags_type = (f->base && !f->base->empty()) ? *f->base : "int32";
@@ -5269,17 +5269,17 @@ void GeneratorKotlin::GenerateFlags(const std::shared_ptr<Package>& p, const std
         GenerateFBEFinalModelEnumFlags(domain, *p->name, *f->name, flags_type);
 }
 
-void GeneratorKotlin::GenerateFlagsClass(const std::shared_ptr<Package>& p, const std::shared_ptr<FlagsType>& f, const CppCommon::Path& path)
+void GeneratorKotlin::GenerateFlagsClass(const std::shared_ptr<Package>& p, const std::shared_ptr<FlagsType>& f, const std::filesystem::path& path)
 {
     std::string flags_name = *f->name;
     std::string flags_type_name = *f->name + "Enum";
 
     // Generate the output file
-    CppCommon::Path output = path / (flags_name + ".kt");
+    std::filesystem::path output = path / (flags_name + ".kt");
     WriteBegin();
 
     // Generate flags class header
-    GenerateHeader(CppCommon::Path(_input).filename().string());
+    GenerateHeader(std::filesystem::path(_input).filename().string());
     GenerateImports(p);
 
     std::string flags_type = (f->base && !f->base->empty()) ? *f->base : "int32";
@@ -5478,17 +5478,17 @@ void GeneratorKotlin::GenerateFlagsJson(const std::shared_ptr<Package>& p, const
     std::string flags_name = domain + package + "." + *f->name;
     std::string adapter_name = *f->name + "Json";
 
-    CppCommon::Path path = (CppCommon::Path(_output) / CreatePackagePath(domain, package)) / "fbe";
+    std::filesystem::path path = (std::filesystem::path(_output) / CreatePackagePath(domain, package)) / "fbe";
 
     // Create package path
     CppCommon::Directory::CreateTree(path);
 
     // Generate the output file
-    CppCommon::Path output = path / (adapter_name + ".kt");
+    std::filesystem::path output = path / (adapter_name + ".kt");
     WriteBegin();
 
     // Generate headers
-    GenerateHeader(CppCommon::Path(_input).filename().string());
+    GenerateHeader(std::filesystem::path(_input).filename().string());
     GenerateImports(domain, package + ".fbe");
 
     std::string flags_type = (f->base && !f->base->empty()) ? *f->base : "int32";
@@ -5530,17 +5530,17 @@ void GeneratorKotlin::GenerateFlagsJson(const std::shared_ptr<Package>& p, const
     Store(output);
 }
 
-void GeneratorKotlin::GenerateStruct(const std::shared_ptr<Package>& p, const std::shared_ptr<StructType>& s, const CppCommon::Path& path)
+void GeneratorKotlin::GenerateStruct(const std::shared_ptr<Package>& p, const std::shared_ptr<StructType>& s, const std::filesystem::path& path)
 {
     std::string domain = (p->domain && !p->domain->empty()) ? (*p->domain + ".") : "";
     bool first;
 
     // Generate the output file
-    CppCommon::Path output = path / (*s->name + ".kt");
+    std::filesystem::path output = path / (*s->name + ".kt");
     WriteBegin();
 
     // Generate struct header
-    GenerateHeader(CppCommon::Path(_input).filename().string());
+    GenerateHeader(std::filesystem::path(_input).filename().string());
     GenerateImports(p);
 
     // Generate struct begin
@@ -5932,17 +5932,17 @@ void GeneratorKotlin::GenerateStructFieldModel(const std::shared_ptr<Package>& p
     std::string package = *p->name;
     std::string struct_name = domain + package + "." + *s->name;
 
-    CppCommon::Path path = (CppCommon::Path(_output) / CreatePackagePath(domain, package)) / "fbe";
+    std::filesystem::path path = (std::filesystem::path(_output) / CreatePackagePath(domain, package)) / "fbe";
 
     // Create package path
     CppCommon::Directory::CreateTree(path);
 
     // Generate the file
-    CppCommon::Path file = path / ("FieldModel" + *s->name + ".kt");
+    std::filesystem::path file = path / ("FieldModel" + *s->name + ".kt");
     WriteBegin();
 
     // Generate headers
-    GenerateHeader(CppCommon::Path(_input).filename().string());
+    GenerateHeader(std::filesystem::path(_input).filename().string());
     GenerateImports(domain, package + ".fbe");
 
     // Generate struct field model begin
@@ -6311,17 +6311,17 @@ void GeneratorKotlin::GenerateStructModel(const std::shared_ptr<Package>& p, con
     std::string package = *p->name;
     std::string struct_name = domain + package + "." + *s->name;
 
-    CppCommon::Path path = (CppCommon::Path(_output) / CreatePackagePath(domain, package)) / "fbe";
+    std::filesystem::path path = (std::filesystem::path(_output) / CreatePackagePath(domain, package)) / "fbe";
 
     // Create package path
     CppCommon::Directory::CreateTree(path);
 
     // Generate the file
-    CppCommon::Path file = path / (*s->name + "Model.kt");
+    std::filesystem::path file = path / (*s->name + "Model.kt");
     WriteBegin();
 
     // Generate headers
-    GenerateHeader(CppCommon::Path(_input).filename().string());
+    GenerateHeader(std::filesystem::path(_input).filename().string());
     GenerateImports(domain, package + ".fbe");
 
     // Generate struct model begin
@@ -6470,17 +6470,17 @@ void GeneratorKotlin::GenerateStructFinalModel(const std::shared_ptr<Package>& p
     std::string package = *p->name;
     std::string struct_name = domain + package + "." + *s->name;
 
-    CppCommon::Path path = (CppCommon::Path(_output) / CreatePackagePath(domain, package)) / "fbe";
+    std::filesystem::path path = (std::filesystem::path(_output) / CreatePackagePath(domain, package)) / "fbe";
 
     // Create package path
     CppCommon::Directory::CreateTree(path);
 
     // Generate the file
-    CppCommon::Path file = path / ("FinalModel" + *s->name + ".kt");
+    std::filesystem::path file = path / ("FinalModel" + *s->name + ".kt");
     WriteBegin();
 
     // Generate headers
-    GenerateHeader(CppCommon::Path(_input).filename().string());
+    GenerateHeader(std::filesystem::path(_input).filename().string());
     GenerateImports(domain, package + ".fbe");
 
     // Generate struct final model begin
@@ -6707,17 +6707,17 @@ void GeneratorKotlin::GenerateStructModelFinal(const std::shared_ptr<Package>& p
     std::string package = *p->name;
     std::string struct_name = domain + package + "." + *s->name;
 
-    CppCommon::Path path = (CppCommon::Path(_output) / CreatePackagePath(domain, package)) / "fbe";
+    std::filesystem::path path = (std::filesystem::path(_output) / CreatePackagePath(domain, package)) / "fbe";
 
     // Create package path
     CppCommon::Directory::CreateTree(path);
 
     // Generate the file
-    CppCommon::Path file = path / (*s->name + "FinalModel.kt");
+    std::filesystem::path file = path / (*s->name + "FinalModel.kt");
     WriteBegin();
 
     // Generate headers
-    GenerateHeader(CppCommon::Path(_input).filename().string());
+    GenerateHeader(std::filesystem::path(_input).filename().string());
     GenerateImports(domain, package + ".fbe");
 
     // Generate struct model final begin
@@ -6853,17 +6853,17 @@ void GeneratorKotlin::GenerateProtocolVersion(const std::shared_ptr<Package>& p)
     std::string domain = (p->domain && !p->domain->empty()) ? (*p->domain + ".") : "";
     std::string package = *p->name;
 
-    CppCommon::Path path = (CppCommon::Path(_output) / CreatePackagePath(domain, package)) / "fbe";
+    std::filesystem::path path = (std::filesystem::path(_output) / CreatePackagePath(domain, package)) / "fbe";
 
     // Create package path
     CppCommon::Directory::CreateTree(path);
 
     // Generate the file
-    CppCommon::Path file = path / ("ProtocolVersion.kt");
+    std::filesystem::path file = path / ("ProtocolVersion.kt");
     WriteBegin();
 
     // Generate headers
-    GenerateHeader(CppCommon::Path(_input).filename().string());
+    GenerateHeader(std::filesystem::path(_input).filename().string());
     GenerateImports(domain, package + ".fbe");
 
     // Generate protocol version class
@@ -6892,7 +6892,7 @@ void GeneratorKotlin::GenerateSender(const std::shared_ptr<Package>& p, bool fin
     std::string domain = (p->domain && !p->domain->empty()) ? (*p->domain + ".") : "";
     std::string package = *p->name;
 
-    CppCommon::Path path = (CppCommon::Path(_output) / CreatePackagePath(domain, package)) / "fbe";
+    std::filesystem::path path = (std::filesystem::path(_output) / CreatePackagePath(domain, package)) / "fbe";
 
     // Create package path
     CppCommon::Directory::CreateTree(path);
@@ -6902,11 +6902,11 @@ void GeneratorKotlin::GenerateSender(const std::shared_ptr<Package>& p, bool fin
     std::string model = (final ? "FinalModel" : "Model");
 
     // Generate the file
-    CppCommon::Path file = path / (sender + ".kt");
+    std::filesystem::path file = path / (sender + ".kt");
     WriteBegin();
 
     // Generate headers
-    GenerateHeader(CppCommon::Path(_input).filename().string());
+    GenerateHeader(std::filesystem::path(_input).filename().string());
     GenerateImports(domain, package + ".fbe");
 
     // Generate sender begin
@@ -7086,7 +7086,7 @@ void GeneratorKotlin::GenerateSenderListener(const std::shared_ptr<Package>& p, 
     std::string domain = (p->domain && !p->domain->empty()) ? (*p->domain + ".") : "";
     std::string package = *p->name;
 
-    CppCommon::Path path = (CppCommon::Path(_output) / CreatePackagePath(domain, package)) / "fbe";
+    std::filesystem::path path = (std::filesystem::path(_output) / CreatePackagePath(domain, package)) / "fbe";
 
     // Create package path
     CppCommon::Directory::CreateTree(path);
@@ -7094,11 +7094,11 @@ void GeneratorKotlin::GenerateSenderListener(const std::shared_ptr<Package>& p, 
     std::string listener = (final ? "IFinalSenderListener" : "ISenderListener");
 
     // Generate the file
-    CppCommon::Path file = path / (listener + ".kt");
+    std::filesystem::path file = path / (listener + ".kt");
     WriteBegin();
 
     // Generate headers
-    GenerateHeader(CppCommon::Path(_input).filename().string());
+    GenerateHeader(std::filesystem::path(_input).filename().string());
     GenerateImports(domain, package + ".fbe");
 
     // Generate sender listener begin
@@ -7141,7 +7141,7 @@ void GeneratorKotlin::GenerateReceiver(const std::shared_ptr<Package>& p, bool f
     std::string domain = (p->domain && !p->domain->empty()) ? (*p->domain + ".") : "";
     std::string package = *p->name;
 
-    CppCommon::Path path = (CppCommon::Path(_output) / CreatePackagePath(domain, package)) / "fbe";
+    std::filesystem::path path = (std::filesystem::path(_output) / CreatePackagePath(domain, package)) / "fbe";
 
     // Create package path
     CppCommon::Directory::CreateTree(path);
@@ -7151,11 +7151,11 @@ void GeneratorKotlin::GenerateReceiver(const std::shared_ptr<Package>& p, bool f
     std::string model = (final ? "FinalModel" : "Model");
 
     // Generate the file
-    CppCommon::Path file = path / (receiver + ".kt");
+    std::filesystem::path file = path / (receiver + ".kt");
     WriteBegin();
 
     // Generate headers
-    GenerateHeader(CppCommon::Path(_input).filename().string());
+    GenerateHeader(std::filesystem::path(_input).filename().string());
     GenerateImports(domain, package + ".fbe");
 
     // Generate receiver begin
@@ -7332,7 +7332,7 @@ void GeneratorKotlin::GenerateReceiverListener(const std::shared_ptr<Package>& p
     std::string domain = (p->domain && !p->domain->empty()) ? (*p->domain + ".") : "";
     std::string package = *p->name;
 
-    CppCommon::Path path = (CppCommon::Path(_output) / CreatePackagePath(domain, package)) / "fbe";
+    std::filesystem::path path = (std::filesystem::path(_output) / CreatePackagePath(domain, package)) / "fbe";
 
     // Create package path
     CppCommon::Directory::CreateTree(path);
@@ -7340,11 +7340,11 @@ void GeneratorKotlin::GenerateReceiverListener(const std::shared_ptr<Package>& p
     std::string listener = (final ? "IFinalReceiverListener" : "IReceiverListener");
 
     // Generate the file
-    CppCommon::Path file = path / (listener + ".kt");
+    std::filesystem::path file = path / (listener + ".kt");
     WriteBegin();
 
     // Generate headers
-    GenerateHeader(CppCommon::Path(_input).filename().string());
+    GenerateHeader(std::filesystem::path(_input).filename().string());
     GenerateImports(domain, package + ".fbe");
 
     // Generate receiver listener begin
@@ -7400,7 +7400,7 @@ void GeneratorKotlin::GenerateProxy(const std::shared_ptr<Package>& p, bool fina
     std::string domain = (p->domain && !p->domain->empty()) ? (*p->domain + ".") : "";
     std::string package = *p->name;
 
-    CppCommon::Path path = (CppCommon::Path(_output) / CreatePackagePath(domain, package)) / "fbe";
+    std::filesystem::path path = (std::filesystem::path(_output) / CreatePackagePath(domain, package)) / "fbe";
 
     // Create package path
     CppCommon::Directory::CreateTree(path);
@@ -7410,11 +7410,11 @@ void GeneratorKotlin::GenerateProxy(const std::shared_ptr<Package>& p, bool fina
     std::string model = (final ? "FinalModel" : "Model");
 
     // Generate the file
-    CppCommon::Path file = path / (proxy + ".kt");
+    std::filesystem::path file = path / (proxy + ".kt");
     WriteBegin();
 
     // Generate headers
-    GenerateHeader(CppCommon::Path(_input).filename().string());
+    GenerateHeader(std::filesystem::path(_input).filename().string());
     GenerateImports(domain, package + ".fbe");
 
     // Generate proxy begin
@@ -7564,7 +7564,7 @@ void GeneratorKotlin::GenerateProxyListener(const std::shared_ptr<Package>& p, b
     std::string domain = (p->domain && !p->domain->empty()) ? (*p->domain + ".") : "";
     std::string package = *p->name;
 
-    CppCommon::Path path = (CppCommon::Path(_output) / CreatePackagePath(domain, package)) / "fbe";
+    std::filesystem::path path = (std::filesystem::path(_output) / CreatePackagePath(domain, package)) / "fbe";
 
     // Create package path
     CppCommon::Directory::CreateTree(path);
@@ -7573,11 +7573,11 @@ void GeneratorKotlin::GenerateProxyListener(const std::shared_ptr<Package>& p, b
     std::string model = (final ? "FinalModel" : "Model");
 
     // Generate the file
-    CppCommon::Path file = path / (listener + ".kt");
+    std::filesystem::path file = path / (listener + ".kt");
     WriteBegin();
 
     // Generate headers
-    GenerateHeader(CppCommon::Path(_input).filename().string());
+    GenerateHeader(std::filesystem::path(_input).filename().string());
     GenerateImports(domain, package + ".fbe");
 
     // Generate proxy listener begin
@@ -7633,7 +7633,7 @@ void GeneratorKotlin::GenerateClient(const std::shared_ptr<Package>& p, bool fin
     std::string domain = (p->domain && !p->domain->empty()) ? (*p->domain + ".") : "";
     std::string package = *p->name;
 
-    CppCommon::Path path = (CppCommon::Path(_output) / CreatePackagePath(domain, package)) / "fbe";
+    std::filesystem::path path = (std::filesystem::path(_output) / CreatePackagePath(domain, package)) / "fbe";
 
     // Create package path
     CppCommon::Directory::CreateTree(path);
@@ -7643,11 +7643,11 @@ void GeneratorKotlin::GenerateClient(const std::shared_ptr<Package>& p, bool fin
     std::string model = (final ? "FinalModel" : "Model");
 
     // Generate the file
-    CppCommon::Path file = path / (client + ".kt");
+    std::filesystem::path file = path / (client + ".kt");
     WriteBegin();
 
     // Generate headers
-    GenerateHeader(CppCommon::Path(_input).filename().string());
+    GenerateHeader(std::filesystem::path(_input).filename().string());
     GenerateImports(domain, package + ".fbe");
 
     // Generate client begin
@@ -7923,7 +7923,7 @@ void GeneratorKotlin::GenerateClientListener(const std::shared_ptr<Package>& p, 
     std::string domain = (p->domain && !p->domain->empty()) ? (*p->domain + ".") : "";
     std::string package = *p->name;
 
-    CppCommon::Path path = (CppCommon::Path(_output) / CreatePackagePath(domain, package)) / "fbe";
+    std::filesystem::path path = (std::filesystem::path(_output) / CreatePackagePath(domain, package)) / "fbe";
 
     // Create package path
     CppCommon::Directory::CreateTree(path);
@@ -7933,11 +7933,11 @@ void GeneratorKotlin::GenerateClientListener(const std::shared_ptr<Package>& p, 
     std::string receiver = (final ? "IFinalReceiverListener" : "IReceiverListener");
 
     // Generate the file
-    CppCommon::Path file = path / (listener + ".kt");
+    std::filesystem::path file = path / (listener + ".kt");
     WriteBegin();
 
     // Generate headers
-    GenerateHeader(CppCommon::Path(_input).filename().string());
+    GenerateHeader(std::filesystem::path(_input).filename().string());
     GenerateImports(domain, package + ".fbe");
 
     // Generate client listener begin
@@ -7981,17 +7981,17 @@ void GeneratorKotlin::GenerateJson(const std::shared_ptr<Package>& p)
     std::string domain = (p->domain && !p->domain->empty()) ? (*p->domain + ".") : "";
     std::string package = *p->name;
 
-    CppCommon::Path path = (CppCommon::Path(_output) / CreatePackagePath(domain, package)) / "fbe";
+    std::filesystem::path path = (std::filesystem::path(_output) / CreatePackagePath(domain, package)) / "fbe";
 
     // Create package path
     CppCommon::Directory::CreateTree(path);
 
     // Generate the file
-    CppCommon::Path file = path / "Json.kt";
+    std::filesystem::path file = path / "Json.kt";
     WriteBegin();
 
     // Generate headers
-    GenerateHeader(CppCommon::Path(_input).filename().string());
+    GenerateHeader(std::filesystem::path(_input).filename().string());
     GenerateImports(domain, package + ".fbe");
 
     // Generate JSON engine begin
@@ -8096,8 +8096,8 @@ bool GeneratorKotlin::IsUnsignedType(const std::string& type)
 std::string GeneratorKotlin::CreatePackagePath(const std::string& domain, const std::string& package)
 {
     std::string result = domain;
-    CppCommon::StringUtils::ReplaceAll(result, ".", std::string(1, CppCommon::Path::separator()));
-    return result + CppCommon::Path::separator() + package;
+    CppCommon::StringUtils::ReplaceAll(result, ".", std::string(1, std::filesystem::path::separator()));
+    return result + std::filesystem::path::separator() + package;
 }
 
 std::string GeneratorKotlin::ConvertEnumBase(const std::string& type)

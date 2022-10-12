@@ -39,8 +39,8 @@ private:
 
     void GenerateHeader(const std::string& source);
     void GenerateFooter();
-    void GenerateInit(const CppCommon::Path& path);
-    void GenerateFBE(const CppCommon::Path& path);
+    void GenerateInit(const std::filesystem::path& path);
+    void GenerateFBE(const std::filesystem::path& path);
     void GenerateFBEWriteBuffer();
     void GenerateFBEReadBuffer();
     void GenerateFBEModel();

@@ -39,7 +39,7 @@ protected:
     void WriteLineIndent(const std::string& str);
     void WriteEnd();
 
-    void Store(const CppCommon::Path& filename);
+    void Store(const std::filesystem::path& filename);
 
     static std::string EndLine();
 };

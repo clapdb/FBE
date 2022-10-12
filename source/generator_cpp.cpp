@@ -7735,13 +7735,13 @@ bool from_json_child(const TJson& json, T& value, const char* key)
     WriteLineIndent("} // namespace JSON");
 }
 
-void GeneratorCpp::GenerateFBE_Header(const CppCommon::Path& path)
+void GeneratorCpp::GenerateFBE_Header(const std::filesystem::path& path)
 {
     // Create package path
     CppCommon::Directory::CreateTree(path);
 
     // Generate the common file
-    CppCommon::Path common = path / "fbe.h";
+    std::filesystem::path common = path / "fbe.h";
     WriteBegin();
 
     // Generate common header
@@ -7779,13 +7779,13 @@ void GeneratorCpp::GenerateFBE_Header(const CppCommon::Path& path)
     Store(common);
 }
 
-void GeneratorCpp::GenerateFBE_Source(const CppCommon::Path& path)
+void GeneratorCpp::GenerateFBE_Source(const std::filesystem::path& path)
 {
     // Create package path
     CppCommon::Directory::CreateTree(path);
 
     // Generate the common file
-    CppCommon::Path common = path / "fbe.cpp";
+    std::filesystem::path common = path / "fbe.cpp";
     WriteBegin();
 
     // Generate common source
@@ -7820,13 +7820,13 @@ void GeneratorCpp::GenerateFBE_Source(const CppCommon::Path& path)
     Store(common);
 }
 
-void GeneratorCpp::GenerateFBEModels_Header(const CppCommon::Path& path)
+void GeneratorCpp::GenerateFBEModels_Header(const std::filesystem::path& path)
 {
     // Create package path
     CppCommon::Directory::CreateTree(path);
 
     // Generate the field models file
-    CppCommon::Path common = path / "fbe_models.h";
+    std::filesystem::path common = path / "fbe_models.h";
     WriteBegin();
 
     // Generate field models header
@@ -7869,13 +7869,13 @@ void GeneratorCpp::GenerateFBEModels_Header(const CppCommon::Path& path)
     Store(common);
 }
 
-void GeneratorCpp::GenerateFBEModels_Inline(const CppCommon::Path& path)
+void GeneratorCpp::GenerateFBEModels_Inline(const std::filesystem::path& path)
 {
     // Create package path
     CppCommon::Directory::CreateTree(path);
 
     // Generate the field models file
-    CppCommon::Path common = path / "fbe_models.inl";
+    std::filesystem::path common = path / "fbe_models.inl";
     WriteBegin();
 
     // Generate field models inline
@@ -7904,13 +7904,13 @@ void GeneratorCpp::GenerateFBEModels_Inline(const CppCommon::Path& path)
     Store(common);
 }
 
-void GeneratorCpp::GenerateFBEModels_Source(const CppCommon::Path& path)
+void GeneratorCpp::GenerateFBEModels_Source(const std::filesystem::path& path)
 {
     // Create package path
     CppCommon::Directory::CreateTree(path);
 
     // Generate the field models file
-    CppCommon::Path common = path / "fbe_models.cpp";
+    std::filesystem::path common = path / "fbe_models.cpp";
     WriteBegin();
 
     // Generate field models source
@@ -7945,13 +7945,13 @@ void GeneratorCpp::GenerateFBEModels_Source(const CppCommon::Path& path)
     Store(common);
 }
 
-void GeneratorCpp::GenerateFBEFinalModels_Header(const CppCommon::Path& path)
+void GeneratorCpp::GenerateFBEFinalModels_Header(const std::filesystem::path& path)
 {
     // Create package path
     CppCommon::Directory::CreateTree(path);
 
     // Generate the final models file
-    CppCommon::Path common = path / "fbe_final_models.h";
+    std::filesystem::path common = path / "fbe_final_models.h";
     WriteBegin();
 
     // Generate final models header
@@ -7990,13 +7990,13 @@ void GeneratorCpp::GenerateFBEFinalModels_Header(const CppCommon::Path& path)
     Store(common);
 }
 
-void GeneratorCpp::GenerateFBEFinalModels_Inline(const CppCommon::Path& path)
+void GeneratorCpp::GenerateFBEFinalModels_Inline(const std::filesystem::path& path)
 {
     // Create package path
     CppCommon::Directory::CreateTree(path);
 
     // Generate the final models file
-    CppCommon::Path common = path / "fbe_final_models.inl";
+    std::filesystem::path common = path / "fbe_final_models.inl";
     WriteBegin();
 
     // Generate final models inline
@@ -8025,13 +8025,13 @@ void GeneratorCpp::GenerateFBEFinalModels_Inline(const CppCommon::Path& path)
     Store(common);
 }
 
-void GeneratorCpp::GenerateFBEFinalModels_Source(const CppCommon::Path& path)
+void GeneratorCpp::GenerateFBEFinalModels_Source(const std::filesystem::path& path)
 {
     // Create package path
     CppCommon::Directory::CreateTree(path);
 
     // Generate the final models file
-    CppCommon::Path common = path / "fbe_final_models.cpp";
+    std::filesystem::path common = path / "fbe_final_models.cpp";
     WriteBegin();
 
     // Generate final models source
@@ -8062,13 +8062,13 @@ void GeneratorCpp::GenerateFBEFinalModels_Source(const CppCommon::Path& path)
     Store(common);
 }
 
-void GeneratorCpp::GenerateFBEProtocol_Header(const CppCommon::Path& path)
+void GeneratorCpp::GenerateFBEProtocol_Header(const std::filesystem::path& path)
 {
     // Create package path
     CppCommon::Directory::CreateTree(path);
 
     // Generate the protocol file
-    CppCommon::Path common = path / "fbe_protocol.h";
+    std::filesystem::path common = path / "fbe_protocol.h";
     WriteBegin();
 
     // Generate protocol header
@@ -8097,13 +8097,13 @@ void GeneratorCpp::GenerateFBEProtocol_Header(const CppCommon::Path& path)
     Store(common);
 }
 
-void GeneratorCpp::GenerateFBEProtocol_Source(const CppCommon::Path& path)
+void GeneratorCpp::GenerateFBEProtocol_Source(const std::filesystem::path& path)
 {
     // Create package path
     CppCommon::Directory::CreateTree(path);
 
     // Generate the protocol file
-    CppCommon::Path common = path / "fbe_protocol.cpp";
+    std::filesystem::path common = path / "fbe_protocol.cpp";
     WriteBegin();
 
     // Generate protocol source
@@ -8132,13 +8132,13 @@ void GeneratorCpp::GenerateFBEProtocol_Source(const CppCommon::Path& path)
     Store(common);
 }
 
-void GeneratorCpp::GenerateFBEJson_Header(const CppCommon::Path& path)
+void GeneratorCpp::GenerateFBEJson_Header(const std::filesystem::path& path)
 {
     // Create package path
     CppCommon::Directory::CreateTree(path);
 
     // Generate the JSON file
-    CppCommon::Path common = path / "fbe_json.h";
+    std::filesystem::path common = path / "fbe_json.h";
     WriteBegin();
 
     // Generate JSON header
@@ -8169,7 +8169,7 @@ void GeneratorCpp::GenerateFBEJson_Header(const CppCommon::Path& path)
 
 void GeneratorCpp::GeneratePackage_Header(const std::shared_ptr<Package>& p)
 {
-    CppCommon::Path output = _output;
+    std::filesystem::path output = _output;
 
     // Create package path
     CppCommon::Directory::CreateTree(output);
@@ -8179,7 +8179,7 @@ void GeneratorCpp::GeneratePackage_Header(const std::shared_ptr<Package>& p)
     WriteBegin();
 
     // Generate package header
-    GenerateHeader(CppCommon::Path(_input).filename().string());
+    GenerateHeader(std::filesystem::path(_input).filename().string());
 
     // Generate imports
     GenerateImports(p);
@@ -8234,7 +8234,7 @@ void GeneratorCpp::GeneratorStructForwardDeclaration(const std::vector<std::shar
 
 void GeneratorCpp::GeneratePackage_Source(const std::shared_ptr<Package>& p)
 {
-    CppCommon::Path output = _output;
+    std::filesystem::path output = _output;
 
     // Create package path
     CppCommon::Directory::CreateTree(output);
@@ -8244,7 +8244,7 @@ void GeneratorCpp::GeneratePackage_Source(const std::shared_ptr<Package>& p)
     WriteBegin();
 
     // Generate package source
-    GenerateSource(CppCommon::Path(_input).filename().string());
+    GenerateSource(std::filesystem::path(_input).filename().string());
 
     // Generate imports
     GenerateImports(*p->name + ".h");
@@ -8314,7 +8314,7 @@ void GeneratorCpp::GeneratePackage_Source(const std::shared_ptr<Package>& p)
 
 void GeneratorCpp::GeneratePackage_Json(const std::shared_ptr<Package>& p)
 {
-    CppCommon::Path output = _output;
+    std::filesystem::path output = _output;
 
     // Create package path
     CppCommon::Directory::CreateTree(output);
@@ -8324,7 +8324,7 @@ void GeneratorCpp::GeneratePackage_Json(const std::shared_ptr<Package>& p)
     WriteBegin();
 
     // Generate package header
-    GenerateHeader(CppCommon::Path(_input).filename().string());
+    GenerateHeader(std::filesystem::path(_input).filename().string());
 
     // Generate imports
     GenerateImportsJson(p);
@@ -8367,7 +8367,7 @@ void GeneratorCpp::GeneratePackage_Json(const std::shared_ptr<Package>& p)
 
 void GeneratorCpp::GeneratePackageModels_Header(const std::shared_ptr<Package>& p)
 {
-    CppCommon::Path output = _output;
+    std::filesystem::path output = _output;
 
     // Create package path
     CppCommon::Directory::CreateTree(output);
@@ -8377,7 +8377,7 @@ void GeneratorCpp::GeneratePackageModels_Header(const std::shared_ptr<Package>& 
     WriteBegin();
 
     // Generate package models header
-    GenerateHeader(CppCommon::Path(_input).filename().string());
+    GenerateHeader(std::filesystem::path(_input).filename().string());
 
     // Generate imports
     GenerateImports("fbe_models.h");
@@ -8432,7 +8432,7 @@ void GeneratorCpp::GeneratePackageModels_Header(const std::shared_ptr<Package>& 
 
 void GeneratorCpp::GeneratePackageModels_Source(const std::shared_ptr<Package>& p)
 {
-    CppCommon::Path output = _output;
+    std::filesystem::path output = _output;
 
     // Create package path
     CppCommon::Directory::CreateTree(output);
@@ -8442,7 +8442,7 @@ void GeneratorCpp::GeneratePackageModels_Source(const std::shared_ptr<Package>& 
     WriteBegin();
 
     // Generate package models source
-    GenerateSource(CppCommon::Path(_input).filename().string());
+    GenerateSource(std::filesystem::path(_input).filename().string());
 
     // Generate imports
     GenerateImports(*p->name + "_models.h");
@@ -8482,7 +8482,7 @@ void GeneratorCpp::GeneratePackageModels_Source(const std::shared_ptr<Package>& 
 
 void GeneratorCpp::GeneratePackageFinalModels_Header(const std::shared_ptr<Package>& p)
 {
-    CppCommon::Path output = _output;
+    std::filesystem::path output = _output;
 
     // Create package path
     CppCommon::Directory::CreateTree(output);
@@ -8492,7 +8492,7 @@ void GeneratorCpp::GeneratePackageFinalModels_Header(const std::shared_ptr<Packa
     WriteBegin();
 
     // Generate package final models header
-    GenerateHeader(CppCommon::Path(_input).filename().string());
+    GenerateHeader(std::filesystem::path(_input).filename().string());
 
     // Generate imports
     GenerateImports("fbe_final_models.h");
@@ -8542,7 +8542,7 @@ void GeneratorCpp::GeneratePackageFinalModels_Header(const std::shared_ptr<Packa
 
 void GeneratorCpp::GeneratePackageFinalModels_Source(const std::shared_ptr<Package>& p)
 {
-    CppCommon::Path output = _output;
+    std::filesystem::path output = _output;
 
     // Create package path
     CppCommon::Directory::CreateTree(output);
@@ -8552,7 +8552,7 @@ void GeneratorCpp::GeneratePackageFinalModels_Source(const std::shared_ptr<Packa
     WriteBegin();
 
     // Generate package final models source
-    GenerateSource(CppCommon::Path(_input).filename().string());
+    GenerateSource(std::filesystem::path(_input).filename().string());
 
     // Generate imports
     GenerateImports(*p->name + "_final_models.h");
@@ -8587,7 +8587,7 @@ void GeneratorCpp::GeneratePackageFinalModels_Source(const std::shared_ptr<Packa
 
 void GeneratorCpp::GeneratePackageProtocol_Header(const std::shared_ptr<Package>& p, bool final)
 {
-    CppCommon::Path output = _output;
+    std::filesystem::path output = _output;
 
     // Create package path
     CppCommon::Directory::CreateTree(output);
@@ -8597,7 +8597,7 @@ void GeneratorCpp::GeneratePackageProtocol_Header(const std::shared_ptr<Package>
     WriteBegin();
 
     // Generate package protocol header
-    GenerateHeader(CppCommon::Path(_input).filename().string());
+    GenerateHeader(std::filesystem::path(_input).filename().string());
 
     // Generate imports
     GenerateImports("fbe_protocol.h");
@@ -8635,7 +8635,7 @@ void GeneratorCpp::GeneratePackageProtocol_Header(const std::shared_ptr<Package>
 
 void GeneratorCpp::GeneratePackageProtocol_Source(const std::shared_ptr<Package>& p, bool final)
 {
-    CppCommon::Path output = _output;
+    std::filesystem::path output = _output;
 
     // Create package path
     CppCommon::Directory::CreateTree(output);
@@ -8645,7 +8645,7 @@ void GeneratorCpp::GeneratePackageProtocol_Source(const std::shared_ptr<Package>
     WriteBegin();
 
     // Generate package protocol source
-    GenerateSource(CppCommon::Path(_input).filename().string());
+    GenerateSource(std::filesystem::path(_input).filename().string());
 
     // Generate warnings header
     GenerateWarningsHeader();

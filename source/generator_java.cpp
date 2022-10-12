@@ -107,7 +107,7 @@ void GeneratorJava::GenerateImports(const std::shared_ptr<Package>& p)
 
 void GeneratorJava::GenerateFBEPackage(const std::string& domain, const std::string& package)
 {
-    CppCommon::Path path = CppCommon::Path(_output) / CreatePackagePath(domain, package);
+    std::filesystem::path path = std::filesystem::path(_output) / CreatePackagePath(domain, package);
 
     // Create FBE package path
     CppCommon::Directory::CreateTree(path);
@@ -115,10 +115,10 @@ void GeneratorJava::GenerateFBEPackage(const std::string& domain, const std::str
 
 void GeneratorJava::GenerateFBEPair(const std::string& domain, const std::string& package)
 {
-    CppCommon::Path path = CppCommon::Path(_output) / CreatePackagePath(domain, package);
+    std::filesystem::path path = std::filesystem::path(_output) / CreatePackagePath(domain, package);
 
     // Generate the file
-    CppCommon::Path file = path / "Pair.java";
+    std::filesystem::path file = path / "Pair.java";
     WriteBegin();
 
     // Generate headers
@@ -164,10 +164,10 @@ public final class Pair<K, V>
 
 void GeneratorJava::GenerateFBEUUIDGenerator(const std::string& domain, const std::string& package)
 {
-    CppCommon::Path path = CppCommon::Path(_output) / CreatePackagePath(domain, package);
+    std::filesystem::path path = std::filesystem::path(_output) / CreatePackagePath(domain, package);
 
     // Generate the file
-    CppCommon::Path file = path / "UUIDGenerator.java";
+    std::filesystem::path file = path / "UUIDGenerator.java";
     WriteBegin();
 
     // Generate headers
@@ -259,10 +259,10 @@ public final class UUIDGenerator
 
 void GeneratorJava::GenerateFBEBuffer(const std::string& domain, const std::string& package)
 {
-    CppCommon::Path path = CppCommon::Path(_output) / CreatePackagePath(domain, package);
+    std::filesystem::path path = std::filesystem::path(_output) / CreatePackagePath(domain, package);
 
     // Generate the file
-    CppCommon::Path file = path / "Buffer.java";
+    std::filesystem::path file = path / "Buffer.java";
     WriteBegin();
 
     // Generate headers
@@ -578,10 +578,10 @@ public class Buffer
 
 void GeneratorJava::GenerateFBEModel(const std::string& domain, const std::string& package)
 {
-    CppCommon::Path path = CppCommon::Path(_output) / CreatePackagePath(domain, package);
+    std::filesystem::path path = std::filesystem::path(_output) / CreatePackagePath(domain, package);
 
     // Generate the file
-    CppCommon::Path file = path / "Model.java";
+    std::filesystem::path file = path / "Model.java";
     WriteBegin();
 
     // Generate headers
@@ -640,10 +640,10 @@ public class Model
 
 void GeneratorJava::GenerateFBEFieldModel(const std::string& domain, const std::string& package)
 {
-    CppCommon::Path path = CppCommon::Path(_output) / CreatePackagePath(domain, package);
+    std::filesystem::path path = std::filesystem::path(_output) / CreatePackagePath(domain, package);
 
     // Generate the file
-    CppCommon::Path file = path / "FieldModel.java";
+    std::filesystem::path file = path / "FieldModel.java";
     WriteBegin();
 
     // Generate headers
@@ -725,10 +725,10 @@ public abstract class FieldModel
 
 void GeneratorJava::GenerateFBEFieldModel(const std::string& domain, const std::string& package, const std::string& name, const std::string& type, const std::string& base, const std::string& size, const std::string& defaults)
 {
-    CppCommon::Path path = CppCommon::Path(_output) / CreatePackagePath(domain, package);
+    std::filesystem::path path = std::filesystem::path(_output) / CreatePackagePath(domain, package);
 
     // Generate the file
-    CppCommon::Path file = path / ("FieldModel" + name + ".java");
+    std::filesystem::path file = path / ("FieldModel" + name + ".java");
     WriteBegin();
 
     // Generate headers
@@ -787,10 +787,10 @@ public final class FieldModel_NAME_ extends FieldModel
 
 void GeneratorJava::GenerateFBEFieldModelDecimal(const std::string& domain, const std::string& package)
 {
-    CppCommon::Path path = CppCommon::Path(_output) / CreatePackagePath(domain, package);
+    std::filesystem::path path = std::filesystem::path(_output) / CreatePackagePath(domain, package);
 
     // Generate the file
-    CppCommon::Path file = path / "FieldModelDecimal.java";
+    std::filesystem::path file = path / "FieldModelDecimal.java";
     WriteBegin();
 
     // Generate headers
@@ -901,10 +901,10 @@ public final class FieldModelDecimal extends FieldModel
 
 void GeneratorJava::GenerateFBEFieldModelDate(const std::string& domain, const std::string& package)
 {
-    CppCommon::Path path = CppCommon::Path(_output) / CreatePackagePath(domain, package);
+    std::filesystem::path path = std::filesystem::path(_output) / CreatePackagePath(domain, package);
 
     // Generate the file
-    CppCommon::Path file = path / "FieldModelDate.java";
+    std::filesystem::path file = path / "FieldModelDate.java";
     WriteBegin();
 
     // Generate headers
@@ -968,10 +968,10 @@ public final class FieldModelDate extends FieldModel
 
 void GeneratorJava::GenerateFBEFieldModelTimestamp(const std::string& domain, const std::string& package)
 {
-    CppCommon::Path path = CppCommon::Path(_output) / CreatePackagePath(domain, package);
+    std::filesystem::path path = std::filesystem::path(_output) / CreatePackagePath(domain, package);
 
     // Generate the file
-    CppCommon::Path file = path / "FieldModelTimestamp.java";
+    std::filesystem::path file = path / "FieldModelTimestamp.java";
     WriteBegin();
 
     // Generate headers
@@ -1035,10 +1035,10 @@ public final class FieldModelTimestamp extends FieldModel
 
 void GeneratorJava::GenerateFBEFieldModelBytes(const std::string& domain, const std::string& package)
 {
-    CppCommon::Path path = CppCommon::Path(_output) / CreatePackagePath(domain, package);
+    std::filesystem::path path = std::filesystem::path(_output) / CreatePackagePath(domain, package);
 
     // Generate the file
-    CppCommon::Path file = path / "FieldModelBytes.java";
+    std::filesystem::path file = path / "FieldModelBytes.java";
     WriteBegin();
 
     // Generate headers
@@ -1156,10 +1156,10 @@ public final class FieldModelBytes extends FieldModel
 
 void GeneratorJava::GenerateFBEFieldModelString(const std::string& domain, const std::string& package)
 {
-    CppCommon::Path path = CppCommon::Path(_output) / CreatePackagePath(domain, package);
+    std::filesystem::path path = std::filesystem::path(_output) / CreatePackagePath(domain, package);
 
     // Generate the file
-    CppCommon::Path file = path / "FieldModelString.java";
+    std::filesystem::path file = path / "FieldModelString.java";
     WriteBegin();
 
     // Generate headers
@@ -1279,17 +1279,17 @@ public final class FieldModelString extends FieldModel
 
 void GeneratorJava::GenerateFBEFieldModelOptional(const std::string& domain, const std::string& package, const std::string& name, const std::string& type, const std::string& model)
 {
-    CppCommon::Path path = (CppCommon::Path(_output) / CreatePackagePath(domain, package)) / "fbe";
+    std::filesystem::path path = (std::filesystem::path(_output) / CreatePackagePath(domain, package)) / "fbe";
 
     // Create package path
     CppCommon::Directory::CreateTree(path);
 
     // Generate the file
-    CppCommon::Path file = path / ("FieldModelOptional" + name + ".java");
+    std::filesystem::path file = path / ("FieldModelOptional" + name + ".java");
     WriteBegin();
 
     // Generate headers
-    GenerateHeader(CppCommon::Path(_input).filename().string());
+    GenerateHeader(std::filesystem::path(_input).filename().string());
     GenerateImports(domain, package + ".fbe");
 
     std::string code = R"CODE(
@@ -1454,17 +1454,17 @@ public final class FieldModelOptional_NAME_ extends _DOMAIN_fbe.FieldModel
 
 void GeneratorJava::GenerateFBEFieldModelArray(const std::string& domain, const std::string& package, const std::string& name, const std::string& type, const std::string& model, bool bytes)
 {
-    CppCommon::Path path = (CppCommon::Path(_output) / CreatePackagePath(domain, package)) / "fbe";
+    std::filesystem::path path = (std::filesystem::path(_output) / CreatePackagePath(domain, package)) / "fbe";
 
     // Create package path
     CppCommon::Directory::CreateTree(path);
 
     // Generate the file
-    CppCommon::Path file = path / ("FieldModelArray" + name + ".java");
+    std::filesystem::path file = path / ("FieldModelArray" + name + ".java");
     WriteBegin();
 
     // Generate headers
-    GenerateHeader(CppCommon::Path(_input).filename().string());
+    GenerateHeader(std::filesystem::path(_input).filename().string());
     GenerateImports(domain, package + ".fbe");
 
     std::string code = R"CODE(
@@ -1633,17 +1633,17 @@ public final class FieldModelArray_NAME_ extends _DOMAIN_fbe.FieldModel
 
 void GeneratorJava::GenerateFBEFieldModelVector(const std::string& domain, const std::string& package, const std::string& name, const std::string& type, const std::string& model)
 {
-    CppCommon::Path path = (CppCommon::Path(_output) / CreatePackagePath(domain, package)) / "fbe";
+    std::filesystem::path path = (std::filesystem::path(_output) / CreatePackagePath(domain, package)) / "fbe";
 
     // Create package path
     CppCommon::Directory::CreateTree(path);
 
     // Generate the file
-    CppCommon::Path file = path / ("FieldModelVector" + name + ".java");
+    std::filesystem::path file = path / ("FieldModelVector" + name + ".java");
     WriteBegin();
 
     // Generate headers
-    GenerateHeader(CppCommon::Path(_input).filename().string());
+    GenerateHeader(std::filesystem::path(_input).filename().string());
     GenerateImports(domain, package + ".fbe");
 
     std::string code = R"CODE(
@@ -1914,17 +1914,17 @@ public final class FieldModelVector_NAME_ extends _DOMAIN_fbe.FieldModel
 
 void GeneratorJava::GenerateFBEFieldModelMap(const std::string& domain, const std::string& package, const std::string& key_name, const std::string& key_type, const std::string& key_model, const std::string& value_name, const std::string& value_type, const std::string& value_model)
 {
-    CppCommon::Path path = (CppCommon::Path(_output) / CreatePackagePath(domain, package)) / "fbe";
+    std::filesystem::path path = (std::filesystem::path(_output) / CreatePackagePath(domain, package)) / "fbe";
 
     // Create package path
     CppCommon::Directory::CreateTree(path);
 
     // Generate the file
-    CppCommon::Path file = path / ("FieldModelMap" + key_name + value_name + ".java");
+    std::filesystem::path file = path / ("FieldModelMap" + key_name + value_name + ".java");
     WriteBegin();
 
     // Generate headers
-    GenerateHeader(CppCommon::Path(_input).filename().string());
+    GenerateHeader(std::filesystem::path(_input).filename().string());
     GenerateImports(domain, package + ".fbe");
 
     std::string code = R"CODE(
@@ -2177,17 +2177,17 @@ public final class FieldModelMap_KEY_NAME__VALUE_NAME_ extends _DOMAIN_fbe.Field
 
 void GeneratorJava::GenerateFBEFieldModelEnumFlags(const std::string& domain, const std::string& package, const std::string& name, const std::string& type)
 {
-    CppCommon::Path path = (CppCommon::Path(_output) / CreatePackagePath(domain, package)) / "fbe";
+    std::filesystem::path path = (std::filesystem::path(_output) / CreatePackagePath(domain, package)) / "fbe";
 
     // Create package path
     CppCommon::Directory::CreateTree(path);
 
     // Generate the file
-    CppCommon::Path file = path / ("FieldModel" + name + ".java");
+    std::filesystem::path file = path / ("FieldModel" + name + ".java");
     WriteBegin();
 
     // Generate headers
-    GenerateHeader(CppCommon::Path(_input).filename().string());
+    GenerateHeader(std::filesystem::path(_input).filename().string());
     GenerateImports(domain, package + ".fbe");
 
     std::string code = R"CODE(
@@ -2242,10 +2242,10 @@ public final class FieldModel_NAME_ extends _DOMAIN_fbe.FieldModel
 
 void GeneratorJava::GenerateFBESize(const std::string& domain, const std::string& package)
 {
-    CppCommon::Path path = CppCommon::Path(_output) / CreatePackagePath(domain, package);
+    std::filesystem::path path = std::filesystem::path(_output) / CreatePackagePath(domain, package);
 
     // Generate the file
-    CppCommon::Path file = path / "Size.java";
+    std::filesystem::path file = path / "Size.java";
     WriteBegin();
 
     // Generate headers
@@ -2279,10 +2279,10 @@ public class Size
 
 void GeneratorJava::GenerateFBEFinalModel(const std::string& domain, const std::string& package)
 {
-    CppCommon::Path path = CppCommon::Path(_output) / CreatePackagePath(domain, package);
+    std::filesystem::path path = std::filesystem::path(_output) / CreatePackagePath(domain, package);
 
     // Generate the file
-    CppCommon::Path file = path / "FinalModel.java";
+    std::filesystem::path file = path / "FinalModel.java";
     WriteBegin();
 
     // Generate headers
@@ -2364,10 +2364,10 @@ public abstract class FinalModel
 
 void GeneratorJava::GenerateFBEFinalModel(const std::string& domain, const std::string& package, const std::string& name, const std::string& type, const std::string& base, const std::string& size, const std::string& defaults)
 {
-    CppCommon::Path path = CppCommon::Path(_output) / CreatePackagePath(domain, package);
+    std::filesystem::path path = std::filesystem::path(_output) / CreatePackagePath(domain, package);
 
     // Generate the file
-    CppCommon::Path file = path / ("FinalModel" + name + ".java");
+    std::filesystem::path file = path / ("FinalModel" + name + ".java");
     WriteBegin();
 
     // Generate headers
@@ -2440,10 +2440,10 @@ public final class FinalModel_NAME_ extends FinalModel
 
 void GeneratorJava::GenerateFBEFinalModelDecimal(const std::string& domain, const std::string& package)
 {
-    CppCommon::Path path = CppCommon::Path(_output) / CreatePackagePath(domain, package);
+    std::filesystem::path path = std::filesystem::path(_output) / CreatePackagePath(domain, package);
 
     // Generate the file
-    CppCommon::Path file = path / "FinalModelDecimal.java";
+    std::filesystem::path file = path / "FinalModelDecimal.java";
     WriteBegin();
 
     // Generate headers
@@ -2560,10 +2560,10 @@ public final class FinalModelDecimal extends FinalModel
 
 void GeneratorJava::GenerateFBEFinalModelDate(const std::string& domain, const std::string& package)
 {
-    CppCommon::Path path = CppCommon::Path(_output) / CreatePackagePath(domain, package);
+    std::filesystem::path path = std::filesystem::path(_output) / CreatePackagePath(domain, package);
 
     // Generate the file
-    CppCommon::Path file = path / "FinalModelDate.java";
+    std::filesystem::path file = path / "FinalModelDate.java";
     WriteBegin();
 
     // Generate headers
@@ -2633,10 +2633,10 @@ public final class FinalModelDate extends FinalModel
 
 void GeneratorJava::GenerateFBEFinalModelTimestamp(const std::string& domain, const std::string& package)
 {
-    CppCommon::Path path = CppCommon::Path(_output) / CreatePackagePath(domain, package);
+    std::filesystem::path path = std::filesystem::path(_output) / CreatePackagePath(domain, package);
 
     // Generate the file
-    CppCommon::Path file = path / "FinalModelTimestamp.java";
+    std::filesystem::path file = path / "FinalModelTimestamp.java";
     WriteBegin();
 
     // Generate headers
@@ -2706,10 +2706,10 @@ public final class FinalModelTimestamp extends FinalModel
 
 void GeneratorJava::GenerateFBEFinalModelBytes(const std::string& domain, const std::string& package)
 {
-    CppCommon::Path path = CppCommon::Path(_output) / CreatePackagePath(domain, package);
+    std::filesystem::path path = std::filesystem::path(_output) / CreatePackagePath(domain, package);
 
     // Generate the file
-    CppCommon::Path file = path / "FinalModelBytes.java";
+    std::filesystem::path file = path / "FinalModelBytes.java";
     WriteBegin();
 
     // Generate headers
@@ -2798,10 +2798,10 @@ public final class FinalModelBytes extends FinalModel
 
 void GeneratorJava::GenerateFBEFinalModelString(const std::string& domain, const std::string& package)
 {
-    CppCommon::Path path = CppCommon::Path(_output) / CreatePackagePath(domain, package);
+    std::filesystem::path path = std::filesystem::path(_output) / CreatePackagePath(domain, package);
 
     // Generate the file
-    CppCommon::Path file = path / "FinalModelString.java";
+    std::filesystem::path file = path / "FinalModelString.java";
     WriteBegin();
 
     // Generate headers
@@ -2892,17 +2892,17 @@ public final class FinalModelString extends FinalModel
 
 void GeneratorJava::GenerateFBEFinalModelOptional(const std::string& domain, const std::string& package, const std::string& name, const std::string& type, const std::string& model)
 {
-    CppCommon::Path path = (CppCommon::Path(_output) / CreatePackagePath(domain, package)) / "fbe";
+    std::filesystem::path path = (std::filesystem::path(_output) / CreatePackagePath(domain, package)) / "fbe";
 
     // Create package path
     CppCommon::Directory::CreateTree(path);
 
     // Generate the file
-    CppCommon::Path file = path / ("FinalModelOptional" + name + ".java");
+    std::filesystem::path file = path / ("FinalModelOptional" + name + ".java");
     WriteBegin();
 
     // Generate headers
-    GenerateHeader(CppCommon::Path(_input).filename().string());
+    GenerateHeader(std::filesystem::path(_input).filename().string());
     GenerateImports(domain, package + ".fbe");
 
     std::string code = R"CODE(
@@ -3012,17 +3012,17 @@ public final class FinalModelOptional_NAME_ extends _DOMAIN_fbe.FinalModel
 
 void GeneratorJava::GenerateFBEFinalModelArray(const std::string& domain, const std::string& package, const std::string& name, const std::string& type, const std::string& model, bool bytes)
 {
-    CppCommon::Path path = (CppCommon::Path(_output) / CreatePackagePath(domain, package)) / "fbe";
+    std::filesystem::path path = (std::filesystem::path(_output) / CreatePackagePath(domain, package)) / "fbe";
 
     // Create package path
     CppCommon::Directory::CreateTree(path);
 
     // Generate the file
-    CppCommon::Path file = path / ("FinalModelArray" + name + ".java");
+    std::filesystem::path file = path / ("FinalModelArray" + name + ".java");
     WriteBegin();
 
     // Generate headers
-    GenerateHeader(CppCommon::Path(_input).filename().string());
+    GenerateHeader(std::filesystem::path(_input).filename().string());
     GenerateImports(domain, package + ".fbe");
 
     std::string code = R"CODE(
@@ -3222,17 +3222,17 @@ public final class FinalModelArray_NAME_ extends _DOMAIN_fbe.FinalModel
 
 void GeneratorJava::GenerateFBEFinalModelVector(const std::string& domain, const std::string& package, const std::string& name, const std::string& type, const std::string& model)
 {
-    CppCommon::Path path = (CppCommon::Path(_output) / CreatePackagePath(domain, package)) / "fbe";
+    std::filesystem::path path = (std::filesystem::path(_output) / CreatePackagePath(domain, package)) / "fbe";
 
     // Create package path
     CppCommon::Directory::CreateTree(path);
 
     // Generate the file
-    CppCommon::Path file = path / ("FinalModelVector" + name + ".java");
+    std::filesystem::path file = path / ("FinalModelVector" + name + ".java");
     WriteBegin();
 
     // Generate headers
-    GenerateHeader(CppCommon::Path(_input).filename().string());
+    GenerateHeader(std::filesystem::path(_input).filename().string());
     GenerateImports(domain, package + ".fbe");
 
     std::string code = R"CODE(
@@ -3489,17 +3489,17 @@ public final class FinalModelVector_NAME_ extends _DOMAIN_fbe.FinalModel
 
 void GeneratorJava::GenerateFBEFinalModelMap(const std::string& domain, const std::string& package, const std::string& key_name, const std::string& key_type, const std::string& key_model, const std::string& value_name, const std::string& value_type, const std::string& value_model)
 {
-    CppCommon::Path path = (CppCommon::Path(_output) / CreatePackagePath(domain, package)) / "fbe";
+    std::filesystem::path path = (std::filesystem::path(_output) / CreatePackagePath(domain, package)) / "fbe";
 
     // Create package path
     CppCommon::Directory::CreateTree(path);
 
     // Generate the file
-    CppCommon::Path file = path / ("FinalModelMap" + key_name + value_name + ".java");
+    std::filesystem::path file = path / ("FinalModelMap" + key_name + value_name + ".java");
     WriteBegin();
 
     // Generate headers
-    GenerateHeader(CppCommon::Path(_input).filename().string());
+    GenerateHeader(std::filesystem::path(_input).filename().string());
     GenerateImports(domain, package + ".fbe");
 
     std::string code = R"CODE(
@@ -3730,17 +3730,17 @@ public final class FinalModelMap_KEY_NAME__VALUE_NAME_ extends _DOMAIN_fbe.Final
 
 void GeneratorJava::GenerateFBEFinalModelEnumFlags(const std::string& domain, const std::string& package, const std::string& name, const std::string& type)
 {
-    CppCommon::Path path = (CppCommon::Path(_output) / CreatePackagePath(domain, package)) / "fbe";
+    std::filesystem::path path = (std::filesystem::path(_output) / CreatePackagePath(domain, package)) / "fbe";
 
     // Create package path
     CppCommon::Directory::CreateTree(path);
 
     // Generate the file
-    CppCommon::Path file = path / ("FinalModel" + name + ".java");
+    std::filesystem::path file = path / ("FinalModel" + name + ".java");
     WriteBegin();
 
     // Generate headers
-    GenerateHeader(CppCommon::Path(_input).filename().string());
+    GenerateHeader(std::filesystem::path(_input).filename().string());
     GenerateImports(domain, package + ".fbe");
 
     std::string code = R"CODE(
@@ -3809,10 +3809,10 @@ public final class FinalModel_NAME_ extends _DOMAIN_fbe.FinalModel
 
 void GeneratorJava::GenerateFBESender(const std::string& domain, const std::string& package)
 {
-    CppCommon::Path path = CppCommon::Path(_output) / CreatePackagePath(domain, package);
+    std::filesystem::path path = std::filesystem::path(_output) / CreatePackagePath(domain, package);
 
     // Generate the file
-    CppCommon::Path file = path / "Sender.java";
+    std::filesystem::path file = path / "Sender.java";
     WriteBegin();
 
     // Generate headers
@@ -3884,10 +3884,10 @@ public abstract class Sender
 
 void GeneratorJava::GenerateFBEReceiver(const std::string& domain, const std::string& package)
 {
-    CppCommon::Path path = CppCommon::Path(_output) / CreatePackagePath(domain, package);
+    std::filesystem::path path = std::filesystem::path(_output) / CreatePackagePath(domain, package);
 
     // Generate the file
-    CppCommon::Path file = path / "Receiver.java";
+    std::filesystem::path file = path / "Receiver.java";
     WriteBegin();
 
     // Generate headers
@@ -4186,10 +4186,10 @@ public abstract class Receiver
 
 void GeneratorJava::GenerateFBEJson(const std::string& domain, const std::string& package)
 {
-    CppCommon::Path path = CppCommon::Path(_output) / CreatePackagePath(domain, package);
+    std::filesystem::path path = std::filesystem::path(_output) / CreatePackagePath(domain, package);
 
     // Generate the file
-    CppCommon::Path file = path / "Json.java";
+    std::filesystem::path file = path / "Json.java";
     WriteBegin();
 
     // Generate headers
@@ -4337,7 +4337,7 @@ public final class Json
 void GeneratorJava::GenerateContainers(const std::shared_ptr<Package>& p, bool final)
 {
     std::string domain = (p->domain && !p->domain->empty()) ? (*p->domain + ".") : "";
-    CppCommon::Path path = CppCommon::Path(_output) / CreatePackagePath(domain, *p->name);
+    std::filesystem::path path = std::filesystem::path(_output) / CreatePackagePath(domain, *p->name);
 
     // Create package path
     CppCommon::Directory::CreateTree(path);
@@ -4389,7 +4389,7 @@ void GeneratorJava::GenerateContainers(const std::shared_ptr<Package>& p, bool f
 void GeneratorJava::GeneratePackage(const std::shared_ptr<Package>& p)
 {
     std::string domain = (p->domain && !p->domain->empty()) ? (*p->domain + ".") : "";
-    CppCommon::Path path = CppCommon::Path(_output) / CreatePackagePath(domain, *p->name);
+    std::filesystem::path path = std::filesystem::path(_output) / CreatePackagePath(domain, *p->name);
 
     // Create package path
     CppCommon::Directory::CreateTree(path);
@@ -4437,16 +4437,16 @@ void GeneratorJava::GeneratePackage(const std::shared_ptr<Package>& p)
         GenerateJson(p);
 }
 
-void GeneratorJava::GenerateEnum(const std::shared_ptr<Package>& p, const std::shared_ptr<EnumType>& e, const CppCommon::Path& path)
+void GeneratorJava::GenerateEnum(const std::shared_ptr<Package>& p, const std::shared_ptr<EnumType>& e, const std::filesystem::path& path)
 {
     std::string enum_name = *e->name + "Enum";
 
     // Generate the output file
-    CppCommon::Path output = path / (enum_name + ".java");
+    std::filesystem::path output = path / (enum_name + ".java");
     WriteBegin();
 
     // Generate enum header
-    GenerateHeader(CppCommon::Path(_input).filename().string());
+    GenerateHeader(std::filesystem::path(_input).filename().string());
     GenerateImports(p);
 
     std::string enum_type = (e->base && !e->base->empty()) ? *e->base : "int32";
@@ -4565,17 +4565,17 @@ void GeneratorJava::GenerateEnum(const std::shared_ptr<Package>& p, const std::s
         GenerateFBEFinalModelEnumFlags(domain, *p->name, *e->name, enum_type);
 }
 
-void GeneratorJava::GenerateEnumClass(const std::shared_ptr<Package>& p, const std::shared_ptr<EnumType>& e, const CppCommon::Path& path)
+void GeneratorJava::GenerateEnumClass(const std::shared_ptr<Package>& p, const std::shared_ptr<EnumType>& e, const std::filesystem::path& path)
 {
     std::string enum_name = *e->name;
     std::string enum_type_name = *e->name + "Enum";
 
     // Generate the output file
-    CppCommon::Path output = path / (enum_name + ".java");
+    std::filesystem::path output = path / (enum_name + ".java");
     WriteBegin();
 
     // Generate enum class header
-    GenerateHeader(CppCommon::Path(_input).filename().string());
+    GenerateHeader(std::filesystem::path(_input).filename().string());
     GenerateImports(p);
 
     std::string enum_type = (e->base && !e->base->empty()) ? *e->base : "int32";
@@ -4701,17 +4701,17 @@ void GeneratorJava::GenerateEnumJson(const std::shared_ptr<Package>& p, const st
     std::string enum_name = domain + package + "." + *e->name;
     std::string adapter_name = *e->name + "Json";
 
-    CppCommon::Path path = (CppCommon::Path(_output) / CreatePackagePath(domain, package)) / "fbe";
+    std::filesystem::path path = (std::filesystem::path(_output) / CreatePackagePath(domain, package)) / "fbe";
 
     // Create package path
     CppCommon::Directory::CreateTree(path);
 
     // Generate the output file
-    CppCommon::Path output = path / (adapter_name + ".java");
+    std::filesystem::path output = path / (adapter_name + ".java");
     WriteBegin();
 
     // Generate headers
-    GenerateHeader(CppCommon::Path(_input).filename().string());
+    GenerateHeader(std::filesystem::path(_input).filename().string());
     GenerateImports(domain, package + ".fbe;");
 
     std::string enum_type = (e->base && !e->base->empty()) ? *e->base : "int32";
@@ -4752,16 +4752,16 @@ void GeneratorJava::GenerateEnumJson(const std::shared_ptr<Package>& p, const st
     Store(output);
 }
 
-void GeneratorJava::GenerateFlags(const std::shared_ptr<Package>& p, const std::shared_ptr<FlagsType>& f, const CppCommon::Path& path)
+void GeneratorJava::GenerateFlags(const std::shared_ptr<Package>& p, const std::shared_ptr<FlagsType>& f, const std::filesystem::path& path)
 {
     std::string flags_name = *f->name + "Enum";
 
     // Generate the output file
-    CppCommon::Path output = path / (flags_name + ".java");
+    std::filesystem::path output = path / (flags_name + ".java");
     WriteBegin();
 
     // Generate flags header
-    GenerateHeader(CppCommon::Path(_input).filename().string());
+    GenerateHeader(std::filesystem::path(_input).filename().string());
     GenerateImports(p);
 
     std::string flags_type = (f->base && !f->base->empty()) ? *f->base : "int32";
@@ -4907,17 +4907,17 @@ void GeneratorJava::GenerateFlags(const std::shared_ptr<Package>& p, const std::
         GenerateFBEFinalModelEnumFlags(domain, *p->name, *f->name, flags_type);
 }
 
-void GeneratorJava::GenerateFlagsClass(const std::shared_ptr<Package>& p, const std::shared_ptr<FlagsType>& f, const CppCommon::Path& path)
+void GeneratorJava::GenerateFlagsClass(const std::shared_ptr<Package>& p, const std::shared_ptr<FlagsType>& f, const std::filesystem::path& path)
 {
     std::string flags_name = *f->name;
     std::string flags_type_name = *f->name + "Enum";
 
     // Generate the output file
-    CppCommon::Path output = path / (flags_name + ".java");
+    std::filesystem::path output = path / (flags_name + ".java");
     WriteBegin();
 
     // Generate flags class header
-    GenerateHeader(CppCommon::Path(_input).filename().string());
+    GenerateHeader(std::filesystem::path(_input).filename().string());
     GenerateImports(p);
 
     std::string flags_type = (f->base && !f->base->empty()) ? *f->base : "int32";
@@ -5100,17 +5100,17 @@ void GeneratorJava::GenerateFlagsJson(const std::shared_ptr<Package>& p, const s
     std::string flags_name = domain + package + "." + *f->name;
     std::string adapter_name = *f->name + "Json";
 
-    CppCommon::Path path = (CppCommon::Path(_output) / CreatePackagePath(domain, package)) / "fbe";
+    std::filesystem::path path = (std::filesystem::path(_output) / CreatePackagePath(domain, package)) / "fbe";
 
     // Create package path
     CppCommon::Directory::CreateTree(path);
 
     // Generate the output file
-    CppCommon::Path output = path / (adapter_name + ".java");
+    std::filesystem::path output = path / (adapter_name + ".java");
     WriteBegin();
 
     // Generate headers
-    GenerateHeader(CppCommon::Path(_input).filename().string());
+    GenerateHeader(std::filesystem::path(_input).filename().string());
     GenerateImports(domain, package + ".fbe;");
 
     std::string flags_type = (f->base && !f->base->empty()) ? *f->base : "int32";
@@ -5152,17 +5152,17 @@ void GeneratorJava::GenerateFlagsJson(const std::shared_ptr<Package>& p, const s
     Store(output);
 }
 
-void GeneratorJava::GenerateStruct(const std::shared_ptr<Package>& p, const std::shared_ptr<StructType>& s, const CppCommon::Path& path)
+void GeneratorJava::GenerateStruct(const std::shared_ptr<Package>& p, const std::shared_ptr<StructType>& s, const std::filesystem::path& path)
 {
     std::string domain = (p->domain && !p->domain->empty()) ? (*p->domain + ".") : "";
     bool first;
 
     // Generate the output file
-    CppCommon::Path output = path / (*s->name + ".java");
+    std::filesystem::path output = path / (*s->name + ".java");
     WriteBegin();
 
     // Generate struct header
-    GenerateHeader(CppCommon::Path(_input).filename().string());
+    GenerateHeader(std::filesystem::path(_input).filename().string());
     GenerateImports(p);
 
     // Generate struct begin
@@ -5577,17 +5577,17 @@ void GeneratorJava::GenerateStructFieldModel(const std::shared_ptr<Package>& p, 
     std::string package = *p->name;
     std::string struct_name = domain + *p->name + "." + *s->name;
 
-    CppCommon::Path path = (CppCommon::Path(_output) / CreatePackagePath(domain, package)) / "fbe";
+    std::filesystem::path path = (std::filesystem::path(_output) / CreatePackagePath(domain, package)) / "fbe";
 
     // Create package path
     CppCommon::Directory::CreateTree(path);
 
     // Generate the file
-    CppCommon::Path file = path / ("FieldModel" + *s->name + ".java");
+    std::filesystem::path file = path / ("FieldModel" + *s->name + ".java");
     WriteBegin();
 
     // Generate headers
-    GenerateHeader(CppCommon::Path(_input).filename().string());
+    GenerateHeader(std::filesystem::path(_input).filename().string());
     GenerateImports(domain, package + ".fbe");
 
     // Generate struct field model begin
@@ -5968,17 +5968,17 @@ void GeneratorJava::GenerateStructModel(const std::shared_ptr<Package>& p, const
     std::string package = *p->name;
     std::string struct_name = domain + package + "." + *s->name;
 
-    CppCommon::Path path = (CppCommon::Path(_output) / CreatePackagePath(domain, package)) / "fbe";
+    std::filesystem::path path = (std::filesystem::path(_output) / CreatePackagePath(domain, package)) / "fbe";
 
     // Create package path
     CppCommon::Directory::CreateTree(path);
 
     // Generate the file
-    CppCommon::Path file = path / (*s->name + "Model.java");
+    std::filesystem::path file = path / (*s->name + "Model.java");
     WriteBegin();
 
     // Generate headers
-    GenerateHeader(CppCommon::Path(_input).filename().string());
+    GenerateHeader(std::filesystem::path(_input).filename().string());
     GenerateImports(domain, package + ".fbe");
 
     // Generate struct model begin
@@ -6120,17 +6120,17 @@ void GeneratorJava::GenerateStructFinalModel(const std::shared_ptr<Package>& p, 
     std::string package = *p->name;
     std::string struct_name = domain + *p->name + "." + *s->name;
 
-    CppCommon::Path path = (CppCommon::Path(_output) / CreatePackagePath(domain, package)) / "fbe";
+    std::filesystem::path path = (std::filesystem::path(_output) / CreatePackagePath(domain, package)) / "fbe";
 
     // Create package path
     CppCommon::Directory::CreateTree(path);
 
     // Generate the file
-    CppCommon::Path file = path / ("FinalModel" + *s->name + ".java");
+    std::filesystem::path file = path / ("FinalModel" + *s->name + ".java");
     WriteBegin();
 
     // Generate headers
-    GenerateHeader(CppCommon::Path(_input).filename().string());
+    GenerateHeader(std::filesystem::path(_input).filename().string());
     GenerateImports(domain, package + ".fbe");
 
     // Generate struct final model begin
@@ -6368,17 +6368,17 @@ void GeneratorJava::GenerateStructModelFinal(const std::shared_ptr<Package>& p, 
     std::string package = *p->name;
     std::string struct_name = domain + package + "." + *s->name;
 
-    CppCommon::Path path = (CppCommon::Path(_output) / CreatePackagePath(domain, package)) / "fbe";
+    std::filesystem::path path = (std::filesystem::path(_output) / CreatePackagePath(domain, package)) / "fbe";
 
     // Create package path
     CppCommon::Directory::CreateTree(path);
 
     // Generate the file
-    CppCommon::Path file = path / (*s->name + "FinalModel.java");
+    std::filesystem::path file = path / (*s->name + "FinalModel.java");
     WriteBegin();
 
     // Generate headers
-    GenerateHeader(CppCommon::Path(_input).filename().string());
+    GenerateHeader(std::filesystem::path(_input).filename().string());
     GenerateImports(domain, package + ".fbe");
 
     // Generate struct model final begin
@@ -6505,17 +6505,17 @@ void GeneratorJava::GenerateProtocolVersion(const std::shared_ptr<Package>& p)
     std::string domain = (p->domain && !p->domain->empty()) ? (*p->domain + ".") : "";
     std::string package = *p->name;
 
-    CppCommon::Path path = (CppCommon::Path(_output) / CreatePackagePath(domain, package)) / "fbe";
+    std::filesystem::path path = (std::filesystem::path(_output) / CreatePackagePath(domain, package)) / "fbe";
 
     // Create package path
     CppCommon::Directory::CreateTree(path);
 
     // Generate the file
-    CppCommon::Path file = path / ("ProtocolVersion.java");
+    std::filesystem::path file = path / ("ProtocolVersion.java");
     WriteBegin();
 
     // Generate headers
-    GenerateHeader(CppCommon::Path(_input).filename().string());
+    GenerateHeader(std::filesystem::path(_input).filename().string());
     GenerateImports(domain, package + ".fbe");
 
     // Generate protocol version class
@@ -6544,7 +6544,7 @@ void GeneratorJava::GenerateSender(const std::shared_ptr<Package>& p, bool final
     std::string domain = (p->domain && !p->domain->empty()) ? (*p->domain + ".") : "";
     std::string package = *p->name;
 
-    CppCommon::Path path = (CppCommon::Path(_output) / CreatePackagePath(domain, package)) / "fbe";
+    std::filesystem::path path = (std::filesystem::path(_output) / CreatePackagePath(domain, package)) / "fbe";
 
     // Create package path
     CppCommon::Directory::CreateTree(path);
@@ -6553,11 +6553,11 @@ void GeneratorJava::GenerateSender(const std::shared_ptr<Package>& p, bool final
     std::string model = (final ? "FinalModel" : "Model");
 
     // Generate the file
-    CppCommon::Path file = path / (sender + ".java");
+    std::filesystem::path file = path / (sender + ".java");
     WriteBegin();
 
     // Generate headers
-    GenerateHeader(CppCommon::Path(_input).filename().string());
+    GenerateHeader(std::filesystem::path(_input).filename().string());
     GenerateImports(domain, package + ".fbe");
 
     // Generate sender begin
@@ -6726,7 +6726,7 @@ void GeneratorJava::GenerateReceiver(const std::shared_ptr<Package>& p, bool fin
     std::string domain = (p->domain && !p->domain->empty()) ? (*p->domain + ".") : "";
     std::string package = *p->name;
 
-    CppCommon::Path path = (CppCommon::Path(_output) / CreatePackagePath(domain, package)) / "fbe";
+    std::filesystem::path path = (std::filesystem::path(_output) / CreatePackagePath(domain, package)) / "fbe";
 
     // Create package path
     CppCommon::Directory::CreateTree(path);
@@ -6735,11 +6735,11 @@ void GeneratorJava::GenerateReceiver(const std::shared_ptr<Package>& p, bool fin
     std::string model = (final ? "FinalModel" : "Model");
 
     // Generate the file
-    CppCommon::Path file = path / (receiver + ".java");
+    std::filesystem::path file = path / (receiver + ".java");
     WriteBegin();
 
     // Generate headers
-    GenerateHeader(CppCommon::Path(_input).filename().string());
+    GenerateHeader(std::filesystem::path(_input).filename().string());
     GenerateImports(domain, package + ".fbe");
 
     // Generate receiver begin
@@ -6921,7 +6921,7 @@ void GeneratorJava::GenerateProxy(const std::shared_ptr<Package>& p, bool final)
     std::string domain = (p->domain && !p->domain->empty()) ? (*p->domain + ".") : "";
     std::string package = *p->name;
 
-    CppCommon::Path path = (CppCommon::Path(_output) / CreatePackagePath(domain, package)) / "fbe";
+    std::filesystem::path path = (std::filesystem::path(_output) / CreatePackagePath(domain, package)) / "fbe";
 
     // Create package path
     CppCommon::Directory::CreateTree(path);
@@ -6930,11 +6930,11 @@ void GeneratorJava::GenerateProxy(const std::shared_ptr<Package>& p, bool final)
     std::string model = (final ? "FinalModel" : "Model");
 
     // Generate the file
-    CppCommon::Path file = path / (proxy + ".java");
+    std::filesystem::path file = path / (proxy + ".java");
     WriteBegin();
 
     // Generate headers
-    GenerateHeader(CppCommon::Path(_input).filename().string());
+    GenerateHeader(std::filesystem::path(_input).filename().string());
     GenerateImports(domain, package + ".fbe");
 
     // Generate proxy begin
@@ -7089,17 +7089,17 @@ void GeneratorJava::GenerateJson(const std::shared_ptr<Package>& p)
     std::string domain = (p->domain && !p->domain->empty()) ? (*p->domain + ".") : "";
     std::string package = *p->name;
 
-    CppCommon::Path path = (CppCommon::Path(_output) / CreatePackagePath(domain, package)) / "fbe";
+    std::filesystem::path path = (std::filesystem::path(_output) / CreatePackagePath(domain, package)) / "fbe";
 
     // Create package path
     CppCommon::Directory::CreateTree(path);
 
     // Generate the file
-    CppCommon::Path file = path / "Json.java";
+    std::filesystem::path file = path / "Json.java";
     WriteBegin();
 
     // Generate headers
-    GenerateHeader(CppCommon::Path(_input).filename().string());
+    GenerateHeader(std::filesystem::path(_input).filename().string());
     GenerateImports(domain, package + ".fbe");
 
     // Generate JSON engine begin
@@ -7215,8 +7215,8 @@ bool GeneratorJava::IsPrimitiveType(const std::string& type, bool optional)
 std::string GeneratorJava::CreatePackagePath(const std::string& domain, const std::string& package)
 {
     std::string result = domain;
-    CppCommon::StringUtils::ReplaceAll(result, ".", std::string(1, CppCommon::Path::separator()));
-    return result + CppCommon::Path::separator() + package;
+    CppCommon::StringUtils::ReplaceAll(result, ".", std::string(1, std::filesystem::path::separator()));
+    return result + std::filesystem::path::separator() + package;
 }
 
 std::string GeneratorJava::ConvertEnumBase(const std::string& type)

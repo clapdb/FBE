@@ -70,10 +70,10 @@ require 'uuidtools'
     Write(code);
 }
 
-void GeneratorRuby::GenerateFBE(const CppCommon::Path& path)
+void GeneratorRuby::GenerateFBE(const std::filesystem::path& path)
 {
     // Generate the common file
-    CppCommon::Path common = path / "fbe.rb";
+    std::filesystem::path common = path / "fbe.rb";
     WriteBegin();
 
     // Generate common header
@@ -3400,7 +3400,7 @@ void GeneratorRuby::GenerateImports(const std::shared_ptr<Package>& p)
 
 void GeneratorRuby::GeneratePackage(const std::shared_ptr<Package>& p)
 {
-    CppCommon::Path output = _output;
+    std::filesystem::path output = _output;
 
     // Create package path
     CppCommon::Directory::CreateTree(output);
@@ -3413,7 +3413,7 @@ void GeneratorRuby::GeneratePackage(const std::shared_ptr<Package>& p)
     WriteBegin();
 
     // Generate package header
-    GenerateHeader(CppCommon::Path(_input).filename().string());
+    GenerateHeader(std::filesystem::path(_input).filename().string());
     GenerateImports(p);
 
     // Generate module begin

@@ -39,12 +39,12 @@ private:
 
     void GenerateHeader(const std::string& source);
     void GenerateFooter();
-    void GenerateBig(const CppCommon::Path& path);
-    void GenerateInt64(const CppCommon::Path& path);
-    void GenerateUUID(const CppCommon::Path& path);
-    void GenerateIEEE754(const CppCommon::Path& path);
-    void GenerateUTF8(const CppCommon::Path& path);
-    void GenerateFBE(const CppCommon::Path& path);
+    void GenerateBig(const std::filesystem::path& path);
+    void GenerateInt64(const std::filesystem::path& path);
+    void GenerateUUID(const std::filesystem::path& path);
+    void GenerateIEEE754(const std::filesystem::path& path);
+    void GenerateUTF8(const std::filesystem::path& path);
+    void GenerateFBE(const std::filesystem::path& path);
     void GenerateFBEDeferredPromise();
     void GenerateFBEBaseBuffer();
     void GenerateFBEWriteBuffer();

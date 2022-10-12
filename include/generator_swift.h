@@ -78,11 +78,11 @@ private:
 
     void GenerateContainers(const std::shared_ptr<Package>& p, bool final);
     void GeneratePackage(const std::shared_ptr<Package>& p);
-    void GenerateEnum(const std::shared_ptr<Package>& p, const std::shared_ptr<EnumType>& e, const CppCommon::Path& path);
-    void GenerateEnumClass(const std::shared_ptr<Package>& p, const std::shared_ptr<EnumType>& e, const CppCommon::Path& path);
-    void GenerateFlags(const std::shared_ptr<Package>& p, const std::shared_ptr<FlagsType>& e, const CppCommon::Path& path);
-    void GenerateFlagsClass(const std::shared_ptr<Package>& p, const std::shared_ptr<FlagsType>& e, const CppCommon::Path& path);
-    void GenerateStruct(const std::shared_ptr<Package>& p, const std::shared_ptr<StructType>& s, const CppCommon::Path& path);
+    void GenerateEnum(const std::shared_ptr<Package>& p, const std::shared_ptr<EnumType>& e, const std::filesystem::path& path);
+    void GenerateEnumClass(const std::shared_ptr<Package>& p, const std::shared_ptr<EnumType>& e, const std::filesystem::path& path);
+    void GenerateFlags(const std::shared_ptr<Package>& p, const std::shared_ptr<FlagsType>& e, const std::filesystem::path& path);
+    void GenerateFlagsClass(const std::shared_ptr<Package>& p, const std::shared_ptr<FlagsType>& e, const std::filesystem::path& path);
+    void GenerateStruct(const std::shared_ptr<Package>& p, const std::shared_ptr<StructType>& s, const std::filesystem::path& path);
     void GenerateStructFieldModel(const std::shared_ptr<Package>& p, const std::shared_ptr<StructType>& s);
     void GenerateStructModel(const std::shared_ptr<Package>& p, const std::shared_ptr<StructType>& s);
     void GenerateStructFinalModel(const std::shared_ptr<Package>& p, const std::shared_ptr<StructType>& s);
@@ -101,7 +101,7 @@ private:
     bool IsPrimitiveType(const std::string& type, bool optional);
     bool IsUnsignedType(const std::string& type);
 
-    CppCommon::Path CreatePackagePath(const std::string& domain, const std::string& package);
+    std::filesystem::path CreatePackagePath(const std::string& domain, const std::string& package);
 
     std::string ConvertEnumBase(const std::string& type);
     std::string ConvertEnumType(const std::string& type);

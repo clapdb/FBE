@@ -94,7 +94,7 @@ void GeneratorGo::GenerateFooter()
 
 void GeneratorGo::GenerateFBEPackage(const std::string& package)
 {
-    CppCommon::Path path = CppCommon::Path(_output) / package;
+    std::filesystem::path path = std::filesystem::path(_output) / package;
 
     // Create FBE package path
     CppCommon::Directory::CreateTree(path);
@@ -102,10 +102,10 @@ void GeneratorGo::GenerateFBEPackage(const std::string& package)
 
 void GeneratorGo::GenerateFBEConstants(const std::string& package)
 {
-    CppCommon::Path path = CppCommon::Path(_output) / package;
+    std::filesystem::path path = std::filesystem::path(_output) / package;
 
     // Generate the file
-    CppCommon::Path file = path / "Constants.go";
+    std::filesystem::path file = path / "Constants.go";
     WriteBegin();
 
     // Generate headers
@@ -140,10 +140,10 @@ const MinUint = 0
 
 void GeneratorGo::GenerateFBEJson(const std::string& package)
 {
-    CppCommon::Path path = CppCommon::Path(_output) / package;
+    std::filesystem::path path = std::filesystem::path(_output) / package;
 
     // Generate the file
-    CppCommon::Path file = path / "Json.go";
+    std::filesystem::path file = path / "Json.go";
     WriteBegin();
 
     // Generate headers
@@ -173,10 +173,10 @@ var Json = jsoniter.ConfigCompatibleWithStandardLibrary
 
 void GeneratorGo::GenerateFBEOptional(const std::string& package)
 {
-    CppCommon::Path path = CppCommon::Path(_output) / package;
+    std::filesystem::path path = std::filesystem::path(_output) / package;
 
     // Generate the file
-    CppCommon::Path file = path / "Optional.go";
+    std::filesystem::path file = path / "Optional.go";
     WriteBegin();
 
     // Generate headers
@@ -291,10 +291,10 @@ func OptionalUUID(value UUID) *UUID {
 
 void GeneratorGo::GenerateFBETypes(const std::string& package)
 {
-    CppCommon::Path path = CppCommon::Path(_output) / package;
+    std::filesystem::path path = std::filesystem::path(_output) / package;
 
     // Generate the file
-    CppCommon::Path file = path / "Types.go";
+    std::filesystem::path file = path / "Types.go";
     WriteBegin();
 
     // Generate headers
@@ -426,10 +426,10 @@ func UUIDRandom() UUID {
 
 void GeneratorGo::GenerateFBEVersion(const std::string& package, const std::string& source)
 {
-    CppCommon::Path path = CppCommon::Path(_output) / package;
+    std::filesystem::path path = std::filesystem::path(_output) / package;
 
     // Generate the file
-    CppCommon::Path file = path / "Version.go";
+    std::filesystem::path file = path / "Version.go";
     WriteBegin();
 
     // Generate headers
@@ -459,10 +459,10 @@ const Version = "_VERSION_"
 
 void GeneratorGo::GenerateFBEBuffer(const std::string& package)
 {
-    CppCommon::Path path = CppCommon::Path(_output) / package;
+    std::filesystem::path path = std::filesystem::path(_output) / package;
 
     // Generate the file
-    CppCommon::Path file = path / "Buffer.go";
+    std::filesystem::path file = path / "Buffer.go";
     WriteBegin();
 
     // Generate headers
@@ -917,10 +917,10 @@ func WriteUUID(buffer []byte, offset int, value UUID) {
 
 void GeneratorGo::GenerateFBEFieldModel(const std::string& package, const std::string& name, const std::string& type, const std::string& size, const std::string& defaults)
 {
-    CppCommon::Path path = CppCommon::Path(_output) / package;
+    std::filesystem::path path = std::filesystem::path(_output) / package;
 
     // Generate the file
-    CppCommon::Path file = path / ("FieldModel" + name + ".go");
+    std::filesystem::path file = path / ("FieldModel" + name + ".go");
     WriteBegin();
 
     // Generate headers
@@ -1006,10 +1006,10 @@ func (fm *FieldModel_NAME_) Set(value _TYPE_) error {
 
 void GeneratorGo::GenerateFBEFieldModelDecimal(const std::string& package)
 {
-    CppCommon::Path path = CppCommon::Path(_output) / package;
+    std::filesystem::path path = std::filesystem::path(_output) / package;
 
     // Generate the file
-    CppCommon::Path file = path / ("FieldModelDecimal.go");
+    std::filesystem::path file = path / ("FieldModelDecimal.go");
     WriteBegin();
 
     // Generate headers
@@ -1155,10 +1155,10 @@ func init()  {
 
 void GeneratorGo::GenerateFBEFieldModelTimestamp(const std::string& package)
 {
-    CppCommon::Path path = CppCommon::Path(_output) / package;
+    std::filesystem::path path = std::filesystem::path(_output) / package;
 
     // Generate the file
-    CppCommon::Path file = path / ("FieldModelTimestamp.go");
+    std::filesystem::path file = path / ("FieldModelTimestamp.go");
     WriteBegin();
 
     // Generate headers
@@ -1240,10 +1240,10 @@ func (fm *FieldModelTimestamp) Set(value Timestamp) error {
 
 void GeneratorGo::GenerateFBEFieldModelUUID(const std::string& package)
 {
-    CppCommon::Path path = CppCommon::Path(_output) / package;
+    std::filesystem::path path = std::filesystem::path(_output) / package;
 
     // Generate the file
-    CppCommon::Path file = path / ("FieldModelUUID.go");
+    std::filesystem::path file = path / ("FieldModelUUID.go");
     WriteBegin();
 
     // Generate headers
@@ -1325,10 +1325,10 @@ func (fm *FieldModelUUID) Set(value UUID) error {
 
 void GeneratorGo::GenerateFBEFieldModelBytes(const std::string& package)
 {
-    CppCommon::Path path = CppCommon::Path(_output) / package;
+    std::filesystem::path path = std::filesystem::path(_output) / package;
 
     // Generate the file
-    CppCommon::Path file = path / ("FieldModelBytes.go");
+    std::filesystem::path file = path / ("FieldModelBytes.go");
     WriteBegin();
 
     // Generate headers
@@ -1464,10 +1464,10 @@ func (fm *FieldModelBytes) Set(value []byte) error {
 
 void GeneratorGo::GenerateFBEFieldModelString(const std::string& package)
 {
-    CppCommon::Path path = CppCommon::Path(_output) / package;
+    std::filesystem::path path = std::filesystem::path(_output) / package;
 
     // Generate the file
-    CppCommon::Path file = path / ("FieldModelString.go");
+    std::filesystem::path file = path / ("FieldModelString.go");
     WriteBegin();
 
     // Generate headers
@@ -1604,10 +1604,10 @@ func (fm *FieldModelString) Set(value string) error {
     Store(file);
 }
 
-void GeneratorGo::GenerateFBEFieldModelOptional(const std::shared_ptr<Package>& p, const std::string& name, const std::string& model, const StructField& field, const CppCommon::Path& path)
+void GeneratorGo::GenerateFBEFieldModelOptional(const std::shared_ptr<Package>& p, const std::string& name, const std::string& model, const StructField& field, const std::filesystem::path& path)
 {
     // Generate the output file
-    CppCommon::Path output = path / ("FieldModelOptional" + name + ".go");
+    std::filesystem::path output = path / ("FieldModelOptional" + name + ".go");
     WriteBegin();
 
     // Generate headers
@@ -1807,10 +1807,10 @@ func (fm *FieldModelOptional_NAME_) Set(fbeValue _TYPE_ARG_) error {
     Store(output);
 }
 
-void GeneratorGo::GenerateFBEFieldModelArray(const std::shared_ptr<Package>& p, const std::string& name, const std::string& model, const StructField& field, const CppCommon::Path& path)
+void GeneratorGo::GenerateFBEFieldModelArray(const std::shared_ptr<Package>& p, const std::string& name, const std::string& model, const StructField& field, const std::filesystem::path& path)
 {
     // Generate the output file
-    CppCommon::Path output = path / ("FieldModelArray" + name + ".go");
+    std::filesystem::path output = path / ("FieldModelArray" + name + ".go");
     WriteBegin();
 
     // Generate headers
@@ -1966,10 +1966,10 @@ func (fm *FieldModelArray_NAME_) Set(values []_TYPE_) error {
     Store(output);
 }
 
-void GeneratorGo::GenerateFBEFieldModelVector(const std::shared_ptr<Package>& p, const std::string& name, const std::string& model, const StructField& field, const CppCommon::Path& path)
+void GeneratorGo::GenerateFBEFieldModelVector(const std::shared_ptr<Package>& p, const std::string& name, const std::string& model, const StructField& field, const std::filesystem::path& path)
 {
     // Generate the output file
-    CppCommon::Path output = path / ("FieldModelVector" + name + ".go");
+    std::filesystem::path output = path / ("FieldModelVector" + name + ".go");
     WriteBegin();
 
     // Generate headers
@@ -2197,10 +2197,10 @@ func (fm *FieldModelVector_NAME_) Set(values []_TYPE_) error {
     Store(output);
 }
 
-void GeneratorGo::GenerateFBEFieldModelSet(const std::shared_ptr<Package>& p, const std::string& name, const std::string& model, const StructField& field, const CppCommon::Path& path)
+void GeneratorGo::GenerateFBEFieldModelSet(const std::shared_ptr<Package>& p, const std::string& name, const std::string& model, const StructField& field, const std::filesystem::path& path)
 {
     // Generate the output file
-    CppCommon::Path output = path / ("FieldModelSet" + name + ".go");
+    std::filesystem::path output = path / ("FieldModelSet" + name + ".go");
     WriteBegin();
 
     // Generate headers
@@ -2427,10 +2427,10 @@ func (fm *FieldModelSet_NAME_) Set(values _TYPE_) error {
     Store(output);
 }
 
-void GeneratorGo::GenerateFBEFieldModelMap(const std::shared_ptr<Package>& p, const std::string& key_name, const std::string& key_model, const std::string& value_name, const std::string& value_model, const StructField& field, const CppCommon::Path& path)
+void GeneratorGo::GenerateFBEFieldModelMap(const std::shared_ptr<Package>& p, const std::string& key_name, const std::string& key_model, const std::string& value_name, const std::string& value_model, const StructField& field, const std::filesystem::path& path)
 {
     // Generate the output file
-    CppCommon::Path output = path / ("FieldModelMap" + key_name + value_name + ".go");
+    std::filesystem::path output = path / ("FieldModelMap" + key_name + value_name + ".go");
     WriteBegin();
 
     // Generate headers
@@ -2689,14 +2689,14 @@ func (fm *FieldModelMap_KEY_NAME__VALUE_NAME_) Set(values _TYPE_) error {
 
 void GeneratorGo::GenerateFBEFieldModelEnumFlags(const std::string& package, const std::string& name, const std::string& type)
 {
-    CppCommon::Path path = CppCommon::Path(_output) / package;
+    std::filesystem::path path = std::filesystem::path(_output) / package;
 
     // Generate the file
-    CppCommon::Path file = path / ("FieldModel" + name + ".go");
+    std::filesystem::path file = path / ("FieldModel" + name + ".go");
     WriteBegin();
 
     // Generate header
-    GenerateHeader(CppCommon::Path(_input).filename().string());
+    GenerateHeader(std::filesystem::path(_input).filename().string());
 
     // Generate package
     WriteLine();
@@ -2803,10 +2803,10 @@ func (fm *FieldModel_NAME_) SetValue(value _NAME_) error {
 
 void GeneratorGo::GenerateFBEFinalModel(const std::string& package, const std::string& name, const std::string& type, const std::string& size, const std::string& defaults)
 {
-    CppCommon::Path path = CppCommon::Path(_output) / package;
+    std::filesystem::path path = std::filesystem::path(_output) / package;
 
     // Generate the file
-    CppCommon::Path file = path / ("FinalModel" + name + ".go");
+    std::filesystem::path file = path / ("FinalModel" + name + ".go");
     WriteBegin();
 
     // Generate headers
@@ -2894,10 +2894,10 @@ func (fm *FinalModel_NAME_) Set(value _TYPE_) (int, error) {
 
 void GeneratorGo::GenerateFBEFinalModelDecimal(const std::string& package)
 {
-    CppCommon::Path path = CppCommon::Path(_output) / package;
+    std::filesystem::path path = std::filesystem::path(_output) / package;
 
     // Generate the file
-    CppCommon::Path file = path / ("FinalModelDecimal.go");
+    std::filesystem::path file = path / ("FinalModelDecimal.go");
     WriteBegin();
 
     // Generate headers
@@ -3045,10 +3045,10 @@ func init()  {
 
 void GeneratorGo::GenerateFBEFinalModelTimestamp(const std::string& package)
 {
-    CppCommon::Path path = CppCommon::Path(_output) / package;
+    std::filesystem::path path = std::filesystem::path(_output) / package;
 
     // Generate the file
-    CppCommon::Path file = path / ("FinalModelTimestamp.go");
+    std::filesystem::path file = path / ("FinalModelTimestamp.go");
     WriteBegin();
 
     // Generate headers
@@ -3132,10 +3132,10 @@ func (fm *FinalModelTimestamp) Set(value Timestamp) (int, error) {
 
 void GeneratorGo::GenerateFBEFinalModelUUID(const std::string& package)
 {
-    CppCommon::Path path = CppCommon::Path(_output) / package;
+    std::filesystem::path path = std::filesystem::path(_output) / package;
 
     // Generate the file
-    CppCommon::Path file = path / ("FinalModelUUID.go");
+    std::filesystem::path file = path / ("FinalModelUUID.go");
     WriteBegin();
 
     // Generate headers
@@ -3219,10 +3219,10 @@ func (fm *FinalModelUUID) Set(value UUID) (int, error) {
 
 void GeneratorGo::GenerateFBEFinalModelBytes(const std::string& package)
 {
-    CppCommon::Path path = CppCommon::Path(_output) / package;
+    std::filesystem::path path = std::filesystem::path(_output) / package;
 
     // Generate the file
-    CppCommon::Path file = path / ("FinalModelBytes.go");
+    std::filesystem::path file = path / ("FinalModelBytes.go");
     WriteBegin();
 
     // Generate headers
@@ -3319,10 +3319,10 @@ func (fm *FinalModelBytes) Set(value []byte) (int, error) {
 
 void GeneratorGo::GenerateFBEFinalModelString(const std::string& package)
 {
-    CppCommon::Path path = CppCommon::Path(_output) / package;
+    std::filesystem::path path = std::filesystem::path(_output) / package;
 
     // Generate the file
-    CppCommon::Path file = path / ("FinalModelString.go");
+    std::filesystem::path file = path / ("FinalModelString.go");
     WriteBegin();
 
     // Generate headers
@@ -3420,10 +3420,10 @@ func (fm *FinalModelString) Set(value string) (int, error) {
     Store(file);
 }
 
-void GeneratorGo::GenerateFBEFinalModelOptional(const std::shared_ptr<Package>& p, const std::string& name, const std::string& model, const StructField& field, const CppCommon::Path& path)
+void GeneratorGo::GenerateFBEFinalModelOptional(const std::shared_ptr<Package>& p, const std::string& name, const std::string& model, const StructField& field, const std::filesystem::path& path)
 {
     // Generate the output file
-    CppCommon::Path output = path / ("FinalModelOptional" + name + ".go");
+    std::filesystem::path output = path / ("FinalModelOptional" + name + ".go");
     WriteBegin();
 
     // Generate headers
@@ -3572,10 +3572,10 @@ func (fm *FinalModelOptional_NAME_) Set(fbeValue _TYPE_ARG_) (int, error) {
     Store(output);
 }
 
-void GeneratorGo::GenerateFBEFinalModelArray(const std::shared_ptr<Package>& p, const std::string& name, const std::string& model, const StructField& field, const CppCommon::Path& path)
+void GeneratorGo::GenerateFBEFinalModelArray(const std::shared_ptr<Package>& p, const std::string& name, const std::string& model, const StructField& field, const std::filesystem::path& path)
 {
     // Generate the output file
-    CppCommon::Path output = path / ("FinalModelArray" + name + ".go");
+    std::filesystem::path output = path / ("FinalModelArray" + name + ".go");
     WriteBegin();
 
     // Generate headers
@@ -3727,10 +3727,10 @@ func (fm *FinalModelArray_NAME_) Set(values []_TYPE_) (int, error) {
     Store(output);
 }
 
-void GeneratorGo::GenerateFBEFinalModelVector(const std::shared_ptr<Package>& p, const std::string& name, const std::string& model, const StructField& field, const CppCommon::Path& path)
+void GeneratorGo::GenerateFBEFinalModelVector(const std::shared_ptr<Package>& p, const std::string& name, const std::string& model, const StructField& field, const std::filesystem::path& path)
 {
     // Generate the output file
-    CppCommon::Path output = path / ("FinalModelVector" + name + ".go");
+    std::filesystem::path output = path / ("FinalModelVector" + name + ".go");
     WriteBegin();
 
     // Generate headers
@@ -3873,10 +3873,10 @@ func (fm *FinalModelVector_NAME_) Set(values []_TYPE_) (int, error) {
     Store(output);
 }
 
-void GeneratorGo::GenerateFBEFinalModelSet(const std::shared_ptr<Package>& p, const std::string& name, const std::string& model, const StructField& field, const CppCommon::Path& path)
+void GeneratorGo::GenerateFBEFinalModelSet(const std::shared_ptr<Package>& p, const std::string& name, const std::string& model, const StructField& field, const std::filesystem::path& path)
 {
     // Generate the output file
-    CppCommon::Path output = path / ("FinalModelSet" + name + ".go");
+    std::filesystem::path output = path / ("FinalModelSet" + name + ".go");
     WriteBegin();
 
     // Generate headers
@@ -4018,10 +4018,10 @@ func (fm *FinalModelSet_NAME_) Set(values _TYPE_) (int, error) {
     Store(output);
 }
 
-void GeneratorGo::GenerateFBEFinalModelMap(const std::shared_ptr<Package>& p, const std::string& key_name, const std::string& key_model, const std::string& value_name, const std::string& value_model, const StructField& field, const CppCommon::Path& path)
+void GeneratorGo::GenerateFBEFinalModelMap(const std::shared_ptr<Package>& p, const std::string& key_name, const std::string& key_model, const std::string& value_name, const std::string& value_model, const StructField& field, const std::filesystem::path& path)
 {
     // Generate the output file
-    CppCommon::Path output = path / ("FinalModelMap" + key_name + value_name + ".go");
+    std::filesystem::path output = path / ("FinalModelMap" + key_name + value_name + ".go");
     WriteBegin();
 
     // Generate headers
@@ -4200,14 +4200,14 @@ func (fm *FinalModelMap_KEY_NAME__VALUE_NAME_) Set(values _TYPE_) (int, error) {
 
 void GeneratorGo::GenerateFBEFinalModelEnumFlags(const std::string& package, const std::string& name, const std::string& type)
 {
-    CppCommon::Path path = CppCommon::Path(_output) / package;
+    std::filesystem::path path = std::filesystem::path(_output) / package;
 
     // Generate the file
-    CppCommon::Path file = path / ("FinalModel" + name + ".go");
+    std::filesystem::path file = path / ("FinalModel" + name + ".go");
     WriteBegin();
 
     // Generate header
-    GenerateHeader(CppCommon::Path(_input).filename().string());
+    GenerateHeader(std::filesystem::path(_input).filename().string());
 
     // Generate package
     WriteLine();
@@ -4322,10 +4322,10 @@ func (fm *FinalModel_NAME_) SetValue(value _NAME_) (int, error) {
 
 void GeneratorGo::GenerateFBESender(const std::string& package)
 {
-    CppCommon::Path path = CppCommon::Path(_output) / package;
+    std::filesystem::path path = std::filesystem::path(_output) / package;
 
     // Generate the file
-    CppCommon::Path file = path / "Sender.go";
+    std::filesystem::path file = path / "Sender.go";
     WriteBegin();
 
     // Generate headers
@@ -4445,10 +4445,10 @@ func (s *Sender) SendSerialized(serialized int) (int, error) {
 
 void GeneratorGo::GenerateFBEReceiver(const std::string& package)
 {
-    CppCommon::Path path = CppCommon::Path(_output) / package;
+    std::filesystem::path path = std::filesystem::path(_output) / package;
 
     // Generate the file
-    CppCommon::Path file = path / "Receiver.go";
+    std::filesystem::path file = path / "Receiver.go";
     WriteBegin();
 
     // Generate headers
@@ -4800,7 +4800,7 @@ void GeneratorGo::GenerateImports(const std::shared_ptr<Package>& p)
             WriteLineIndent("var _ = " + *import + ".Version");
 }
 
-void GeneratorGo::GenerateContainers(const std::shared_ptr<Package>& p, const CppCommon::Path& path, bool final)
+void GeneratorGo::GenerateContainers(const std::shared_ptr<Package>& p, const std::filesystem::path& path, bool final)
 {
     if (p->body)
     {
@@ -4855,13 +4855,13 @@ void GeneratorGo::GenerateContainers(const std::shared_ptr<Package>& p, const Cp
 
 void GeneratorGo::GeneratePackage(const std::shared_ptr<Package>& p)
 {
-    CppCommon::Path path = CppCommon::Path(_output) / *p->name;
+    std::filesystem::path path = std::filesystem::path(_output) / *p->name;
 
     // Create package path
     CppCommon::Directory::CreateTree(path);
 
     // Generate package version
-    GenerateFBEVersion(*p->name, CppCommon::Path(_input).filename().string());
+    GenerateFBEVersion(*p->name, std::filesystem::path(_input).filename().string());
 
     // Generate namespace
     if (p->body)
@@ -4902,16 +4902,16 @@ void GeneratorGo::GeneratePackage(const std::shared_ptr<Package>& p)
     }
 }
 
-void GeneratorGo::GenerateEnum(const std::shared_ptr<Package>& p, const std::shared_ptr<EnumType>& e, const CppCommon::Path& path)
+void GeneratorGo::GenerateEnum(const std::shared_ptr<Package>& p, const std::shared_ptr<EnumType>& e, const std::filesystem::path& path)
 {
     std::string enum_name = ConvertToUpper(*e->name);
 
     // Generate the output file
-    CppCommon::Path output = path / (enum_name + ".go");
+    std::filesystem::path output = path / (enum_name + ".go");
     WriteBegin();
 
     // Generate header
-    GenerateHeader(CppCommon::Path(_input).filename().string());
+    GenerateHeader(std::filesystem::path(_input).filename().string());
 
     // Generate package
     WriteLine();
@@ -5085,16 +5085,16 @@ void GeneratorGo::GenerateEnum(const std::shared_ptr<Package>& p, const std::sha
         GenerateFBEFinalModelEnumFlags(*p->name, enum_name, enum_type);
 }
 
-void GeneratorGo::GenerateFlags(const std::shared_ptr<Package>& p, const std::shared_ptr<FlagsType>& f, const CppCommon::Path& path)
+void GeneratorGo::GenerateFlags(const std::shared_ptr<Package>& p, const std::shared_ptr<FlagsType>& f, const std::filesystem::path& path)
 {
     std::string flags_name = ConvertToUpper(*f->name);
 
     // Generate the output file
-    CppCommon::Path output = path / (flags_name + ".go");
+    std::filesystem::path output = path / (flags_name + ".go");
     WriteBegin();
 
     // Generate header
-    GenerateHeader(CppCommon::Path(_input).filename().string());
+    GenerateHeader(std::filesystem::path(_input).filename().string());
 
     // Generate package
     WriteLine();
@@ -5297,16 +5297,16 @@ void GeneratorGo::GenerateFlags(const std::shared_ptr<Package>& p, const std::sh
         GenerateFBEFinalModelEnumFlags(*p->name, flags_name, flags_type);
 }
 
-void GeneratorGo::GenerateStruct(const std::shared_ptr<Package>& p, const std::shared_ptr<StructType>& s, const CppCommon::Path& path)
+void GeneratorGo::GenerateStruct(const std::shared_ptr<Package>& p, const std::shared_ptr<StructType>& s, const std::filesystem::path& path)
 {
     std::string struct_name = ConvertToUpper(*s->name);
 
     // Generate the output file
-    CppCommon::Path output = path / (struct_name + ".go");
+    std::filesystem::path output = path / (struct_name + ".go");
     WriteBegin();
 
     // Generate header
-    GenerateHeader(CppCommon::Path(_input).filename().string());
+    GenerateHeader(std::filesystem::path(_input).filename().string());
 
     // Generate package
     WriteLine();
@@ -6072,17 +6072,17 @@ void GeneratorGo::GenerateStruct(const std::shared_ptr<Package>& p, const std::s
     }
 }
 
-void GeneratorGo::GenerateStructFieldModel(const std::shared_ptr<Package>& p, const std::shared_ptr<StructType>& s, const CppCommon::Path& path)
+void GeneratorGo::GenerateStructFieldModel(const std::shared_ptr<Package>& p, const std::shared_ptr<StructType>& s, const std::filesystem::path& path)
 {
     std::string struct_name = ConvertToUpper(*s->name);
     std::string field_model_name = "FieldModel" + struct_name;
 
     // Generate the output file
-    CppCommon::Path output = path / (field_model_name + ".go");
+    std::filesystem::path output = path / (field_model_name + ".go");
     WriteBegin();
 
     // Generate header
-    GenerateHeader(CppCommon::Path(_input).filename().string());
+    GenerateHeader(std::filesystem::path(_input).filename().string());
 
     // Generate package
     WriteLine();
@@ -6526,18 +6526,18 @@ void GeneratorGo::GenerateStructFieldModel(const std::shared_ptr<Package>& p, co
     Store(output);
 }
 
-void GeneratorGo::GenerateStructModel(const std::shared_ptr<Package>& p, const std::shared_ptr<StructType>& s, const CppCommon::Path& path)
+void GeneratorGo::GenerateStructModel(const std::shared_ptr<Package>& p, const std::shared_ptr<StructType>& s, const std::filesystem::path& path)
 {
     std::string struct_name = ConvertToUpper(*s->name);
     std::string model_name = struct_name + "Model";
     std::string field_model_name = "FieldModel" + struct_name;
 
     // Generate the output file
-    CppCommon::Path output = path / (model_name + ".go");
+    std::filesystem::path output = path / (model_name + ".go");
     WriteBegin();
 
     // Generate header
-    GenerateHeader(CppCommon::Path(_input).filename().string());
+    GenerateHeader(std::filesystem::path(_input).filename().string());
 
     // Generate package
     WriteLine();
@@ -6692,17 +6692,17 @@ void GeneratorGo::GenerateStructModel(const std::shared_ptr<Package>& p, const s
     Store(output);
 }
 
-void GeneratorGo::GenerateStructFinalModel(const std::shared_ptr<Package>& p, const std::shared_ptr<StructType>& s, const CppCommon::Path& path)
+void GeneratorGo::GenerateStructFinalModel(const std::shared_ptr<Package>& p, const std::shared_ptr<StructType>& s, const std::filesystem::path& path)
 {
     std::string struct_name = ConvertToUpper(*s->name);
     std::string final_model_name = "FinalModel" + struct_name;
 
     // Generate the output file
-    CppCommon::Path output = path / (final_model_name + ".go");
+    std::filesystem::path output = path / (final_model_name + ".go");
     WriteBegin();
 
     // Generate header
-    GenerateHeader(CppCommon::Path(_input).filename().string());
+    GenerateHeader(std::filesystem::path(_input).filename().string());
 
     // Generate package
     WriteLine();
@@ -7011,18 +7011,18 @@ void GeneratorGo::GenerateStructFinalModel(const std::shared_ptr<Package>& p, co
     Store(output);
 }
 
-void GeneratorGo::GenerateStructModelFinal(const std::shared_ptr<Package>& p, const std::shared_ptr<StructType>& s, const CppCommon::Path& path)
+void GeneratorGo::GenerateStructModelFinal(const std::shared_ptr<Package>& p, const std::shared_ptr<StructType>& s, const std::filesystem::path& path)
 {
     std::string struct_name = ConvertToUpper(*s->name);
     std::string model_name = struct_name + "FinalModel";
     std::string final_model_name = "FinalModel" + struct_name;
 
     // Generate the output file
-    CppCommon::Path output = path / (model_name + ".go");
+    std::filesystem::path output = path / (model_name + ".go");
     WriteBegin();
 
     // Generate header
-    GenerateHeader(CppCommon::Path(_input).filename().string());
+    GenerateHeader(std::filesystem::path(_input).filename().string());
 
     // Generate package
     WriteLine();
@@ -7192,14 +7192,14 @@ void GeneratorGo::GenerateStructModelFinal(const std::shared_ptr<Package>& p, co
     Store(output);
 }
 
-void GeneratorGo::GenerateProtocolVersion(const std::shared_ptr<Package>& p, const CppCommon::Path& path)
+void GeneratorGo::GenerateProtocolVersion(const std::shared_ptr<Package>& p, const std::filesystem::path& path)
 {
     // Generate the output file
-    CppCommon::Path output = path / "ProtocolVersion.go";
+    std::filesystem::path output = path / "ProtocolVersion.go";
     WriteBegin();
 
     // Generate header
-    GenerateHeader(CppCommon::Path(_input).filename().string());
+    GenerateHeader(std::filesystem::path(_input).filename().string());
 
     // Generate package
     WriteLine();
@@ -7220,16 +7220,16 @@ void GeneratorGo::GenerateProtocolVersion(const std::shared_ptr<Package>& p, con
     Store(output);
 }
 
-void GeneratorGo::GenerateSender(const std::shared_ptr<Package>& p, const CppCommon::Path& path, bool final)
+void GeneratorGo::GenerateSender(const std::shared_ptr<Package>& p, const std::filesystem::path& path, bool final)
 {
     std::string sender_name = std::string(final ? "Final" : "") + "Sender";
 
     // Generate the output file
-    CppCommon::Path output = path / (sender_name + ".go");
+    std::filesystem::path output = path / (sender_name + ".go");
     WriteBegin();
 
     // Generate header
-    GenerateHeader(CppCommon::Path(_input).filename().string());
+    GenerateHeader(std::filesystem::path(_input).filename().string());
 
     // Generate package
     WriteLine();
@@ -7400,16 +7400,16 @@ void GeneratorGo::GenerateSender(const std::shared_ptr<Package>& p, const CppCom
     Store(output);
 }
 
-void GeneratorGo::GenerateReceiver(const std::shared_ptr<Package>& p, const CppCommon::Path& path, bool final)
+void GeneratorGo::GenerateReceiver(const std::shared_ptr<Package>& p, const std::filesystem::path& path, bool final)
 {
     std::string receiver_name = std::string(final ? "Final" : "") + "Receiver";
 
     // Generate the output file
-    CppCommon::Path output = path / (receiver_name + ".go");
+    std::filesystem::path output = path / (receiver_name + ".go");
     WriteBegin();
 
     // Generate header
-    GenerateHeader(CppCommon::Path(_input).filename().string());
+    GenerateHeader(std::filesystem::path(_input).filename().string());
 
     // Generate package
     WriteLine();
@@ -7666,16 +7666,16 @@ void GeneratorGo::GenerateReceiver(const std::shared_ptr<Package>& p, const CppC
     Store(output);
 }
 
-void GeneratorGo::GenerateProxy(const std::shared_ptr<Package>& p, const CppCommon::Path& path, bool final)
+void GeneratorGo::GenerateProxy(const std::shared_ptr<Package>& p, const std::filesystem::path& path, bool final)
 {
     std::string proxy_name = std::string(final ? "Final" : "") + "Proxy";
 
     // Generate the output file
-    CppCommon::Path output = path / (proxy_name + ".go");
+    std::filesystem::path output = path / (proxy_name + ".go");
     WriteBegin();
 
     // Generate header
-    GenerateHeader(CppCommon::Path(_input).filename().string());
+    GenerateHeader(std::filesystem::path(_input).filename().string());
 
     // Generate package
     WriteLine();

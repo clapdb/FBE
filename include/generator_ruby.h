@@ -40,7 +40,7 @@ private:
     void GenerateHeader(const std::string& source);
     void GenerateFooter();
     void GenerateImports();
-    void GenerateFBE(const CppCommon::Path& path);
+    void GenerateFBE(const std::filesystem::path& path);
     void GenerateFBEEnum();
     void GenerateFBEFlags();
     void GenerateFBEInteger();

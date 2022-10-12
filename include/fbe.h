@@ -21,6 +21,7 @@
 #include "threads/thread.h"
 */
 
+#include <filesystem>
 #include <algorithm>
 #include <cstdint>
 #include <memory>

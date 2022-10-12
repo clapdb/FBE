@@ -4279,10 +4279,10 @@ void GeneratorCSharp::GenerateFBEJson()
     Write(code);
 }
 
-void GeneratorCSharp::GenerateFBE(const std::string& domain, const CppCommon::Path& path)
+void GeneratorCSharp::GenerateFBE(const std::string& domain, const std::filesystem::path& path)
 {
     // Generate the common file
-    CppCommon::Path common = path / (domain + "fbe.cs");
+    std::filesystem::path common = path / (domain + "fbe.cs");
     WriteBegin();
 
     // Generate common header
@@ -4401,7 +4401,7 @@ void GeneratorCSharp::GenerateFBE(const std::string& domain, const CppCommon::Pa
 
 void GeneratorCSharp::GeneratePackage(const std::string& domain, const std::shared_ptr<Package>& p)
 {
-    CppCommon::Path output = _output;
+    std::filesystem::path output = _output;
 
     // Create package path
     CppCommon::Directory::CreateTree(output);
@@ -4414,7 +4414,7 @@ void GeneratorCSharp::GeneratePackage(const std::string& domain, const std::shar
     WriteBegin();
 
     // Generate package header
-    GenerateHeader(CppCommon::Path(_input).filename().string());
+    GenerateHeader(std::filesystem::path(_input).filename().string());
     GenerateImports(domain, p);
 
     // Generate namespace body
