@@ -5181,7 +5181,7 @@ std::string GeneratorPython::ConvertEnumType(const std::string& type)
 
 std::string GeneratorPython::ConvertEnumConstant(const std::string& type, const std::string& value)
 {
-    if (((type == "char") || (type == "wchar")) && CppCommon::StringUtils::StartsWith(value, "'"))
+    if (((type == "char") || (type == "wchar")) && startswith(value, "'"))
         return "ord(" + value + ")";
     else if (type.empty())
         return value;
@@ -5370,7 +5370,7 @@ std::string GeneratorPython::ConvertConstant(const std::string& type, const std:
 
     if (type == "bool")
         return "bool(" + value + ")";
-    else if (((type == "char") || (type == "wchar")) && !CppCommon::StringUtils::StartsWith(value, "'"))
+    else if (((type == "char") || (type == "wchar")) && !startswith(value, "'"))
         return "chr(" + value + ")";
     else if ((type == "byte") || (type == "int8") || (type == "uint8") || (type == "int16") || (type == "uint16") || (type == "int32") || (type == "uint32") || (type == "int64") || (type == "uint64") || (type == "timestamp"))
         return "int(" + value + ")";

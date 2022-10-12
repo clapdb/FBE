@@ -12413,7 +12413,7 @@ std::string GeneratorJavaScript::ConvertEnumType(const std::string& type)
 
 std::string GeneratorJavaScript::ConvertEnumConstant(const std::string& name, const std::string& type, const std::string& value)
 {
-    if (((type == "char") || (type == "wchar")) && CppCommon::StringUtils::StartsWith(value, "'"))
+    if (((type == "char") || (type == "wchar")) && startswith(value, "'"))
         return value + ".charCodeAt(0)";
     else if (type == "int64")
         return ConvertConstantInt64(value);
@@ -12640,7 +12640,7 @@ std::string GeneratorJavaScript::ConvertConstant(const std::string& type, const 
     else if (value == "utc")
         return "new Date(Date.now())";
 
-    if (((type == "char") || (type == "wchar")) && !CppCommon::StringUtils::StartsWith(value, "'"))
+    if (((type == "char") || (type == "wchar")) && !startswith(value, "'"))
         return "String.fromCharCode(" + value + ")";
     else if (type == "int64")
         return ConvertConstantInt64(value);
@@ -12726,7 +12726,7 @@ std::string GeneratorJavaScript::ConvertString(const std::string& value)
 {
     std::string result;
 
-    if (CppCommon::StringUtils::StartsWith(value, "\"") && CppCommon::StringUtils::EndsWith(value, "\"") && (value.size() >= 2))
+    if (startswith(value, "\"") && CppCommon::StringUtils::EndsWith(value, "\"") && (value.size() >= 2))
         result = value.substr(1, value.size() - 2);
     else
         result = value;

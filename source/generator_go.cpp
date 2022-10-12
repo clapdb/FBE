@@ -8059,7 +8059,7 @@ std::string GeneratorGo::ConvertEnumConstant(const std::string& value)
 
 std::string GeneratorGo::ConvertEnumConstant(const std::string& name, const std::string& type, const std::string& value)
 {
-    if (((type == "char") || (type == "wchar")) && CppCommon::StringUtils::StartsWith(value, "'"))
+    if (((type == "char") || (type == "wchar")) && startswith(value, "'"))
         return name + "(" + value + ")";
 
     std::string result = value;
@@ -8506,7 +8506,7 @@ std::string GeneratorGo::ConvertConstant(const std::string& type, const std::str
 
     if ((type == "bool") || (type == "byte") || (type == "int8") || (type == "uint8") || (type == "int16") || (type == "uint16") || (type == "int32") || (type == "uint32") || (type == "int64") || (type == "uint64"))
         return type + "(" + value + ")";
-    else if (((type == "char") || (type == "wchar")) && !CppCommon::StringUtils::StartsWith(value, "'"))
+    else if (((type == "char") || (type == "wchar")) && !startswith(value, "'"))
         return "rune(" + value + ")";
     else if (type == "float")
         return "float32(" + value + ")";

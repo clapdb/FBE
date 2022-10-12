@@ -5991,7 +5991,7 @@ std::string GeneratorRuby::ConvertEnumConstant(const std::string& type, const st
 {
     std::string prefix = flag ? "Flags.value(:" : "Enum.value(:";
 
-    if (((type == "char") || (type == "wchar")) && CppCommon::StringUtils::StartsWith(value, "'"))
+    if (((type == "char") || (type == "wchar")) && startswith(value, "'"))
         return value + ".ord";
     else if (type.empty())
     {
@@ -6183,9 +6183,9 @@ std::string GeneratorRuby::ConvertConstant(const std::string& type, const std::s
 
     if (type == "bool")
         return value + " != 0";
-    else if ((type == "char") && !CppCommon::StringUtils::StartsWith(value, "'"))
+    else if ((type == "char") && !startswith(value, "'"))
         return value + ".chr";
-    else if ((type == "wchar") && !CppCommon::StringUtils::StartsWith(value, "'"))
+    else if ((type == "wchar") && !startswith(value, "'"))
         return value + ".chr(Encoding::UTF_8)";
     else if (type == "decimal")
         return "BigDecimal('" + value + "')";

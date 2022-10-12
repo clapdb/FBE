@@ -106,6 +106,10 @@ inline auto to_upper(std::string& src) -> std::string& {
     return src;
 }
 
+inline auto startswith(const std::string& src, const std::string& prefix) -> bool {
+    return src.starts_with(prefix);
+}
+
 int yyerror(const char* msg);
 int yyerror(const std::string& msg);
 
