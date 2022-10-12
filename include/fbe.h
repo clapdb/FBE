@@ -29,6 +29,7 @@
 #include <set>
 #include <string>
 #include <vector>
+#include <map>
 #include <boost/lexical_cast.hpp>
 #include <boost/uuid/uuid.hpp>
 #include <boost/uuid/uuid_generators.hpp>
