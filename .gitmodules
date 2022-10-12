@@ -1,0 +1,10 @@
+[submodule "modules/Catch2"]
+	path = modules/Catch2
+	url = https://github.com/catchorg/Catch2.git
+[submodule "modules/memory"]
+	path = modules/memory
+	url = https://github.com/stdbio/memory.git
+[submodule "modules/cpp-optparse"]
+	path = modules/cpp-optparse
+	url = https://github.com/stdbio/cpp-optparse.git
+	branch = cmake
