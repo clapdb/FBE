@@ -8569,14 +8569,14 @@ std::string GeneratorCSharp::ConvertConstant(const std::string& domain, const st
             for (const auto& it : flags)
             {
                 std::string flag = trim(it);
-                std::string ns = (CppCommon::StringUtils::CountAll(flag, ".") > 1) ? ("global::" + domain) : ("global::" + domain + package + ".");
+                std::string ns = (count_char(flag, '.') > 1) ? ("global::" + domain) : ("global::" + domain + package + ".");
                 result += (first ? "" : " | ") + ns + flag;
                 first = false;
             }
         }
         else
         {
-            std::string ns = (CppCommon::StringUtils::CountAll(result, ".") > 1) ? ("global::" + domain) : ("global::" + domain + package + ".");
+            std::string ns = (count_char(result, '.') > 1) ? ("global::" + domain) : ("global::" + domain + package + ".");
             result = ns + result;
         }
     }

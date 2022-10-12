@@ -12166,7 +12166,7 @@ std::string GeneratorCpp::ConvertConstant(const std::string& type, const std::st
     auto items = split(value, '|', true);
     for (auto& item : items)
     {
-        bool pkg = (CppCommon::StringUtils::CountAll(item, ".") > 1);
+        bool pkg = (count_char(item, '.') > 1);
         replace_all(item, ".", "::");
         result += (!first ? " | " : "");
         result += (pkg ? "::" : "") + item;

@@ -8308,7 +8308,7 @@ std::string GeneratorSwift::ConvertConstant(const std::string& domain, const std
             size_t pos = result.find_last_of('.');
             if (pos != std::string::npos)
             {
-                if (CppCommon::StringUtils::CountAll(result, ".") > 1)
+                if (count_char(result, '.') > 1)
                     result = domain + result;
                 else
                     result = (package.empty() ? "" : (domain + package + ".")) + result;

@@ -7832,7 +7832,7 @@ std::string GeneratorJava::ConvertConstant(const std::string& domain, const std:
                 size_t pos = flag.find_last_of('.');
                 if (pos != std::string::npos)
                 {
-                    if (CppCommon::StringUtils::CountAll(flag, ".") > 1)
+                    if (count_char(flag, '.') > 1)
                         flag = domain + flag;
                     else
                         flag = (package.empty() ? "" : (domain + package + ".")) + flag;
@@ -7847,7 +7847,7 @@ std::string GeneratorJava::ConvertConstant(const std::string& domain, const std:
             size_t pos = result.find_last_of('.');
             if (pos != std::string::npos)
             {
-                if (CppCommon::StringUtils::CountAll(result, ".") > 1)
+                if (count_char(result, '.') > 1)
                     result = domain + result;
                 else
                     result = (package.empty() ? "" : (domain + package + ".")) + result;

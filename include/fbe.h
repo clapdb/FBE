@@ -174,6 +174,9 @@ inline auto split(std::string_view str, char delimiter, bool skip_empty) -> std:
 inline auto contains(const std::string& src, char ch) -> bool {
     return src.find(ch) != std::string ::npos;
 }
+inline auto count_char(const std::string& src, char ch) -> std::size_t {
+    return std::count_if(src.cbegin(), src.cend(), [ch](char c){ return c = ch; });
+}
 
 int yyerror(const char* msg);
 int yyerror(const std::string& msg);
