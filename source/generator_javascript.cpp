@@ -8688,7 +8688,7 @@ void GeneratorJavaScript::GeneratePackage(const std::shared_ptr<Package>& p)
     fs::path output = _output;
 
     // Create package path
-    CppCommon::Directory::CreateTree(output);
+    create_dir(output);
 
     // Generate common files
     GenerateBig(output);

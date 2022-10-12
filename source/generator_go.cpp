@@ -97,7 +97,7 @@ void GeneratorGo::GenerateFBEPackage(const std::string& package)
     fs::path path = fs::path(_output) / package;
 
     // Create FBE package path
-    CppCommon::Directory::CreateTree(path);
+    create_dir(path);
 }
 
 void GeneratorGo::GenerateFBEConstants(const std::string& package)
@@ -4858,7 +4858,7 @@ void GeneratorGo::GeneratePackage(const std::shared_ptr<Package>& p)
     fs::path path = fs::path(_output) / *p->name;
 
     // Create package path
-    CppCommon::Directory::CreateTree(path);
+    create_dir(path);
 
     // Generate package version
     GenerateFBEVersion(*p->name, fs::path(_input).filename().string());

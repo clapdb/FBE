@@ -2778,7 +2778,7 @@ void GeneratorPython::GeneratePackage(const std::shared_ptr<Package>& p)
     fs::path output = _output;
 
     // Create package path
-    CppCommon::Directory::CreateTree(output);
+    create_dir(output);
 
     // Generate __init__ file
     GenerateInit(output);

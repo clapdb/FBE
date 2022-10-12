@@ -11,7 +11,7 @@ namespace FBE {
 void GeneratorCpp::GenerateFBEPtr_Header(const fs::path& path)
 {
     // Create package path
-    CppCommon::Directory::CreateTree(path);
+    create_dir(path);
 
     // Generate the common file
     fs::path common = path / "fbe_ptr.h";
@@ -1401,7 +1401,7 @@ inline void FieldModelCustomMap<TKey, TValue, TKStruct, TValueStruct>::set(const
 void GeneratorCpp::GenerateFBECustomModels_Header(const fs::path& path)
 {
     // Create package path
-    CppCommon::Directory::CreateTree(path);
+    create_dir(path);
 
     // Generate the field models file
     fs::path common = path / "fbe_custom_models.h";
@@ -1443,7 +1443,7 @@ void GeneratorCpp::GenerateFBECustomModels_Header(const fs::path& path)
 void GeneratorCpp::GenerateFBECustomModels_Inline(const fs::path& path)
 {
     // Create package path
-    CppCommon::Directory::CreateTree(path);
+    create_dir(path);
 
     // Generate the field models file
     fs::path common = path / "fbe_custom_models.inl";
@@ -1479,7 +1479,7 @@ void GeneratorCpp::GeneratePtrPackage_Header(const std::shared_ptr<Package>& p)
     fs::path output = _output;
 
     // Create package path
-    CppCommon::Directory::CreateTree(output);
+    create_dir(output);
 
     // Generate the output file
     output /= *p->name + "_ptr.h";
@@ -1538,7 +1538,7 @@ void GeneratorCpp::GeneratePtrPackage_Source(const std::shared_ptr<Package>& p)
     fs::path output = _output;
 
     // Create package path
-    CppCommon::Directory::CreateTree(output);
+    create_dir(output);
 
     // Generate the output file
     output /= *p->name + "_ptr.cpp";
@@ -1618,7 +1618,7 @@ void GeneratorCpp::GeneratePtrPackageModels_Header(const std::shared_ptr<Package
     fs::path output = _output;
 
     // Create package path
-    CppCommon::Directory::CreateTree(output);
+    create_dir(output);
 
     // Generate the output file
     output /= *p->name + "_ptr_models.h";
@@ -1689,7 +1689,7 @@ void GeneratorCpp::GeneratePtrPackageModels_Source(const std::shared_ptr<Package
     fs::path output = _output;
 
     // Create package path
-    CppCommon::Directory::CreateTree(output);
+    create_dir(output);
 
     // Generate the output file
     output /= *p->name + "_ptr_models.cpp";

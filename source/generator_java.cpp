@@ -110,7 +110,7 @@ void GeneratorJava::GenerateFBEPackage(const std::string& domain, const std::str
     fs::path path = fs::path(_output) / CreatePackagePath(domain, package);
 
     // Create FBE package path
-    CppCommon::Directory::CreateTree(path);
+    create_dir(path);
 }
 
 void GeneratorJava::GenerateFBEPair(const std::string& domain, const std::string& package)
@@ -1282,7 +1282,7 @@ void GeneratorJava::GenerateFBEFieldModelOptional(const std::string& domain, con
     fs::path path = (fs::path(_output) / CreatePackagePath(domain, package)) / "fbe";
 
     // Create package path
-    CppCommon::Directory::CreateTree(path);
+    create_dir(path);
 
     // Generate the file
     fs::path file = path / ("FieldModelOptional" + name + ".java");
@@ -1457,7 +1457,7 @@ void GeneratorJava::GenerateFBEFieldModelArray(const std::string& domain, const 
     fs::path path = (fs::path(_output) / CreatePackagePath(domain, package)) / "fbe";
 
     // Create package path
-    CppCommon::Directory::CreateTree(path);
+    create_dir(path);
 
     // Generate the file
     fs::path file = path / ("FieldModelArray" + name + ".java");
@@ -1636,7 +1636,7 @@ void GeneratorJava::GenerateFBEFieldModelVector(const std::string& domain, const
     fs::path path = (fs::path(_output) / CreatePackagePath(domain, package)) / "fbe";
 
     // Create package path
-    CppCommon::Directory::CreateTree(path);
+    create_dir(path);
 
     // Generate the file
     fs::path file = path / ("FieldModelVector" + name + ".java");
@@ -1917,7 +1917,7 @@ void GeneratorJava::GenerateFBEFieldModelMap(const std::string& domain, const st
     fs::path path = (fs::path(_output) / CreatePackagePath(domain, package)) / "fbe";
 
     // Create package path
-    CppCommon::Directory::CreateTree(path);
+    create_dir(path);
 
     // Generate the file
     fs::path file = path / ("FieldModelMap" + key_name + value_name + ".java");
@@ -2180,7 +2180,7 @@ void GeneratorJava::GenerateFBEFieldModelEnumFlags(const std::string& domain, co
     fs::path path = (fs::path(_output) / CreatePackagePath(domain, package)) / "fbe";
 
     // Create package path
-    CppCommon::Directory::CreateTree(path);
+    create_dir(path);
 
     // Generate the file
     fs::path file = path / ("FieldModel" + name + ".java");
@@ -2895,7 +2895,7 @@ void GeneratorJava::GenerateFBEFinalModelOptional(const std::string& domain, con
     fs::path path = (fs::path(_output) / CreatePackagePath(domain, package)) / "fbe";
 
     // Create package path
-    CppCommon::Directory::CreateTree(path);
+    create_dir(path);
 
     // Generate the file
     fs::path file = path / ("FinalModelOptional" + name + ".java");
@@ -3015,7 +3015,7 @@ void GeneratorJava::GenerateFBEFinalModelArray(const std::string& domain, const 
     fs::path path = (fs::path(_output) / CreatePackagePath(domain, package)) / "fbe";
 
     // Create package path
-    CppCommon::Directory::CreateTree(path);
+    create_dir(path);
 
     // Generate the file
     fs::path file = path / ("FinalModelArray" + name + ".java");
@@ -3225,7 +3225,7 @@ void GeneratorJava::GenerateFBEFinalModelVector(const std::string& domain, const
     fs::path path = (fs::path(_output) / CreatePackagePath(domain, package)) / "fbe";
 
     // Create package path
-    CppCommon::Directory::CreateTree(path);
+    create_dir(path);
 
     // Generate the file
     fs::path file = path / ("FinalModelVector" + name + ".java");
@@ -3492,7 +3492,7 @@ void GeneratorJava::GenerateFBEFinalModelMap(const std::string& domain, const st
     fs::path path = (fs::path(_output) / CreatePackagePath(domain, package)) / "fbe";
 
     // Create package path
-    CppCommon::Directory::CreateTree(path);
+    create_dir(path);
 
     // Generate the file
     fs::path file = path / ("FinalModelMap" + key_name + value_name + ".java");
@@ -3733,7 +3733,7 @@ void GeneratorJava::GenerateFBEFinalModelEnumFlags(const std::string& domain, co
     fs::path path = (fs::path(_output) / CreatePackagePath(domain, package)) / "fbe";
 
     // Create package path
-    CppCommon::Directory::CreateTree(path);
+    create_dir(path);
 
     // Generate the file
     fs::path file = path / ("FinalModel" + name + ".java");
@@ -4340,7 +4340,7 @@ void GeneratorJava::GenerateContainers(const std::shared_ptr<Package>& p, bool f
     fs::path path = fs::path(_output) / CreatePackagePath(domain, *p->name);
 
     // Create package path
-    CppCommon::Directory::CreateTree(path);
+    create_dir(path);
 
     if (p->body)
     {
@@ -4392,7 +4392,7 @@ void GeneratorJava::GeneratePackage(const std::shared_ptr<Package>& p)
     fs::path path = fs::path(_output) / CreatePackagePath(domain, *p->name);
 
     // Create package path
-    CppCommon::Directory::CreateTree(path);
+    create_dir(path);
 
     // Generate namespace
     if (p->body)
@@ -4704,7 +4704,7 @@ void GeneratorJava::GenerateEnumJson(const std::shared_ptr<Package>& p, const st
     fs::path path = (fs::path(_output) / CreatePackagePath(domain, package)) / "fbe";
 
     // Create package path
-    CppCommon::Directory::CreateTree(path);
+    create_dir(path);
 
     // Generate the output file
     fs::path output = path / (adapter_name + ".java");
@@ -5103,7 +5103,7 @@ void GeneratorJava::GenerateFlagsJson(const std::shared_ptr<Package>& p, const s
     fs::path path = (fs::path(_output) / CreatePackagePath(domain, package)) / "fbe";
 
     // Create package path
-    CppCommon::Directory::CreateTree(path);
+    create_dir(path);
 
     // Generate the output file
     fs::path output = path / (adapter_name + ".java");
@@ -5580,7 +5580,7 @@ void GeneratorJava::GenerateStructFieldModel(const std::shared_ptr<Package>& p, 
     fs::path path = (fs::path(_output) / CreatePackagePath(domain, package)) / "fbe";
 
     // Create package path
-    CppCommon::Directory::CreateTree(path);
+    create_dir(path);
 
     // Generate the file
     fs::path file = path / ("FieldModel" + *s->name + ".java");
@@ -5971,7 +5971,7 @@ void GeneratorJava::GenerateStructModel(const std::shared_ptr<Package>& p, const
     fs::path path = (fs::path(_output) / CreatePackagePath(domain, package)) / "fbe";
 
     // Create package path
-    CppCommon::Directory::CreateTree(path);
+    create_dir(path);
 
     // Generate the file
     fs::path file = path / (*s->name + "Model.java");
@@ -6123,7 +6123,7 @@ void GeneratorJava::GenerateStructFinalModel(const std::shared_ptr<Package>& p, 
     fs::path path = (fs::path(_output) / CreatePackagePath(domain, package)) / "fbe";
 
     // Create package path
-    CppCommon::Directory::CreateTree(path);
+    create_dir(path);
 
     // Generate the file
     fs::path file = path / ("FinalModel" + *s->name + ".java");
@@ -6371,7 +6371,7 @@ void GeneratorJava::GenerateStructModelFinal(const std::shared_ptr<Package>& p, 
     fs::path path = (fs::path(_output) / CreatePackagePath(domain, package)) / "fbe";
 
     // Create package path
-    CppCommon::Directory::CreateTree(path);
+    create_dir(path);
 
     // Generate the file
     fs::path file = path / (*s->name + "FinalModel.java");
@@ -6508,7 +6508,7 @@ void GeneratorJava::GenerateProtocolVersion(const std::shared_ptr<Package>& p)
     fs::path path = (fs::path(_output) / CreatePackagePath(domain, package)) / "fbe";
 
     // Create package path
-    CppCommon::Directory::CreateTree(path);
+    create_dir(path);
 
     // Generate the file
     fs::path file = path / ("ProtocolVersion.java");
@@ -6547,7 +6547,7 @@ void GeneratorJava::GenerateSender(const std::shared_ptr<Package>& p, bool final
     fs::path path = (fs::path(_output) / CreatePackagePath(domain, package)) / "fbe";
 
     // Create package path
-    CppCommon::Directory::CreateTree(path);
+    create_dir(path);
 
     std::string sender = (final ? "FinalSender" : "Sender");
     std::string model = (final ? "FinalModel" : "Model");
@@ -6729,7 +6729,7 @@ void GeneratorJava::GenerateReceiver(const std::shared_ptr<Package>& p, bool fin
     fs::path path = (fs::path(_output) / CreatePackagePath(domain, package)) / "fbe";
 
     // Create package path
-    CppCommon::Directory::CreateTree(path);
+    create_dir(path);
 
     std::string receiver = (final ? "FinalReceiver" : "Receiver");
     std::string model = (final ? "FinalModel" : "Model");
@@ -6924,7 +6924,7 @@ void GeneratorJava::GenerateProxy(const std::shared_ptr<Package>& p, bool final)
     fs::path path = (fs::path(_output) / CreatePackagePath(domain, package)) / "fbe";
 
     // Create package path
-    CppCommon::Directory::CreateTree(path);
+    create_dir(path);
 
     std::string proxy = (final ? "FinalProxy" : "Proxy");
     std::string model = (final ? "FinalModel" : "Model");
@@ -7092,7 +7092,7 @@ void GeneratorJava::GenerateJson(const std::shared_ptr<Package>& p)
     fs::path path = (fs::path(_output) / CreatePackagePath(domain, package)) / "fbe";
 
     // Create package path
-    CppCommon::Directory::CreateTree(path);
+    create_dir(path);
 
     // Generate the file
     fs::path file = path / "Json.java";

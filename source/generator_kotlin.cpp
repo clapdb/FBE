@@ -127,7 +127,7 @@ void GeneratorKotlin::GenerateFBEPackage(const std::string& domain, const std::s
     fs::path path = fs::path(_output) / CreatePackagePath(domain, package);
 
     // Create FBE package path
-    CppCommon::Directory::CreateTree(path);
+    create_dir(path);
 }
 
 void GeneratorKotlin::GenerateFBEUUIDGenerator(const std::string& domain, const std::string& package)
@@ -1270,7 +1270,7 @@ void GeneratorKotlin::GenerateFBEFieldModelOptional(const std::string& domain, c
     fs::path path = (fs::path(_output) / CreatePackagePath(domain, package)) / "fbe";
 
     // Create package path
-    CppCommon::Directory::CreateTree(path);
+    create_dir(path);
 
     // Generate the file
     fs::path file = path / ("FieldModelOptional" + name + ".kt");
@@ -1436,7 +1436,7 @@ void GeneratorKotlin::GenerateFBEFieldModelArray(const std::string& domain, cons
     fs::path path = (fs::path(_output) / CreatePackagePath(domain, package)) / "fbe";
 
     // Create package path
-    CppCommon::Directory::CreateTree(path);
+    create_dir(path);
 
     // Generate the file
     fs::path file = path / ("FieldModelArray" + name + ".kt");
@@ -1598,7 +1598,7 @@ void GeneratorKotlin::GenerateFBEFieldModelVector(const std::string& domain, con
     fs::path path = (fs::path(_output) / CreatePackagePath(domain, package)) / "fbe";
 
     // Create package path
-    CppCommon::Directory::CreateTree(path);
+    create_dir(path);
 
     // Generate the file
     fs::path file = path / ("FieldModelVector" + name + ".kt");
@@ -1850,7 +1850,7 @@ void GeneratorKotlin::GenerateFBEFieldModelMap(const std::string& domain, const 
     fs::path path = (fs::path(_output) / CreatePackagePath(domain, package)) / "fbe";
 
     // Create package path
-    CppCommon::Directory::CreateTree(path);
+    create_dir(path);
 
     // Generate the file
     fs::path file = path / ("FieldModelMap" + key_name + value_name + ".kt");
@@ -2090,7 +2090,7 @@ void GeneratorKotlin::GenerateFBEFieldModelEnumFlags(const std::string& domain, 
     fs::path path = (fs::path(_output) / CreatePackagePath(domain, package)) / "fbe";
 
     // Create package path
-    CppCommon::Directory::CreateTree(path);
+    create_dir(path);
 
     // Generate the file
     fs::path file = path / ("FieldModel" + name + ".kt");
@@ -2781,7 +2781,7 @@ void GeneratorKotlin::GenerateFBEFinalModelOptional(const std::string& domain, c
     fs::path path = (fs::path(_output) / CreatePackagePath(domain, package)) / "fbe";
 
     // Create package path
-    CppCommon::Directory::CreateTree(path);
+    create_dir(path);
 
     // Generate the file
     fs::path file = path / ("FinalModelOptional" + name + ".kt");
@@ -2894,7 +2894,7 @@ void GeneratorKotlin::GenerateFBEFinalModelArray(const std::string& domain, cons
     fs::path path = (fs::path(_output) / CreatePackagePath(domain, package)) / "fbe";
 
     // Create package path
-    CppCommon::Directory::CreateTree(path);
+    create_dir(path);
 
     // Generate the file
     fs::path file = path / ("FinalModelArray" + name + ".kt");
@@ -3098,7 +3098,7 @@ void GeneratorKotlin::GenerateFBEFinalModelVector(const std::string& domain, con
     fs::path path = (fs::path(_output) / CreatePackagePath(domain, package)) / "fbe";
 
     // Create package path
-    CppCommon::Directory::CreateTree(path);
+    create_dir(path);
 
     // Generate the file
     fs::path file = path / ("FinalModelVector" + name + ".kt");
@@ -3328,7 +3328,7 @@ void GeneratorKotlin::GenerateFBEFinalModelMap(const std::string& domain, const 
     fs::path path = (fs::path(_output) / CreatePackagePath(domain, package)) / "fbe";
 
     // Create package path
-    CppCommon::Directory::CreateTree(path);
+    create_dir(path);
 
     // Generate the file
     fs::path file = path / ("FinalModelMap" + key_name + value_name + ".kt");
@@ -3548,7 +3548,7 @@ void GeneratorKotlin::GenerateFBEFinalModelEnumFlags(const std::string& domain, 
     fs::path path = (fs::path(_output) / CreatePackagePath(domain, package)) / "fbe";
 
     // Create package path
-    CppCommon::Directory::CreateTree(path);
+    create_dir(path);
 
     // Generate the file
     fs::path file = path / ("FinalModel" + name + ".kt");
@@ -4639,7 +4639,7 @@ void GeneratorKotlin::GenerateContainers(const std::shared_ptr<Package>& p, bool
     fs::path path = fs::path(_output) / CreatePackagePath(domain, *p->name);
 
     // Create package path
-    CppCommon::Directory::CreateTree(path);
+    create_dir(path);
 
     if (p->body)
     {
@@ -4691,7 +4691,7 @@ void GeneratorKotlin::GeneratePackage(const std::shared_ptr<Package>& p)
     fs::path path = fs::path(_output) / CreatePackagePath(domain, *p->name);
 
     // Create package path
-    CppCommon::Directory::CreateTree(path);
+    create_dir(path);
 
     // Generate namespace
     if (p->body)
@@ -5045,7 +5045,7 @@ void GeneratorKotlin::GenerateEnumJson(const std::shared_ptr<Package>& p, const 
     fs::path path = (fs::path(_output) / CreatePackagePath(domain, package)) / "fbe";
 
     // Create package path
-    CppCommon::Directory::CreateTree(path);
+    create_dir(path);
 
     // Generate the output file
     fs::path output = path / (adapter_name + ".kt");
@@ -5481,7 +5481,7 @@ void GeneratorKotlin::GenerateFlagsJson(const std::shared_ptr<Package>& p, const
     fs::path path = (fs::path(_output) / CreatePackagePath(domain, package)) / "fbe";
 
     // Create package path
-    CppCommon::Directory::CreateTree(path);
+    create_dir(path);
 
     // Generate the output file
     fs::path output = path / (adapter_name + ".kt");
@@ -5935,7 +5935,7 @@ void GeneratorKotlin::GenerateStructFieldModel(const std::shared_ptr<Package>& p
     fs::path path = (fs::path(_output) / CreatePackagePath(domain, package)) / "fbe";
 
     // Create package path
-    CppCommon::Directory::CreateTree(path);
+    create_dir(path);
 
     // Generate the file
     fs::path file = path / ("FieldModel" + *s->name + ".kt");
@@ -6314,7 +6314,7 @@ void GeneratorKotlin::GenerateStructModel(const std::shared_ptr<Package>& p, con
     fs::path path = (fs::path(_output) / CreatePackagePath(domain, package)) / "fbe";
 
     // Create package path
-    CppCommon::Directory::CreateTree(path);
+    create_dir(path);
 
     // Generate the file
     fs::path file = path / (*s->name + "Model.kt");
@@ -6473,7 +6473,7 @@ void GeneratorKotlin::GenerateStructFinalModel(const std::shared_ptr<Package>& p
     fs::path path = (fs::path(_output) / CreatePackagePath(domain, package)) / "fbe";
 
     // Create package path
-    CppCommon::Directory::CreateTree(path);
+    create_dir(path);
 
     // Generate the file
     fs::path file = path / ("FinalModel" + *s->name + ".kt");
@@ -6710,7 +6710,7 @@ void GeneratorKotlin::GenerateStructModelFinal(const std::shared_ptr<Package>& p
     fs::path path = (fs::path(_output) / CreatePackagePath(domain, package)) / "fbe";
 
     // Create package path
-    CppCommon::Directory::CreateTree(path);
+    create_dir(path);
 
     // Generate the file
     fs::path file = path / (*s->name + "FinalModel.kt");
@@ -6856,7 +6856,7 @@ void GeneratorKotlin::GenerateProtocolVersion(const std::shared_ptr<Package>& p)
     fs::path path = (fs::path(_output) / CreatePackagePath(domain, package)) / "fbe";
 
     // Create package path
-    CppCommon::Directory::CreateTree(path);
+    create_dir(path);
 
     // Generate the file
     fs::path file = path / ("ProtocolVersion.kt");
@@ -6895,7 +6895,7 @@ void GeneratorKotlin::GenerateSender(const std::shared_ptr<Package>& p, bool fin
     fs::path path = (fs::path(_output) / CreatePackagePath(domain, package)) / "fbe";
 
     // Create package path
-    CppCommon::Directory::CreateTree(path);
+    create_dir(path);
 
     std::string listener = (final ? "IFinalSenderListener" : "ISenderListener");
     std::string sender = (final ? "FinalSender" : "Sender");
@@ -7089,7 +7089,7 @@ void GeneratorKotlin::GenerateSenderListener(const std::shared_ptr<Package>& p, 
     fs::path path = (fs::path(_output) / CreatePackagePath(domain, package)) / "fbe";
 
     // Create package path
-    CppCommon::Directory::CreateTree(path);
+    create_dir(path);
 
     std::string listener = (final ? "IFinalSenderListener" : "ISenderListener");
 
@@ -7144,7 +7144,7 @@ void GeneratorKotlin::GenerateReceiver(const std::shared_ptr<Package>& p, bool f
     fs::path path = (fs::path(_output) / CreatePackagePath(domain, package)) / "fbe";
 
     // Create package path
-    CppCommon::Directory::CreateTree(path);
+    create_dir(path);
 
     std::string listener = (final ? "IFinalReceiverListener" : "IReceiverListener");
     std::string receiver = (final ? "FinalReceiver" : "Receiver");
@@ -7335,7 +7335,7 @@ void GeneratorKotlin::GenerateReceiverListener(const std::shared_ptr<Package>& p
     fs::path path = (fs::path(_output) / CreatePackagePath(domain, package)) / "fbe";
 
     // Create package path
-    CppCommon::Directory::CreateTree(path);
+    create_dir(path);
 
     std::string listener = (final ? "IFinalReceiverListener" : "IReceiverListener");
 
@@ -7403,7 +7403,7 @@ void GeneratorKotlin::GenerateProxy(const std::shared_ptr<Package>& p, bool fina
     fs::path path = (fs::path(_output) / CreatePackagePath(domain, package)) / "fbe";
 
     // Create package path
-    CppCommon::Directory::CreateTree(path);
+    create_dir(path);
 
     std::string listener = (final ? "IFinalProxyListener" : "IProxyListener");
     std::string proxy = (final ? "FinalProxy" : "Proxy");
@@ -7567,7 +7567,7 @@ void GeneratorKotlin::GenerateProxyListener(const std::shared_ptr<Package>& p, b
     fs::path path = (fs::path(_output) / CreatePackagePath(domain, package)) / "fbe";
 
     // Create package path
-    CppCommon::Directory::CreateTree(path);
+    create_dir(path);
 
     std::string listener = (final ? "IFinalProxyListener" : "IProxyListener");
     std::string model = (final ? "FinalModel" : "Model");
@@ -7636,7 +7636,7 @@ void GeneratorKotlin::GenerateClient(const std::shared_ptr<Package>& p, bool fin
     fs::path path = (fs::path(_output) / CreatePackagePath(domain, package)) / "fbe";
 
     // Create package path
-    CppCommon::Directory::CreateTree(path);
+    create_dir(path);
 
     std::string listener = (final ? "IFinalClientListener" : "IClientListener");
     std::string client = (final ? "FinalClient" : "Client");
@@ -7926,7 +7926,7 @@ void GeneratorKotlin::GenerateClientListener(const std::shared_ptr<Package>& p, 
     fs::path path = (fs::path(_output) / CreatePackagePath(domain, package)) / "fbe";
 
     // Create package path
-    CppCommon::Directory::CreateTree(path);
+    create_dir(path);
 
     std::string listener = (final ? "IFinalClientListener" : "IClientListener");
     std::string sender = (final ? "IFinalSenderListener" : "ISenderListener");
@@ -7984,7 +7984,7 @@ void GeneratorKotlin::GenerateJson(const std::shared_ptr<Package>& p)
     fs::path path = (fs::path(_output) / CreatePackagePath(domain, package)) / "fbe";
 
     // Create package path
-    CppCommon::Directory::CreateTree(path);
+    create_dir(path);
 
     // Generate the file
     fs::path file = path / "Json.kt";

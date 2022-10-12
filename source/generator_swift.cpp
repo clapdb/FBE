@@ -122,12 +122,12 @@ void GeneratorSwift::GenerateFBEPackage(const std::string& domain, const std::st
     fs::path path = fs::path(_output) / CreatePackagePath(domain, package);
 
     // Create FBE package path
-    CppCommon::Directory::CreateTree(path);
+    create_dir(path);
 
     fs::path packagePath = fs::path(_output) / package;
 
     // Create FBE package path
-    CppCommon::Directory::CreateTree(packagePath);
+    create_dir(packagePath);
 
     // Generate the file
     fs::path file = packagePath / "Package.swift";
@@ -1395,7 +1395,7 @@ void GeneratorSwift::GenerateFBEFieldModelOptional(const std::string& domain, co
     fs::path path = (fs::path(_output) / CreatePackagePath(domain, package)) / "Fbe";
 
     // Create package path
-    CppCommon::Directory::CreateTree(path);
+    create_dir(path);
 
     // Generate the file
     fs::path file = path / ("FieldModelOptional" + name + ".swift");
@@ -1584,7 +1584,7 @@ void GeneratorSwift::GenerateFBEFieldModelArray(const std::string& domain, const
     fs::path path = (fs::path(_output) / CreatePackagePath(domain, package)) / "Fbe";
 
     // Create package path
-    CppCommon::Directory::CreateTree(path);
+    create_dir(path);
 
     // Generate the file
     fs::path file = path / ("FieldModelArray" + name + ".swift");
@@ -1737,7 +1737,7 @@ void GeneratorSwift::GenerateFBEFieldModelVector(const std::string& domain, cons
     fs::path path = (fs::path(_output) / CreatePackagePath(domain, package)) / "Fbe";
 
     // Create package path
-    CppCommon::Directory::CreateTree(path);
+    create_dir(path);
 
     // Generate the file
     fs::path file = path / ("FieldModelVector" + name + ".swift");
@@ -1937,7 +1937,7 @@ void GeneratorSwift::GenerateFBEFieldModelMap(const std::string& domain, const s
     fs::path path = (fs::path(_output) / CreatePackagePath(domain, package)) / "Fbe";
 
     // Create package path
-    CppCommon::Directory::CreateTree(path);
+    create_dir(path);
 
     // Generate the file
     fs::path file = path / ("FieldModelMap" + key_name + value_name + ".swift");
@@ -2156,7 +2156,7 @@ void GeneratorSwift::GenerateFBEFieldModelEnumFlags(const std::string& domain, c
     fs::path path = (fs::path(_output) / CreatePackagePath(domain, package)) / "Fbe";
 
     // Create package path
-    CppCommon::Directory::CreateTree(path);
+    create_dir(path);
 
     // Generate the file
     fs::path file = path / ("FieldModel" + name + ".swift");
@@ -2839,7 +2839,7 @@ void GeneratorSwift::GenerateFBEFinalModelOptional(const std::string& domain, co
     fs::path path = (fs::path(_output) / CreatePackagePath(domain, package)) / "Fbe";
 
     // Create package path
-    CppCommon::Directory::CreateTree(path);
+    create_dir(path);
 
     // Generate the file
     fs::path file = path / ("FinalModelOptional" + name + ".swift");
@@ -2972,7 +2972,7 @@ void GeneratorSwift::GenerateFBEFinalModelArray(const std::string& domain, const
     fs::path path = (fs::path(_output) / CreatePackagePath(domain, package)) / "Fbe";
 
     // Create package path
-    CppCommon::Directory::CreateTree(path);
+    create_dir(path);
 
     // Generate the file
     fs::path file = path / ("FinalModelArray" + name + ".swift");
@@ -3120,7 +3120,7 @@ void GeneratorSwift::GenerateFBEFinalModelVector(const std::string& domain, cons
     fs::path path = (fs::path(_output) / CreatePackagePath(domain, package)) / "Fbe";
 
     // Create package path
-    CppCommon::Directory::CreateTree(path);
+    create_dir(path);
 
     // Generate the file
     fs::path file = path / ("FinalModelVector" + name + ".swift");
@@ -3251,7 +3251,7 @@ void GeneratorSwift::GenerateFBEFinalModelMap(const std::string& domain, const s
     fs::path path = (fs::path(_output) / CreatePackagePath(domain, package)) / "Fbe";
 
     // Create package path
-    CppCommon::Directory::CreateTree(path);
+    create_dir(path);
 
     // Generate the file
     fs::path file = path / ("FinalModelMap" + key_name + value_name + ".swift");
@@ -3405,7 +3405,7 @@ void GeneratorSwift::GenerateFBEFinalModelEnumFlags(const std::string& domain, c
     fs::path path = (fs::path(_output) / CreatePackagePath(domain, package)) / "Fbe";
 
     // Create package path
-    CppCommon::Directory::CreateTree(path);
+    create_dir(path);
 
     // Generate the file
     fs::path file = path / ("FinalModel" + name + ".swift");
@@ -4200,7 +4200,7 @@ void GeneratorSwift::GenerateContainers(const std::shared_ptr<Package>& p, bool 
     fs::path path = fs::path(_output) / CreatePackagePath(domain, package);
 
     // Create package path
-    CppCommon::Directory::CreateTree(path);
+    create_dir(path);
 
     if (p->body)
     {
@@ -4254,12 +4254,12 @@ void GeneratorSwift::GeneratePackage(const std::shared_ptr<Package>& p)
     fs::path path = fs::path(_output) / CreatePackagePath(domain, package);
 
     // Create package path
-    CppCommon::Directory::CreateTree(path);
+    create_dir(path);
 
     fs::path packagePath = fs::path(_output) / package;
 
     // Create FBE package path
-    CppCommon::Directory::CreateTree(packagePath);
+    create_dir(packagePath);
 
     // Generate the file
     fs::path file = packagePath / "Package.swift";
@@ -5509,7 +5509,7 @@ void GeneratorSwift::GenerateStructFieldModel(const std::shared_ptr<Package>& p,
     fs::path path = (fs::path(_output) / CreatePackagePath(domain, package)) / "Fbe";
 
     // Create package path
-    CppCommon::Directory::CreateTree(path);
+    create_dir(path);
 
     // Generate the file
     fs::path file = path / ("FieldModel" + *s->name + ".swift");
@@ -5984,7 +5984,7 @@ void GeneratorSwift::GenerateStructModel(const std::shared_ptr<Package>& p, cons
     fs::path path = (fs::path(_output) / CreatePackagePath(domain, package)) / "Fbe";
 
     // Create package path
-    CppCommon::Directory::CreateTree(path);
+    create_dir(path);
 
     // Generate the file
     fs::path file = path / (*s->name + "Model.swift");
@@ -6131,7 +6131,7 @@ void GeneratorSwift::GenerateStructFinalModel(const std::shared_ptr<Package>& p,
     fs::path path = (fs::path(_output) / CreatePackagePath(domain, package)) / "Fbe";
 
     // Create package path
-    CppCommon::Directory::CreateTree(path);
+    create_dir(path);
 
     // Generate the file
     fs::path file = path / ("FinalModel" + *s->name + ".swift");
@@ -6388,7 +6388,7 @@ void GeneratorSwift::GenerateStructModelFinal(const std::shared_ptr<Package>& p,
     fs::path path = (fs::path(_output) / CreatePackagePath(domain, package)) / "Fbe";
 
     // Create package path
-    CppCommon::Directory::CreateTree(path);
+    create_dir(path);
 
     // Generate the file
     fs::path file = path / (*s->name + "FinalModel.swift");
@@ -6532,7 +6532,7 @@ void GeneratorSwift::GenerateProtocolVersion(const std::shared_ptr<Package>& p)
     fs::path path = (fs::path(_output) / CreatePackagePath(domain, package)) / "Fbe";
 
     // Create package path
-    CppCommon::Directory::CreateTree(path);
+    create_dir(path);
 
     // Generate the file
     fs::path file = path / ("ProtocolVersion.swift");
@@ -6568,7 +6568,7 @@ void GeneratorSwift::GenerateSender(const std::shared_ptr<Package>& p, bool fina
     fs::path path = (fs::path(_output) / CreatePackagePath(domain, package)) / "Fbe";
 
     // Create package path
-    CppCommon::Directory::CreateTree(path);
+    create_dir(path);
 
     std::string sender = (final ? "FinalSender" : "Sender");
     std::string model = (final ? "FinalModel" : "Model");
@@ -6767,7 +6767,7 @@ void GeneratorSwift::GenerateReceiver(const std::shared_ptr<Package>& p, bool fi
     fs::path path = (fs::path(_output) / CreatePackagePath(domain, package)) / "Fbe";
 
     // Create package path
-    CppCommon::Directory::CreateTree(path);
+    create_dir(path);
 
     std::string listener = (final ? "FinalReceiverListener" : "ReceiverListener");
     std::string receiver = (final ? "FinalReceiver" : "Receiver");
@@ -6961,7 +6961,7 @@ void GeneratorSwift::GenerateReceiverListener(const std::shared_ptr<Package>& p,
     fs::path path = (fs::path(_output) / CreatePackagePath(domain, package)) / "Fbe";
 
     // Create package path
-    CppCommon::Directory::CreateTree(path);
+    create_dir(path);
 
     std::string listener = (final ? "FinalReceiverListener" : "ReceiverListener");
 
@@ -7048,7 +7048,7 @@ void GeneratorSwift::GenerateProxy(const std::shared_ptr<Package>& p, bool final
     fs::path path = (fs::path(_output) / CreatePackagePath(domain, package)) / "Fbe";
 
     // Create package path
-    CppCommon::Directory::CreateTree(path);
+    create_dir(path);
 
     std::string listener = (final ? "FinalProxyListener" : "ProxyListener");
     std::string proxy = (final ? "FinalProxy" : "Proxy");
@@ -7219,7 +7219,7 @@ void GeneratorSwift::GenerateProxyListener(const std::shared_ptr<Package>& p, bo
     fs::path path = (fs::path(_output) / CreatePackagePath(domain, package)) / "Fbe";
 
     // Create package path
-    CppCommon::Directory::CreateTree(path);
+    create_dir(path);
 
     std::string listener = (final ? "FinalProxyListener" : "ProxyListener");
     std::string model = (final ? "FinalModel" : "Model");
@@ -7305,7 +7305,7 @@ void GeneratorSwift::GenerateClient(const std::shared_ptr<Package>& p, bool fina
     fs::path path = (fs::path(_output) / CreatePackagePath(domain, package)) / "Fbe";
 
     // Create package path
-    CppCommon::Directory::CreateTree(path);
+    create_dir(path);
 
     std::string listener = (final ? "FinalReceiverListener" : "ReceiverListener");
     std::string client = (final ? "FinalClient" : "Client");

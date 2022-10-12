@@ -4404,7 +4404,7 @@ void GeneratorCSharp::GeneratePackage(const std::string& domain, const std::shar
     fs::path output = _output;
 
     // Create package path
-    CppCommon::Directory::CreateTree(output);
+    create_dir(output);
 
     // Generate common file
     GenerateFBE(domain, output);
