@@ -55,7 +55,7 @@ add_subdirectory("modules/memory")
 add_subdirectory("modules/cpp-optparse")
 
 # Link libraries
-list(APPEND LINKLIBS cppcommon)
+#list(APPEND LINKLIBS cppcommon)
 
 # System directories
 #include_directories("${CMAKE_CURRENT_SOURCE_DIR}/CppCommon")
