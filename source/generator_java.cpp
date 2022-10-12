@@ -107,7 +107,7 @@ void GeneratorJava::GenerateImports(const std::shared_ptr<Package>& p)
 
 void GeneratorJava::GenerateFBEPackage(const std::string& domain, const std::string& package)
 {
-    fs::path path = fs::path(_output) / CreatePackagePath(domain, package);
+    fs::path path = fs::path(_output) / fs::path(CreatePackagePath(domain, package));
 
     // Create FBE package path
     create_dir(path);
@@ -115,7 +115,7 @@ void GeneratorJava::GenerateFBEPackage(const std::string& domain, const std::str
 
 void GeneratorJava::GenerateFBEPair(const std::string& domain, const std::string& package)
 {
-    fs::path path = fs::path(_output) / CreatePackagePath(domain, package);
+    fs::path path = fs::path(_output) / fs::path(CreatePackagePath(domain, package));
 
     // Generate the file
     fs::path file = path / "Pair.java";
@@ -7214,9 +7214,12 @@ bool GeneratorJava::IsPrimitiveType(const std::string& type, bool optional)
 
 std::string GeneratorJava::CreatePackagePath(const std::string& domain, const std::string& package)
 {
-    std::string result = domain;
-    replace_all(result, ".", std::string(1, fs::path::preferred_separator));
-    return result + fs::path::preferred_separator + package;
+    if (!domain.empty()) {
+        std::string result = domain;
+        replace_all(result, ".", std::string(1, fs::path::preferred_separator));
+        return result + fs::path::preferred_separator + package;
+    }
+    return package;
 }
 
 std::string GeneratorJava::ConvertEnumBase(const std::string& type)
