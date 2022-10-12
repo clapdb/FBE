@@ -19,7 +19,7 @@ void Generator::Store(const fs::path& filename)
     std::string previous;
 
     // Try to read the previous file content
-    if (filename.IsExists())
+    if (fs::exists(filename))
     {
         CppCommon::File file = filename;
         file.Open(true, false);
