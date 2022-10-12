@@ -43,6 +43,11 @@ set(CMAKE_MODULE_LINKER_FLAGS_DEBUG "${CMAKE_MODULE_LINKER_FLAGS_DEBUG} ${SANITI
 find_package(BISON)
 find_package(FLEX)
 find_package(xxHash REQUIRED)
+# boost
+find_package(Boost REQUIRED)
+include_directories(SYSTEM ${Boost_INCLUDE_DIRS})
+
+
 
 # Modules
 add_subdirectory("modules/Catch2")

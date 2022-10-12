@@ -29,8 +29,19 @@
 #include <set>
 #include <string>
 #include <vector>
+#include <boost/lexical_cast.hpp>
+#include <boost/uuid/uuid.hpp>
+#include <boost/uuid/uuid_generators.hpp>
+#include <boost/uuid/uuid_io.hpp>
 
 namespace fs = std::filesystem;
+
+inline auto unique_name() -> std::string  {
+    using boost::lexical_cast;
+    using boost::uuids::uuid;
+    using boost::uuids::random_generator;
+    return lexical_cast<std::string>((random_generator())());
+}
 
 int yyerror(const char* msg);
 int yyerror(const std::string& msg);

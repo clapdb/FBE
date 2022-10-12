@@ -32,7 +32,8 @@ void Generator::Store(const fs::path& filename)
         return;
 
     // Store the buffer into unique file
-    fs::path unique = filename.parent() / fs::path::unique();
+//    fs::path unique = filename.parent_path() / fs::path::unique();
+    fs::path unique = filename.parent_path() / unique_name();
     CppCommon::File::WriteAllText(unique, _buffer);
 
 #if defined(_WIN32) || defined(_WIN64) || defined(__CYGWIN__)
