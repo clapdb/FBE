@@ -106,6 +106,12 @@ inline auto to_upper(std::string& src) -> std::string& {
     return src;
 }
 
+inline auto to_upper(const std::string& src) -> std::string {
+    auto rst = src;
+    to_upper(rst);
+    return rst;
+}
+
 inline auto startswith(const std::string& src, const std::string& prefix) -> bool {
     return src.starts_with(prefix);
 }
