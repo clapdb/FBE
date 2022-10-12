@@ -269,7 +269,7 @@ int main(int argc, char** argv)
         yyerror("Input file not exist - " + input);
 
     // Decompose the parent directory
-    directory = file.parent().string();
+    directory = file.parent_path().string();
 
     // Open the input file
     FILE* in = fopen(input.c_str(), "r");
