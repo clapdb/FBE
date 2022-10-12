@@ -267,7 +267,7 @@ int main(int argc, char** argv)
 
     // Check if the input file exist
     //if (!file.IsFileExists())
-    if (fs::exists(file))
+    if (not fs::exists(file))
         yyerror("Input file not exist - " + input);
 
     // Decompose the parent directory
