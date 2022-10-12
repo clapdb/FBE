@@ -116,6 +116,10 @@ inline auto startswith(const std::string& src, const std::string& prefix) -> boo
     return src.starts_with(prefix);
 }
 
+inline auto endswith(const std::string& src, const std::string& postfix) -> bool {
+    return src.ends_with(postfix);
+}
+
 int yyerror(const char* msg);
 int yyerror(const std::string& msg);
 

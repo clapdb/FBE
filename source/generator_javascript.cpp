@@ -12726,7 +12726,7 @@ std::string GeneratorJavaScript::ConvertString(const std::string& value)
 {
     std::string result;
 
-    if (startswith(value, "\"") && CppCommon::StringUtils::EndsWith(value, "\"") && (value.size() >= 2))
+    if (startswith(value, "\"") && endswith(value, "\"") && (value.size() >= 2))
         result = value.substr(1, value.size() - 2);
     else
         result = value;
