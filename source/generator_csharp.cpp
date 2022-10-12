@@ -8322,7 +8322,7 @@ std::string GeneratorCSharp::ConvertTypeName(const std::string& type, bool optio
 
 std::string GeneratorCSharp::ConvertTypeName(const std::string& domain, const std::string& package, const std::string& type, bool optional)
 {
-    return (CppCommon::StringUtils::Contains(type, '.') ? "" : ("global::" + domain + package + ".")) + ConvertTypeName(type, optional);
+    return (contains(type, '.') ? "" : ("global::" + domain + package + ".")) + ConvertTypeName(type, optional);
 }
 
 std::string GeneratorCSharp::ConvertTypeName(const StructField& field)
@@ -8694,7 +8694,7 @@ std::string GeneratorCSharp::ConvertDefault(const std::string& domain, const std
         return "null";
     else if (!IsKnownType(*field.type))
     {
-        std::string ns = "global::" + domain + (CppCommon::StringUtils::Contains(*field.type, '.') ? "" : (package + "."));
+        std::string ns = "global::" + domain + (contains(*field.type, '.') ? "" : (package + "."));
         return ns + ConvertTypeName(field) + ".Default";
     }
 

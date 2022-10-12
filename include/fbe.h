@@ -170,6 +170,11 @@ inline auto split(std::string_view str, char delimiter, bool skip_empty) -> std:
 
     return tokens;
 }
+
+inline auto contains(const std::string& src, char ch) -> bool {
+    return src.find(ch) != std::string ::npos;
+}
+
 int yyerror(const char* msg);
 int yyerror(const std::string& msg);
 
