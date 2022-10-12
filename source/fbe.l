@@ -262,10 +262,12 @@ int main(int argc, char** argv)
     // Open the input file
     if (!quiet) std::cout << "Open input file - " + input + "...";
 
-    CppCommon::File file(input);
+    //CppCommon::File file(input);
+    fs::path file(input);
 
     // Check if the input file exist
-    if (!file.IsFileExists())
+    //if (!file.IsFileExists())
+    if (fs::exists(file))
         yyerror("Input file not exist - " + input);
 
     // Decompose the parent directory
