@@ -52,7 +52,7 @@ inline void create_dir(const fs::path& path) {
         fs::permissions(path, fs::perms::owner_all, code);
         return;
     }
-    throw std::filesystem::filesystem_error("create dir failed", code);
+    // the folder exists
 }
 
 inline auto read_all(const fs::path& path) -> std::string {
