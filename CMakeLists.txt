@@ -45,7 +45,9 @@ find_package(FLEX)
 find_package(xxHash REQUIRED)
 
 # Modules
-add_subdirectory("modules")
+add_subdirectory("modules/Catch2")
+add_subdirectory("modules/memory")
+add_subdirectory("modules/cpp-optparse")
 
 # Link libraries
 list(APPEND LINKLIBS cppcommon)

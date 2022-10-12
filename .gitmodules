@@ -1,6 +1,3 @@
-[submodule "modules/cpp-optparse"]
-	path = modules/cpp-optparse
-	url = https://github.com/weisslj/cpp-optparse.git
 [submodule "modules/Catch2"]
 	path = modules/Catch2
 	url = https://github.com/catchorg/Catch2.git
