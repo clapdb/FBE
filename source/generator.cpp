@@ -65,7 +65,7 @@ void Generator::Store(const fs::path& filename)
     throwex CppCommon::FileSystemException("Cannot generate the output file!").Attach(filename);
 #else
     // Rename the unique file inside a loop with retries
-    fs::path::Rename(unique, filename);
+    fs::rename(unique, filename);
 #endif
 }
 
