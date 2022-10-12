@@ -47,6 +47,7 @@ find_package(xxHash REQUIRED)
 find_package(Boost REQUIRED)
 include_directories(SYSTEM ${Boost_INCLUDE_DIRS})
 include_directories("modules/memory")
+include_directories("modules/Catch2/single_include")
 
 
 
