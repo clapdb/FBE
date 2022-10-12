@@ -7865,7 +7865,7 @@ std::string GeneratorSwift::ConvertEnumConstant(const std::string& base, const s
             bool first = true;
             for (const auto& it : flags)
             {
-                result += std::string(first ? "" : " | ") + "Self." + CppCommon::StringUtils::ToTrim(it) + ".rawValue";
+                result += std::string(first ? "" : " | ") + "Self." + trim(it) + ".rawValue";
                 first = false;
             }
         }
@@ -8084,7 +8084,7 @@ std::string GeneratorSwift::ConvertTypeFieldName(const std::string& type)
     if (pos != std::string::npos)
         result.assign(type, pos + 1, type.size() - pos);
 
-    CppCommon::StringUtils::ReplaceAll(result, ".", "");
+    replace_all(result, ".", "");
     return result;
 }
 
@@ -8297,7 +8297,7 @@ std::string GeneratorSwift::ConvertConstant(const std::string& domain, const std
             bool first = true;
             for (const auto& it : flags)
             {
-                std::string flag = CppCommon::StringUtils::ToTrim(it);
+                std::string flag = trim(it);
                 result += (first ? "" : ", ") + flag + ".value!";
                 first = false;
             }
@@ -8463,7 +8463,7 @@ std::string GeneratorSwift::ConvertOutputStreamValue(const std::string& type, co
 std::string GeneratorSwift::ConvertDomain(const std::shared_ptr<Package>& package)
 {
     std::string domain = (package->domain && !package->domain->empty()) ? (*package->domain + ".") : "";
-    CppCommon::StringUtils::ReplaceAll(domain, "com.", "");
+    replace_all(domain, "com.", "");
     domain[0] = toupper(domain[0]);
     size_t pos = domain.find_last_of('.');
     while(pos != std::string::npos)

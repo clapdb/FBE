@@ -30,11 +30,13 @@
 #include <string>
 #include <vector>
 #include <map>
+#include <fstream>
 #include <boost/lexical_cast.hpp>
 #include <boost/uuid/uuid.hpp>
 #include <boost/uuid/uuid_generators.hpp>
 #include <boost/uuid/uuid_io.hpp>
 
+// file and directory section
 namespace fs = std::filesystem;
 
 inline auto unique_name() -> std::string  {
@@ -51,6 +53,47 @@ inline void create_dir(const fs::path& path) {
         return;
     }
     throw std::filesystem::filesystem_error("create dir failed", code);
+}
+
+inline auto read_all(const fs::path& path) -> std::string {
+// Sanity check
+    if (!std::filesystem::is_regular_file(path))
+        return { };
+    // Open the file
+    // Note that we have to use binary mode as we want to return a string
+    // representing matching the bytes of the file on the file system.
+    std::ifstream file(path, std::ios::in | std::ios::binary);
+    if (!file.is_open())
+        return { };
+    // Read contents
+    std::string content{std::istreambuf_iterator<char>(file), std::istreambuf_iterator<char>()};
+    // Close the file
+    file.close();
+    return content;
+}
+
+inline void write_all(const fs::path& path, const std::string& content) {
+    std::ofstream file(path, std::ios::out);
+    file << content;
+    file.close();
+}
+
+// string section
+inline auto replace_all(std::string& inout, std::string_view what, std::string_view with) -> size_t
+{
+    std::size_t count{};
+    for (std::string::size_type pos{};
+         inout.npos != (pos = inout.find(what.data(), pos, what.length()));
+         pos += with.length(), ++count) {
+        inout.replace(pos, what.length(), with.data(), with.length());
+    }
+    return count;
+}
+inline auto trim(const std::string &s) -> std::string
+{
+    auto wsfront=std::find_if_not(s.begin(),s.end(),[](int c){return std::isspace(c);});
+    auto wsback=std::find_if_not(s.rbegin(),s.rend(),[](int c){return std::isspace(c);}).base();
+    return (wsback<=wsfront ? std::string() : std::string(wsfront,wsback));
 }
 
 int yyerror(const char* msg);

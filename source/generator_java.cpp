@@ -7215,7 +7215,7 @@ bool GeneratorJava::IsPrimitiveType(const std::string& type, bool optional)
 std::string GeneratorJava::CreatePackagePath(const std::string& domain, const std::string& package)
 {
     std::string result = domain;
-    CppCommon::StringUtils::ReplaceAll(result, ".", std::string(1, fs::path::separator()));
+    replace_all(result, ".", std::string(1, fs::path::separator()));
     return result + fs::path::separator() + package;
 }
 
@@ -7380,7 +7380,7 @@ std::string GeneratorJava::ConvertEnumConstant(const std::string& type, const st
             bool first = true;
             for (const auto& it : flags)
             {
-                result += (first ? "" : "|") + CppCommon::StringUtils::ToTrim(it) + ".getRaw()";
+                result += (first ? "" : "|") + trim(it) + ".getRaw()";
                 first = false;
             }
         }
@@ -7627,7 +7627,7 @@ std::string GeneratorJava::ConvertTypeFieldName(const std::string& type)
         return "UUID";
 
     std::string result = type;
-    CppCommon::StringUtils::ReplaceAll(result, ".", "");
+    replace_all(result, ".", "");
     return result;
 }
 
@@ -7828,7 +7828,7 @@ std::string GeneratorJava::ConvertConstant(const std::string& domain, const std:
             bool first = true;
             for (const auto& it : flags)
             {
-                std::string flag = CppCommon::StringUtils::ToTrim(it);
+                std::string flag = trim(it);
                 size_t pos = flag.find_last_of('.');
                 if (pos != std::string::npos)
                 {

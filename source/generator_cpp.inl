@@ -1741,7 +1741,7 @@ void GeneratorCpp::GeneratePtrStruct_Header(const std::shared_ptr<Package>& p, c
     if (s->response)
     {
         std::string response = *s->response->response;
-        bool imported = CppCommon::StringUtils::ReplaceAll(response, ".", "");
+        bool imported = replace_all(response, ".", "");
         if (!imported)
         {
             WriteLine();
@@ -1790,7 +1790,7 @@ void GeneratorCpp::GeneratePtrStruct_Header(const std::shared_ptr<Package>& p, c
     if (s->response)
     {
         std::string response = *s->response->response;
-        CppCommon::StringUtils::ReplaceAll(response, ".", "::");
+        replace_all(response, ".", "::");
         WriteLineIndent("typedef " + response + " Response;");
         if (s->body && !s->body->fields.empty())
             WriteLine();
@@ -3576,7 +3576,7 @@ std::string GeneratorCpp::ConvertPtrTypeName(const std::string& package, const s
         return "FBE::uuid_t";
     
     std::string result = type;
-    bool pkg = !CppCommon::StringUtils::ReplaceAll(result, ".", "::");
+    bool pkg = !replace_all(result, ".", "::");
     std::string ret = (pkg ? ("::" + package) : "") + "::" + result;
     return ret;
 }
@@ -3676,7 +3676,7 @@ std::string GeneratorCpp::ConvertPtrFieldModelType(const std::shared_ptr<Package
     std::string field_model_type;
     if (IsStructType(p, *field->type) || (ImportPtr() && !IsCurrentPackageType(*field->type))) {
         std::string model_name = std::string("FieldModel") + (field->ptr ? "Ptr" : "") + "_" +  (IsCurrentPackageType(*field->type) ? (*p->name + "_") : "") + *field->type;
-        CppCommon::StringUtils::ReplaceAll(model_name, ".", "_");
+        replace_all(model_name, ".", "_");
         if (IsContainerType(*field)) {
             field_model_type = "FieldModel";
             if (field->array) {
@@ -3690,7 +3690,7 @@ std::string GeneratorCpp::ConvertPtrFieldModelType(const std::shared_ptr<Package
                 // 2. import-ptr struct type
                 if (IsStructType(p, *field->key) || (!IsCurrentPackageType(*field->key) && ImportPtr())) {
                     kType = std::string("FieldModel") + "_" + (IsCurrentPackageType(*field->type) ? (*p->name + "_") : "") + *field->type;
-                    CppCommon::StringUtils::ReplaceAll(kType, ".", "_");
+                    replace_all(kType, ".", "_");
 
                 } else {
                     kType = std::string("FieldModel<") + ConvertPtrTypeName(*p->name, *field->key) + ">";

@@ -8096,7 +8096,7 @@ bool GeneratorKotlin::IsUnsignedType(const std::string& type)
 std::string GeneratorKotlin::CreatePackagePath(const std::string& domain, const std::string& package)
 {
     std::string result = domain;
-    CppCommon::StringUtils::ReplaceAll(result, ".", std::string(1, fs::path::separator()));
+    replace_all(result, ".", std::string(1, fs::path::separator()));
     return result + fs::path::separator() + package;
 }
 
@@ -8329,7 +8329,7 @@ std::string GeneratorKotlin::ConvertEnumConstant(const std::string& base, const 
             bool first = true;
             for (const auto& it : flags)
             {
-                result += (first ? "" : " or ") + CppCommon::StringUtils::ToTrim(it) + ".raw" + (flag ? ConvertEnumFlags(base) : "");
+                result += (first ? "" : " or ") + trim(it) + ".raw" + (flag ? ConvertEnumFlags(base) : "");
                 first = false;
             }
         }
@@ -8527,7 +8527,7 @@ std::string GeneratorKotlin::ConvertTypeFieldName(const std::string& type)
         return "UUID";
 
     std::string result = type;
-    CppCommon::StringUtils::ReplaceAll(result, ".", "");
+    replace_all(result, ".", "");
     return result;
 }
 
@@ -8738,7 +8738,7 @@ std::string GeneratorKotlin::ConvertConstant(const std::string& domain, const st
             bool first = true;
             for (const auto& it : flags)
             {
-                std::string flag = CppCommon::StringUtils::ToTrim(it);
+                std::string flag = trim(it);
                 size_t pos = flag.find_last_of('.');
                 if (pos != std::string::npos)
                 {

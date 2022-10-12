@@ -19,13 +19,14 @@ void Generator::Store(const fs::path& filename)
     std::string previous;
 
     // Try to read the previous file content
-    if (fs::exists(filename))
+    /*if (fs::exists(filename))
     {
         CppCommon::File file = filename;
         file.Open(true, false);
         previous = file.ReadAllText();
         file.Close();
-    }
+    }*/
+    previous = read_all(filename);
 
     // Compare the buffer with previous content in order to store only new content
     if (_buffer == previous)
@@ -34,7 +35,7 @@ void Generator::Store(const fs::path& filename)
     // Store the buffer into unique file
 //    fs::path unique = filename.parent_path() / fs::path::unique();
     fs::path unique = filename.parent_path() / unique_name();
-    CppCommon::File::WriteAllText(unique, _buffer);
+    write_all(unique, _buffer);
 
 #if defined(_WIN32) || defined(_WIN64) || defined(__CYGWIN__)
     // Sometimes it happens that Visual Studio opens generated files on a fly to analyze.

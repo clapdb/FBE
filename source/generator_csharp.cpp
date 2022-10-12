@@ -7336,7 +7336,7 @@ void GeneratorCSharp::GenerateClient(const std::string& domain, const std::share
         {
             std::string response_name = response;
             std::string response_type = ConvertTypeName(domain, *p->name, response, false);
-            CppCommon::StringUtils::ReplaceAll(response_name, ".", "");
+            replace_all(response_name, ".", "");
 
             WriteLineIndent("private Dictionary<Guid, Tuple<DateTime, TimeSpan, TaskCompletionSource<" + response_type + ">>> _requestsById" + response_name + ";");
             WriteLineIndent("private SortedDictionary<DateTime, Guid> _requestsByTimestamp" + response_name + ";");
@@ -7370,7 +7370,7 @@ void GeneratorCSharp::GenerateClient(const std::string& domain, const std::share
         {
             std::string response_name = response;
             std::string response_type = ConvertTypeName(domain, *p->name, response, false);
-            CppCommon::StringUtils::ReplaceAll(response_name, ".", "");
+            replace_all(response_name, ".", "");
 
             WriteLineIndent("_requestsById" + response_name + " = new Dictionary<Guid, Tuple<DateTime, TimeSpan, TaskCompletionSource<" + response_type + ">>>();");
             WriteLineIndent("_requestsByTimestamp" + response_name + " = new SortedDictionary<DateTime, Guid>();");
@@ -7403,7 +7403,7 @@ void GeneratorCSharp::GenerateClient(const std::string& domain, const std::share
         {
             std::string response_name = response;
             std::string response_type = ConvertTypeName(domain, *p->name, response, false);
-            CppCommon::StringUtils::ReplaceAll(response_name, ".", "");
+            replace_all(response_name, ".", "");
 
             WriteLineIndent("_requestsById" + response_name + " = new Dictionary<Guid, Tuple<DateTime, TimeSpan, TaskCompletionSource<" + response_type + ">>>();");
             WriteLineIndent("_requestsByTimestamp" + response_name + " = new SortedDictionary<DateTime, Guid>();");
@@ -7423,8 +7423,8 @@ void GeneratorCSharp::GenerateClient(const std::string& domain, const std::share
                 std::string request_type = ConvertTypeName(domain, *p->name, *s->name, false);
                 std::string response_type = (s->response) ? ConvertTypeName(domain, *p->name, *s->response->response, false) : "";
                 std::string response_field = (s->response) ? *s->response->response : "";
-                CppCommon::StringUtils::ReplaceAll(request_name, ".", "");
-                CppCommon::StringUtils::ReplaceAll(response_field, ".", "");
+                replace_all(request_name, ".", "");
+                replace_all(response_field, ".", "");
 
                 WriteLine();
                 if (response_type.empty())
@@ -7581,7 +7581,7 @@ void GeneratorCSharp::GenerateClient(const std::string& domain, const std::share
     {
         std::string response_name = response;
         std::string response_type = ConvertTypeName(domain, *p->name, response, false);
-        CppCommon::StringUtils::ReplaceAll(response_name, ".", "");
+        replace_all(response_name, ".", "");
 
         WriteLine();
         WriteLineIndent("public bool OnReceiveResponse(" + response_type + " response)");
@@ -7601,7 +7601,7 @@ void GeneratorCSharp::GenerateClient(const std::string& domain, const std::share
                 {
                     std::string struct_response_name = *s->response->response;
                     std::string struct_response_type = ConvertTypeName(domain, *p->name, *s->response->response, false);
-                    CppCommon::StringUtils::ReplaceAll(struct_response_name, ".", "");
+                    replace_all(struct_response_name, ".", "");
 
                     if ((struct_response_type == response_type) && (cache.find(struct_response_type) == cache.end()))
                     {
@@ -7641,7 +7641,7 @@ void GeneratorCSharp::GenerateClient(const std::string& domain, const std::share
             {
                 std::string struct_response_name = *s->name;
                 std::string struct_response_type = ConvertTypeName(domain, *p->name, *s->name, false);
-                CppCommon::StringUtils::ReplaceAll(struct_response_name, ".", "");
+                replace_all(struct_response_name, ".", "");
 
                 if ((responses.find(*s->name) == responses.end()) && (cache.find(struct_response_type) == cache.end()))
                 {
@@ -7661,8 +7661,8 @@ void GeneratorCSharp::GenerateClient(const std::string& domain, const std::share
         std::string reject_name = reject.first;
         std::string reject_type = ConvertTypeName(domain, *p->name, reject.first, false);
         bool global = reject.second;
-        bool imported = CppCommon::StringUtils::ReplaceAll(reject_name, ".", "");
-        CppCommon::StringUtils::ReplaceAll(reject_name, ".", "");
+        bool imported = replace_all(reject_name, ".", "");
+        replace_all(reject_name, ".", "");
 
         WriteLine();
         WriteLineIndent("public bool OnReceiveReject(" + reject_type + " reject)");
@@ -7718,11 +7718,11 @@ void GeneratorCSharp::GenerateClient(const std::string& domain, const std::share
                     {
                         std::string struct_response_name = *s->response->response;
                         std::string struct_response_type = ConvertTypeName(domain, *p->name, *s->response->response, false);
-                        CppCommon::StringUtils::ReplaceAll(struct_response_name, ".", "");
+                        replace_all(struct_response_name, ".", "");
 
                         std::string struct_reject_name = *r.reject;
                         std::string struct_reject_type = ConvertTypeName(domain, *p->name, *r.reject, false);
-                        CppCommon::StringUtils::ReplaceAll(struct_reject_name, ".", "");
+                        replace_all(struct_reject_name, ".", "");
 
                         if ((struct_reject_type == reject_type) && (cache.find(struct_response_name) == cache.end()))
                         {
@@ -7763,7 +7763,7 @@ void GeneratorCSharp::GenerateClient(const std::string& domain, const std::share
             {
                 std::string struct_reject_name = *s->name;
                 std::string struct_reject_type = ConvertTypeName(domain, *p->name, *s->name, false);
-                CppCommon::StringUtils::ReplaceAll(struct_reject_name, ".", "");
+                replace_all(struct_reject_name, ".", "");
 
                 if ((rejects.find(*s->name) == rejects.end()) && (cache.find(struct_reject_type) == cache.end()))
                 {
@@ -7788,7 +7788,7 @@ void GeneratorCSharp::GenerateClient(const std::string& domain, const std::share
             {
                 std::string struct_notify_name = *s->name;
                 std::string struct_notify_type = ConvertTypeName(domain, *p->name, *s->name, false);
-                CppCommon::StringUtils::ReplaceAll(struct_notify_name, ".", "");
+                replace_all(struct_notify_name, ".", "");
 
                 if (cache.find(struct_notify_type) == cache.end())
                 {
@@ -7813,7 +7813,7 @@ void GeneratorCSharp::GenerateClient(const std::string& domain, const std::share
             {
                 std::string struct_response_name = *s->name;
                 std::string struct_response_type = ConvertTypeName(domain, *p->name, *s->name, false);
-                CppCommon::StringUtils::ReplaceAll(struct_response_name, ".", "");
+                replace_all(struct_response_name, ".", "");
 
                 if (cache.find(struct_response_type) == cache.end())
                 {
@@ -7844,7 +7844,7 @@ void GeneratorCSharp::GenerateClient(const std::string& domain, const std::share
     {
         std::string response_name = response;
         std::string response_type = ConvertTypeName(domain, *p->name, response, false);
-        CppCommon::StringUtils::ReplaceAll(response_name, ".", "");
+        replace_all(response_name, ".", "");
 
         WriteLine();
         WriteLineIndent("foreach(var request in _requestsById" + response_name + ")");
@@ -7874,7 +7874,7 @@ void GeneratorCSharp::GenerateClient(const std::string& domain, const std::share
     {
         std::string response_name = response;
         std::string response_type = ConvertTypeName(domain, *p->name, response, false);
-        CppCommon::StringUtils::ReplaceAll(response_name, ".", "");
+        replace_all(response_name, ".", "");
 
         WriteLine();
         WriteLineIndent("while (_requestsByTimestamp" + response_name + ".Count > 0)");
@@ -7972,7 +7972,7 @@ void GeneratorCSharp::GenerateClient(const std::string& domain, const std::share
     {
         std::string response_name = response;
         std::string response_type = ConvertTypeName(domain, *p->name, response, false);
-        CppCommon::StringUtils::ReplaceAll(response_name, ".", "");
+        replace_all(response_name, ".", "");
 
         WriteLineIndent("public delegate void ReceiveResponseHandler_" + response_name + "(" + response_type + " response);");
         WriteLineIndent("public event ReceiveResponseHandler_" + response_name + " ReceivedResponse_" + response_name + " = (response) => {};");
@@ -7987,7 +7987,7 @@ void GeneratorCSharp::GenerateClient(const std::string& domain, const std::share
             {
                 std::string struct_response_name = *s->name;
                 std::string struct_response_type = ConvertTypeName(domain, *p->name, *s->name, false);
-                CppCommon::StringUtils::ReplaceAll(struct_response_name, ".", "");
+                replace_all(struct_response_name, ".", "");
 
                 if ((responses.find(*s->name) == responses.end()) && (cache.find(struct_response_type) == cache.end()))
                 {
@@ -8004,7 +8004,7 @@ void GeneratorCSharp::GenerateClient(const std::string& domain, const std::share
     {
         std::string reject_name = reject.first;
         std::string reject_type = ConvertTypeName(domain, *p->name, reject.first, false);
-        CppCommon::StringUtils::ReplaceAll(reject_name, ".", "");
+        replace_all(reject_name, ".", "");
 
         WriteLineIndent("public delegate void ReceiveRejectHandler_" + reject_name + "(" + reject_type + " reject);");
         WriteLineIndent("public event ReceiveRejectHandler_" + reject_name + " ReceivedReject_" + reject_name + " = (reject) => {};");
@@ -8019,7 +8019,7 @@ void GeneratorCSharp::GenerateClient(const std::string& domain, const std::share
             {
                 std::string struct_reject_name = *s->name;
                 std::string struct_reject_type = ConvertTypeName(domain, *p->name, *s->name, false);
-                CppCommon::StringUtils::ReplaceAll(struct_reject_name, ".", "");
+                replace_all(struct_reject_name, ".", "");
 
                 if ((rejects.find(*s->name) == rejects.end()) && (cache.find(struct_reject_type) == cache.end()))
                 {
@@ -8041,7 +8041,7 @@ void GeneratorCSharp::GenerateClient(const std::string& domain, const std::share
             {
                 std::string struct_notify_name = *s->name;
                 std::string struct_notify_type = ConvertTypeName(domain, *p->name, *s->name, false);
-                CppCommon::StringUtils::ReplaceAll(struct_notify_name, ".", "");
+                replace_all(struct_notify_name, ".", "");
 
                 if (cache.find(struct_notify_type) == cache.end())
                 {
@@ -8212,7 +8212,7 @@ std::string GeneratorCSharp::ConvertEnumConstant(const std::string& type, const 
         bool first = true;
         for (const auto& it : flags)
         {
-            std::string flag = CppCommon::StringUtils::ToTrim(it);
+            std::string flag = trim(it);
             result += (first ? "" : "_ | _") + flag;
             first = false;
         }
@@ -8568,7 +8568,7 @@ std::string GeneratorCSharp::ConvertConstant(const std::string& domain, const st
             bool first = true;
             for (const auto& it : flags)
             {
-                std::string flag = CppCommon::StringUtils::ToTrim(it);
+                std::string flag = trim(it);
                 std::string ns = (CppCommon::StringUtils::CountAll(flag, ".") > 1) ? ("global::" + domain) : ("global::" + domain + package + ".");
                 result += (first ? "" : " | ") + ns + flag;
                 first = false;

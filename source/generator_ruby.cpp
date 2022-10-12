@@ -5916,7 +5916,7 @@ std::string GeneratorRuby::ConvertTitle(const std::string& type)
         bool first = true;
         for (const auto& it : parts)
         {
-            std::string value = CppCommon::StringUtils::ToTrim(it);
+            std::string value = trim(it);
             value[0] = std::toupper(value[0]);
             result += (first ? "" : "::") + value;
             first = false;
@@ -6005,13 +6005,13 @@ std::string GeneratorRuby::ConvertEnumConstant(const std::string& type, const st
             bool first = true;
             for (const auto& it : flags)
             {
-                result += std::string(first ? "" : "|") + prefix + CppCommon::StringUtils::ToTrim(it) + ")";
+                result += std::string(first ? "" : "|") + prefix + trim(it) + ")";
                 first = false;
             }
             return result;
         }
 
-        return prefix + CppCommon::StringUtils::ToTrim(value) + ")";
+        return prefix + trim(value) + ")";
     }
 
     return value;

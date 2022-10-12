@@ -9177,7 +9177,7 @@ void GeneratorCpp::GenerateStruct_Header(const std::shared_ptr<Package>& p, cons
     if (s->response)
     {
         std::string response = *s->response->response;
-        bool imported = CppCommon::StringUtils::ReplaceAll(response, ".", "");
+        bool imported = replace_all(response, ".", "");
         if (!imported)
         {
             WriteLine();
@@ -9198,7 +9198,7 @@ void GeneratorCpp::GenerateStruct_Header(const std::shared_ptr<Package>& p, cons
     if (s->response)
     {
         std::string response = *s->response->response;
-        CppCommon::StringUtils::ReplaceAll(response, ".", "::");
+        replace_all(response, ".", "::");
         WriteLineIndent("typedef " + response + " Response;");
         if (s->body && !s->body->fields.empty())
             WriteLine();
@@ -11469,7 +11469,7 @@ void GeneratorCpp::GenerateClient_Header(const std::shared_ptr<Package>& p, bool
                 std::string request_name = "::" + *p->name + "::" + *s->name;
                 std::string response_name = (s->response) ? ConvertTypeName(*p->name, *s->response->response, false) : "";
                 std::string response_field = (s->response) ? *s->response->response : "";
-                CppCommon::StringUtils::ReplaceAll(response_field, ".", "");
+                replace_all(response_field, ".", "");
 
                 if (response_name.empty())
                     WriteLineIndent("std::future<void> request(const " + request_name + "& value, size_t timeout = 0);");
@@ -11622,7 +11622,7 @@ void GeneratorCpp::GenerateClient_Header(const std::shared_ptr<Package>& p, bool
         {
             std::string response_name = ConvertTypeName(*p->name, response, false);
             std::string response_field = response;
-            CppCommon::StringUtils::ReplaceAll(response_field, ".", "");
+            replace_all(response_field, ".", "");
 
             WriteLineIndent("std::unordered_map<FBE::uuid_t, std::tuple<uint64_t, uint64_t, std::promise<" + response_name + ">>> _requests_by_id_" + response_field + ";");
             WriteLineIndent("std::map<uint64_t, FBE::uuid_t> _requests_by_timestamp_" + response_field + ";");
@@ -11672,7 +11672,7 @@ void GeneratorCpp::GenerateClient_Source(const std::shared_ptr<Package>& p, bool
                 std::string request_name = "::" + *p->name + "::" + *s->name;
                 std::string response_name = (s->response) ? ConvertTypeName(*p->name, *s->response->response, false) : "";
                 std::string response_field = (s->response) ? *s->response->response : "";
-                CppCommon::StringUtils::ReplaceAll(response_field, ".", "");
+                replace_all(response_field, ".", "");
 
                 WriteLine();
                 if (response_name.empty())
@@ -11760,7 +11760,7 @@ void GeneratorCpp::GenerateClient_Source(const std::shared_ptr<Package>& p, bool
                 {
                     std::string struct_response_name = ConvertTypeName(*p->name, *s->response->response, false);
                     std::string struct_response_field = *s->response->response;
-                    CppCommon::StringUtils::ReplaceAll(struct_response_field, ".", "");
+                    replace_all(struct_response_field, ".", "");
 
                     if ((struct_response_name == response_name) && (cache.find(struct_response_name) == cache.end()))
                     {
@@ -11794,7 +11794,7 @@ void GeneratorCpp::GenerateClient_Source(const std::shared_ptr<Package>& p, bool
         std::string reject_name = ConvertTypeName(*p->name, reject.first, false);
         std::string reject_field = reject.first;
         bool global = reject.second;
-        bool imported = CppCommon::StringUtils::ReplaceAll(reject_field, ".", "");
+        bool imported = replace_all(reject_field, ".", "");
 
         WriteLine();
         WriteLineIndent("bool " + client + "::onReceiveReject(const " + reject_name + "& reject)");
@@ -11846,11 +11846,11 @@ void GeneratorCpp::GenerateClient_Source(const std::shared_ptr<Package>& p, bool
                     {
                         std::string struct_response_name = ConvertTypeName(*p->name, *s->response->response, false);
                         std::string struct_response_field = *s->response->response;
-                        CppCommon::StringUtils::ReplaceAll(struct_response_field, ".", "");
+                        replace_all(struct_response_field, ".", "");
 
                         std::string struct_reject_name = ConvertTypeName(*p->name, *r.reject, false);
                         std::string struct_reject_field = *r.reject;
-                        CppCommon::StringUtils::ReplaceAll(struct_reject_field, ".", "");
+                        replace_all(struct_reject_field, ".", "");
 
                         if ((struct_reject_name == reject_name) && (cache.find(struct_response_field) == cache.end()))
                         {
@@ -11898,7 +11898,7 @@ void GeneratorCpp::GenerateClient_Source(const std::shared_ptr<Package>& p, bool
     {
         std::string response_name = ConvertTypeName(*p->name, response, false);
         std::string response_field = response;
-        CppCommon::StringUtils::ReplaceAll(response_field, ".", "");
+        replace_all(response_field, ".", "");
 
         WriteLine();
         WriteLineIndent("for (auto& request : _requests_by_id_" + response_field + ")");
@@ -11926,7 +11926,7 @@ void GeneratorCpp::GenerateClient_Source(const std::shared_ptr<Package>& p, bool
     {
         std::string response_name = ConvertTypeName(*p->name, response, false);
         std::string response_field = response;
-        CppCommon::StringUtils::ReplaceAll(response_field, ".", "");
+        replace_all(response_field, ".", "");
 
         WriteLineIndent("auto it_request_by_timestamp_" + response_field + " = _requests_by_timestamp_" + response_field + ".begin();");
         WriteLineIndent("while (it_request_by_timestamp_" + response_field + " != _requests_by_timestamp_" + response_field + ".end())");
@@ -12062,7 +12062,7 @@ std::string GeneratorCpp::ConvertTypeName(const std::string& package, const std:
         return "FBE::uuid_t";
 
     std::string result = type;
-    bool pkg = !CppCommon::StringUtils::ReplaceAll(result, ".", "::");
+    bool pkg = !replace_all(result, ".", "::");
     return (pkg ? ("::" + package) : "") + "::" + result;
 }
 
@@ -12167,7 +12167,7 @@ std::string GeneratorCpp::ConvertConstant(const std::string& type, const std::st
     for (auto& item : items)
     {
         bool pkg = (CppCommon::StringUtils::CountAll(item, ".") > 1);
-        CppCommon::StringUtils::ReplaceAll(item, ".", "::");
+        replace_all(item, ".", "::");
         result += (!first ? " | " : "");
         result += (pkg ? "::" : "") + item;
         first = false;
@@ -12256,7 +12256,7 @@ std::string GeneratorCpp::ConvertDefault(const std::string& package, const std::
         return "FBE::uuid_t::nil()";
 
     std::string result = type + "()";
-    bool pkg = !CppCommon::StringUtils::ReplaceAll(result, ".", "::");
+    bool pkg = !replace_all(result, ".", "::");
     return (pkg ? ("::" + package) : "") + "::" + result;
 }
 

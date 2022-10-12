@@ -12431,7 +12431,7 @@ std::string GeneratorJavaScript::ConvertEnumConstant(const std::string& name, co
             bool first = true;
             for (const auto& it : flags)
             {
-                result += (first ? "" : " | ") + name + "." + CppCommon::StringUtils::ToTrim(it);
+                result += (first ? "" : " | ") + name + "." + trim(it);
                 first = false;
             }
             return result;

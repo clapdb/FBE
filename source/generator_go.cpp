@@ -7935,14 +7935,14 @@ bool GeneratorGo::IsGoType(const std::string& type)
 
 std::string GeneratorGo::ConvertToLower(const std::string& type)
 {
-    std::string result = CppCommon::StringUtils::ToTrim(type);
+    std::string result = trim(type);
     result[0] = std::tolower(result[0]);
     return result;
 }
 
 std::string GeneratorGo::ConvertToUpper(const std::string& type)
 {
-    std::string result = CppCommon::StringUtils::ToTrim(type);
+    std::string result = trim(type);
     result[0] = std::toupper(result[0]);
     return result;
 }
@@ -8076,7 +8076,7 @@ std::string GeneratorGo::ConvertEnumConstant(const std::string& name, const std:
             bool first = true;
             for (const auto& it : flags)
             {
-                result += (first ? "" : " | ") + name + "_" + CppCommon::StringUtils::ToTrim(it);
+                result += (first ? "" : " | ") + name + "_" + trim(it);
                 first = false;
             }
         }
@@ -8342,7 +8342,7 @@ std::string GeneratorGo::ConvertTypeFieldName(const std::string& type)
         t.assign(type, pos + 1, type.size() - pos);
     }
 
-    CppCommon::StringUtils::ReplaceAll(ns, ".", "");
+    replace_all(ns, ".", "");
     return ns + ConvertToUpper(t);
 }
 
@@ -8531,13 +8531,13 @@ std::string GeneratorGo::ConvertConstant(const std::string& type, const std::str
             bool first = true;
             for (const auto& it : flags)
             {
-                result += (first ? "" : " | ") + ConvertEnumConstant(CppCommon::StringUtils::ToTrim(it));
+                result += (first ? "" : " | ") + ConvertEnumConstant(trim(it));
                 first = false;
             }
         }
         // Generate single flag
         else if (flags.size() > 0)
-            result = ConvertEnumConstant(CppCommon::StringUtils::ToTrim(flags.front()));
+            result = ConvertEnumConstant(trim(flags.front()));
     }
 
     return result;
