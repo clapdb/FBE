@@ -27,6 +27,7 @@ fbe_fedora_packages=(
     ninja-build
     zlib-static
     xxhash-devel
+    rapidjson-devel
 )
 
 fbe_debian_packages=(
