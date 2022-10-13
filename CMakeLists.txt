@@ -49,8 +49,7 @@ find_package(Boost REQUIRED)
 include_directories(SYSTEM ${Boost_INCLUDE_DIRS})
 
 # uuid
-find_package(LibUUID REQUIRED)
-include_directories(SYSTEM ${LIBUUID_INCLUDE_DIR})
+find_package(LibUUID)
 
 include_directories("modules/memory")
 include_directories("modules/Catch2/single_include")
@@ -263,7 +262,7 @@ if(NOT FBEC_MODULE)
   set_target_properties(proto PROPERTIES COMPILE_FLAGS "${PEDANTIC_COMPILE_FLAGS}" FOLDER "libraries")
   target_include_directories(proto PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/proto"  ${memory_path})
   if (APPLE)
-      target_link_libraries(proto ${LINKLIBS} arena xxHash::xxHash ${LIBUUID_LIBRARY} ${lib_cxxexperimental})
+      target_link_libraries(proto ${LINKLIBS} arena xxHash::xxHash ${lib_cxxexperimental})
   elseif (UNIX)
       target_link_libraries(proto ${LINKLIBS} arena xxHash::xxHash ${LIBUUID_LIBRARY})
   endif()
