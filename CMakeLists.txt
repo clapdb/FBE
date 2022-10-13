@@ -43,12 +43,17 @@ set(CMAKE_MODULE_LINKER_FLAGS_DEBUG "${CMAKE_MODULE_LINKER_FLAGS_DEBUG} ${SANITI
 find_package(BISON)
 find_package(FLEX)
 find_package(xxHash REQUIRED)
+
 # boost
 find_package(Boost REQUIRED)
 include_directories(SYSTEM ${Boost_INCLUDE_DIRS})
+
+# uuid
+find_package(LibUUID REQUIRED)
+include_directories(SYSTEM ${LIBUUID_INCLUDE_DIR})
+
 include_directories("modules/memory")
 include_directories("modules/Catch2/single_include")
-
 
 
 # Modules
@@ -258,9 +263,9 @@ if(NOT FBEC_MODULE)
   set_target_properties(proto PROPERTIES COMPILE_FLAGS "${PEDANTIC_COMPILE_FLAGS}" FOLDER "libraries")
   target_include_directories(proto PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/proto"  ${memory_path})
   if (APPLE)
-  target_link_libraries(proto ${LINKLIBS} arena xxHash::xxHash ${lib_cxxexperimental})
+      target_link_libraries(proto ${LINKLIBS} arena xxHash::xxHash ${LIBUUID_LIBRARY} ${lib_cxxexperimental})
   elseif (UNIX)
-  target_link_libraries(proto ${LINKLIBS} arena xxHash::xxHash)
+      target_link_libraries(proto ${LINKLIBS} arena xxHash::xxHash ${LIBUUID_LIBRARY})
   endif()
   list(APPEND INSTALL_TARGETS proto)
   list(APPEND LINKLIBS proto)
@@ -277,9 +282,9 @@ if(NOT FBEC_MODULE)
     set_target_properties(${EXAMPLE_TARGET} PROPERTIES COMPILE_FLAGS "${PEDANTIC_COMPILE_FLAGS}" FOLDER "examples")
     target_include_directories(${EXAMPLE_TARGET} PUBLIC ${rapidjson})
     if (APPLE)
-    target_link_libraries(${EXAMPLE_TARGET} ${LINKLIBS} xxHash::xxHash ${lib_cxxexperimental})
+        target_link_libraries(${EXAMPLE_TARGET} ${LINKLIBS} xxHash::xxHash ${lib_cxxexperimental})
     elseif(UNIX)
-    target_link_libraries(${EXAMPLE_TARGET} ${LINKLIBS} xxHash::xxHash)
+        target_link_libraries(${EXAMPLE_TARGET} ${LINKLIBS} xxHash::xxHash)
     endif()
     list(APPEND INSTALL_TARGETS ${EXAMPLE_TARGET})
     list(APPEND INSTALL_TARGETS_PDB ${EXAMPLE_TARGET})

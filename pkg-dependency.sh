@@ -28,6 +28,7 @@ fbe_fedora_packages=(
     zlib-static
     xxhash-devel
     rapidjson-devel
+    uuid-devel
 )
 
 fbe_debian_packages=(
