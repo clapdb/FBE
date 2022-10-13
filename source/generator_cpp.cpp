@@ -2569,127 +2569,127 @@ void FieldModel<pmr_buffer_t>::set(const void* data, size_t size)
     Write(code);
 }
 
-void GeneratorCpp::GenerateFBEFieldModelString_Header()
-{
-    std::string code = R"CODE(
-// Fast Binary Encoding field model string specialization
-template <>
-class FieldModel<std::string>
-{
-public:
-    FieldModel(FBEBuffer& buffer, size_t offset) noexcept : _buffer(buffer), _offset(offset) {}
+//void GeneratorCpp::GenerateFBEFieldModelString_Header()
+//{
+//    std::string code = R"CODE(
+//// Fast Binary Encoding field model string specialization
+//template <>
+//class FieldModel<std::string>
+//{
+//public:
+//    FieldModel(FBEBuffer& buffer, size_t offset) noexcept : _buffer(buffer), _offset(offset) {}
+//
+//    // Get the field offset
+//    size_t fbe_offset() const noexcept { return _offset; }
+//    // Get the field size
+//    size_t fbe_size() const noexcept { return 4; }
+//    // Get the field extra size
+//    size_t fbe_extra() const noexcept;
+//
+//    // Shift the current field offset
+//    void fbe_shift(size_t size) noexcept { _offset += size; }
+//    // Unshift the current field offset
+//    void fbe_unshift(size_t size) noexcept { _offset -= size; }
+//
+//    // Check if the string value is valid
+//    bool verify() const noexcept;
+//
+//    // Get the string value
+//    size_t get(char* data, size_t size) const noexcept;
+//    // Get the string value
+//    template <size_t N>
+//    size_t get(char (&data)[N]) const noexcept { return get(data, N); }
+//    // Get the string value
+//    template <size_t N>
+//    size_t get(std::array<char, N>& data) const noexcept { return get(data.data(), data.size()); }
+//    // Get the string value
+//    void get(std::string& value) const noexcept;
+//    // Get the string value
+//    void get(std::string& value, const std::string& defaults) const noexcept;
+//
+//    // Set the string value
+//    void set(const char* data, size_t size);
+//    // Set the string value
+//    template <size_t N>
+//    void set(const char (&data)[N]) { set(data, N); }
+//    // Set the string value
+//    template <size_t N>
+//    void set(const std::array<char, N>& data) { set(data.data(), data.size()); }
+//    // Set the string value
+//    void set(const std::string& value);
+//
+//private:
+//    FBEBuffer& _buffer;
+//    size_t _offset;
+//};
+//)CODE";
+//
+//    // Prepare code template
+//    code = std::regex_replace(code, std::regex("\n"), EndLine());
+//
+//    Write(code);
+//}
 
-    // Get the field offset
-    size_t fbe_offset() const noexcept { return _offset; }
-    // Get the field size
-    size_t fbe_size() const noexcept { return 4; }
-    // Get the field extra size
-    size_t fbe_extra() const noexcept;
-
-    // Shift the current field offset
-    void fbe_shift(size_t size) noexcept { _offset += size; }
-    // Unshift the current field offset
-    void fbe_unshift(size_t size) noexcept { _offset -= size; }
-
-    // Check if the string value is valid
-    bool verify() const noexcept;
-
-    // Get the string value
-    size_t get(char* data, size_t size) const noexcept;
-    // Get the string value
-    template <size_t N>
-    size_t get(char (&data)[N]) const noexcept { return get(data, N); }
-    // Get the string value
-    template <size_t N>
-    size_t get(std::array<char, N>& data) const noexcept { return get(data.data(), data.size()); }
-    // Get the string value
-    void get(std::string& value) const noexcept;
-    // Get the string value
-    void get(std::string& value, const std::string& defaults) const noexcept;
-
-    // Set the string value
-    void set(const char* data, size_t size);
-    // Set the string value
-    template <size_t N>
-    void set(const char (&data)[N]) { set(data, N); }
-    // Set the string value
-    template <size_t N>
-    void set(const std::array<char, N>& data) { set(data.data(), data.size()); }
-    // Set the string value
-    void set(const std::string& value);
-
-private:
-    FBEBuffer& _buffer;
-    size_t _offset;
-};
-)CODE";
-
-    // Prepare code template
-    code = std::regex_replace(code, std::regex("\n"), EndLine());
-
-    Write(code);
-}
-
-void GeneratorCpp::GenerateFBEFieldModelPMRString_Header()
-{
-    std::string code = R"CODE(
-// Fast Binary Encoding field model string specialization
-template <>
-class FieldModel<pmr::string>
-{
-public:
-    FieldModel(FBEBuffer& buffer, size_t offset) noexcept : _buffer(buffer), _offset(offset) {}
-
-    // Get the field offset
-    size_t fbe_offset() const noexcept { return _offset; }
-    // Get the field size
-    size_t fbe_size() const noexcept { return 4; }
-    // Get the field extra size
-    size_t fbe_extra() const noexcept;
-
-    // Shift the current field offset
-    void fbe_shift(size_t size) noexcept { _offset += size; }
-    // Unshift the current field offset
-    void fbe_unshift(size_t size) noexcept { _offset -= size; }
-
-    // Check if the string value is valid
-    bool verify() const noexcept;
-
-    // Get the string value
-    size_t get(char* data, size_t size) const noexcept;
-    // Get the string value
-    template <size_t N>
-    size_t get(char (&data)[N]) const noexcept { return get(data, N); }
-    // Get the string value
-    template <size_t N>
-    size_t get(std::array<char, N>& data) const noexcept { return get(data.data(), data.size()); }
-    // Get the pmr string value
-    void get(pmr::string& value) const noexcept;
-    // Get the pmr string value
-    void get(pmr::string& value, const pmr::string& defaults) const noexcept;
-
-    // Set the string value
-    void set(const char* data, size_t size);
-    // Set the string value
-    template <size_t N>
-    void set(const char (&data)[N]) { set(data, N); }
-    // Set the string value
-    template <size_t N>
-    void set(const std::array<char, N>& data) { set(data.data(), data.size()); }
-    // Set the string value
-    void set(const pmr::string& value);
-
-private:
-    FBEBuffer& _buffer;
-    size_t _offset;
-};
-)CODE";
-
-    // Prepare code template
-    code = std::regex_replace(code, std::regex("\n"), EndLine());
-
-    Write(code);
-}
+//void GeneratorCpp::GenerateFBEFieldModelPMRString_Header()
+//{
+//    std::string code = R"CODE(
+//// Fast Binary Encoding field model string specialization
+//template <>
+//class FieldModel<pmr::string>
+//{
+//public:
+//    FieldModel(FBEBuffer& buffer, size_t offset) noexcept : _buffer(buffer), _offset(offset) {}
+//
+//    // Get the field offset
+//    size_t fbe_offset() const noexcept { return _offset; }
+//    // Get the field size
+//    size_t fbe_size() const noexcept { return 4; }
+//    // Get the field extra size
+//    size_t fbe_extra() const noexcept;
+//
+//    // Shift the current field offset
+//    void fbe_shift(size_t size) noexcept { _offset += size; }
+//    // Unshift the current field offset
+//    void fbe_unshift(size_t size) noexcept { _offset -= size; }
+//
+//    // Check if the string value is valid
+//    bool verify() const noexcept;
+//
+//    // Get the string value
+//    size_t get(char* data, size_t size) const noexcept;
+//    // Get the string value
+//    template <size_t N>
+//    size_t get(char (&data)[N]) const noexcept { return get(data, N); }
+//    // Get the string value
+//    template <size_t N>
+//    size_t get(std::array<char, N>& data) const noexcept { return get(data.data(), data.size()); }
+//    // Get the pmr string value
+//    void get(pmr::string& value) const noexcept;
+//    // Get the pmr string value
+//    void get(pmr::string& value, const pmr::string& defaults) const noexcept;
+//
+//    // Set the string value
+//    void set(const char* data, size_t size);
+//    // Set the string value
+//    template <size_t N>
+//    void set(const char (&data)[N]) { set(data, N); }
+//    // Set the string value
+//    template <size_t N>
+//    void set(const std::array<char, N>& data) { set(data.data(), data.size()); }
+//    // Set the string value
+//    void set(const pmr::string& value);
+//
+//private:
+//    FBEBuffer& _buffer;
+//    size_t _offset;
+//};
+//)CODE";
+//
+//    // Prepare code template
+//    code = std::regex_replace(code, std::regex("\n"), EndLine());
+//
+//    Write(code);
+//}
 void GeneratorCpp::GenerateFBEFieldModelMemoryString_Header()
 {
     std::string code = R"CODE(
@@ -2812,317 +2812,317 @@ private:
     Write(code);
 }
 
-void GeneratorCpp::GenerateFBEFieldModelString_Source()
-{
-    std::string code = R"CODE(
-size_t FieldModel<std::string>::fbe_extra() const noexcept
-{
-    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
-        return 0;
-
-    uint32_t fbe_string_offset = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset());
-    if ((fbe_string_offset == 0) || ((_buffer.offset() + fbe_string_offset + 4) > _buffer.size()))
-        return 0;
-
-    uint32_t fbe_string_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_string_offset);
-    return (size_t)(4 + fbe_string_size);
-}
-
-bool FieldModel<std::string>::verify() const noexcept
-{
-    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
-        return true;
-
-    uint32_t fbe_string_offset = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset());
-    if (fbe_string_offset == 0)
-        return true;
-
-    if ((_buffer.offset() + fbe_string_offset + 4) > _buffer.size())
-        return false;
-
-    uint32_t fbe_string_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_string_offset);
-    if ((_buffer.offset() + fbe_string_offset + 4 + fbe_string_size) > _buffer.size())
-        return false;
-
-    return true;
-}
-
-size_t FieldModel<std::string>::get(char* data, size_t size) const noexcept
-{
-    assert(((size == 0) || (data != nullptr)) && "Invalid buffer!");
-    if ((size > 0) && (data == nullptr))
-        return 0;
-
-    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
-        return 0;
-
-    uint32_t fbe_string_offset = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset());
-    if (fbe_string_offset == 0)
-        return 0;
-
-    assert(((_buffer.offset() + fbe_string_offset + 4) <= _buffer.size()) && "Model is broken!");
-    if ((_buffer.offset() + fbe_string_offset + 4) > _buffer.size())
-        return 0;
-
-    uint32_t fbe_string_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_string_offset);
-    assert(((_buffer.offset() + fbe_string_offset + 4 + fbe_string_size) <= _buffer.size()) && "Model is broken!");
-    if ((_buffer.offset() + fbe_string_offset + 4 + fbe_string_size) > _buffer.size())
-        return 0;
-
-    size_t result = std::min(size, (size_t)fbe_string_size);
-    memcpy(data, (const char*)(_buffer.data() + _buffer.offset() + fbe_string_offset + 4), result);
-    return result;
-}
-
-void FieldModel<std::string>::get(std::string& value) const noexcept
-{
-    value.clear();
-
-    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
-        return;
-
-    uint32_t fbe_string_offset = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + _offset);
-    if (fbe_string_offset == 0)
-        return;
-
-    assert(((_buffer.offset() + fbe_string_offset + 4) <= _buffer.size()) && "Model is broken!");
-    if ((_buffer.offset() + fbe_string_offset + 4) > _buffer.size())
-        return;
-
-    uint32_t fbe_string_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_string_offset);
-    assert(((_buffer.offset() + fbe_string_offset + 4 + fbe_string_size) <= _buffer.size()) && "Model is broken!");
-    if ((_buffer.offset() + fbe_string_offset + 4 + fbe_string_size) > _buffer.size())
-        return;
-
-    value.assign((const char*)(_buffer.data() + _buffer.offset() + fbe_string_offset + 4), fbe_string_size);
-}
-
-void FieldModel<std::string>::get(std::string& value, const std::string& defaults) const noexcept
-{
-    value = defaults;
-
-    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
-        return;
-
-    uint32_t fbe_string_offset = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + _offset);
-    if (fbe_string_offset == 0)
-        return;
-
-    assert(((_buffer.offset() + fbe_string_offset + 4) <= _buffer.size()) && "Model is broken!");
-    if ((_buffer.offset() + fbe_string_offset + 4) > _buffer.size())
-        return;
-
-    uint32_t fbe_string_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_string_offset);
-    assert(((_buffer.offset() + fbe_string_offset + 4 + fbe_string_size) <= _buffer.size()) && "Model is broken!");
-    if ((_buffer.offset() + fbe_string_offset + 4 + fbe_string_size) > _buffer.size())
-        return;
-
-    value.assign((const char*)(_buffer.data() + _buffer.offset() + fbe_string_offset + 4), fbe_string_size);
-}
-
-void FieldModel<std::string>::set(const char* data, size_t size)
-{
-    assert(((size == 0) || (data != nullptr)) && "Invalid buffer!");
-    if ((size > 0) && (data == nullptr))
-        return;
-
-    assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
-    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
-        return;
-
-    uint32_t fbe_string_size = (uint32_t)size;
-    uint32_t fbe_string_offset = (uint32_t)(_buffer.allocate(4 + fbe_string_size) - _buffer.offset());
-    assert(((fbe_string_offset > 0) && ((_buffer.offset() + fbe_string_offset + 4 + fbe_string_size) <= _buffer.size())) && "Model is broken!");
-    if ((fbe_string_offset == 0) || ((_buffer.offset() + fbe_string_offset + 4 + fbe_string_size) > _buffer.size()))
-        return;
-
-    unaligned_store<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset(), fbe_string_offset);
-    unaligned_store<uint32_t>(_buffer.data() + _buffer.offset() + fbe_string_offset, fbe_string_size);
-
-
-    memcpy((char*)(_buffer.data() + _buffer.offset() + fbe_string_offset + 4), data, fbe_string_size);
-}
-
-void FieldModel<std::string>::set(const std::string& value)
-{
-    assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
-    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
-        return;
-
-    uint32_t fbe_string_size = (uint32_t)value.size();
-    uint32_t fbe_string_offset = (uint32_t)(_buffer.allocate(4 + fbe_string_size) - _buffer.offset());
-    assert(((fbe_string_offset > 0) && ((_buffer.offset() + fbe_string_offset + 4 + fbe_string_size) <= _buffer.size())) && "Model is broken!");
-    if ((fbe_string_offset == 0) || ((_buffer.offset() + fbe_string_offset + 4 + fbe_string_size) > _buffer.size()))
-        return;
-
-    unaligned_store<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset(), fbe_string_offset);
-    unaligned_store<uint32_t>(_buffer.data() + _buffer.offset() + fbe_string_offset, fbe_string_size);
-
-    memcpy((char*)(_buffer.data() + _buffer.offset() + fbe_string_offset + 4), value.data(), fbe_string_size);
-}
-)CODE";
-
-    // Prepare code template
-    code = std::regex_replace(code, std::regex("\n"), EndLine());
-
-    Write(code);
-}
-
-void GeneratorCpp::GenerateFBEFieldModelPMRString_Source()
-{
-    std::string code = R"CODE(
-size_t FieldModel<pmr::string>::fbe_extra() const noexcept
-{
-    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
-        return 0;
-
-    uint32_t fbe_string_offset = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset());
-    if ((fbe_string_offset == 0) || ((_buffer.offset() + fbe_string_offset + 4) > _buffer.size()))
-        return 0;
-
-    uint32_t fbe_string_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_string_offset);
-    return (size_t)(4 + fbe_string_size);
-}
-
-bool FieldModel<pmr::string>::verify() const noexcept
-{
-    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
-        return true;
-
-    uint32_t fbe_string_offset = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset());
-    if (fbe_string_offset == 0)
-        return true;
-
-    if ((_buffer.offset() + fbe_string_offset + 4) > _buffer.size())
-        return false;
-
-    uint32_t fbe_string_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_string_offset);
-    if ((_buffer.offset() + fbe_string_offset + 4 + fbe_string_size) > _buffer.size())
-        return false;
-
-    return true;
-}
-
-size_t FieldModel<pmr::string>::get(char* data, size_t size) const noexcept
-{
-    assert(((size == 0) || (data != nullptr)) && "Invalid buffer!");
-    if ((size > 0) && (data == nullptr))
-        return 0;
-
-    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
-        return 0;
-
-    uint32_t fbe_string_offset = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset());
-    if (fbe_string_offset == 0)
-        return 0;
-
-    assert(((_buffer.offset() + fbe_string_offset + 4) <= _buffer.size()) && "Model is broken!");
-    if ((_buffer.offset() + fbe_string_offset + 4) > _buffer.size())
-        return 0;
-
-    uint32_t fbe_string_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_string_offset);
-    assert(((_buffer.offset() + fbe_string_offset + 4 + fbe_string_size) <= _buffer.size()) && "Model is broken!");
-    if ((_buffer.offset() + fbe_string_offset + 4 + fbe_string_size) > _buffer.size())
-        return 0;
-
-    size_t result = std::min(size, (size_t)fbe_string_size);
-    memcpy(data, (const char*)(_buffer.data() + _buffer.offset() + fbe_string_offset + 4), result);
-    return result;
-}
-
-void FieldModel<pmr::string>::get(pmr::string& value) const noexcept
-{
-    value.clear();
-
-    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
-        return;
-
-    uint32_t fbe_string_offset = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + _offset);
-    if (fbe_string_offset == 0)
-        return;
-
-    assert(((_buffer.offset() + fbe_string_offset + 4) <= _buffer.size()) && "Model is broken!");
-    if ((_buffer.offset() + fbe_string_offset + 4) > _buffer.size())
-        return;
-
-    uint32_t fbe_string_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_string_offset);
-    assert(((_buffer.offset() + fbe_string_offset + 4 + fbe_string_size) <= _buffer.size()) && "Model is broken!");
-    if ((_buffer.offset() + fbe_string_offset + 4 + fbe_string_size) > _buffer.size())
-        return;
-
-    value.assign((const char*)(_buffer.data() + _buffer.offset() + fbe_string_offset + 4), fbe_string_size);
-}
-
-void FieldModel<pmr::string>::get(pmr::string& value, const pmr::string& defaults) const noexcept
-{
-    value = defaults;
-
-    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
-        return;
-
-    uint32_t fbe_string_offset = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + _offset);
-    if (fbe_string_offset == 0)
-        return;
-
-    assert(((_buffer.offset() + fbe_string_offset + 4) <= _buffer.size()) && "Model is broken!");
-    if ((_buffer.offset() + fbe_string_offset + 4) > _buffer.size())
-        return;
-
-    uint32_t fbe_string_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_string_offset);
-    assert(((_buffer.offset() + fbe_string_offset + 4 + fbe_string_size) <= _buffer.size()) && "Model is broken!");
-    if ((_buffer.offset() + fbe_string_offset + 4 + fbe_string_size) > _buffer.size())
-        return;
-
-    value.assign((const char*)(_buffer.data() + _buffer.offset() + fbe_string_offset + 4), fbe_string_size);
-}
-
-void FieldModel<pmr::string>::set(const char* data, size_t size)
-{
-    assert(((size == 0) || (data != nullptr)) && "Invalid buffer!");
-    if ((size > 0) && (data == nullptr))
-        return;
-
-    assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
-    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
-        return;
-
-    uint32_t fbe_string_size = (uint32_t)size;
-    uint32_t fbe_string_offset = (uint32_t)(_buffer.allocate(4 + fbe_string_size) - _buffer.offset());
-    assert(((fbe_string_offset > 0) && ((_buffer.offset() + fbe_string_offset + 4 + fbe_string_size) <= _buffer.size())) && "Model is broken!");
-    if ((fbe_string_offset == 0) || ((_buffer.offset() + fbe_string_offset + 4 + fbe_string_size) > _buffer.size()))
-        return;
-
-    unaligned_store<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset(), fbe_string_offset);
-    unaligned_store<uint32_t>(_buffer.data() + _buffer.offset() + fbe_string_offset, fbe_string_size);
-
-
-    memcpy((char*)(_buffer.data() + _buffer.offset() + fbe_string_offset + 4), data, fbe_string_size);
-}
-
-void FieldModel<pmr::string>::set(const pmr::string& value)
-{
-    assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
-    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
-        return;
-
-    uint32_t fbe_string_size = (uint32_t)value.size();
-    uint32_t fbe_string_offset = (uint32_t)(_buffer.allocate(4 + fbe_string_size) - _buffer.offset());
-    assert(((fbe_string_offset > 0) && ((_buffer.offset() + fbe_string_offset + 4 + fbe_string_size) <= _buffer.size())) && "Model is broken!");
-    if ((fbe_string_offset == 0) || ((_buffer.offset() + fbe_string_offset + 4 + fbe_string_size) > _buffer.size()))
-        return;
-
-    unaligned_store<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset(), fbe_string_offset);
-    unaligned_store<uint32_t>(_buffer.data() + _buffer.offset() + fbe_string_offset, fbe_string_size);
-
-    memcpy((char*)(_buffer.data() + _buffer.offset() + fbe_string_offset + 4), value.data(), fbe_string_size);
-}
-)CODE";
-
-    // Prepare code template
-    code = std::regex_replace(code, std::regex("\n"), EndLine());
-
-    Write(code);
-}
+//void GeneratorCpp::GenerateFBEFieldModelString_Source()
+//{
+//    std::string code = R"CODE(
+//size_t FieldModel<std::string>::fbe_extra() const noexcept
+//{
+//    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+//        return 0;
+//
+//    uint32_t fbe_string_offset = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset());
+//    if ((fbe_string_offset == 0) || ((_buffer.offset() + fbe_string_offset + 4) > _buffer.size()))
+//        return 0;
+//
+//    uint32_t fbe_string_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_string_offset);
+//    return (size_t)(4 + fbe_string_size);
+//}
+//
+//bool FieldModel<std::string>::verify() const noexcept
+//{
+//    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+//        return true;
+//
+//    uint32_t fbe_string_offset = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset());
+//    if (fbe_string_offset == 0)
+//        return true;
+//
+//    if ((_buffer.offset() + fbe_string_offset + 4) > _buffer.size())
+//        return false;
+//
+//    uint32_t fbe_string_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_string_offset);
+//    if ((_buffer.offset() + fbe_string_offset + 4 + fbe_string_size) > _buffer.size())
+//        return false;
+//
+//    return true;
+//}
+//
+//size_t FieldModel<std::string>::get(char* data, size_t size) const noexcept
+//{
+//    assert(((size == 0) || (data != nullptr)) && "Invalid buffer!");
+//    if ((size > 0) && (data == nullptr))
+//        return 0;
+//
+//    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+//        return 0;
+//
+//    uint32_t fbe_string_offset = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset());
+//    if (fbe_string_offset == 0)
+//        return 0;
+//
+//    assert(((_buffer.offset() + fbe_string_offset + 4) <= _buffer.size()) && "Model is broken!");
+//    if ((_buffer.offset() + fbe_string_offset + 4) > _buffer.size())
+//        return 0;
+//
+//    uint32_t fbe_string_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_string_offset);
+//    assert(((_buffer.offset() + fbe_string_offset + 4 + fbe_string_size) <= _buffer.size()) && "Model is broken!");
+//    if ((_buffer.offset() + fbe_string_offset + 4 + fbe_string_size) > _buffer.size())
+//        return 0;
+//
+//    size_t result = std::min(size, (size_t)fbe_string_size);
+//    memcpy(data, (const char*)(_buffer.data() + _buffer.offset() + fbe_string_offset + 4), result);
+//    return result;
+//}
+//
+//void FieldModel<std::string>::get(std::string& value) const noexcept
+//{
+//    value.clear();
+//
+//    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+//        return;
+//
+//    uint32_t fbe_string_offset = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + _offset);
+//    if (fbe_string_offset == 0)
+//        return;
+//
+//    assert(((_buffer.offset() + fbe_string_offset + 4) <= _buffer.size()) && "Model is broken!");
+//    if ((_buffer.offset() + fbe_string_offset + 4) > _buffer.size())
+//        return;
+//
+//    uint32_t fbe_string_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_string_offset);
+//    assert(((_buffer.offset() + fbe_string_offset + 4 + fbe_string_size) <= _buffer.size()) && "Model is broken!");
+//    if ((_buffer.offset() + fbe_string_offset + 4 + fbe_string_size) > _buffer.size())
+//        return;
+//
+//    value.assign((const char*)(_buffer.data() + _buffer.offset() + fbe_string_offset + 4), fbe_string_size);
+//}
+//
+//void FieldModel<std::string>::get(std::string& value, const std::string& defaults) const noexcept
+//{
+//    value = defaults;
+//
+//    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+//        return;
+//
+//    uint32_t fbe_string_offset = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + _offset);
+//    if (fbe_string_offset == 0)
+//        return;
+//
+//    assert(((_buffer.offset() + fbe_string_offset + 4) <= _buffer.size()) && "Model is broken!");
+//    if ((_buffer.offset() + fbe_string_offset + 4) > _buffer.size())
+//        return;
+//
+//    uint32_t fbe_string_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_string_offset);
+//    assert(((_buffer.offset() + fbe_string_offset + 4 + fbe_string_size) <= _buffer.size()) && "Model is broken!");
+//    if ((_buffer.offset() + fbe_string_offset + 4 + fbe_string_size) > _buffer.size())
+//        return;
+//
+//    value.assign((const char*)(_buffer.data() + _buffer.offset() + fbe_string_offset + 4), fbe_string_size);
+//}
+//
+//void FieldModel<std::string>::set(const char* data, size_t size)
+//{
+//    assert(((size == 0) || (data != nullptr)) && "Invalid buffer!");
+//    if ((size > 0) && (data == nullptr))
+//        return;
+//
+//    assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
+//    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+//        return;
+//
+//    uint32_t fbe_string_size = (uint32_t)size;
+//    uint32_t fbe_string_offset = (uint32_t)(_buffer.allocate(4 + fbe_string_size) - _buffer.offset());
+//    assert(((fbe_string_offset > 0) && ((_buffer.offset() + fbe_string_offset + 4 + fbe_string_size) <= _buffer.size())) && "Model is broken!");
+//    if ((fbe_string_offset == 0) || ((_buffer.offset() + fbe_string_offset + 4 + fbe_string_size) > _buffer.size()))
+//        return;
+//
+//    unaligned_store<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset(), fbe_string_offset);
+//    unaligned_store<uint32_t>(_buffer.data() + _buffer.offset() + fbe_string_offset, fbe_string_size);
+//
+//
+//    memcpy((char*)(_buffer.data() + _buffer.offset() + fbe_string_offset + 4), data, fbe_string_size);
+//}
+//
+//void FieldModel<std::string>::set(const std::string& value)
+//{
+//    assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
+//    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+//        return;
+//
+//    uint32_t fbe_string_size = (uint32_t)value.size();
+//    uint32_t fbe_string_offset = (uint32_t)(_buffer.allocate(4 + fbe_string_size) - _buffer.offset());
+//    assert(((fbe_string_offset > 0) && ((_buffer.offset() + fbe_string_offset + 4 + fbe_string_size) <= _buffer.size())) && "Model is broken!");
+//    if ((fbe_string_offset == 0) || ((_buffer.offset() + fbe_string_offset + 4 + fbe_string_size) > _buffer.size()))
+//        return;
+//
+//    unaligned_store<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset(), fbe_string_offset);
+//    unaligned_store<uint32_t>(_buffer.data() + _buffer.offset() + fbe_string_offset, fbe_string_size);
+//
+//    memcpy((char*)(_buffer.data() + _buffer.offset() + fbe_string_offset + 4), value.data(), fbe_string_size);
+//}
+//)CODE";
+//
+//    // Prepare code template
+//    code = std::regex_replace(code, std::regex("\n"), EndLine());
+//
+//    Write(code);
+//}
+
+//void GeneratorCpp::GenerateFBEFieldModelPMRString_Source()
+//{
+//    std::string code = R"CODE(
+//size_t FieldModel<pmr::string>::fbe_extra() const noexcept
+//{
+//    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+//        return 0;
+//
+//    uint32_t fbe_string_offset = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset());
+//    if ((fbe_string_offset == 0) || ((_buffer.offset() + fbe_string_offset + 4) > _buffer.size()))
+//        return 0;
+//
+//    uint32_t fbe_string_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_string_offset);
+//    return (size_t)(4 + fbe_string_size);
+//}
+//
+//bool FieldModel<pmr::string>::verify() const noexcept
+//{
+//    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+//        return true;
+//
+//    uint32_t fbe_string_offset = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset());
+//    if (fbe_string_offset == 0)
+//        return true;
+//
+//    if ((_buffer.offset() + fbe_string_offset + 4) > _buffer.size())
+//        return false;
+//
+//    uint32_t fbe_string_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_string_offset);
+//    if ((_buffer.offset() + fbe_string_offset + 4 + fbe_string_size) > _buffer.size())
+//        return false;
+//
+//    return true;
+//}
+//
+//size_t FieldModel<pmr::string>::get(char* data, size_t size) const noexcept
+//{
+//    assert(((size == 0) || (data != nullptr)) && "Invalid buffer!");
+//    if ((size > 0) && (data == nullptr))
+//        return 0;
+//
+//    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+//        return 0;
+//
+//    uint32_t fbe_string_offset = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset());
+//    if (fbe_string_offset == 0)
+//        return 0;
+//
+//    assert(((_buffer.offset() + fbe_string_offset + 4) <= _buffer.size()) && "Model is broken!");
+//    if ((_buffer.offset() + fbe_string_offset + 4) > _buffer.size())
+//        return 0;
+//
+//    uint32_t fbe_string_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_string_offset);
+//    assert(((_buffer.offset() + fbe_string_offset + 4 + fbe_string_size) <= _buffer.size()) && "Model is broken!");
+//    if ((_buffer.offset() + fbe_string_offset + 4 + fbe_string_size) > _buffer.size())
+//        return 0;
+//
+//    size_t result = std::min(size, (size_t)fbe_string_size);
+//    memcpy(data, (const char*)(_buffer.data() + _buffer.offset() + fbe_string_offset + 4), result);
+//    return result;
+//}
+//
+//void FieldModel<pmr::string>::get(pmr::string& value) const noexcept
+//{
+//    value.clear();
+//
+//    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+//        return;
+//
+//    uint32_t fbe_string_offset = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + _offset);
+//    if (fbe_string_offset == 0)
+//        return;
+//
+//    assert(((_buffer.offset() + fbe_string_offset + 4) <= _buffer.size()) && "Model is broken!");
+//    if ((_buffer.offset() + fbe_string_offset + 4) > _buffer.size())
+//        return;
+//
+//    uint32_t fbe_string_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_string_offset);
+//    assert(((_buffer.offset() + fbe_string_offset + 4 + fbe_string_size) <= _buffer.size()) && "Model is broken!");
+//    if ((_buffer.offset() + fbe_string_offset + 4 + fbe_string_size) > _buffer.size())
+//        return;
+//
+//    value.assign((const char*)(_buffer.data() + _buffer.offset() + fbe_string_offset + 4), fbe_string_size);
+//}
+//
+//void FieldModel<pmr::string>::get(pmr::string& value, const pmr::string& defaults) const noexcept
+//{
+//    value = defaults;
+//
+//    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+//        return;
+//
+//    uint32_t fbe_string_offset = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + _offset);
+//    if (fbe_string_offset == 0)
+//        return;
+//
+//    assert(((_buffer.offset() + fbe_string_offset + 4) <= _buffer.size()) && "Model is broken!");
+//    if ((_buffer.offset() + fbe_string_offset + 4) > _buffer.size())
+//        return;
+//
+//    uint32_t fbe_string_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_string_offset);
+//    assert(((_buffer.offset() + fbe_string_offset + 4 + fbe_string_size) <= _buffer.size()) && "Model is broken!");
+//    if ((_buffer.offset() + fbe_string_offset + 4 + fbe_string_size) > _buffer.size())
+//        return;
+//
+//    value.assign((const char*)(_buffer.data() + _buffer.offset() + fbe_string_offset + 4), fbe_string_size);
+//}
+//
+//void FieldModel<pmr::string>::set(const char* data, size_t size)
+//{
+//    assert(((size == 0) || (data != nullptr)) && "Invalid buffer!");
+//    if ((size > 0) && (data == nullptr))
+//        return;
+//
+//    assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
+//    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+//        return;
+//
+//    uint32_t fbe_string_size = (uint32_t)size;
+//    uint32_t fbe_string_offset = (uint32_t)(_buffer.allocate(4 + fbe_string_size) - _buffer.offset());
+//    assert(((fbe_string_offset > 0) && ((_buffer.offset() + fbe_string_offset + 4 + fbe_string_size) <= _buffer.size())) && "Model is broken!");
+//    if ((fbe_string_offset == 0) || ((_buffer.offset() + fbe_string_offset + 4 + fbe_string_size) > _buffer.size()))
+//        return;
+//
+//    unaligned_store<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset(), fbe_string_offset);
+//    unaligned_store<uint32_t>(_buffer.data() + _buffer.offset() + fbe_string_offset, fbe_string_size);
+//
+//
+//    memcpy((char*)(_buffer.data() + _buffer.offset() + fbe_string_offset + 4), data, fbe_string_size);
+//}
+//
+//void FieldModel<pmr::string>::set(const pmr::string& value)
+//{
+//    assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
+//    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+//        return;
+//
+//    uint32_t fbe_string_size = (uint32_t)value.size();
+//    uint32_t fbe_string_offset = (uint32_t)(_buffer.allocate(4 + fbe_string_size) - _buffer.offset());
+//    assert(((fbe_string_offset > 0) && ((_buffer.offset() + fbe_string_offset + 4 + fbe_string_size) <= _buffer.size())) && "Model is broken!");
+//    if ((fbe_string_offset == 0) || ((_buffer.offset() + fbe_string_offset + 4 + fbe_string_size) > _buffer.size()))
+//        return;
+//
+//    unaligned_store<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset(), fbe_string_offset);
+//    unaligned_store<uint32_t>(_buffer.data() + _buffer.offset() + fbe_string_offset, fbe_string_size);
+//
+//    memcpy((char*)(_buffer.data() + _buffer.offset() + fbe_string_offset + 4), value.data(), fbe_string_size);
+//}
+//)CODE";
+//
+//    // Prepare code template
+//    code = std::regex_replace(code, std::regex("\n"), EndLine());
+//
+//    Write(code);
+//}
 
 void GeneratorCpp::GenerateFBEFieldModelMemoryString_Source()
 {
@@ -7845,8 +7845,8 @@ void GeneratorCpp::GenerateFBEModels_Header(const fs::path& path)
     GenerateFBEFieldModelUUID_Header();
     GenerateFBEFieldModelBytes_Header();
     GenerateFBEFieldModelPMRBytes_Header();
-    GenerateFBEFieldModelString_Header();
-    GenerateFBEFieldModelPMRString_Header();
+//    GenerateFBEFieldModelString_Header();
+//    GenerateFBEFieldModelPMRString_Header();
     GenerateFBEFieldModelMemoryString_Header();
     GenerateFBEFieldModelMemoryArenaString_Header();
     GenerateFBEFieldModelOptional_Header();
@@ -7928,8 +7928,8 @@ void GeneratorCpp::GenerateFBEModels_Source(const fs::path& path)
     GenerateFBEFieldModelUUID_Source();
     GenerateFBEFieldModelBytes_Source();
     GenerateFBEFieldModelPMRBytes_Source();
-    GenerateFBEFieldModelString_Source();
-    GenerateFBEFieldModelPMRString_Source();
+//    GenerateFBEFieldModelString_Source();
+//    GenerateFBEFieldModelPMRString_Source();
     GenerateFBEFieldModelMemoryString_Source();
     GenerateFBEFieldModelMemoryArenaString_Source();
 

@@ -21,7 +21,7 @@ open class Account : Comparable<Any?>
 
     @Transient open var fbeType: Long = 3
 
-    constructor(id: Int = 0, name: String = "", state: State = State.fromSet(java.util.EnumSet.of(com.chronoxor.State.initialized.value, com.chronoxor.State.bad.value)), wallet: Balance = Balance(), asset: Balance? = null, orders: java.util.ArrayList<Order> = java.util.ArrayList())
+    constructor(id: Int = 0, name: String = "", state: State = State.fromSet(java.util.EnumSet.of(State.initialized.value, State.bad.value)), wallet: Balance = Balance(), asset: Balance? = null, orders: java.util.ArrayList<Order> = java.util.ArrayList())
     {
         this.id = id
         this.name = name

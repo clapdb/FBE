@@ -20,7 +20,7 @@
 #endif
 
 #include "fbe.h"
-#include "memory/arena/arena.hpp"
+#include "arena/arena.hpp"
 
 #include "arena_common.h"
 

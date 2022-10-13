@@ -101,11 +101,11 @@ private:
     void GenerateFBEFieldModelBytes_Source();
     void GenerateFBEFieldModelPMRBytes_Header();
     void GenerateFBEFieldModelPMRBytes_Source();
-    void GenerateFBEFieldModelString_Header();
-    void GenerateFBEFieldModelString_Source();
+//    void GenerateFBEFieldModelString_Header();
+//    void GenerateFBEFieldModelString_Source();
     // TODO(liuqi): exists for backwards compatibility
-    void GenerateFBEFieldModelPMRString_Header();
-    void GenerateFBEFieldModelPMRString_Source();
+//    void GenerateFBEFieldModelPMRString_Header();
+//    void GenerateFBEFieldModelPMRString_Source();
     void GenerateFBEFieldModelMemoryString_Header();
     void GenerateFBEFieldModelMemoryString_Source();
     void GenerateFBEFieldModelMemoryArenaString_Header();

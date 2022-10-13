@@ -11,7 +11,7 @@ public class Account implements Comparable<Object>
 {
     public int id = 0;
     public String name = "";
-    public State state = State.fromSet(java.util.EnumSet.of(com.chronoxor.State.initialized.getEnum(), com.chronoxor.State.bad.getEnum()));
+    public State state = State.fromSet(java.util.EnumSet.of(State.initialized.getEnum(), State.bad.getEnum()));
     public Balance wallet = new Balance();
     public Balance asset = null;
     public java.util.ArrayList<Order> orders = new java.util.ArrayList<Order>();

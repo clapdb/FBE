@@ -2200,7 +2200,7 @@ namespace com.chronoxor.proto {
         {
             id = (int)0
             , name = ""
-            , state = global::com.chronoxor.State.initialized | global::com.chronoxor.State.bad
+            , state = global::com.chronoxor.proto.State.initialized | global::com.chronoxor.proto.State.bad
             , wallet = global::com.chronoxor.proto.Balance.Default
             , asset = null
             , orders = new List<Order>()
@@ -2526,9 +2526,9 @@ namespace com.chronoxor.proto.FBE {
             fbeCurrentSize += name.FBESize;
 
             if ((fbeCurrentSize + state.FBESize) <= fbeStructSize)
-                state.Get(out fbeValue.state, global::com.chronoxor.State.initialized | global::com.chronoxor.State.bad);
+                state.Get(out fbeValue.state, global::com.chronoxor.proto.State.initialized | global::com.chronoxor.proto.State.bad);
             else
-                fbeValue.state = global::com.chronoxor.State.initialized | global::com.chronoxor.State.bad;
+                fbeValue.state = global::com.chronoxor.proto.State.initialized | global::com.chronoxor.proto.State.bad;
             fbeCurrentSize += state.FBESize;
 
             if ((fbeCurrentSize + wallet.FBESize) <= fbeStructSize)
