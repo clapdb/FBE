@@ -30,5 +30,5 @@
 *.exe
 *.out
 *.app
-./bin/*
+bin
 projects/*
