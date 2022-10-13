@@ -1076,464 +1076,464 @@ public class FieldModelEnums: FieldModel {
         var fbeCurrentSize = 4 + 4
 
         if fbeCurrentSize + byte0.fbeSize <= fbeStructSize {
-            fbeValue.byte0 = byte0.get(defaults: ChronoxorEnumByte.ENUM_VALUE_0)
+            fbeValue.byte0 = byte0.get(defaults: ChronoxorEnums.EnumByte.ENUM_VALUE_0)
         } else {
-            fbeValue.byte0 = ChronoxorEnumByte.ENUM_VALUE_0
+            fbeValue.byte0 = ChronoxorEnums.EnumByte.ENUM_VALUE_0
         }
         fbeCurrentSize += byte0.fbeSize
 
         if fbeCurrentSize + byte1.fbeSize <= fbeStructSize {
-            fbeValue.byte1 = byte1.get(defaults: ChronoxorEnumByte.ENUM_VALUE_1)
+            fbeValue.byte1 = byte1.get(defaults: ChronoxorEnums.EnumByte.ENUM_VALUE_1)
         } else {
-            fbeValue.byte1 = ChronoxorEnumByte.ENUM_VALUE_1
+            fbeValue.byte1 = ChronoxorEnums.EnumByte.ENUM_VALUE_1
         }
         fbeCurrentSize += byte1.fbeSize
 
         if fbeCurrentSize + byte2.fbeSize <= fbeStructSize {
-            fbeValue.byte2 = byte2.get(defaults: ChronoxorEnumByte.ENUM_VALUE_2)
+            fbeValue.byte2 = byte2.get(defaults: ChronoxorEnums.EnumByte.ENUM_VALUE_2)
         } else {
-            fbeValue.byte2 = ChronoxorEnumByte.ENUM_VALUE_2
+            fbeValue.byte2 = ChronoxorEnums.EnumByte.ENUM_VALUE_2
         }
         fbeCurrentSize += byte2.fbeSize
 
         if fbeCurrentSize + byte3.fbeSize <= fbeStructSize {
-            fbeValue.byte3 = byte3.get(defaults: ChronoxorEnumByte.ENUM_VALUE_3)
+            fbeValue.byte3 = byte3.get(defaults: ChronoxorEnums.EnumByte.ENUM_VALUE_3)
         } else {
-            fbeValue.byte3 = ChronoxorEnumByte.ENUM_VALUE_3
+            fbeValue.byte3 = ChronoxorEnums.EnumByte.ENUM_VALUE_3
         }
         fbeCurrentSize += byte3.fbeSize
 
         if fbeCurrentSize + byte4.fbeSize <= fbeStructSize {
-            fbeValue.byte4 = byte4.get(defaults: ChronoxorEnumByte.ENUM_VALUE_4)
+            fbeValue.byte4 = byte4.get(defaults: ChronoxorEnums.EnumByte.ENUM_VALUE_4)
         } else {
-            fbeValue.byte4 = ChronoxorEnumByte.ENUM_VALUE_4
+            fbeValue.byte4 = ChronoxorEnums.EnumByte.ENUM_VALUE_4
         }
         fbeCurrentSize += byte4.fbeSize
 
         if fbeCurrentSize + byte5.fbeSize <= fbeStructSize {
-            fbeValue.byte5 = byte5.get(defaults: ChronoxorEnumByte.ENUM_VALUE_5)
+            fbeValue.byte5 = byte5.get(defaults: ChronoxorEnums.EnumByte.ENUM_VALUE_5)
         } else {
-            fbeValue.byte5 = ChronoxorEnumByte.ENUM_VALUE_5
+            fbeValue.byte5 = ChronoxorEnums.EnumByte.ENUM_VALUE_5
         }
         fbeCurrentSize += byte5.fbeSize
 
         if fbeCurrentSize + char0.fbeSize <= fbeStructSize {
-            fbeValue.char0 = char0.get(defaults: ChronoxorEnumChar.ENUM_VALUE_0)
+            fbeValue.char0 = char0.get(defaults: ChronoxorEnums.EnumChar.ENUM_VALUE_0)
         } else {
-            fbeValue.char0 = ChronoxorEnumChar.ENUM_VALUE_0
+            fbeValue.char0 = ChronoxorEnums.EnumChar.ENUM_VALUE_0
         }
         fbeCurrentSize += char0.fbeSize
 
         if fbeCurrentSize + char1.fbeSize <= fbeStructSize {
-            fbeValue.char1 = char1.get(defaults: ChronoxorEnumChar.ENUM_VALUE_1)
+            fbeValue.char1 = char1.get(defaults: ChronoxorEnums.EnumChar.ENUM_VALUE_1)
         } else {
-            fbeValue.char1 = ChronoxorEnumChar.ENUM_VALUE_1
+            fbeValue.char1 = ChronoxorEnums.EnumChar.ENUM_VALUE_1
         }
         fbeCurrentSize += char1.fbeSize
 
         if fbeCurrentSize + char2.fbeSize <= fbeStructSize {
-            fbeValue.char2 = char2.get(defaults: ChronoxorEnumChar.ENUM_VALUE_2)
+            fbeValue.char2 = char2.get(defaults: ChronoxorEnums.EnumChar.ENUM_VALUE_2)
         } else {
-            fbeValue.char2 = ChronoxorEnumChar.ENUM_VALUE_2
+            fbeValue.char2 = ChronoxorEnums.EnumChar.ENUM_VALUE_2
         }
         fbeCurrentSize += char2.fbeSize
 
         if fbeCurrentSize + char3.fbeSize <= fbeStructSize {
-            fbeValue.char3 = char3.get(defaults: ChronoxorEnumChar.ENUM_VALUE_3)
+            fbeValue.char3 = char3.get(defaults: ChronoxorEnums.EnumChar.ENUM_VALUE_3)
         } else {
-            fbeValue.char3 = ChronoxorEnumChar.ENUM_VALUE_3
+            fbeValue.char3 = ChronoxorEnums.EnumChar.ENUM_VALUE_3
         }
         fbeCurrentSize += char3.fbeSize
 
         if fbeCurrentSize + char4.fbeSize <= fbeStructSize {
-            fbeValue.char4 = char4.get(defaults: ChronoxorEnumChar.ENUM_VALUE_4)
+            fbeValue.char4 = char4.get(defaults: ChronoxorEnums.EnumChar.ENUM_VALUE_4)
         } else {
-            fbeValue.char4 = ChronoxorEnumChar.ENUM_VALUE_4
+            fbeValue.char4 = ChronoxorEnums.EnumChar.ENUM_VALUE_4
         }
         fbeCurrentSize += char4.fbeSize
 
         if fbeCurrentSize + char5.fbeSize <= fbeStructSize {
-            fbeValue.char5 = char5.get(defaults: ChronoxorEnumChar.ENUM_VALUE_5)
+            fbeValue.char5 = char5.get(defaults: ChronoxorEnums.EnumChar.ENUM_VALUE_5)
         } else {
-            fbeValue.char5 = ChronoxorEnumChar.ENUM_VALUE_5
+            fbeValue.char5 = ChronoxorEnums.EnumChar.ENUM_VALUE_5
         }
         fbeCurrentSize += char5.fbeSize
 
         if fbeCurrentSize + wchar0.fbeSize <= fbeStructSize {
-            fbeValue.wchar0 = wchar0.get(defaults: ChronoxorEnumWChar.ENUM_VALUE_0)
+            fbeValue.wchar0 = wchar0.get(defaults: ChronoxorEnums.EnumWChar.ENUM_VALUE_0)
         } else {
-            fbeValue.wchar0 = ChronoxorEnumWChar.ENUM_VALUE_0
+            fbeValue.wchar0 = ChronoxorEnums.EnumWChar.ENUM_VALUE_0
         }
         fbeCurrentSize += wchar0.fbeSize
 
         if fbeCurrentSize + wchar1.fbeSize <= fbeStructSize {
-            fbeValue.wchar1 = wchar1.get(defaults: ChronoxorEnumWChar.ENUM_VALUE_1)
+            fbeValue.wchar1 = wchar1.get(defaults: ChronoxorEnums.EnumWChar.ENUM_VALUE_1)
         } else {
-            fbeValue.wchar1 = ChronoxorEnumWChar.ENUM_VALUE_1
+            fbeValue.wchar1 = ChronoxorEnums.EnumWChar.ENUM_VALUE_1
         }
         fbeCurrentSize += wchar1.fbeSize
 
         if fbeCurrentSize + wchar2.fbeSize <= fbeStructSize {
-            fbeValue.wchar2 = wchar2.get(defaults: ChronoxorEnumWChar.ENUM_VALUE_2)
+            fbeValue.wchar2 = wchar2.get(defaults: ChronoxorEnums.EnumWChar.ENUM_VALUE_2)
         } else {
-            fbeValue.wchar2 = ChronoxorEnumWChar.ENUM_VALUE_2
+            fbeValue.wchar2 = ChronoxorEnums.EnumWChar.ENUM_VALUE_2
         }
         fbeCurrentSize += wchar2.fbeSize
 
         if fbeCurrentSize + wchar3.fbeSize <= fbeStructSize {
-            fbeValue.wchar3 = wchar3.get(defaults: ChronoxorEnumWChar.ENUM_VALUE_3)
+            fbeValue.wchar3 = wchar3.get(defaults: ChronoxorEnums.EnumWChar.ENUM_VALUE_3)
         } else {
-            fbeValue.wchar3 = ChronoxorEnumWChar.ENUM_VALUE_3
+            fbeValue.wchar3 = ChronoxorEnums.EnumWChar.ENUM_VALUE_3
         }
         fbeCurrentSize += wchar3.fbeSize
 
         if fbeCurrentSize + wchar4.fbeSize <= fbeStructSize {
-            fbeValue.wchar4 = wchar4.get(defaults: ChronoxorEnumWChar.ENUM_VALUE_4)
+            fbeValue.wchar4 = wchar4.get(defaults: ChronoxorEnums.EnumWChar.ENUM_VALUE_4)
         } else {
-            fbeValue.wchar4 = ChronoxorEnumWChar.ENUM_VALUE_4
+            fbeValue.wchar4 = ChronoxorEnums.EnumWChar.ENUM_VALUE_4
         }
         fbeCurrentSize += wchar4.fbeSize
 
         if fbeCurrentSize + wchar5.fbeSize <= fbeStructSize {
-            fbeValue.wchar5 = wchar5.get(defaults: ChronoxorEnumWChar.ENUM_VALUE_5)
+            fbeValue.wchar5 = wchar5.get(defaults: ChronoxorEnums.EnumWChar.ENUM_VALUE_5)
         } else {
-            fbeValue.wchar5 = ChronoxorEnumWChar.ENUM_VALUE_5
+            fbeValue.wchar5 = ChronoxorEnums.EnumWChar.ENUM_VALUE_5
         }
         fbeCurrentSize += wchar5.fbeSize
 
         if fbeCurrentSize + int8b0.fbeSize <= fbeStructSize {
-            fbeValue.int8b0 = int8b0.get(defaults: ChronoxorEnumInt8.ENUM_VALUE_0)
+            fbeValue.int8b0 = int8b0.get(defaults: ChronoxorEnums.EnumInt8.ENUM_VALUE_0)
         } else {
-            fbeValue.int8b0 = ChronoxorEnumInt8.ENUM_VALUE_0
+            fbeValue.int8b0 = ChronoxorEnums.EnumInt8.ENUM_VALUE_0
         }
         fbeCurrentSize += int8b0.fbeSize
 
         if fbeCurrentSize + int8b1.fbeSize <= fbeStructSize {
-            fbeValue.int8b1 = int8b1.get(defaults: ChronoxorEnumInt8.ENUM_VALUE_1)
+            fbeValue.int8b1 = int8b1.get(defaults: ChronoxorEnums.EnumInt8.ENUM_VALUE_1)
         } else {
-            fbeValue.int8b1 = ChronoxorEnumInt8.ENUM_VALUE_1
+            fbeValue.int8b1 = ChronoxorEnums.EnumInt8.ENUM_VALUE_1
         }
         fbeCurrentSize += int8b1.fbeSize
 
         if fbeCurrentSize + int8b2.fbeSize <= fbeStructSize {
-            fbeValue.int8b2 = int8b2.get(defaults: ChronoxorEnumInt8.ENUM_VALUE_2)
+            fbeValue.int8b2 = int8b2.get(defaults: ChronoxorEnums.EnumInt8.ENUM_VALUE_2)
         } else {
-            fbeValue.int8b2 = ChronoxorEnumInt8.ENUM_VALUE_2
+            fbeValue.int8b2 = ChronoxorEnums.EnumInt8.ENUM_VALUE_2
         }
         fbeCurrentSize += int8b2.fbeSize
 
         if fbeCurrentSize + int8b3.fbeSize <= fbeStructSize {
-            fbeValue.int8b3 = int8b3.get(defaults: ChronoxorEnumInt8.ENUM_VALUE_3)
+            fbeValue.int8b3 = int8b3.get(defaults: ChronoxorEnums.EnumInt8.ENUM_VALUE_3)
         } else {
-            fbeValue.int8b3 = ChronoxorEnumInt8.ENUM_VALUE_3
+            fbeValue.int8b3 = ChronoxorEnums.EnumInt8.ENUM_VALUE_3
         }
         fbeCurrentSize += int8b3.fbeSize
 
         if fbeCurrentSize + int8b4.fbeSize <= fbeStructSize {
-            fbeValue.int8b4 = int8b4.get(defaults: ChronoxorEnumInt8.ENUM_VALUE_4)
+            fbeValue.int8b4 = int8b4.get(defaults: ChronoxorEnums.EnumInt8.ENUM_VALUE_4)
         } else {
-            fbeValue.int8b4 = ChronoxorEnumInt8.ENUM_VALUE_4
+            fbeValue.int8b4 = ChronoxorEnums.EnumInt8.ENUM_VALUE_4
         }
         fbeCurrentSize += int8b4.fbeSize
 
         if fbeCurrentSize + int8b5.fbeSize <= fbeStructSize {
-            fbeValue.int8b5 = int8b5.get(defaults: ChronoxorEnumInt8.ENUM_VALUE_5)
+            fbeValue.int8b5 = int8b5.get(defaults: ChronoxorEnums.EnumInt8.ENUM_VALUE_5)
         } else {
-            fbeValue.int8b5 = ChronoxorEnumInt8.ENUM_VALUE_5
+            fbeValue.int8b5 = ChronoxorEnums.EnumInt8.ENUM_VALUE_5
         }
         fbeCurrentSize += int8b5.fbeSize
 
         if fbeCurrentSize + uint8b0.fbeSize <= fbeStructSize {
-            fbeValue.uint8b0 = uint8b0.get(defaults: ChronoxorEnumUInt8.ENUM_VALUE_0)
+            fbeValue.uint8b0 = uint8b0.get(defaults: ChronoxorEnums.EnumUInt8.ENUM_VALUE_0)
         } else {
-            fbeValue.uint8b0 = ChronoxorEnumUInt8.ENUM_VALUE_0
+            fbeValue.uint8b0 = ChronoxorEnums.EnumUInt8.ENUM_VALUE_0
         }
         fbeCurrentSize += uint8b0.fbeSize
 
         if fbeCurrentSize + uint8b1.fbeSize <= fbeStructSize {
-            fbeValue.uint8b1 = uint8b1.get(defaults: ChronoxorEnumUInt8.ENUM_VALUE_1)
+            fbeValue.uint8b1 = uint8b1.get(defaults: ChronoxorEnums.EnumUInt8.ENUM_VALUE_1)
         } else {
-            fbeValue.uint8b1 = ChronoxorEnumUInt8.ENUM_VALUE_1
+            fbeValue.uint8b1 = ChronoxorEnums.EnumUInt8.ENUM_VALUE_1
         }
         fbeCurrentSize += uint8b1.fbeSize
 
         if fbeCurrentSize + uint8b2.fbeSize <= fbeStructSize {
-            fbeValue.uint8b2 = uint8b2.get(defaults: ChronoxorEnumUInt8.ENUM_VALUE_2)
+            fbeValue.uint8b2 = uint8b2.get(defaults: ChronoxorEnums.EnumUInt8.ENUM_VALUE_2)
         } else {
-            fbeValue.uint8b2 = ChronoxorEnumUInt8.ENUM_VALUE_2
+            fbeValue.uint8b2 = ChronoxorEnums.EnumUInt8.ENUM_VALUE_2
         }
         fbeCurrentSize += uint8b2.fbeSize
 
         if fbeCurrentSize + uint8b3.fbeSize <= fbeStructSize {
-            fbeValue.uint8b3 = uint8b3.get(defaults: ChronoxorEnumUInt8.ENUM_VALUE_3)
+            fbeValue.uint8b3 = uint8b3.get(defaults: ChronoxorEnums.EnumUInt8.ENUM_VALUE_3)
         } else {
-            fbeValue.uint8b3 = ChronoxorEnumUInt8.ENUM_VALUE_3
+            fbeValue.uint8b3 = ChronoxorEnums.EnumUInt8.ENUM_VALUE_3
         }
         fbeCurrentSize += uint8b3.fbeSize
 
         if fbeCurrentSize + uint8b4.fbeSize <= fbeStructSize {
-            fbeValue.uint8b4 = uint8b4.get(defaults: ChronoxorEnumUInt8.ENUM_VALUE_4)
+            fbeValue.uint8b4 = uint8b4.get(defaults: ChronoxorEnums.EnumUInt8.ENUM_VALUE_4)
         } else {
-            fbeValue.uint8b4 = ChronoxorEnumUInt8.ENUM_VALUE_4
+            fbeValue.uint8b4 = ChronoxorEnums.EnumUInt8.ENUM_VALUE_4
         }
         fbeCurrentSize += uint8b4.fbeSize
 
         if fbeCurrentSize + uint8b5.fbeSize <= fbeStructSize {
-            fbeValue.uint8b5 = uint8b5.get(defaults: ChronoxorEnumUInt8.ENUM_VALUE_5)
+            fbeValue.uint8b5 = uint8b5.get(defaults: ChronoxorEnums.EnumUInt8.ENUM_VALUE_5)
         } else {
-            fbeValue.uint8b5 = ChronoxorEnumUInt8.ENUM_VALUE_5
+            fbeValue.uint8b5 = ChronoxorEnums.EnumUInt8.ENUM_VALUE_5
         }
         fbeCurrentSize += uint8b5.fbeSize
 
         if fbeCurrentSize + int16b0.fbeSize <= fbeStructSize {
-            fbeValue.int16b0 = int16b0.get(defaults: ChronoxorEnumInt16.ENUM_VALUE_0)
+            fbeValue.int16b0 = int16b0.get(defaults: ChronoxorEnums.EnumInt16.ENUM_VALUE_0)
         } else {
-            fbeValue.int16b0 = ChronoxorEnumInt16.ENUM_VALUE_0
+            fbeValue.int16b0 = ChronoxorEnums.EnumInt16.ENUM_VALUE_0
         }
         fbeCurrentSize += int16b0.fbeSize
 
         if fbeCurrentSize + int16b1.fbeSize <= fbeStructSize {
-            fbeValue.int16b1 = int16b1.get(defaults: ChronoxorEnumInt16.ENUM_VALUE_1)
+            fbeValue.int16b1 = int16b1.get(defaults: ChronoxorEnums.EnumInt16.ENUM_VALUE_1)
         } else {
-            fbeValue.int16b1 = ChronoxorEnumInt16.ENUM_VALUE_1
+            fbeValue.int16b1 = ChronoxorEnums.EnumInt16.ENUM_VALUE_1
         }
         fbeCurrentSize += int16b1.fbeSize
 
         if fbeCurrentSize + int16b2.fbeSize <= fbeStructSize {
-            fbeValue.int16b2 = int16b2.get(defaults: ChronoxorEnumInt16.ENUM_VALUE_2)
+            fbeValue.int16b2 = int16b2.get(defaults: ChronoxorEnums.EnumInt16.ENUM_VALUE_2)
         } else {
-            fbeValue.int16b2 = ChronoxorEnumInt16.ENUM_VALUE_2
+            fbeValue.int16b2 = ChronoxorEnums.EnumInt16.ENUM_VALUE_2
         }
         fbeCurrentSize += int16b2.fbeSize
 
         if fbeCurrentSize + int16b3.fbeSize <= fbeStructSize {
-            fbeValue.int16b3 = int16b3.get(defaults: ChronoxorEnumInt16.ENUM_VALUE_3)
+            fbeValue.int16b3 = int16b3.get(defaults: ChronoxorEnums.EnumInt16.ENUM_VALUE_3)
         } else {
-            fbeValue.int16b3 = ChronoxorEnumInt16.ENUM_VALUE_3
+            fbeValue.int16b3 = ChronoxorEnums.EnumInt16.ENUM_VALUE_3
         }
         fbeCurrentSize += int16b3.fbeSize
 
         if fbeCurrentSize + int16b4.fbeSize <= fbeStructSize {
-            fbeValue.int16b4 = int16b4.get(defaults: ChronoxorEnumInt16.ENUM_VALUE_4)
+            fbeValue.int16b4 = int16b4.get(defaults: ChronoxorEnums.EnumInt16.ENUM_VALUE_4)
         } else {
-            fbeValue.int16b4 = ChronoxorEnumInt16.ENUM_VALUE_4
+            fbeValue.int16b4 = ChronoxorEnums.EnumInt16.ENUM_VALUE_4
         }
         fbeCurrentSize += int16b4.fbeSize
 
         if fbeCurrentSize + int16b5.fbeSize <= fbeStructSize {
-            fbeValue.int16b5 = int16b5.get(defaults: ChronoxorEnumInt16.ENUM_VALUE_5)
+            fbeValue.int16b5 = int16b5.get(defaults: ChronoxorEnums.EnumInt16.ENUM_VALUE_5)
         } else {
-            fbeValue.int16b5 = ChronoxorEnumInt16.ENUM_VALUE_5
+            fbeValue.int16b5 = ChronoxorEnums.EnumInt16.ENUM_VALUE_5
         }
         fbeCurrentSize += int16b5.fbeSize
 
         if fbeCurrentSize + uint16b0.fbeSize <= fbeStructSize {
-            fbeValue.uint16b0 = uint16b0.get(defaults: ChronoxorEnumUInt16.ENUM_VALUE_0)
+            fbeValue.uint16b0 = uint16b0.get(defaults: ChronoxorEnums.EnumUInt16.ENUM_VALUE_0)
         } else {
-            fbeValue.uint16b0 = ChronoxorEnumUInt16.ENUM_VALUE_0
+            fbeValue.uint16b0 = ChronoxorEnums.EnumUInt16.ENUM_VALUE_0
         }
         fbeCurrentSize += uint16b0.fbeSize
 
         if fbeCurrentSize + uint16b1.fbeSize <= fbeStructSize {
-            fbeValue.uint16b1 = uint16b1.get(defaults: ChronoxorEnumUInt16.ENUM_VALUE_1)
+            fbeValue.uint16b1 = uint16b1.get(defaults: ChronoxorEnums.EnumUInt16.ENUM_VALUE_1)
         } else {
-            fbeValue.uint16b1 = ChronoxorEnumUInt16.ENUM_VALUE_1
+            fbeValue.uint16b1 = ChronoxorEnums.EnumUInt16.ENUM_VALUE_1
         }
         fbeCurrentSize += uint16b1.fbeSize
 
         if fbeCurrentSize + uint16b2.fbeSize <= fbeStructSize {
-            fbeValue.uint16b2 = uint16b2.get(defaults: ChronoxorEnumUInt16.ENUM_VALUE_2)
+            fbeValue.uint16b2 = uint16b2.get(defaults: ChronoxorEnums.EnumUInt16.ENUM_VALUE_2)
         } else {
-            fbeValue.uint16b2 = ChronoxorEnumUInt16.ENUM_VALUE_2
+            fbeValue.uint16b2 = ChronoxorEnums.EnumUInt16.ENUM_VALUE_2
         }
         fbeCurrentSize += uint16b2.fbeSize
 
         if fbeCurrentSize + uint16b3.fbeSize <= fbeStructSize {
-            fbeValue.uint16b3 = uint16b3.get(defaults: ChronoxorEnumUInt16.ENUM_VALUE_3)
+            fbeValue.uint16b3 = uint16b3.get(defaults: ChronoxorEnums.EnumUInt16.ENUM_VALUE_3)
         } else {
-            fbeValue.uint16b3 = ChronoxorEnumUInt16.ENUM_VALUE_3
+            fbeValue.uint16b3 = ChronoxorEnums.EnumUInt16.ENUM_VALUE_3
         }
         fbeCurrentSize += uint16b3.fbeSize
 
         if fbeCurrentSize + uint16b4.fbeSize <= fbeStructSize {
-            fbeValue.uint16b4 = uint16b4.get(defaults: ChronoxorEnumUInt16.ENUM_VALUE_4)
+            fbeValue.uint16b4 = uint16b4.get(defaults: ChronoxorEnums.EnumUInt16.ENUM_VALUE_4)
         } else {
-            fbeValue.uint16b4 = ChronoxorEnumUInt16.ENUM_VALUE_4
+            fbeValue.uint16b4 = ChronoxorEnums.EnumUInt16.ENUM_VALUE_4
         }
         fbeCurrentSize += uint16b4.fbeSize
 
         if fbeCurrentSize + uint16b5.fbeSize <= fbeStructSize {
-            fbeValue.uint16b5 = uint16b5.get(defaults: ChronoxorEnumUInt16.ENUM_VALUE_5)
+            fbeValue.uint16b5 = uint16b5.get(defaults: ChronoxorEnums.EnumUInt16.ENUM_VALUE_5)
         } else {
-            fbeValue.uint16b5 = ChronoxorEnumUInt16.ENUM_VALUE_5
+            fbeValue.uint16b5 = ChronoxorEnums.EnumUInt16.ENUM_VALUE_5
         }
         fbeCurrentSize += uint16b5.fbeSize
 
         if fbeCurrentSize + int32b0.fbeSize <= fbeStructSize {
-            fbeValue.int32b0 = int32b0.get(defaults: ChronoxorEnumInt32.ENUM_VALUE_0)
+            fbeValue.int32b0 = int32b0.get(defaults: ChronoxorEnums.EnumInt32.ENUM_VALUE_0)
         } else {
-            fbeValue.int32b0 = ChronoxorEnumInt32.ENUM_VALUE_0
+            fbeValue.int32b0 = ChronoxorEnums.EnumInt32.ENUM_VALUE_0
         }
         fbeCurrentSize += int32b0.fbeSize
 
         if fbeCurrentSize + int32b1.fbeSize <= fbeStructSize {
-            fbeValue.int32b1 = int32b1.get(defaults: ChronoxorEnumInt32.ENUM_VALUE_1)
+            fbeValue.int32b1 = int32b1.get(defaults: ChronoxorEnums.EnumInt32.ENUM_VALUE_1)
         } else {
-            fbeValue.int32b1 = ChronoxorEnumInt32.ENUM_VALUE_1
+            fbeValue.int32b1 = ChronoxorEnums.EnumInt32.ENUM_VALUE_1
         }
         fbeCurrentSize += int32b1.fbeSize
 
         if fbeCurrentSize + int32b2.fbeSize <= fbeStructSize {
-            fbeValue.int32b2 = int32b2.get(defaults: ChronoxorEnumInt32.ENUM_VALUE_2)
+            fbeValue.int32b2 = int32b2.get(defaults: ChronoxorEnums.EnumInt32.ENUM_VALUE_2)
         } else {
-            fbeValue.int32b2 = ChronoxorEnumInt32.ENUM_VALUE_2
+            fbeValue.int32b2 = ChronoxorEnums.EnumInt32.ENUM_VALUE_2
         }
         fbeCurrentSize += int32b2.fbeSize
 
         if fbeCurrentSize + int32b3.fbeSize <= fbeStructSize {
-            fbeValue.int32b3 = int32b3.get(defaults: ChronoxorEnumInt32.ENUM_VALUE_3)
+            fbeValue.int32b3 = int32b3.get(defaults: ChronoxorEnums.EnumInt32.ENUM_VALUE_3)
         } else {
-            fbeValue.int32b3 = ChronoxorEnumInt32.ENUM_VALUE_3
+            fbeValue.int32b3 = ChronoxorEnums.EnumInt32.ENUM_VALUE_3
         }
         fbeCurrentSize += int32b3.fbeSize
 
         if fbeCurrentSize + int32b4.fbeSize <= fbeStructSize {
-            fbeValue.int32b4 = int32b4.get(defaults: ChronoxorEnumInt32.ENUM_VALUE_4)
+            fbeValue.int32b4 = int32b4.get(defaults: ChronoxorEnums.EnumInt32.ENUM_VALUE_4)
         } else {
-            fbeValue.int32b4 = ChronoxorEnumInt32.ENUM_VALUE_4
+            fbeValue.int32b4 = ChronoxorEnums.EnumInt32.ENUM_VALUE_4
         }
         fbeCurrentSize += int32b4.fbeSize
 
         if fbeCurrentSize + int32b5.fbeSize <= fbeStructSize {
-            fbeValue.int32b5 = int32b5.get(defaults: ChronoxorEnumInt32.ENUM_VALUE_5)
+            fbeValue.int32b5 = int32b5.get(defaults: ChronoxorEnums.EnumInt32.ENUM_VALUE_5)
         } else {
-            fbeValue.int32b5 = ChronoxorEnumInt32.ENUM_VALUE_5
+            fbeValue.int32b5 = ChronoxorEnums.EnumInt32.ENUM_VALUE_5
         }
         fbeCurrentSize += int32b5.fbeSize
 
         if fbeCurrentSize + uint32b0.fbeSize <= fbeStructSize {
-            fbeValue.uint32b0 = uint32b0.get(defaults: ChronoxorEnumUInt32.ENUM_VALUE_0)
+            fbeValue.uint32b0 = uint32b0.get(defaults: ChronoxorEnums.EnumUInt32.ENUM_VALUE_0)
         } else {
-            fbeValue.uint32b0 = ChronoxorEnumUInt32.ENUM_VALUE_0
+            fbeValue.uint32b0 = ChronoxorEnums.EnumUInt32.ENUM_VALUE_0
         }
         fbeCurrentSize += uint32b0.fbeSize
 
         if fbeCurrentSize + uint32b1.fbeSize <= fbeStructSize {
-            fbeValue.uint32b1 = uint32b1.get(defaults: ChronoxorEnumUInt32.ENUM_VALUE_1)
+            fbeValue.uint32b1 = uint32b1.get(defaults: ChronoxorEnums.EnumUInt32.ENUM_VALUE_1)
         } else {
-            fbeValue.uint32b1 = ChronoxorEnumUInt32.ENUM_VALUE_1
+            fbeValue.uint32b1 = ChronoxorEnums.EnumUInt32.ENUM_VALUE_1
         }
         fbeCurrentSize += uint32b1.fbeSize
 
         if fbeCurrentSize + uint32b2.fbeSize <= fbeStructSize {
-            fbeValue.uint32b2 = uint32b2.get(defaults: ChronoxorEnumUInt32.ENUM_VALUE_2)
+            fbeValue.uint32b2 = uint32b2.get(defaults: ChronoxorEnums.EnumUInt32.ENUM_VALUE_2)
         } else {
-            fbeValue.uint32b2 = ChronoxorEnumUInt32.ENUM_VALUE_2
+            fbeValue.uint32b2 = ChronoxorEnums.EnumUInt32.ENUM_VALUE_2
         }
         fbeCurrentSize += uint32b2.fbeSize
 
         if fbeCurrentSize + uint32b3.fbeSize <= fbeStructSize {
-            fbeValue.uint32b3 = uint32b3.get(defaults: ChronoxorEnumUInt32.ENUM_VALUE_3)
+            fbeValue.uint32b3 = uint32b3.get(defaults: ChronoxorEnums.EnumUInt32.ENUM_VALUE_3)
         } else {
-            fbeValue.uint32b3 = ChronoxorEnumUInt32.ENUM_VALUE_3
+            fbeValue.uint32b3 = ChronoxorEnums.EnumUInt32.ENUM_VALUE_3
         }
         fbeCurrentSize += uint32b3.fbeSize
 
         if fbeCurrentSize + uint32b4.fbeSize <= fbeStructSize {
-            fbeValue.uint32b4 = uint32b4.get(defaults: ChronoxorEnumUInt32.ENUM_VALUE_4)
+            fbeValue.uint32b4 = uint32b4.get(defaults: ChronoxorEnums.EnumUInt32.ENUM_VALUE_4)
         } else {
-            fbeValue.uint32b4 = ChronoxorEnumUInt32.ENUM_VALUE_4
+            fbeValue.uint32b4 = ChronoxorEnums.EnumUInt32.ENUM_VALUE_4
         }
         fbeCurrentSize += uint32b4.fbeSize
 
         if fbeCurrentSize + uint32b5.fbeSize <= fbeStructSize {
-            fbeValue.uint32b5 = uint32b5.get(defaults: ChronoxorEnumUInt32.ENUM_VALUE_5)
+            fbeValue.uint32b5 = uint32b5.get(defaults: ChronoxorEnums.EnumUInt32.ENUM_VALUE_5)
         } else {
-            fbeValue.uint32b5 = ChronoxorEnumUInt32.ENUM_VALUE_5
+            fbeValue.uint32b5 = ChronoxorEnums.EnumUInt32.ENUM_VALUE_5
         }
         fbeCurrentSize += uint32b5.fbeSize
 
         if fbeCurrentSize + int64b0.fbeSize <= fbeStructSize {
-            fbeValue.int64b0 = int64b0.get(defaults: ChronoxorEnumInt64.ENUM_VALUE_0)
+            fbeValue.int64b0 = int64b0.get(defaults: ChronoxorEnums.EnumInt64.ENUM_VALUE_0)
         } else {
-            fbeValue.int64b0 = ChronoxorEnumInt64.ENUM_VALUE_0
+            fbeValue.int64b0 = ChronoxorEnums.EnumInt64.ENUM_VALUE_0
         }
         fbeCurrentSize += int64b0.fbeSize
 
         if fbeCurrentSize + int64b1.fbeSize <= fbeStructSize {
-            fbeValue.int64b1 = int64b1.get(defaults: ChronoxorEnumInt64.ENUM_VALUE_1)
+            fbeValue.int64b1 = int64b1.get(defaults: ChronoxorEnums.EnumInt64.ENUM_VALUE_1)
         } else {
-            fbeValue.int64b1 = ChronoxorEnumInt64.ENUM_VALUE_1
+            fbeValue.int64b1 = ChronoxorEnums.EnumInt64.ENUM_VALUE_1
         }
         fbeCurrentSize += int64b1.fbeSize
 
         if fbeCurrentSize + int64b2.fbeSize <= fbeStructSize {
-            fbeValue.int64b2 = int64b2.get(defaults: ChronoxorEnumInt64.ENUM_VALUE_2)
+            fbeValue.int64b2 = int64b2.get(defaults: ChronoxorEnums.EnumInt64.ENUM_VALUE_2)
         } else {
-            fbeValue.int64b2 = ChronoxorEnumInt64.ENUM_VALUE_2
+            fbeValue.int64b2 = ChronoxorEnums.EnumInt64.ENUM_VALUE_2
         }
         fbeCurrentSize += int64b2.fbeSize
 
         if fbeCurrentSize + int64b3.fbeSize <= fbeStructSize {
-            fbeValue.int64b3 = int64b3.get(defaults: ChronoxorEnumInt64.ENUM_VALUE_3)
+            fbeValue.int64b3 = int64b3.get(defaults: ChronoxorEnums.EnumInt64.ENUM_VALUE_3)
         } else {
-            fbeValue.int64b3 = ChronoxorEnumInt64.ENUM_VALUE_3
+            fbeValue.int64b3 = ChronoxorEnums.EnumInt64.ENUM_VALUE_3
         }
         fbeCurrentSize += int64b3.fbeSize
 
         if fbeCurrentSize + int64b4.fbeSize <= fbeStructSize {
-            fbeValue.int64b4 = int64b4.get(defaults: ChronoxorEnumInt64.ENUM_VALUE_4)
+            fbeValue.int64b4 = int64b4.get(defaults: ChronoxorEnums.EnumInt64.ENUM_VALUE_4)
         } else {
-            fbeValue.int64b4 = ChronoxorEnumInt64.ENUM_VALUE_4
+            fbeValue.int64b4 = ChronoxorEnums.EnumInt64.ENUM_VALUE_4
         }
         fbeCurrentSize += int64b4.fbeSize
 
         if fbeCurrentSize + int64b5.fbeSize <= fbeStructSize {
-            fbeValue.int64b5 = int64b5.get(defaults: ChronoxorEnumInt64.ENUM_VALUE_5)
+            fbeValue.int64b5 = int64b5.get(defaults: ChronoxorEnums.EnumInt64.ENUM_VALUE_5)
         } else {
-            fbeValue.int64b5 = ChronoxorEnumInt64.ENUM_VALUE_5
+            fbeValue.int64b5 = ChronoxorEnums.EnumInt64.ENUM_VALUE_5
         }
         fbeCurrentSize += int64b5.fbeSize
 
         if fbeCurrentSize + uint64b0.fbeSize <= fbeStructSize {
-            fbeValue.uint64b0 = uint64b0.get(defaults: ChronoxorEnumUInt64.ENUM_VALUE_0)
+            fbeValue.uint64b0 = uint64b0.get(defaults: ChronoxorEnums.EnumUInt64.ENUM_VALUE_0)
         } else {
-            fbeValue.uint64b0 = ChronoxorEnumUInt64.ENUM_VALUE_0
+            fbeValue.uint64b0 = ChronoxorEnums.EnumUInt64.ENUM_VALUE_0
         }
         fbeCurrentSize += uint64b0.fbeSize
 
         if fbeCurrentSize + uint64b1.fbeSize <= fbeStructSize {
-            fbeValue.uint64b1 = uint64b1.get(defaults: ChronoxorEnumUInt64.ENUM_VALUE_1)
+            fbeValue.uint64b1 = uint64b1.get(defaults: ChronoxorEnums.EnumUInt64.ENUM_VALUE_1)
         } else {
-            fbeValue.uint64b1 = ChronoxorEnumUInt64.ENUM_VALUE_1
+            fbeValue.uint64b1 = ChronoxorEnums.EnumUInt64.ENUM_VALUE_1
         }
         fbeCurrentSize += uint64b1.fbeSize
 
         if fbeCurrentSize + uint64b2.fbeSize <= fbeStructSize {
-            fbeValue.uint64b2 = uint64b2.get(defaults: ChronoxorEnumUInt64.ENUM_VALUE_2)
+            fbeValue.uint64b2 = uint64b2.get(defaults: ChronoxorEnums.EnumUInt64.ENUM_VALUE_2)
         } else {
-            fbeValue.uint64b2 = ChronoxorEnumUInt64.ENUM_VALUE_2
+            fbeValue.uint64b2 = ChronoxorEnums.EnumUInt64.ENUM_VALUE_2
         }
         fbeCurrentSize += uint64b2.fbeSize
 
         if fbeCurrentSize + uint64b3.fbeSize <= fbeStructSize {
-            fbeValue.uint64b3 = uint64b3.get(defaults: ChronoxorEnumUInt64.ENUM_VALUE_3)
+            fbeValue.uint64b3 = uint64b3.get(defaults: ChronoxorEnums.EnumUInt64.ENUM_VALUE_3)
         } else {
-            fbeValue.uint64b3 = ChronoxorEnumUInt64.ENUM_VALUE_3
+            fbeValue.uint64b3 = ChronoxorEnums.EnumUInt64.ENUM_VALUE_3
         }
         fbeCurrentSize += uint64b3.fbeSize
 
         if fbeCurrentSize + uint64b4.fbeSize <= fbeStructSize {
-            fbeValue.uint64b4 = uint64b4.get(defaults: ChronoxorEnumUInt64.ENUM_VALUE_4)
+            fbeValue.uint64b4 = uint64b4.get(defaults: ChronoxorEnums.EnumUInt64.ENUM_VALUE_4)
         } else {
-            fbeValue.uint64b4 = ChronoxorEnumUInt64.ENUM_VALUE_4
+            fbeValue.uint64b4 = ChronoxorEnums.EnumUInt64.ENUM_VALUE_4
         }
         fbeCurrentSize += uint64b4.fbeSize
 
         if fbeCurrentSize + uint64b5.fbeSize <= fbeStructSize {
-            fbeValue.uint64b5 = uint64b5.get(defaults: ChronoxorEnumUInt64.ENUM_VALUE_5)
+            fbeValue.uint64b5 = uint64b5.get(defaults: ChronoxorEnums.EnumUInt64.ENUM_VALUE_5)
         } else {
-            fbeValue.uint64b5 = ChronoxorEnumUInt64.ENUM_VALUE_5
+            fbeValue.uint64b5 = ChronoxorEnums.EnumUInt64.ENUM_VALUE_5
         }
         fbeCurrentSize += uint64b5.fbeSize
     }

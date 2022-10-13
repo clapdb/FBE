@@ -202,9 +202,9 @@ public final class FieldModelAccount extends com.chronoxor.fbe.FieldModel
         fbeCurrentSize += name.fbeSize();
 
         if ((fbeCurrentSize + state.fbeSize()) <= fbeStructSize)
-            fbeValue.state = state.get(com.chronoxor.proto.State.fromSet(java.util.EnumSet.of(com.chronoxor.State.initialized.getEnum(), com.chronoxor.State.bad.getEnum())));
+            fbeValue.state = state.get(com.chronoxor.proto.State.fromSet(java.util.EnumSet.of(com.chronoxor.proto.State.initialized.getEnum(), com.chronoxor.proto.State.bad.getEnum())));
         else
-            fbeValue.state = com.chronoxor.proto.State.fromSet(java.util.EnumSet.of(com.chronoxor.State.initialized.getEnum(), com.chronoxor.State.bad.getEnum()));
+            fbeValue.state = com.chronoxor.proto.State.fromSet(java.util.EnumSet.of(com.chronoxor.proto.State.initialized.getEnum(), com.chronoxor.proto.State.bad.getEnum()));
         fbeCurrentSize += state.fbeSize();
 
         if ((fbeCurrentSize + wallet.fbeSize()) <= fbeStructSize)
