@@ -4,7 +4,7 @@
 #include "arena_ptr_ptr.h"
 #include "catch2/catch.hpp"
 #include "test.h"
-#include "memory/arena/arena.hpp"
+#include "arena/arena.hpp"
 #include "../proto/arena_models.h"
 #include "../proto/arena_ptr_ptr_models.h"
 

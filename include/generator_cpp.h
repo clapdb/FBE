@@ -42,7 +42,7 @@ public:
     bool Arena() const noexcept { return _arena; }
     GeneratorCpp& Arena(bool arena) noexcept { _arena = arena; return *this; }
 
-    std::string ArenaHeader() const noexcept { return "memory/arena/arena.hpp"; }
+    std::string ArenaHeader() const noexcept { return "arena/arena.hpp"; }
 
     std::vector<std::string> ArenaTags() const noexcept { return {"ArenaManagedCreateOnlyTag"}; }
 
