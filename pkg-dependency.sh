@@ -35,7 +35,7 @@ fbe_debian_packages=(
     cloc
     curl
     git
-    python
+    python2
     lld
     #cmake version of ubuntu is also too low.
     cmake
@@ -49,6 +49,9 @@ fbe_debian_packages=(
     clangd
     clang-tidy
     libxxhash-dev
+    libboost-dev
+    libfmt-dev
+    rapidjson-dev
 )
 
 fbe_darwin_packages=(
