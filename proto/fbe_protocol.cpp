@@ -63,7 +63,7 @@ void Receiver::receive(const void* data, size_t size)
                 {
                     message_size_copied = true;
                     message_size_found = true;
-                    message_size = (size_t)(*((const uint32_t*)(buffer1 + offset0)));
+                    message_size = (size_t)(unaligned_load<uint32_t>(buffer1 + offset0));
                     offset0 += 4;
                     break;
                 }
@@ -96,7 +96,7 @@ void Receiver::receive(const void* data, size_t size)
                 if (count == 4)
                 {
                     message_size_found = true;
-                    message_size = (size_t)(*((const uint32_t*)(buffer2 + offset2)));
+                    message_size = (size_t)(unaligned_load<uint32_t>(buffer2 + offset2));
                     offset2 += 4;
                     break;
                 }
@@ -246,14 +246,14 @@ void Receiver::receive(const void* data, size_t size)
         // Read the message parameters
         if (_final)
         {
-            fbe_struct_size = *((const uint32_t*)(message_buffer));
-            fbe_struct_type = *((const uint32_t*)(message_buffer + 4));
+            fbe_struct_size = unaligned_load<uint32_t>(message_buffer);
+            fbe_struct_type = unaligned_load<uint32_t>(message_buffer + 4);
         }
         else
         {
-            uint32_t fbe_struct_offset = *((const uint32_t*)(message_buffer + 4));
-            fbe_struct_size = *((const uint32_t*)(message_buffer + fbe_struct_offset));
-            fbe_struct_type = *((const uint32_t*)(message_buffer + fbe_struct_offset + 4));
+            uint32_t fbe_struct_offset = unaligned_load<uint32_t>(message_buffer + 4);
+            fbe_struct_size = unaligned_load<uint32_t>(message_buffer + fbe_struct_offset);
+            fbe_struct_type = unaligned_load<uint32_t>(message_buffer + fbe_struct_offset + 4);
         }
 
         // Handle the message
