@@ -51,9 +51,15 @@ Extra::~Extra()
 
 bool Extra::operator==([[maybe_unused]] const Extra& other) const noexcept
 {
-    return (
-        true
-        );
+    if (name != other.name)
+        return false;
+    if (detail != other.detail)
+        return false;
+    if (sex != other.sex)
+        return false;
+    if (flag != other.flag)
+        return false;
+    return true;
 }
 
 bool Extra::operator<([[maybe_unused]] const Extra& other) const noexcept
@@ -125,9 +131,16 @@ Simple::~Simple()
 
 bool Simple::operator==([[maybe_unused]] const Simple& other) const noexcept
 {
-    return (
-        true
-        );
+    if (name != other.name)
+        return false;
+    if (depth != other.depth)
+        return false;
+    // compare container sa
+    if (sa != other.sa)
+        return false;
+    if (sex != other.sex)
+        return false;
+    return true;
 }
 
 bool Simple::operator<([[maybe_unused]] const Simple& other) const noexcept
@@ -237,9 +250,18 @@ Complex::~Complex()
 
 bool Complex::operator==([[maybe_unused]] const Complex& other) const noexcept
 {
-    return (
-        true
-        );
+    if (name != other.name)
+        return false;
+    if (sex != other.sex)
+        return false;
+    if (flag != other.flag)
+        return false;
+    if (extra != other.extra)
+        return false;
+    // compare container nums
+    if (nums != other.nums)
+        return false;
+    return true;
 }
 
 bool Complex::operator<([[maybe_unused]] const Complex& other) const noexcept

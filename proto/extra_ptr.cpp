@@ -46,9 +46,28 @@ Info::~Info()
 
 bool Info::operator==([[maybe_unused]] const Info& other) const noexcept
 {
-    return (
-        true
-        );
+    if (info != other.info)
+        return false;
+    // compare ptr extra
+    if ((extra  == nullptr && other.extra  != nullptr) || (extra  != nullptr && other.extra  == nullptr) || (extra  != nullptr && other.extra  != nullptr && *extra != *other.extra))
+        return false;
+    // compare container extras
+    if (extras.size() != other.extras.size())
+        return false;
+    for (size_t i = 0; i < extras.size(); i++)
+    {
+        if (*extras[i] != *other.extras[i])
+            return false;
+    }
+    // compare container extras1
+    if (extras1.size() != other.extras1.size())
+        return false;
+    for (size_t i = 0; i < extras1.size(); i++)
+    {
+        if (*extras1[i] != *other.extras1[i])
+            return false;
+    }
+    return true;
 }
 
 bool Info::operator<([[maybe_unused]] const Info& other) const noexcept

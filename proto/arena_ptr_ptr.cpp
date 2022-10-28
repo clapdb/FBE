@@ -31,9 +31,9 @@ Line::~Line()
 
 bool Line::operator==([[maybe_unused]] const Line& other) const noexcept
 {
-    return (
-        true
-        );
+    if (expression != other.expression)
+        return false;
+    return true;
 }
 
 bool Line::operator<([[maybe_unused]] const Line& other) const noexcept
@@ -91,9 +91,9 @@ Line2::~Line2()
 
 bool Line2::operator==([[maybe_unused]] const Line2& other) const noexcept
 {
-    return (
-        true
-        );
+    if (bytes_v != other.bytes_v)
+        return false;
+    return true;
 }
 
 bool Line2::operator<([[maybe_unused]] const Line2& other) const noexcept

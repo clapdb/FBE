@@ -9,6 +9,29 @@
 
 namespace variants_ptr {
 
+auto is_equal(const Expr& lhs, const Expr& rhs) -> bool {
+    if (lhs.index() != rhs.index())
+        return false;
+    switch (lhs.index()) {
+        case 0: {
+            if (std::get<0>(lhs) != std::get<0>(rhs))
+                return false;
+            break;
+        }
+        case 1: {
+            if (std::get<1>(lhs) != std::get<1>(rhs))
+                return false;
+            break;
+        }
+        case 2: {
+            if (std::get<2>(lhs) != std::get<2>(rhs))
+                return false;
+            break;
+        }
+    }
+    return true;
+}
+
 std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const Expr& value)
 {
     stream << "Expr(variant|";
@@ -31,6 +54,114 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const Expr& valu
     }
     stream << ")";
     return stream;
+}
+
+auto is_equal(const V& lhs, const V& rhs) -> bool {
+    if (lhs.index() != rhs.index())
+        return false;
+    switch (lhs.index()) {
+        case 0: {
+            if (std::get<0>(lhs) != std::get<0>(rhs))
+                return false;
+            break;
+        }
+        case 1: {
+            if (std::get<1>(lhs) != std::get<1>(rhs))
+                return false;
+            break;
+        }
+        case 2: {
+            if (std::get<2>(lhs) != std::get<2>(rhs))
+                return false;
+            break;
+        }
+        case 3: {
+            if (std::get<3>(lhs) != std::get<3>(rhs))
+                return false;
+            break;
+        }
+        case 4: {
+            if (*std::get<4>(lhs) != *std::get<4>(rhs))
+                return false;
+            break;
+        }
+        case 5: {
+            for (size_t i = 0; i < std::get<5>(lhs).size(); i++)
+            {
+                if (std::get<5>(lhs)[i] != std::get<5>(rhs)[i])
+                    return false;
+            }
+            break;
+        }
+        case 6: {
+            for (size_t i = 0; i < std::get<6>(lhs).size(); i++)
+            {
+                if (std::get<6>(lhs)[i] != std::get<6>(rhs)[i])
+                    return false;
+            }
+            break;
+        }
+        case 7: {
+            for (auto & [k, v]: std::get<7>(lhs))
+            {
+                if (auto pos = std::get<7>(rhs).find(k); pos == std::get<7>(rhs).end())
+                    return false;
+                if (auto other_v = std::get<7>(rhs).at(k); other_v != v)
+                    return false;
+            }
+            break;
+        }
+        case 8: {
+            for (size_t i = 0; i < std::get<8>(lhs).size(); i++)
+            {
+                if (std::get<8>(lhs)[i] != std::get<8>(rhs)[i])
+                    return false;
+            }
+            break;
+        }
+        case 9: {
+            for (size_t i = 0; i < std::get<9>(lhs).size(); i++)
+            {
+                if (std::get<9>(lhs)[i] != std::get<9>(rhs)[i])
+                    return false;
+            }
+            break;
+        }
+        case 10: {
+            for (auto & [k, v]: std::get<10>(lhs))
+            {
+                if (auto pos = std::get<10>(rhs).find(k); pos == std::get<10>(rhs).end())
+                    return false;
+                if (auto other_v = std::get<10>(rhs).at(k); other_v != v)
+                    return false;
+            }
+            break;
+        }
+        case 11: {
+            for (auto & [k, v]: std::get<11>(lhs))
+            {
+                if (auto pos = std::get<11>(rhs).find(k); pos == std::get<11>(rhs).end())
+                    return false;
+                if (auto other_v = std::get<11>(rhs).at(k); other_v != v)
+                    return false;
+            }
+            break;
+        }
+        case 12: {
+            for (size_t i = 0; i < std::get<12>(lhs).size(); i++)
+            {
+                if (*std::get<12>(lhs)[i] != *std::get<12>(rhs)[i])
+                    return false;
+            }
+            break;
+        }
+        case 13: {
+            if (!is_equal(std::get<13>(lhs), std::get<13>(rhs)))
+                return false;
+            break;
+        }
+    }
+    return true;
 }
 
 std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const V& value)
@@ -173,9 +304,9 @@ Simple::~Simple()
 
 bool Simple::operator==([[maybe_unused]] const Simple& other) const noexcept
 {
-    return (
-        true
-        );
+    if (name != other.name)
+        return false;
+    return true;
 }
 
 bool Simple::operator<([[maybe_unused]] const Simple& other) const noexcept
@@ -253,9 +384,16 @@ Value::~Value()
 
 bool Value::operator==([[maybe_unused]] const Value& other) const noexcept
 {
-    return (
-        true
-        );
+    // compare variant v
+    if (!is_equal(v, other.v))
+        return false;
+    // compare variant vo
+    if ((vo.has_value() && !other.vo.has_value()) || (!vo.has_value() && other.vo.has_value()) || (vo.has_value() && other.vo.has_value() && !is_equal(vo.value(), other.vo.value())))
+        return false;
+    // compare variant vo2
+    if ((vo2.has_value() && !other.vo2.has_value()) || (!vo2.has_value() && other.vo2.has_value()) || (vo2.has_value() && other.vo2.has_value() && !is_equal(vo2.value(), other.vo2.value())))
+        return false;
+    return true;
 }
 
 bool Value::operator<([[maybe_unused]] const Value& other) const noexcept
@@ -324,9 +462,25 @@ ValueContainer::~ValueContainer()
 
 bool ValueContainer::operator==([[maybe_unused]] const ValueContainer& other) const noexcept
 {
-    return (
-        true
-        );
+    // compare container vv
+    if (vv.size() != other.vv.size())
+        return false;
+    for (size_t i = 0; i < vv.size(); i++)
+    {
+        if (!is_equal(vv[i], other.vv[i]))
+            return false;
+    }
+    // compare container vm
+    if (vm.size() != other.vm.size())
+        return false;
+    for (auto & [k, v]: vm)
+    {
+        if (auto pos = other.vm.find(k); pos == other.vm.end())
+            return false;
+        if (auto other_v = other.vm.at(k); !is_equal(other_v, v))
+            return false;
+    }
+    return true;
 }
 
 bool ValueContainer::operator<([[maybe_unused]] const ValueContainer& other) const noexcept

@@ -144,6 +144,9 @@ public:
     buffer_t& operator=(const buffer_t& other) = default;
     buffer_t& operator=(buffer_t&& other) = default;
 
+    bool operator==(const buffer_t& other) const noexcept { return buffer() == other.buffer(); }
+    bool operator!=(const buffer_t& other) const noexcept { return !operator==(other); }
+
     uint8_t& operator[](size_t index) { return _data[index]; }
     const uint8_t& operator[](size_t index) const { return _data[index]; }
 
@@ -255,6 +258,9 @@ public:
     pmr_buffer_t& operator=(pmr::vector<uint8_t>&& other) { _data = std::move(other); return *this; }
     pmr_buffer_t& operator=(const pmr_buffer_t& other) = default;
     pmr_buffer_t& operator=(pmr_buffer_t&& other) = default;
+
+    bool operator==(const pmr_buffer_t& other) const noexcept { return buffer() == other.buffer(); }
+    bool operator!=(const pmr_buffer_t& other) const noexcept { return !operator==(other); }
 
     uint8_t& operator[](size_t index) { return _data[index]; }
     const uint8_t& operator[](size_t index) const { return _data[index]; }

@@ -146,7 +146,7 @@ Simple::Simple(const stdb::memory::string& arg_name)
 bool Simple::operator==([[maybe_unused]] const Simple& other) const noexcept
 {
     return (
-        true
+        (name == other.name)
         );
 }
 
@@ -185,7 +185,7 @@ Value::Value(const ::variants::V& arg_v)
 bool Value::operator==([[maybe_unused]] const Value& other) const noexcept
 {
     return (
-        true
+        (v == other.v)
         );
 }
 

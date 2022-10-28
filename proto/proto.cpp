@@ -87,6 +87,11 @@ bool Order::operator==([[maybe_unused]] const Order& other) const noexcept
 {
     return (
         (id == other.id)
+        && (symbol == other.symbol)
+        && (side == other.side)
+        && (type == other.type)
+        && (price == other.price)
+        && (volume == other.volume)
         );
 }
 
@@ -142,6 +147,7 @@ bool Balance::operator==([[maybe_unused]] const Balance& other) const noexcept
 {
     return (
         (currency == other.currency)
+        && (amount == other.amount)
         );
 }
 
@@ -197,6 +203,11 @@ bool Account::operator==([[maybe_unused]] const Account& other) const noexcept
 {
     return (
         (id == other.id)
+        && (name == other.name)
+        && (state == other.state)
+        && (wallet == other.wallet)
+        && (asset == other.asset)
+        && (orders == other.orders)
         );
 }
 
@@ -258,7 +269,7 @@ OrderMessage::OrderMessage(const ::proto::Order& arg_body)
 bool OrderMessage::operator==([[maybe_unused]] const OrderMessage& other) const noexcept
 {
     return (
-        true
+        (body == other.body)
         );
 }
 
@@ -297,7 +308,7 @@ BalanceMessage::BalanceMessage(const ::proto::Balance& arg_body)
 bool BalanceMessage::operator==([[maybe_unused]] const BalanceMessage& other) const noexcept
 {
     return (
-        true
+        (body == other.body)
         );
 }
 
@@ -336,7 +347,7 @@ AccountMessage::AccountMessage(const ::proto::Account& arg_body)
 bool AccountMessage::operator==([[maybe_unused]] const AccountMessage& other) const noexcept
 {
     return (
-        true
+        (body == other.body)
         );
 }
 

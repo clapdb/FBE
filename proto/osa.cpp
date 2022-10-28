@@ -41,7 +41,10 @@ Extra::Extra(const stdb::memory::string& arg_name, const stdb::memory::string& a
 bool Extra::operator==([[maybe_unused]] const Extra& other) const noexcept
 {
     return (
-        true
+        (name == other.name)
+        && (detail == other.detail)
+        && (sex == other.sex)
+        && (flag == other.flag)
         );
 }
 
@@ -92,7 +95,10 @@ Simple::Simple(const stdb::memory::string& arg_name, int32_t arg_depth, const st
 bool Simple::operator==([[maybe_unused]] const Simple& other) const noexcept
 {
     return (
-        true
+        (name == other.name)
+        && (depth == other.depth)
+        && (sa == other.sa)
+        && (sex == other.sex)
         );
 }
 

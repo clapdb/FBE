@@ -31,9 +31,12 @@ Line::~Line()
 
 bool Line::operator==([[maybe_unused]] const Line& other) const noexcept
 {
-    return (
-        true
-        );
+    if (value != other.value)
+        return false;
+    // compare ptr value_ptr
+    if ((value_ptr  == nullptr && other.value_ptr  != nullptr) || (value_ptr  != nullptr && other.value_ptr  == nullptr) || (value_ptr  != nullptr && other.value_ptr  != nullptr && *value_ptr != *other.value_ptr))
+        return false;
+    return true;
 }
 
 bool Line::operator<([[maybe_unused]] const Line& other) const noexcept

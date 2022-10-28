@@ -39,9 +39,11 @@ struct ValueContainer;
 
 using Expr = std::variant<bool, stdb::memory::string, int32_t>;
 std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const Expr& value);
+auto is_equal(const Expr& lhs, const Expr& rhs) -> bool;
 
 using V = std::variant<int32_t, stdb::memory::string, double, ::variants_ptr::Simple, ::variants_ptr::Simple*, std::vector<::variants_ptr::Simple>, std::vector<int32_t>, std::unordered_map<int32_t, ::variants_ptr::Simple>, std::vector<FBE::buffer_t>, std::vector<stdb::memory::string>, std::unordered_map<int32_t, FBE::buffer_t>, std::unordered_map<stdb::memory::string, FBE::buffer_t>, std::vector<::variants_ptr::Simple*>, ::variants_ptr::Expr>;
 std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const V& value);
+auto is_equal(const V& lhs, const V& rhs) -> bool;
 
 struct Simple : FBE::Base
 {

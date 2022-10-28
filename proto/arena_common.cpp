@@ -65,7 +65,9 @@ Alias::Alias(const stdb::memory::arena_string& arg_name, const ::arena_common::O
 bool Alias::operator==([[maybe_unused]] const Alias& other) const noexcept
 {
     return (
-        true
+        (name == other.name)
+        && (optr == other.optr)
+        && (expr == other.expr)
         );
 }
 
@@ -118,7 +120,9 @@ Expression::Expression(const pmr::vector<stdb::memory::arena_string>& arg_keys, 
 bool Expression::operator==([[maybe_unused]] const Expression& other) const noexcept
 {
     return (
-        true
+        (keys == other.keys)
+        && (aliases == other.aliases)
+        && (alias_int == other.alias_int)
         );
 }
 
