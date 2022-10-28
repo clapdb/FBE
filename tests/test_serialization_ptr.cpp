@@ -146,6 +146,7 @@ TEST_CASE("Serialization (simple self-reference)", "[Ptr-based FBE]")
     REQUIRE(copy.spm[2048]->spm.empty());
     REQUIRE(copy.spm[2048]->sm.empty());
     REQUIRE(copy.sm.empty());
+    REQUIRE(simple == copy);
 }
 
 TEST_CASE("Serialization (extra circular-dependency)", "[Ptr-based FBE]")
@@ -270,6 +271,7 @@ TEST_CASE("Serialization (extra circular-dependency)", "[Ptr-based FBE]")
     REQUIRE(copy.infopv[0]->extras1.empty());
     REQUIRE(copy.infol.empty());
     REQUIRE(copy.infopl.empty());
+    REQUIRE(extra == copy);
 }
 
 TEST_CASE("Serilization (identical with templated-based code without ptr)", "[Ptr-based FBE]")
@@ -336,7 +338,7 @@ TEST_CASE("Serilization (identical with templated-based code without ptr)", "[Pt
     REQUIRE(osa_copy.sa[0].sex == ::osa::Sex::male);
     REQUIRE(sa_copy.sex == sa::Sex::male);
     REQUIRE(osa_copy.sex == osa::Sex::male);
-
+    REQUIRE(sa == sa_copy);
 }
 TEST_CASE("Serialization (optional)", "[Ptr-based FBE]") {
     ::sa::Complex c1 = {
@@ -398,6 +400,7 @@ TEST_CASE("Serialization (optional)", "[Ptr-based FBE]") {
     REQUIRE(c1_copy.extra->flag == ::sa::MyFLags::flag2);
     REQUIRE(c1_copy.nums.size() == 1);
     REQUIRE(c1_copy.nums[0] == 123);
+    REQUIRE(c1 == c1_copy);
 }
 TEST_CASE("Serialization (ptr-based import templated-based fbe)", "[Ptr-based FBE]") {
     ::osa::Extra extra(stdb::memory::string("extra"), "detail", ::osa::Sex::male, ::osa::MyFLags::flag1);
@@ -427,6 +430,8 @@ TEST_CASE("Serialization (ptr-based import templated-based fbe)", "[Ptr-based FB
     REQUIRE(pkg_info_copy.extra.detail == pkg_info.extra.detail);
     REQUIRE(pkg_info_copy.extra.sex == pkg_info.extra.sex);
     REQUIRE(pkg_info_copy.extra.flag == pkg_info.extra.flag);
+    REQUIRE(pkg_info == pkg_info_copy);
+
 
     ::pkg::Detail detail;
     detail.extram.emplace(1, std::move(pkg_info.extra));
@@ -457,6 +462,7 @@ TEST_CASE("Serialization (ptr-based import templated-based fbe)", "[Ptr-based FB
     REQUIRE(detail_copy.extrav.at(0).detail == "detail");
     REQUIRE(detail_copy.extrav.at(0).sex == ::osa::Sex::male);
     REQUIRE(detail_copy.extrav.at(0).flag == ::osa::MyFLags::flag1);
+    REQUIRE(detail == detail_copy);
 }
 
 TEST_CASE("Serialization (variant)", "[Ptr-based FBE]") {
@@ -479,6 +485,7 @@ TEST_CASE("Serialization (variant)", "[Ptr-based FBE]") {
 
         REQUIRE(value_copy.v.index() == 1);
         REQUIRE(std::get<stdb::memory::string>(value_copy.v) == "variant v");
+        REQUIRE(value == value_copy);
     }
 
     SECTION ("primitive type") {
@@ -500,6 +507,7 @@ TEST_CASE("Serialization (variant)", "[Ptr-based FBE]") {
 
         REQUIRE(value_copy.v.index() == 0);
         REQUIRE(std::get<int32_t>(value_copy.v) == 42);
+        REQUIRE(value == value_copy);
     }
 
     SECTION ("struct") {
@@ -521,6 +529,7 @@ TEST_CASE("Serialization (variant)", "[Ptr-based FBE]") {
 
         REQUIRE(value_copy.v.index() == 3);
         REQUIRE(std::get<::variants_ptr::Simple>(value_copy.v).name == "simple");
+        REQUIRE(value == value_copy);
     }
 
     SECTION ("pointer") {
@@ -543,6 +552,7 @@ TEST_CASE("Serialization (variant)", "[Ptr-based FBE]") {
 
         REQUIRE(value_copy.v.index() == 4);
         REQUIRE(std::get<::variants_ptr::Simple*>(value_copy.v)->name == "simple");
+        REQUIRE(value == value_copy);
     }
 
     SECTION ("vector of struct") {
@@ -572,6 +582,7 @@ TEST_CASE("Serialization (variant)", "[Ptr-based FBE]") {
         REQUIRE(v_copy.size() == 2);
         REQUIRE(v_copy.at(0).name == "simple1");
         REQUIRE(v_copy.at(1).name == "simple2");
+        REQUIRE(value == value_copy);
     }
 
     SECTION ("vector of primitive type") {
@@ -600,6 +611,7 @@ TEST_CASE("Serialization (variant)", "[Ptr-based FBE]") {
         REQUIRE(v_copy.at(0) == 1);
         REQUIRE(v_copy.at(1) == 2);
         REQUIRE(v_copy.at(2) == 3);
+        REQUIRE(value == value_copy);
     }
 
     SECTION ("hash with primitive and struct") {
@@ -629,6 +641,7 @@ TEST_CASE("Serialization (variant)", "[Ptr-based FBE]") {
         REQUIRE(v_copy.size() == 2);
         REQUIRE(v_copy.at(1).name == "simple1");
         REQUIRE(v_copy.at(2).name == "simple2");
+        REQUIRE(value == value_copy);
     }
     
     SECTION ("container of bytes") {
@@ -657,6 +670,7 @@ TEST_CASE("Serialization (variant)", "[Ptr-based FBE]") {
         auto& v_copy = std::get<8>(value_copy.v);
         REQUIRE(v_copy.size() == 1);
         REQUIRE(v_copy.at(0).string() == "ABCDE");
+        REQUIRE(value == value_copy);
     }
     
     SECTION ("vector of string") {
@@ -684,6 +698,7 @@ TEST_CASE("Serialization (variant)", "[Ptr-based FBE]") {
         REQUIRE(v_copy.size() == 2);
         REQUIRE(v_copy.at(0) == "hello");
         REQUIRE(v_copy.at(1) == "world");
+        REQUIRE(value == value_copy);
     }
 
     SECTION ("hash with primitive and bytes") {
@@ -712,6 +727,7 @@ TEST_CASE("Serialization (variant)", "[Ptr-based FBE]") {
         auto& v_copy = std::get<10>(value_copy.v);
         REQUIRE(v_copy.size() == 1);
         REQUIRE(v_copy.at(42).string() == "ABCDE");
+        REQUIRE(value == value_copy);
     }
 
     SECTION ("hash with string and bytes") {
@@ -740,6 +756,7 @@ TEST_CASE("Serialization (variant)", "[Ptr-based FBE]") {
         auto& v_copy = std::get<11>(value_copy.v);
         REQUIRE(v_copy.size() == 1);
         REQUIRE(v_copy.at("hello world").string() == "ABCDE");
+        REQUIRE(value == value_copy);
     }
 
     SECTION ("vector of pointer") {
@@ -771,6 +788,7 @@ TEST_CASE("Serialization (variant)", "[Ptr-based FBE]") {
         REQUIRE(v_copy.size() == 2);
         REQUIRE(v_copy.at(0)->name == "simple1");
         REQUIRE(v_copy.at(1)->name == "simple2");
+        REQUIRE(value == value_copy);
 
         for (auto& s : v_copy) {
             delete s;
@@ -807,6 +825,7 @@ TEST_CASE("Serialization (variant)", "[Ptr-based FBE]") {
         REQUIRE(std::get<int32_t>(value_container_copy.vm.at(1)) == 42);
         REQUIRE(std::holds_alternative<stdb::memory::string>(value_container_copy.vm.at(2)));
         REQUIRE(std::get<stdb::memory::string>(value_container_copy.vm.at(2)) == "42");
+        REQUIRE(value_container == value_container_copy);
     }
 
     SECTION ("variant of variant") {
@@ -844,6 +863,7 @@ TEST_CASE("Serialization (variant)", "[Ptr-based FBE]") {
         REQUIRE(value_copy.vo2.has_value());
         REQUIRE(value_copy.vo2->index() == 3);
         REQUIRE(std::get<::variants_ptr::Simple>(value_copy.vo2.value()).name == "simple");
+        REQUIRE(value == value_copy);
     }
 }
 
@@ -902,6 +922,7 @@ TEST_CASE("Serialization (import template)", "[Ptr-based FBE]") {
         REQUIRE(line.vo.has_value());
         REQUIRE(std::holds_alternative<::variants::Simple>(line.vo.value()));
         REQUIRE(std::get<::variants::Simple>(line.vo.value()).name == "optional simple");
+        REQUIRE(line == line_copy);
     }
     SECTION("enum and variant in a map") {
         ::template_variant::Line2 line;
@@ -929,7 +950,7 @@ TEST_CASE("Serialization (import template)", "[Ptr-based FBE]") {
         REQUIRE(std::get<int32_t>(line_copy.vm.at(::enums::EnumInt8::ENUM_VALUE_1)) == 42);
         REQUIRE(std::holds_alternative<::variants::Simple>(line_copy.vm.at(::enums::EnumInt8::ENUM_VALUE_2)));
         REQUIRE(std::get<::variants::Simple>(line_copy.vm.at(::enums::EnumInt8::ENUM_VALUE_2)).name == "simple");
-
+        REQUIRE(line == line_copy);
     }
     SECTION("struct") {
         ::template_variant::Line3 line;
@@ -958,5 +979,6 @@ TEST_CASE("Serialization (import template)", "[Ptr-based FBE]") {
         auto& v_copy = std::get<7>(line_copy.value.v);
         REQUIRE(v_copy.size() == 1);
         REQUIRE(v_copy.at(0).string() == "ABCDE");
+        REQUIRE(line == line_copy);
     }
 }

@@ -1582,6 +1582,7 @@ void GeneratorCpp::GeneratePtrPackage_Source(const std::shared_ptr<Package>& p)
         if (!p->body->variants.empty()) {
             for (const auto& v : p->body->variants)
             {
+                GenerateVariantIsEqualFunc(p, v);
                 GenerateVariantOutputStream(p, v);
             }
         }
@@ -2189,32 +2190,127 @@ void GeneratorCpp::GeneratePtrStruct_Source(const std::shared_ptr<Package>& p, c
     WriteLineIndent("bool " + *s->name + "::operator==([[maybe_unused]] const " + *s->name + "& other) const noexcept");
     WriteLineIndent("{");
     Indent(1);
-    WriteLineIndent("return (");
-    Indent(1);
-    first = true;
     if (s->base && !s->base->empty())
     {
-        WriteLineIndent(ConvertPtrTypeName(*p->name, *s->base) + "::operator==(other)");
-        first = false;
+        // opreator!= not provided automatically.
+        WriteLineIndent("if (" + ConvertPtrTypeName(*p->name, *s->base) + "::operator!=(other))");
+        Indent(1);
+        WriteLineIndent("return false;");
+        Indent(-1);
     }
     if (s->body)
     {
+        // disable `key` attribute feature.
+        // priority: container > ptr = variant > other
+        // the ket is compare variant.
         for (const auto& field : s->body->fields)
         {
-            if (field->keys)
-            {
-                WriteLineIndent(std::string(first ? "(" : "&& (") + *field->name + " == other." + *field->name + ")");
-                first = false;
+            auto field_name = *field->name;
+            auto other_field_name = "other." + field_name;
+            if (IsContainerType(*field)) {
+                // container type can be 1. ptr，2. struct, 3. variants
+                WriteLineIndent("// compare container " + field_name);
+                if (!field->ptr && !IsVariantType(p, *field->type)) {
+                    // If the element is a variant type which may be a ptr, it can lead to false-positive equality.
+                    // It's hard to figure out the details of variants because of the lack of context.
+                    WriteLineIndent("if (" + field_name + " != " + other_field_name + ")");
+                    Indent(1);
+                    WriteLineIndent("return false;");
+                    Indent(-1);
+                    continue;
+                }
+                // first compare size
+                WriteLineIndent("if (" + field_name + ".size() != " + other_field_name + ".size())");
+                Indent(1);
+                WriteLineIndent("return false;");
+                Indent(-1);
+                // element is a pointer.
+                if (field->vector || field->array) {
+                    // each element in lhs compares equal with element in rhs at the same position
+                    WriteLineIndent("for (size_t i = 0; i < " + field_name + ".size(); i++)");
+                    WriteLineIndent("{");
+                    Indent(1);
+                    if (field->ptr) {
+                        WriteLineIndent("if (*" + field_name +"[i] != *" + other_field_name + "[i])");
+                    } else {
+                        WriteLineIndent("if (!is_equal(" + field_name +"[i], " + other_field_name + "[i]))");
+                    }
+                    Indent(1);
+                    WriteLineIndent("return false;");
+                    Indent(-1);
+                    Indent(-1);
+                    WriteLineIndent("}");
+                } else if (field->list) {
+                    WriteLineIndent("// compare list");
+                    WriteLineIndent("for (auto l_iter = " + field_name + ".begin(), r_iter = " + other_field_name + ".begin(); r_iter != " + other_field_name + ".end(); l_iter++, r_iter++) {");
+                    Indent(1);
+                    if (field->ptr) {
+                        WriteLineIndent("if (**l_iter != **r_iter)");
+                    } else {
+                        WriteLineIndent("if (!is_equal(*l_iter, *r_iter))");
+                    }
+                    Indent(1);
+                    WriteLineIndent("return false;");
+                    Indent(-1);
+                    Indent(-1);
+                    WriteLineIndent("}");
+                } else if (field->map || field->hash) {
+                    // each element in lhs compares equal with element in rhs at the same position
+                    WriteLineIndent("for (auto & [k, v]: " + field_name + ")");
+                    WriteLineIndent("{");
+                    Indent(1);
+                    WriteLineIndent("if (auto pos = " + other_field_name + ".find(k); pos == " + other_field_name + ".end())");
+                    Indent(1);
+                    WriteLineIndent("return false;");
+                    Indent(-1);
+                    if (field->ptr) {
+                        WriteLineIndent("if (auto other_v = " + other_field_name + ".at(k); *other_v != *v)");
+                    } else {
+                        WriteLineIndent("if (auto other_v = " + other_field_name + ".at(k); !is_equal(other_v, v))");
+                    }
+                    Indent(1);
+                    WriteLineIndent("return false;");
+                    Indent(-1);
+                    Indent(-1);
+                    WriteLineIndent("}");
+                } else {
+                    static_assert(true, "unreached condition");
+                }
+            } else if (field->ptr) {
+                // ptr or not
+                WriteLineIndent("// compare ptr " + field_name);
+                std::string condition1 = "(" + field_name + "  == nullptr && " + other_field_name + "  != nullptr)";
+                std::string condition2 = "(" + field_name + "  != nullptr && " + other_field_name + "  == nullptr)";
+                std::string condition3 = "(" + field_name + "  != nullptr && " + other_field_name + "  != nullptr && *" + field_name + " != *" + other_field_name + ")";
+                WriteLineIndent("if (" + condition1 + " || " + condition2 + " || " + condition3 + ")");
+                Indent(1);
+                WriteLineIndent("return false;");
+                Indent(-1);
+            } else if (IsVariantType(p, *field->type)) {
+                WriteLineIndent("// compare variant " + field_name);
+                // Compare using is_same, and take optional into consideration
+                if (field->optional) {
+                    std::string condition1 = "(" + field_name + ".has_value() && !" + other_field_name + ".has_value())";
+                    std::string condition2 = "(!" + field_name + ".has_value() && " + other_field_name + ".has_value())";
+                    std::string condition3 = "(" + field_name + ".has_value() && " + other_field_name + ".has_value() && !is_equal(" + field_name + ".value(), " + other_field_name + ".value()))";
+                    WriteLineIndent("if (" + condition1 + " || " + condition2 + " || " + condition3 + ")");
+                } else {
+                    WriteLineIndent("if (!is_equal(" + field_name + ", " + other_field_name + "))");
+                }
+                Indent(1);
+                WriteLineIndent("return false;");
+                Indent(-1);
+            } else {
+                // optional, struct, variant(imported), enum, flags and other primitive types
+                WriteLineIndent("if (" + field_name + " != " + other_field_name + ")");
+                Indent(1);
+                WriteLineIndent("return false;");
+                Indent(-1);
             }
         }
     }
-    if (!s->keys)
-    {
-        WriteLineIndent(std::string(first ? "true" : "&& true"));
-        first = false;
-    }
-    WriteLineIndent(");");
-    Indent(-1);
+    WriteLineIndent("return true;");
+
     Indent(-1);
     WriteLineIndent("}");
 
@@ -2323,6 +2419,103 @@ void GeneratorCpp::GeneratePtrStruct_Source(const std::shared_ptr<Package>& p, c
     if (s->body)
         for (const auto& field : s->body->fields)
             WriteLineIndent("swap(" + *field->name + ", other." + *field->name + ");");
+    Indent(-1);
+    WriteLineIndent("}");
+}
+
+void GeneratorCpp::GenerateVariantIsEqualFunc(const std::shared_ptr<Package>& p, const std::shared_ptr<VariantType>& v)
+{
+    WriteLine();
+    WriteLineIndent("auto is_equal(const " + *v->name + "& lhs" + ", const " + *v->name + "& rhs) -> bool {");
+    Indent(1);
+    WriteLineIndent("if (lhs.index() != rhs.index())");
+    Indent(1);
+    WriteLineIndent("return false;");
+    Indent(-1);
+    WriteLineIndent("switch (lhs.index()) {");
+    Indent(1);
+    for (size_t index = 0; index < v->body->values.size(); index++) {
+        WriteLineIndent("case " + std::to_string(index) + ": {");
+        Indent(1);
+        auto v_value = v->body->values[index];
+        auto is_v_value_variant = IsVariantType(p, *v_value->type);
+        auto get_lhs_code = "std::get<" + std::to_string(index) + ">(lhs)";
+        auto get_rhs_code = "std::get<" + std::to_string(index) + ">(rhs)";
+        if (v_value-> vector) {
+            WriteLineIndent("for (size_t i = 0; i < " + get_lhs_code + ".size(); i++)");
+            WriteLineIndent("{");
+            Indent(1);
+            if (v_value->ptr) {
+                WriteLineIndent("if (*" + get_lhs_code +"[i] != *" + get_rhs_code + "[i])");
+            } else if (is_v_value_variant) {
+                WriteLineIndent("if (!is_equal(" + get_lhs_code +"[i], " + get_rhs_code + "[i]))");
+            } else {
+                WriteLineIndent("if (" + get_lhs_code +"[i] != " + get_rhs_code + "[i])");
+            }
+            Indent(1);
+            WriteLineIndent("return false;");
+            Indent(-1);
+            Indent(-1);
+            WriteLineIndent("}");
+        } else if (v_value->map || v_value->hash) {
+            // each element in lhs compares equal with element in rhs at the same position
+            WriteLineIndent("for (auto & [k, v]: " + get_lhs_code + ")");
+            WriteLineIndent("{");
+            Indent(1);
+            WriteLineIndent("if (auto pos = " + get_rhs_code + ".find(k); pos == " + get_rhs_code + ".end())");
+            Indent(1);
+            WriteLineIndent("return false;");
+            Indent(-1);
+            if (v_value->ptr) {
+                WriteLineIndent("if (auto other_v = " + get_rhs_code + ".at(k); *other_v != *v)");
+            } else if (is_v_value_variant) {
+                WriteLineIndent("if (auto other_v = " + get_rhs_code + ".at(k); !is_equal(other_v, v))");
+            } else {
+                WriteLineIndent("if (auto other_v = " + get_rhs_code + ".at(k); other_v != v)");
+            }
+            Indent(1);
+            WriteLineIndent("return false;");
+            Indent(-1);
+            Indent(-1);
+            WriteLineIndent("}");
+        } else if (v_value->list) {
+            WriteLineIndent("for (auto l_iter = " + get_lhs_code + ".begin(), r_iter = " + get_rhs_code + ".begin(); r_iter != " + get_rhs_code + ".end(); l_iter++, r_iter++) {");
+            Indent(1);
+            if (v_value->ptr) {
+                WriteLineIndent("if (**l_iter != **r_iter)");
+            } else if (is_v_value_variant) {
+                WriteLineIndent("if (!is_equal(*l_iter, *r_iter))");
+            } else {
+                WriteLineIndent("if (*l_iter != *r_iter)");
+            }
+            Indent(1);
+            WriteLineIndent("return false;");
+            Indent(-1);
+            Indent(-1);
+            WriteLineIndent("}");
+        } else if (v_value->ptr) {
+            WriteLineIndent("if (*" + get_lhs_code + " != *" + get_rhs_code + ")");
+            Indent(1);
+            WriteLineIndent("return false;");
+            Indent(-1);
+        } else if (is_v_value_variant) {
+            WriteLineIndent("if (!is_equal(" + get_lhs_code + ", " + get_rhs_code + "))");
+            Indent(1);
+            WriteLineIndent("return false;");
+            Indent(-1);
+        } else {
+            WriteLineIndent("if (" + get_lhs_code + " != " + get_rhs_code + ")");
+            Indent(1);
+            WriteLineIndent("return false;");
+            Indent(-1);
+        }
+        WriteLineIndent("break;");
+        Indent(-1);
+        WriteLineIndent("}");
+    }
+    Indent(-1);
+    WriteLineIndent("}");
+    WriteLineIndent("return true;");
     Indent(-1);
     WriteLineIndent("}");
 }

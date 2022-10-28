@@ -164,9 +164,41 @@ Extra::~Extra()
 
 bool Extra::operator==([[maybe_unused]] const Extra& other) const noexcept
 {
-    return (
-        true
-        );
+    if (num != other.num)
+        return false;
+    if (data != other.data)
+        return false;
+    // compare ptr info
+    if ((info  == nullptr && other.info  != nullptr) || (info  != nullptr && other.info  == nullptr) || (info  != nullptr && other.info  != nullptr && *info != *other.info))
+        return false;
+    // compare ptr info2
+    if ((info2  == nullptr && other.info2  != nullptr) || (info2  != nullptr && other.info2  == nullptr) || (info2  != nullptr && other.info2  != nullptr && *info2 != *other.info2))
+        return false;
+    if (info3 != other.info3)
+        return false;
+    // compare container infov
+    if (infov != other.infov)
+        return false;
+    // compare container infopv
+    if (infopv.size() != other.infopv.size())
+        return false;
+    for (size_t i = 0; i < infopv.size(); i++)
+    {
+        if (*infopv[i] != *other.infopv[i])
+            return false;
+    }
+    // compare container infol
+    if (infol != other.infol)
+        return false;
+    // compare container infopl
+    if (infopl.size() != other.infopl.size())
+        return false;
+    // compare list
+    for (auto l_iter = infopl.begin(), r_iter = other.infopl.begin(); r_iter != other.infopl.end(); l_iter++, r_iter++) {
+        if (**l_iter != **r_iter)
+            return false;
+    }
+    return true;
 }
 
 bool Extra::operator<([[maybe_unused]] const Extra& other) const noexcept
