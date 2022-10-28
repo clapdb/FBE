@@ -720,7 +720,7 @@ size_t SimpleModel::create_end(size_t fbe_begin)
 {
     size_t fbe_end = this->buffer().size();
     uint32_t fbe_full_size = (uint32_t)(fbe_end - fbe_begin);
-    *((uint32_t*)(this->buffer().data() + this->buffer().offset() + model.fbe_offset() - 4)) = fbe_full_size;
+    unaligned_store<uint32_t>(this->buffer().data() + this->buffer().offset() + model.fbe_offset() - 4, fbe_full_size);
     return fbe_full_size;
 }
 
@@ -926,7 +926,7 @@ size_t ValueModel::create_end(size_t fbe_begin)
 {
     size_t fbe_end = this->buffer().size();
     uint32_t fbe_full_size = (uint32_t)(fbe_end - fbe_begin);
-    *((uint32_t*)(this->buffer().data() + this->buffer().offset() + model.fbe_offset() - 4)) = fbe_full_size;
+    unaligned_store<uint32_t>(this->buffer().data() + this->buffer().offset() + model.fbe_offset() - 4, fbe_full_size);
     return fbe_full_size;
 }
 

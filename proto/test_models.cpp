@@ -891,7 +891,7 @@ size_t StructSimpleModel::create_end(size_t fbe_begin)
 {
     size_t fbe_end = this->buffer().size();
     uint32_t fbe_full_size = (uint32_t)(fbe_end - fbe_begin);
-    *((uint32_t*)(this->buffer().data() + this->buffer().offset() + model.fbe_offset() - 4)) = fbe_full_size;
+    unaligned_store<uint32_t>(this->buffer().data() + this->buffer().offset() + model.fbe_offset() - 4, fbe_full_size);
     return fbe_full_size;
 }
 
@@ -2151,7 +2151,7 @@ size_t StructOptionalModel::create_end(size_t fbe_begin)
 {
     size_t fbe_end = this->buffer().size();
     uint32_t fbe_full_size = (uint32_t)(fbe_end - fbe_begin);
-    *((uint32_t*)(this->buffer().data() + this->buffer().offset() + model.fbe_offset() - 4)) = fbe_full_size;
+    unaligned_store<uint32_t>(this->buffer().data() + this->buffer().offset() + model.fbe_offset() - 4, fbe_full_size);
     return fbe_full_size;
 }
 
@@ -2547,7 +2547,7 @@ size_t StructNestedModel::create_end(size_t fbe_begin)
 {
     size_t fbe_end = this->buffer().size();
     uint32_t fbe_full_size = (uint32_t)(fbe_end - fbe_begin);
-    *((uint32_t*)(this->buffer().data() + this->buffer().offset() + model.fbe_offset() - 4)) = fbe_full_size;
+    unaligned_store<uint32_t>(this->buffer().data() + this->buffer().offset() + model.fbe_offset() - 4, fbe_full_size);
     return fbe_full_size;
 }
 
@@ -2785,7 +2785,7 @@ size_t StructBytesModel::create_end(size_t fbe_begin)
 {
     size_t fbe_end = this->buffer().size();
     uint32_t fbe_full_size = (uint32_t)(fbe_end - fbe_begin);
-    *((uint32_t*)(this->buffer().data() + this->buffer().offset() + model.fbe_offset() - 4)) = fbe_full_size;
+    unaligned_store<uint32_t>(this->buffer().data() + this->buffer().offset() + model.fbe_offset() - 4, fbe_full_size);
     return fbe_full_size;
 }
 
@@ -3125,7 +3125,7 @@ size_t StructArrayModel::create_end(size_t fbe_begin)
 {
     size_t fbe_end = this->buffer().size();
     uint32_t fbe_full_size = (uint32_t)(fbe_end - fbe_begin);
-    *((uint32_t*)(this->buffer().data() + this->buffer().offset() + model.fbe_offset() - 4)) = fbe_full_size;
+    unaligned_store<uint32_t>(this->buffer().data() + this->buffer().offset() + model.fbe_offset() - 4, fbe_full_size);
     return fbe_full_size;
 }
 
@@ -3475,7 +3475,7 @@ size_t StructVectorModel::create_end(size_t fbe_begin)
 {
     size_t fbe_end = this->buffer().size();
     uint32_t fbe_full_size = (uint32_t)(fbe_end - fbe_begin);
-    *((uint32_t*)(this->buffer().data() + this->buffer().offset() + model.fbe_offset() - 4)) = fbe_full_size;
+    unaligned_store<uint32_t>(this->buffer().data() + this->buffer().offset() + model.fbe_offset() - 4, fbe_full_size);
     return fbe_full_size;
 }
 
@@ -3825,7 +3825,7 @@ size_t StructListModel::create_end(size_t fbe_begin)
 {
     size_t fbe_end = this->buffer().size();
     uint32_t fbe_full_size = (uint32_t)(fbe_end - fbe_begin);
-    *((uint32_t*)(this->buffer().data() + this->buffer().offset() + model.fbe_offset() - 4)) = fbe_full_size;
+    unaligned_store<uint32_t>(this->buffer().data() + this->buffer().offset() + model.fbe_offset() - 4, fbe_full_size);
     return fbe_full_size;
 }
 
@@ -4079,7 +4079,7 @@ size_t StructSetModel::create_end(size_t fbe_begin)
 {
     size_t fbe_end = this->buffer().size();
     uint32_t fbe_full_size = (uint32_t)(fbe_end - fbe_begin);
-    *((uint32_t*)(this->buffer().data() + this->buffer().offset() + model.fbe_offset() - 4)) = fbe_full_size;
+    unaligned_store<uint32_t>(this->buffer().data() + this->buffer().offset() + model.fbe_offset() - 4, fbe_full_size);
     return fbe_full_size;
 }
 
@@ -4429,7 +4429,7 @@ size_t StructMapModel::create_end(size_t fbe_begin)
 {
     size_t fbe_end = this->buffer().size();
     uint32_t fbe_full_size = (uint32_t)(fbe_end - fbe_begin);
-    *((uint32_t*)(this->buffer().data() + this->buffer().offset() + model.fbe_offset() - 4)) = fbe_full_size;
+    unaligned_store<uint32_t>(this->buffer().data() + this->buffer().offset() + model.fbe_offset() - 4, fbe_full_size);
     return fbe_full_size;
 }
 
@@ -4779,7 +4779,7 @@ size_t StructHashModel::create_end(size_t fbe_begin)
 {
     size_t fbe_end = this->buffer().size();
     uint32_t fbe_full_size = (uint32_t)(fbe_end - fbe_begin);
-    *((uint32_t*)(this->buffer().data() + this->buffer().offset() + model.fbe_offset() - 4)) = fbe_full_size;
+    unaligned_store<uint32_t>(this->buffer().data() + this->buffer().offset() + model.fbe_offset() - 4, fbe_full_size);
     return fbe_full_size;
 }
 
@@ -5001,7 +5001,7 @@ size_t StructHashExModel::create_end(size_t fbe_begin)
 {
     size_t fbe_end = this->buffer().size();
     uint32_t fbe_full_size = (uint32_t)(fbe_end - fbe_begin);
-    *((uint32_t*)(this->buffer().data() + this->buffer().offset() + model.fbe_offset() - 4)) = fbe_full_size;
+    unaligned_store<uint32_t>(this->buffer().data() + this->buffer().offset() + model.fbe_offset() - 4, fbe_full_size);
     return fbe_full_size;
 }
 
@@ -5188,7 +5188,7 @@ size_t StructEmptyModel::create_end(size_t fbe_begin)
 {
     size_t fbe_end = this->buffer().size();
     uint32_t fbe_full_size = (uint32_t)(fbe_end - fbe_begin);
-    *((uint32_t*)(this->buffer().data() + this->buffer().offset() + model.fbe_offset() - 4)) = fbe_full_size;
+    unaligned_store<uint32_t>(this->buffer().data() + this->buffer().offset() + model.fbe_offset() - 4, fbe_full_size);
     return fbe_full_size;
 }
 

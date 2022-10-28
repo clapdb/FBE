@@ -478,6 +478,9 @@ public:
     buffer_t& operator=(const buffer_t& other) = default;
     buffer_t& operator=(buffer_t&& other) = default;
 
+    bool operator==(const buffer_t& other) const noexcept { return buffer() == other.buffer(); }
+    bool operator!=(const buffer_t& other) const noexcept { return !operator==(other); }
+
     uint8_t& operator[](size_t index) { return _data[index]; }
     const uint8_t& operator[](size_t index) const { return _data[index]; }
 
@@ -664,6 +667,9 @@ public:
     pmr_buffer_t& operator=(pmr::vector<uint8_t>&& other) { _data = std::move(other); return *this; }
     pmr_buffer_t& operator=(const pmr_buffer_t& other) = default;
     pmr_buffer_t& operator=(pmr_buffer_t&& other) = default;
+
+    bool operator==(const pmr_buffer_t& other) const noexcept { return buffer() == other.buffer(); }
+    bool operator!=(const pmr_buffer_t& other) const noexcept { return !operator==(other); }
 
     uint8_t& operator[](size_t index) { return _data[index]; }
     const uint8_t& operator[](size_t index) const { return _data[index]; }
@@ -9094,6 +9100,10 @@ void GeneratorCpp::GenerateVariantAlias(const std::shared_ptr<Package>& p, const
     code += ">;";
     WriteLineIndent(code);
     WriteLineIndent("std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const " + *v->name + "& value);");
+    if (Ptr()) {
+        // use built-in operator== for varaint type of template-based FBE
+        WriteLineIndent("auto is_equal(const " + *v->name + "& lhs" + ", const " + *v->name + "& rhs) -> bool;");
+    }
 }
 
 void GeneratorCpp::GenerateVariantOutputStream(const std::shared_ptr<Package>& p, const std::shared_ptr<VariantType>& v)
@@ -9450,17 +9460,12 @@ void GeneratorCpp::GenerateStruct_Source(const std::shared_ptr<Package>& p, cons
     {
         for (const auto& field : s->body->fields)
         {
-            if (field->keys)
-            {
-                WriteLineIndent(std::string(first ? "(" : "&& (") + *field->name + " == other." + *field->name + ")");
-                first = false;
-            }
+            WriteLineIndent(std::string(first ? "(" : "&& (") + *field->name + " == other." + *field->name + ")");
+            first = false;
         }
     }
-    if (!s->keys)
-    {
-        WriteLineIndent(std::string(first ? "true" : "&& true"));
-        first = false;
+    if (s->body->fields.empty()) {
+        WriteLineIndent("true");
     }
     WriteLineIndent(");");
     Indent(-1);

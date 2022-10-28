@@ -46,9 +46,17 @@ Line::~Line()
 
 bool Line::operator==([[maybe_unused]] const Line& other) const noexcept
 {
-    return (
-        true
-        );
+    if (v != other.v)
+        return false;
+    // compare container vv
+    if (vv != other.vv)
+        return false;
+    // compare container vm
+    if (vm != other.vm)
+        return false;
+    if (vo != other.vo)
+        return false;
+    return true;
 }
 
 bool Line::operator<([[maybe_unused]] const Line& other) const noexcept
@@ -134,9 +142,10 @@ Line2::~Line2()
 
 bool Line2::operator==([[maybe_unused]] const Line2& other) const noexcept
 {
-    return (
-        true
-        );
+    // compare container vm
+    if (vm != other.vm)
+        return false;
+    return true;
 }
 
 bool Line2::operator<([[maybe_unused]] const Line2& other) const noexcept
@@ -201,9 +210,9 @@ Line3::~Line3()
 
 bool Line3::operator==([[maybe_unused]] const Line3& other) const noexcept
 {
-    return (
-        true
-        );
+    if (value != other.value)
+        return false;
+    return true;
 }
 
 bool Line3::operator<([[maybe_unused]] const Line3& other) const noexcept

@@ -36,9 +36,15 @@ Info::~Info()
 
 bool Info::operator==([[maybe_unused]] const Info& other) const noexcept
 {
-    return (
-        true
-        );
+    if (info != other.info)
+        return false;
+    if (sex != other.sex)
+        return false;
+    if (flag != other.flag)
+        return false;
+    if (extra != other.extra)
+        return false;
+    return true;
 }
 
 bool Info::operator<([[maybe_unused]] const Info& other) const noexcept
@@ -104,9 +110,13 @@ Detail::~Detail()
 
 bool Detail::operator==([[maybe_unused]] const Detail& other) const noexcept
 {
-    return (
-        true
-        );
+    // compare container extrav
+    if (extrav != other.extrav)
+        return false;
+    // compare container extram
+    if (extram != other.extram)
+        return false;
+    return true;
 }
 
 bool Detail::operator<([[maybe_unused]] const Detail& other) const noexcept

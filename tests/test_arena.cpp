@@ -169,6 +169,7 @@ TEST_CASE_METHOD(ArenaTest, "Arena (template import template)", "[template-based
     REQUIRE(expression.alias_int.size() == 1);
     REQUIRE(expression.alias_int.at(24).name == "an alias name 3");
     REQUIRE(expression.alias_int.at(24).optr == ::arena_common::Optr::GT);
+    REQUIRE(*item == copy);
   });
 }
 
@@ -231,6 +232,7 @@ TEST_CASE_METHOD(ArenaTest, "Arena (ptr import template)", "[ptr-based FBE]") {
         REQUIRE(expression.alias_int.at(24).optr == ::arena_common::Optr::GT);
         REQUIRE(expression.alias_int.at(42).name == "an alias name 4");
         REQUIRE(expression.alias_int.at(42).optr == ::arena_common::Optr::EQ);
+        REQUIRE(*line == line_copy);
     });
 }
 
@@ -259,5 +261,6 @@ TEST_CASE_METHOD(ArenaTest, "Arena (pmr::bytes)", "[ptr-based FBE]") {
         REQUIRE(deserialized_info == line_reader.buffer().size());
 
         REQUIRE(line2->bytes_v.string() == "ABCDE");
+        REQUIRE(*line2 == copy_line);
     });
 }

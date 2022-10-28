@@ -55,9 +55,38 @@ Simple::~Simple()
 
 bool Simple::operator==([[maybe_unused]] const Simple& other) const noexcept
 {
-    return (
-        true
-        );
+    if (info != other.info)
+        return false;
+    // compare ptr simple
+    if ((simple  == nullptr && other.simple  != nullptr) || (simple  != nullptr && other.simple  == nullptr) || (simple  != nullptr && other.simple  != nullptr && *simple != *other.simple))
+        return false;
+    if (depth != other.depth)
+        return false;
+    // compare container spv
+    if (spv.size() != other.spv.size())
+        return false;
+    for (size_t i = 0; i < spv.size(); i++)
+    {
+        if (*spv[i] != *other.spv[i])
+            return false;
+    }
+    // compare container sv
+    if (sv != other.sv)
+        return false;
+    // compare container spm
+    if (spm.size() != other.spm.size())
+        return false;
+    for (auto & [k, v]: spm)
+    {
+        if (auto pos = other.spm.find(k); pos == other.spm.end())
+            return false;
+        if (auto other_v = other.spm.at(k); *other_v != *v)
+            return false;
+    }
+    // compare container sm
+    if (sm != other.sm)
+        return false;
+    return true;
 }
 
 bool Simple::operator<([[maybe_unused]] const Simple& other) const noexcept

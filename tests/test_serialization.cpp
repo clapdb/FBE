@@ -68,6 +68,7 @@ TEST_CASE("Serialization: domain", "[FBE]")
     REQUIRE(account2.orders[2].type == proto::OrderType::stop);
     REQUIRE(account2.orders[2].price == 1.5);
     REQUIRE(account2.orders[2].volume == 10.0);
+    REQUIRE(account1 == account2);
 }
 
 TEST_CASE("Serialization: struct simple", "[FBE]")
@@ -179,6 +180,7 @@ TEST_CASE("Serialization: struct simple", "[FBE]")
     REQUIRE(struct2.f38 == struct1.f38);
     REQUIRE(struct2.f39 == struct1.f39);
     REQUIRE(struct2.f40 == struct1.f40);
+    REQUIRE(struct1 == struct2);
 }
 
 TEST_CASE("Serialization: struct optional", "[FBE]")
@@ -434,6 +436,7 @@ TEST_CASE("Serialization: struct optional", "[FBE]")
     REQUIRE(struct2.f155 == struct1.f155);
     REQUIRE(struct2.f156 == struct1.f156);
     REQUIRE(struct2.f157 == struct1.f157);
+    REQUIRE(struct1 == struct2);
 }
 
 TEST_CASE("Serialization: struct nested", "[FBE]")
@@ -709,6 +712,7 @@ TEST_CASE("Serialization: struct nested", "[FBE]")
     REQUIRE(struct2.f1005 == struct1.f1005);
     REQUIRE(struct2.f1006 == struct1.f1006);
     REQUIRE(struct2.f1007 == struct1.f1007);
+    REQUIRE(struct1 == struct2);
 }
 
 TEST_CASE("Serialization: struct bytes", "[FBE]")
@@ -753,6 +757,7 @@ TEST_CASE("Serialization: struct bytes", "[FBE]")
     REQUIRE(struct2.f2.value().size() == 4);
     REQUIRE(memcmp(f2, struct2.f2.value().data(), struct2.f2.value().size()) == 0);
     REQUIRE(!struct2.f3.has_value());
+    REQUIRE(struct1 == struct2);
 }
 
 TEST_CASE("Serialization: struct array", "[FBE]")
@@ -852,6 +857,7 @@ TEST_CASE("Serialization: struct array", "[FBE]")
     REQUIRE(struct2.f10[0].value().f12 == 255);
     REQUIRE(struct2.f10[0].value().f32 == "Initial string!");
     REQUIRE(struct2.f10[1] == std::nullopt);
+    REQUIRE(struct1 == struct2);
 }
 
 TEST_CASE("Serialization: struct vector", "[FBE]")
@@ -951,6 +957,7 @@ TEST_CASE("Serialization: struct vector", "[FBE]")
     REQUIRE(struct2.f10[0].value().f12 == 255);
     REQUIRE(struct2.f10[0].value().f32 == "Initial string!");
     REQUIRE(struct2.f10[1] == std::nullopt);
+    REQUIRE(struct1 == struct2);
 }
 
 TEST_CASE("Serialization: struct list", "[FBE]")
@@ -1050,6 +1057,7 @@ TEST_CASE("Serialization: struct list", "[FBE]")
     REQUIRE(struct2.f10.front().value().f12 == 255);
     REQUIRE(struct2.f10.front().value().f32 == "Initial string!");
     REQUIRE(struct2.f10.back() == std::nullopt);
+    REQUIRE(struct1 == struct2);
 }
 
 TEST_CASE("Serialization: struct set", "[FBE]")
@@ -1108,6 +1116,7 @@ TEST_CASE("Serialization: struct set", "[FBE]")
     REQUIRE(struct2.f4.size() == 2);
     REQUIRE(struct2.f4.find(s1) != struct2.f4.end());
     REQUIRE(struct2.f4.find(s2) != struct2.f4.end());
+    REQUIRE(struct1 == struct2);
 }
 
 TEST_CASE("Serialization: struct map", "[FBE]")
@@ -1194,6 +1203,7 @@ TEST_CASE("Serialization: struct map", "[FBE]")
     REQUIRE(struct2.f10.size() == 2);
     REQUIRE(struct2.f10.find(10)->second.value().id == 48);
     REQUIRE(struct2.f10.find(20)->second == std::nullopt);
+    REQUIRE(struct1 == struct2);
 }
 
 TEST_CASE("Serialization: struct hash", "[FBE]")
@@ -1280,6 +1290,7 @@ TEST_CASE("Serialization: struct hash", "[FBE]")
     REQUIRE(struct2.f10.size() == 2);
     REQUIRE(struct2.f10.find("10")->second.value().id == 48);
     REQUIRE(struct2.f10.find("20")->second == std::nullopt);
+    REQUIRE(struct1 == struct2);
 }
 
 TEST_CASE("Serialization: struct hash extended", "[FBE]")
@@ -1326,6 +1337,7 @@ TEST_CASE("Serialization: struct hash extended", "[FBE]")
     REQUIRE(struct2.f2.size() == 2);
     REQUIRE(struct2.f2.find(s1)->second.value().f1002 == test::EnumTyped::ENUM_VALUE_2);
     REQUIRE(struct2.f2.find(s2)->second == std::nullopt);
+    REQUIRE(struct1 == struct2);
 }
 
 
@@ -1348,6 +1360,7 @@ TEST_CASE("Serialization: variant", "[FBE]") {
 
         REQUIRE(value_copy.v.index() == 0);
         REQUIRE(std::get<stdb::memory::string>(value_copy.v) == "variant v");
+        REQUIRE(value == value_copy);
     }
 
     SECTION ("primitive type") {
@@ -1369,6 +1382,7 @@ TEST_CASE("Serialization: variant", "[FBE]") {
 
         REQUIRE(value_copy.v.index() == 1);
         REQUIRE(std::get<int32_t>(value_copy.v) == 42);
+        REQUIRE(value == value_copy);
     }
 
     SECTION ("struct") {
@@ -1390,6 +1404,7 @@ TEST_CASE("Serialization: variant", "[FBE]") {
 
         REQUIRE(value_copy.v.index() == 3);
         REQUIRE(std::get<::variants::Simple>(value_copy.v).name == "simple");
+        REQUIRE(value == value_copy);
     }
 
     SECTION ("vector of struct") {
@@ -1419,6 +1434,7 @@ TEST_CASE("Serialization: variant", "[FBE]") {
         REQUIRE(v_copy.size() == 2);
         REQUIRE(v_copy.at(0).name == "simple1");
         REQUIRE(v_copy.at(1).name == "simple2");
+        REQUIRE(value == value_copy);
     }
 
     SECTION ("vector of primitive type") {
@@ -1447,6 +1463,7 @@ TEST_CASE("Serialization: variant", "[FBE]") {
         REQUIRE(v_copy.at(0) == 1);
         REQUIRE(v_copy.at(1) == 2);
         REQUIRE(v_copy.at(2) == 3);
+        REQUIRE(value == value_copy);
     }
 
     SECTION ("hash with primitive and struct") {
@@ -1476,6 +1493,7 @@ TEST_CASE("Serialization: variant", "[FBE]") {
         REQUIRE(v_copy.size() == 2);
         REQUIRE(v_copy.at(1).name == "simple1");
         REQUIRE(v_copy.at(2).name == "simple2");
+        REQUIRE(value == value_copy);
     }
 
     SECTION ("container of bytes") {
@@ -1504,6 +1522,7 @@ TEST_CASE("Serialization: variant", "[FBE]") {
         auto& v_copy = std::get<7>(value_copy.v);
         REQUIRE(v_copy.size() == 1);
         REQUIRE(v_copy.at(0).string() == "ABCDE");
+        REQUIRE(value == value_copy);
     }
     
     SECTION ("vector of string") {
@@ -1531,6 +1550,7 @@ TEST_CASE("Serialization: variant", "[FBE]") {
         REQUIRE(v_copy.size() == 2);
         REQUIRE(v_copy.at(0) == "hello");
         REQUIRE(v_copy.at(1) == "world");
+        REQUIRE(value == value_copy);
     }
 
     SECTION ("hash with primitive and bytes") {
@@ -1559,6 +1579,7 @@ TEST_CASE("Serialization: variant", "[FBE]") {
         auto& v_copy = std::get<9>(value_copy.v);
         REQUIRE(v_copy.size() == 1);
         REQUIRE(v_copy.at(42).string() == "ABCDE");
+        REQUIRE(value == value_copy);
     }
 
     SECTION ("hash with string and bytes") {
@@ -1587,6 +1608,7 @@ TEST_CASE("Serialization: variant", "[FBE]") {
         auto& v_copy = std::get<10>(value_copy.v);
         REQUIRE(v_copy.size() == 1);
         REQUIRE(v_copy.at("hello world").string() == "ABCDE");
+        REQUIRE(value == value_copy);
     }
 
     SECTION ("variant of variant") {
@@ -1612,5 +1634,6 @@ TEST_CASE("Serialization: variant", "[FBE]") {
         auto& v_copy_expr = std::get<::variants::Expr>(value_copy.v);
         REQUIRE(v_copy_expr.index() == 2);
         REQUIRE(std::get<2>(v_copy_expr) == "42");
+        REQUIRE(value == value_copy);
     }
 }

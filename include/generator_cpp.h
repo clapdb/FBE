@@ -191,6 +191,7 @@ private:
     void GenerateFlagsFinalModel(const std::shared_ptr<Package>& p, const std::shared_ptr<FlagsType>& f);
     void GeneratorStructForwardDeclaration(const std::vector<std::shared_ptr<StructType>>& structs);
     void GenerateVariantAlias(const std::shared_ptr<Package>& p, const std::shared_ptr<VariantType>& v);
+    void GenerateVariantIsEqualFunc(const std::shared_ptr<Package>& p, const std::shared_ptr<VariantType>& v);
     void GenerateVariantOutputStream(const std::shared_ptr<Package>& p, const std::shared_ptr<VariantType>& v);
     void GenerateStruct_Header(const std::shared_ptr<Package>& p, const std::shared_ptr<StructType>& s);
     void GenerateStruct_Source(const std::shared_ptr<Package>& p, const std::shared_ptr<StructType>& s);

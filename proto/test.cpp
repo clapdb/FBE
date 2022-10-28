@@ -233,6 +233,50 @@ bool StructSimple::operator==([[maybe_unused]] const StructSimple& other) const 
 {
     return (
         (id == other.id)
+        && (f1 == other.f1)
+        && (f2 == other.f2)
+        && (f3 == other.f3)
+        && (f4 == other.f4)
+        && (f5 == other.f5)
+        && (f6 == other.f6)
+        && (f7 == other.f7)
+        && (f8 == other.f8)
+        && (f9 == other.f9)
+        && (f10 == other.f10)
+        && (f11 == other.f11)
+        && (f12 == other.f12)
+        && (f13 == other.f13)
+        && (f14 == other.f14)
+        && (f15 == other.f15)
+        && (f16 == other.f16)
+        && (f17 == other.f17)
+        && (f18 == other.f18)
+        && (f19 == other.f19)
+        && (f20 == other.f20)
+        && (f21 == other.f21)
+        && (f22 == other.f22)
+        && (f23 == other.f23)
+        && (f24 == other.f24)
+        && (f25 == other.f25)
+        && (f26 == other.f26)
+        && (f27 == other.f27)
+        && (f28 == other.f28)
+        && (f29 == other.f29)
+        && (f30 == other.f30)
+        && (f31 == other.f31)
+        && (f32 == other.f32)
+        && (f33 == other.f33)
+        && (f34 == other.f34)
+        && (f35 == other.f35)
+        && (f36 == other.f36)
+        && (f37 == other.f37)
+        && (f38 == other.f38)
+        && (f39 == other.f39)
+        && (f40 == other.f40)
+        && (f41 == other.f41)
+        && (f42 == other.f42)
+        && (f43 == other.f43)
+        && (f44 == other.f44)
         );
 }
 
@@ -496,7 +540,72 @@ bool StructOptional::operator==([[maybe_unused]] const StructOptional& other) co
 {
     return (
         ::test::StructSimple::operator==(other)
-        && true
+        && (f100 == other.f100)
+        && (f101 == other.f101)
+        && (f102 == other.f102)
+        && (f103 == other.f103)
+        && (f104 == other.f104)
+        && (f105 == other.f105)
+        && (f106 == other.f106)
+        && (f107 == other.f107)
+        && (f108 == other.f108)
+        && (f109 == other.f109)
+        && (f110 == other.f110)
+        && (f111 == other.f111)
+        && (f112 == other.f112)
+        && (f113 == other.f113)
+        && (f114 == other.f114)
+        && (f115 == other.f115)
+        && (f116 == other.f116)
+        && (f117 == other.f117)
+        && (f118 == other.f118)
+        && (f119 == other.f119)
+        && (f120 == other.f120)
+        && (f121 == other.f121)
+        && (f122 == other.f122)
+        && (f123 == other.f123)
+        && (f124 == other.f124)
+        && (f125 == other.f125)
+        && (f126 == other.f126)
+        && (f127 == other.f127)
+        && (f128 == other.f128)
+        && (f129 == other.f129)
+        && (f130 == other.f130)
+        && (f131 == other.f131)
+        && (f132 == other.f132)
+        && (f133 == other.f133)
+        && (f134 == other.f134)
+        && (f135 == other.f135)
+        && (f136 == other.f136)
+        && (f137 == other.f137)
+        && (f138 == other.f138)
+        && (f139 == other.f139)
+        && (f140 == other.f140)
+        && (f141 == other.f141)
+        && (f142 == other.f142)
+        && (f143 == other.f143)
+        && (f144 == other.f144)
+        && (f145 == other.f145)
+        && (f146 == other.f146)
+        && (f147 == other.f147)
+        && (f148 == other.f148)
+        && (f149 == other.f149)
+        && (f150 == other.f150)
+        && (f151 == other.f151)
+        && (f152 == other.f152)
+        && (f153 == other.f153)
+        && (f154 == other.f154)
+        && (f155 == other.f155)
+        && (f156 == other.f156)
+        && (f157 == other.f157)
+        && (f158 == other.f158)
+        && (f159 == other.f159)
+        && (f160 == other.f160)
+        && (f161 == other.f161)
+        && (f162 == other.f162)
+        && (f163 == other.f163)
+        && (f164 == other.f164)
+        && (f165 == other.f165)
         );
 }
 
@@ -696,7 +805,18 @@ bool StructNested::operator==([[maybe_unused]] const StructNested& other) const 
 {
     return (
         ::test::StructOptional::operator==(other)
-        && true
+        && (f1000 == other.f1000)
+        && (f1001 == other.f1001)
+        && (f1002 == other.f1002)
+        && (f1003 == other.f1003)
+        && (f1004 == other.f1004)
+        && (f1005 == other.f1005)
+        && (f1006 == other.f1006)
+        && (f1007 == other.f1007)
+        && (f1008 == other.f1008)
+        && (f1009 == other.f1009)
+        && (f1010 == other.f1010)
+        && (f1011 == other.f1011)
         );
 }
 
@@ -767,7 +887,9 @@ StructBytes::StructBytes(const FBE::buffer_t& arg_f1, const std::optional<FBE::b
 bool StructBytes::operator==([[maybe_unused]] const StructBytes& other) const noexcept
 {
     return (
-        true
+        (f1 == other.f1)
+        && (f2 == other.f2)
+        && (f3 == other.f3)
         );
 }
 
@@ -828,7 +950,16 @@ StructArray::StructArray(const std::array<uint8_t, 2>& arg_f1, const std::array<
 bool StructArray::operator==([[maybe_unused]] const StructArray& other) const noexcept
 {
     return (
-        true
+        (f1 == other.f1)
+        && (f2 == other.f2)
+        && (f3 == other.f3)
+        && (f4 == other.f4)
+        && (f5 == other.f5)
+        && (f6 == other.f6)
+        && (f7 == other.f7)
+        && (f8 == other.f8)
+        && (f9 == other.f9)
+        && (f10 == other.f10)
         );
 }
 
@@ -993,7 +1124,16 @@ StructVector::StructVector(const std::vector<uint8_t>& arg_f1, const std::vector
 bool StructVector::operator==([[maybe_unused]] const StructVector& other) const noexcept
 {
     return (
-        true
+        (f1 == other.f1)
+        && (f2 == other.f2)
+        && (f3 == other.f3)
+        && (f4 == other.f4)
+        && (f5 == other.f5)
+        && (f6 == other.f6)
+        && (f7 == other.f7)
+        && (f8 == other.f8)
+        && (f9 == other.f9)
+        && (f10 == other.f10)
         );
 }
 
@@ -1158,7 +1298,16 @@ StructList::StructList(const std::list<uint8_t>& arg_f1, const std::list<std::op
 bool StructList::operator==([[maybe_unused]] const StructList& other) const noexcept
 {
     return (
-        true
+        (f1 == other.f1)
+        && (f2 == other.f2)
+        && (f3 == other.f3)
+        && (f4 == other.f4)
+        && (f5 == other.f5)
+        && (f6 == other.f6)
+        && (f7 == other.f7)
+        && (f8 == other.f8)
+        && (f9 == other.f9)
+        && (f10 == other.f10)
         );
 }
 
@@ -1311,7 +1460,10 @@ StructSet::StructSet(const std::set<uint8_t>& arg_f1, const std::set<::test::Enu
 bool StructSet::operator==([[maybe_unused]] const StructSet& other) const noexcept
 {
     return (
-        true
+        (f1 == other.f1)
+        && (f2 == other.f2)
+        && (f3 == other.f3)
+        && (f4 == other.f4)
         );
 }
 
@@ -1410,7 +1562,16 @@ StructMap::StructMap(const std::map<int32_t, uint8_t>& arg_f1, const std::map<in
 bool StructMap::operator==([[maybe_unused]] const StructMap& other) const noexcept
 {
     return (
-        true
+        (f1 == other.f1)
+        && (f2 == other.f2)
+        && (f3 == other.f3)
+        && (f4 == other.f4)
+        && (f5 == other.f5)
+        && (f6 == other.f6)
+        && (f7 == other.f7)
+        && (f8 == other.f8)
+        && (f9 == other.f9)
+        && (f10 == other.f10)
         );
 }
 
@@ -1595,7 +1756,16 @@ StructHash::StructHash(const std::unordered_map<stdb::memory::string, uint8_t>& 
 bool StructHash::operator==([[maybe_unused]] const StructHash& other) const noexcept
 {
     return (
-        true
+        (f1 == other.f1)
+        && (f2 == other.f2)
+        && (f3 == other.f3)
+        && (f4 == other.f4)
+        && (f5 == other.f5)
+        && (f6 == other.f6)
+        && (f7 == other.f7)
+        && (f8 == other.f8)
+        && (f9 == other.f9)
+        && (f10 == other.f10)
         );
 }
 
@@ -1764,7 +1934,8 @@ StructHashEx::StructHashEx(const std::unordered_map<::test::StructSimple, ::test
 bool StructHashEx::operator==([[maybe_unused]] const StructHashEx& other) const noexcept
 {
     return (
-        true
+        (f1 == other.f1)
+        && (f2 == other.f2)
         );
 }
 

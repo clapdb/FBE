@@ -33,7 +33,10 @@ Item::Item(const ::arena_common::Optr& arg_optr, const ::arena_common::Alias& ar
 bool Item::operator==([[maybe_unused]] const Item& other) const noexcept
 {
     return (
-        true
+        (optr == other.optr)
+        && (alias == other.alias)
+        && (expressions == other.expressions)
+        && (aliases_int == other.aliases_int)
         );
 }
 
@@ -102,7 +105,7 @@ Item2::Item2(const FBE::pmr_buffer_t& arg_bytes_v)
 bool Item2::operator==([[maybe_unused]] const Item2& other) const noexcept
 {
     return (
-        true
+        (bytes_v == other.bytes_v)
         );
 }
 

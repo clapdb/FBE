@@ -59,6 +59,7 @@ TEST_CASE("Serialization (JSON): domain", "[FBE]")
     REQUIRE(account2.orders[2].type == proto::OrderType::stop);
     REQUIRE(account2.orders[2].price == 1.5);
     REQUIRE(account2.orders[2].volume == 10.0);
+    REQUIRE(account1 == account2);
 }
 
 TEST_CASE("Serialization (JSON): struct simple", "[FBE]")
@@ -165,6 +166,7 @@ TEST_CASE("Serialization (JSON): struct simple", "[FBE]")
     REQUIRE(struct2.f38 == struct1.f38);
     REQUIRE(struct2.f39 == struct1.f39);
     REQUIRE(struct2.f40 == struct1.f40);
+    REQUIRE(struct1 == struct2);
 }
 
 TEST_CASE("Serialization (JSON): struct optional", "[FBE]")
@@ -415,6 +417,7 @@ TEST_CASE("Serialization (JSON): struct optional", "[FBE]")
     REQUIRE(struct2.f155 == struct1.f155);
     REQUIRE(struct2.f156 == struct1.f156);
     REQUIRE(struct2.f157 == struct1.f157);
+    REQUIRE(struct1 == struct2);
 }
 
 TEST_CASE("Serialization (JSON): struct nested", "[FBE]")
@@ -685,6 +688,7 @@ TEST_CASE("Serialization (JSON): struct nested", "[FBE]")
     REQUIRE(struct2.f1005 == struct1.f1005);
     REQUIRE(struct2.f1006 == struct1.f1006);
     REQUIRE(struct2.f1007 == struct1.f1007);
+    REQUIRE(struct1 == struct2);
 }
 
 TEST_CASE("Serialization (JSON): struct bytes", "[FBE]")
@@ -721,6 +725,7 @@ TEST_CASE("Serialization (JSON): struct bytes", "[FBE]")
     REQUIRE(struct2.f2.value().size() == 4);
     REQUIRE(memcmp(f2, struct2.f2.value().data(), struct2.f2.value().size()) == 0);
     REQUIRE(!struct2.f3.has_value());
+    REQUIRE(struct1 == struct2);
 }
 
 TEST_CASE("Serialization (JSON): struct array", "[FBE]")
@@ -795,6 +800,7 @@ TEST_CASE("Serialization (JSON): struct array", "[FBE]")
     REQUIRE(struct2.f10[0].value().f12 == 255);
     REQUIRE(struct2.f10[0].value().f32 == "Initial string!");
     REQUIRE(struct2.f10[1] == std::nullopt);
+    REQUIRE(struct1 == struct2);
 }
 
 TEST_CASE("Serialization (JSON): struct vector", "[FBE]")
@@ -869,6 +875,7 @@ TEST_CASE("Serialization (JSON): struct vector", "[FBE]")
     REQUIRE(struct2.f10[0].value().f12 == 255);
     REQUIRE(struct2.f10[0].value().f32 == "Initial string!");
     REQUIRE(struct2.f10[1] == std::nullopt);
+    REQUIRE(struct1 == struct2);
 }
 
 TEST_CASE("Serialization (JSON): struct list", "[FBE]")
@@ -943,6 +950,7 @@ TEST_CASE("Serialization (JSON): struct list", "[FBE]")
     REQUIRE(struct2.f10.front().value().f12 == 255);
     REQUIRE(struct2.f10.front().value().f32 == "Initial string!");
     REQUIRE(struct2.f10.back() == std::nullopt);
+    REQUIRE(struct1 == struct2);
 }
 
 TEST_CASE("Serialization (JSON): struct set", "[FBE]")
@@ -987,6 +995,7 @@ TEST_CASE("Serialization (JSON): struct set", "[FBE]")
     test::StructSimple s2;
     s2.id = 65;
     REQUIRE(struct2.f4.find(s2) != struct2.f4.end());
+    REQUIRE(struct1 == struct2);
 }
 
 TEST_CASE("Serialization (JSON): struct map", "[FBE]")
@@ -1044,6 +1053,7 @@ TEST_CASE("Serialization (JSON): struct map", "[FBE]")
     REQUIRE(struct2.f10.size() == 2);
     REQUIRE(struct2.f10.find(10)->second.value().id == 48);
     REQUIRE(struct2.f10.find(20)->second == std::nullopt);
+    REQUIRE(struct1 == struct2);
 }
 
 TEST_CASE("Serialization (JSON): struct hash", "[FBE]")
@@ -1101,4 +1111,5 @@ TEST_CASE("Serialization (JSON): struct hash", "[FBE]")
     REQUIRE(struct2.f10.size() == 2);
     REQUIRE(struct2.f10.find("10")->second.value().id == 48);
     REQUIRE(struct2.f10.find("20")->second == std::nullopt);
+    REQUIRE(struct1 == struct2);
 }
