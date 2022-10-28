@@ -2192,7 +2192,6 @@ void GeneratorCpp::GeneratePtrStruct_Source(const std::shared_ptr<Package>& p, c
     Indent(1);
     if (s->base && !s->base->empty())
     {
-        // opreator!= not provided automatically.
         WriteLineIndent("if (" + ConvertPtrTypeName(*p->name, *s->base) + "::operator!=(other))");
         Indent(1);
         WriteLineIndent("return false;");
@@ -2200,15 +2199,14 @@ void GeneratorCpp::GeneratePtrStruct_Source(const std::shared_ptr<Package>& p, c
     }
     if (s->body)
     {
-        // disable `key` attribute feature.
+        // disable `key` attribute feature
         // priority: container > ptr = variant > other
-        // the ket is compare variant.
         for (const auto& field : s->body->fields)
         {
             auto field_name = *field->name;
             auto other_field_name = "other." + field_name;
             if (IsContainerType(*field)) {
-                // container type can be 1. ptr，2. struct, 3. variants
+                // container type can be ptr，struct, or variant.
                 WriteLineIndent("// compare container " + field_name);
                 if (!field->ptr && !IsVariantType(p, *field->type)) {
                     // If the element is a variant type which may be a ptr, it can lead to false-positive equality.
@@ -2224,7 +2222,6 @@ void GeneratorCpp::GeneratePtrStruct_Source(const std::shared_ptr<Package>& p, c
                 Indent(1);
                 WriteLineIndent("return false;");
                 Indent(-1);
-                // element is a pointer.
                 if (field->vector || field->array) {
                     // each element in lhs compares equal with element in rhs at the same position
                     WriteLineIndent("for (size_t i = 0; i < " + field_name + ".size(); i++)");
@@ -2277,7 +2274,6 @@ void GeneratorCpp::GeneratePtrStruct_Source(const std::shared_ptr<Package>& p, c
                     static_assert(true, "unreached condition");
                 }
             } else if (field->ptr) {
-                // ptr or not
                 WriteLineIndent("// compare ptr " + field_name);
                 std::string condition1 = "(" + field_name + "  == nullptr && " + other_field_name + "  != nullptr)";
                 std::string condition2 = "(" + field_name + "  != nullptr && " + other_field_name + "  == nullptr)";
@@ -2288,7 +2284,6 @@ void GeneratorCpp::GeneratePtrStruct_Source(const std::shared_ptr<Package>& p, c
                 Indent(-1);
             } else if (IsVariantType(p, *field->type)) {
                 WriteLineIndent("// compare variant " + field_name);
-                // Compare using is_same, and take optional into consideration
                 if (field->optional) {
                     std::string condition1 = "(" + field_name + ".has_value() && !" + other_field_name + ".has_value())";
                     std::string condition2 = "(!" + field_name + ".has_value() && " + other_field_name + ".has_value())";
