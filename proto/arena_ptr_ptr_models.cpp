@@ -90,6 +90,7 @@ void FieldModelPtr_arena_ptr_Line::get(::arena_ptr::Line** fbe_value) noexcept
     if (fbe_begin == 0)
         return;
 
+    if (ptr) delete ptr;
     ptr = new FieldModel_arena_ptr_Line(_buffer, 0);
 
     ::arena_ptr::Line *tempModel = new ::arena_ptr::Line();
@@ -135,6 +136,7 @@ void FieldModelPtr_arena_ptr_Line::set(const ::arena_ptr::Line* fbe_value) noexc
 
     if (fbe_value != nullptr) {
         BaseFieldModel* temp = new FieldModel_arena_ptr_Line(_buffer, 0);
+        if (ptr) delete ptr;
         ptr = temp;
         ptr->set(*fbe_value);
     }
@@ -433,6 +435,7 @@ void FieldModelPtr_arena_ptr_Line2::get(::arena_ptr::Line2** fbe_value) noexcept
     if (fbe_begin == 0)
         return;
 
+    if (ptr) delete ptr;
     ptr = new FieldModel_arena_ptr_Line2(_buffer, 0);
 
     ::arena_ptr::Line2 *tempModel = new ::arena_ptr::Line2();
@@ -478,6 +481,7 @@ void FieldModelPtr_arena_ptr_Line2::set(const ::arena_ptr::Line2* fbe_value) noe
 
     if (fbe_value != nullptr) {
         BaseFieldModel* temp = new FieldModel_arena_ptr_Line2(_buffer, 0);
+        if (ptr) delete ptr;
         ptr = temp;
         ptr->set(*fbe_value);
     }

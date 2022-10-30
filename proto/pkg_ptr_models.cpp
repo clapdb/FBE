@@ -90,6 +90,7 @@ void FieldModelPtr_pkg_Info::get(::pkg::Info** fbe_value) noexcept
     if (fbe_begin == 0)
         return;
 
+    if (ptr) delete ptr;
     ptr = new FieldModel_pkg_Info(_buffer, 0);
 
     ::pkg::Info *tempModel = new ::pkg::Info();
@@ -135,6 +136,7 @@ void FieldModelPtr_pkg_Info::set(const ::pkg::Info* fbe_value) noexcept
 
     if (fbe_value != nullptr) {
         BaseFieldModel* temp = new FieldModel_pkg_Info(_buffer, 0);
+        if (ptr) delete ptr;
         ptr = temp;
         ptr->set(*fbe_value);
     }
@@ -487,6 +489,7 @@ void FieldModelPtr_pkg_Detail::get(::pkg::Detail** fbe_value) noexcept
     if (fbe_begin == 0)
         return;
 
+    if (ptr) delete ptr;
     ptr = new FieldModel_pkg_Detail(_buffer, 0);
 
     ::pkg::Detail *tempModel = new ::pkg::Detail();
@@ -532,6 +535,7 @@ void FieldModelPtr_pkg_Detail::set(const ::pkg::Detail* fbe_value) noexcept
 
     if (fbe_value != nullptr) {
         BaseFieldModel* temp = new FieldModel_pkg_Detail(_buffer, 0);
+        if (ptr) delete ptr;
         ptr = temp;
         ptr->set(*fbe_value);
     }

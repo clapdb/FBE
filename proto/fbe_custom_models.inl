@@ -69,7 +69,7 @@ inline void FieldModelCustomArray<T, TStruct, N>::get(TStruct* (&values)[S]) con
     auto fbe_model = (*this)[0];
     for (size_t i = 0; (i < S) && (i < N); ++i)
     {
-        TStruct* value = new TStruct();
+        TStruct* value = nullptr;
         fbe_model.get(&value);
         values[i] = value;
         fbe_model.fbe_shift(fbe_model.fbe_size());
@@ -95,7 +95,7 @@ inline void FieldModelCustomArray<T, TStruct, N>::get(std::array<TStruct*, S>& v
     auto fbe_model = (*this)[0];
     for (size_t i = 0; (i < S) && (i < N); ++i)
     {
-        TStruct* value = new TStruct();
+        TStruct* value = nullptr;
         fbe_model.get(&value);
         values[i] = value;
         fbe_model.fbe_shift(fbe_model.fbe_size());
@@ -191,7 +191,7 @@ inline void FieldModelCustomArray<T, TStruct, N>::get(std::vector<TStruct*>& val
     auto fbe_model = (*this)[0];
     for (size_t i = N; i-- > 0;)
     {
-        TStruct* value = new TStruct();
+        TStruct* value = nullptr;
         fbe_model.get(&value);
         values.emplace_back(value);
         fbe_model.fbe_shift(fbe_model.fbe_size());
@@ -253,7 +253,7 @@ inline void FieldModelCustomArray<T, TStruct, N>::get(pmr::vector<TStruct*>& val
     auto fbe_model = (*this)[0];
     for (size_t i = N; i-- > 0;)
     {
-        TStruct* value = new TStruct();
+        TStruct* value = nullptr;
         fbe_model.get(&value);
         values.emplace_back(value);
         fbe_model.fbe_shift(fbe_model.fbe_size());
@@ -430,7 +430,7 @@ inline void FieldModelCustomVector<T, TStruct>::get(std::vector<TStruct*>& value
     auto fbe_model = (*this)[0];
     for (size_t i = fbe_vector_size; i-- > 0;)
     {
-        TStruct* value = new TStruct();
+        TStruct* value = nullptr;
         fbe_model.get(&value);
         values.emplace_back(value);
         fbe_model.fbe_shift(fbe_model.fbe_size());
@@ -468,7 +468,7 @@ inline void FieldModelCustomVector<T, TStruct>::get(std::list<TStruct*>& values)
     auto fbe_model = (*this)[0];
     for (size_t i = fbe_vector_size; i-- > 0;)
     {
-        TStruct* value = new TStruct();
+        TStruct* value = nullptr;
         fbe_model.get(&value);
         values.emplace_back(value);
         fbe_model.fbe_shift(fbe_model.fbe_size());
@@ -506,7 +506,7 @@ inline void FieldModelCustomVector<T, TStruct>::get(std::set<TStruct*>& values) 
     auto fbe_model = (*this)[0];
     for (size_t i = fbe_vector_size; i-- > 0;)
     {
-        TStruct* value = new TStruct();
+        TStruct* value = nullptr;
         fbe_model.get(&value);
         values.emplace(value);
         fbe_model.fbe_shift(fbe_model.fbe_size());
@@ -638,7 +638,7 @@ inline void FieldModelCustomVector<T, TStruct>::get(pmr::vector<TStruct*>& value
     auto fbe_model = (*this)[0];
     for (size_t i = fbe_vector_size; i-- > 0;)
     {
-        TStruct* value = new TStruct();
+        TStruct* value = nullptr;
         fbe_model.get(&value);
         values.emplace_back(value);
         fbe_model.fbe_shift(fbe_model.fbe_size());
@@ -676,7 +676,7 @@ inline void FieldModelCustomVector<T, TStruct>::get(pmr::list<TStruct*>& values)
     auto fbe_model = (*this)[0];
     for (size_t i = fbe_vector_size; i-- > 0;)
     {
-        TStruct* value = new TStruct();
+        TStruct* value = nullptr;
         fbe_model.get(&value);
         values.emplace_back(value);
         fbe_model.fbe_shift(fbe_model.fbe_size());
@@ -714,7 +714,7 @@ inline void FieldModelCustomVector<T, TStruct>::get(pmr::set<TStruct*>& values) 
     auto fbe_model = (*this)[0];
     for (size_t i = fbe_vector_size; i-- > 0;)
     {
-        TStruct* value = new TStruct();
+        TStruct* value = nullptr;
         fbe_model.get(&value);
         values.emplace(value);
         fbe_model.fbe_shift(fbe_model.fbe_size());
@@ -961,7 +961,7 @@ inline void FieldModelCustomMap<TKey, TValue, TKStruct, TValueStruct>::get(std::
     for (size_t i = fbe_map_size; i-- > 0;)
     {
         TKStruct key;
-        TValueStruct* value = new TValueStruct();
+        TValueStruct* value = nullptr;
         fbe_model.first.get(key);
         fbe_model.second.get(&value);
         values.emplace(std::move(key), value);
@@ -1005,7 +1005,7 @@ inline void FieldModelCustomMap<TKey, TValue, TKStruct, TValueStruct>::get(std::
     for (size_t i = fbe_map_size; i-- > 0;)
     {
         TKStruct key;
-        TValueStruct* value = new TValueStruct();
+        TValueStruct* value = nullptr;
         fbe_model.first.get(key);
         fbe_model.second.get(&value);
         values.emplace(std::move(key), value);
@@ -1117,7 +1117,7 @@ inline void FieldModelCustomMap<TKey, TValue, TKStruct, TValueStruct>::get(pmr::
     for (size_t i = fbe_map_size; i-- > 0;)
     {
         TKStruct key;
-        TValueStruct* value = new TValueStruct();
+        TValueStruct* value = nullptr;
         fbe_model.first.get(key);
         fbe_model.second.get(&value);
         values.emplace(std::move(key), value);
@@ -1161,7 +1161,7 @@ inline void FieldModelCustomMap<TKey, TValue, TKStruct, TValueStruct>::get(pmr::
     for (size_t i = fbe_map_size; i-- > 0;)
     {
         TKStruct key;
-        TValueStruct* value = new TValueStruct();
+        TValueStruct* value = nullptr;
         fbe_model.first.get(key);
         fbe_model.second.get(&value);
         values.emplace(std::move(key), value);

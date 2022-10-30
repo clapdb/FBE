@@ -551,8 +551,10 @@ TEST_CASE("Serialization (variant)", "[Ptr-based FBE]") {
         REQUIRE(deserialized == reader.buffer().size());
 
         REQUIRE(value_copy.v.index() == 4);
-        REQUIRE(std::get<::variants_ptr::Simple*>(value_copy.v)->name == "simple");
+        auto* simple_ptr = std::get<::variants_ptr::Simple*>(value_copy.v);
+        REQUIRE(simple_ptr->name == "simple");
         REQUIRE(value == value_copy);
+        delete simple_ptr;
     }
 
     SECTION ("vector of struct") {

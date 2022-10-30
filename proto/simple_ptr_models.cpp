@@ -90,6 +90,7 @@ void FieldModelPtr_simple_Simple::get(::simple::Simple** fbe_value) noexcept
     if (fbe_begin == 0)
         return;
 
+    if (ptr) delete ptr;
     ptr = new FieldModel_simple_Simple(_buffer, 0);
 
     ::simple::Simple *tempModel = new ::simple::Simple();
@@ -135,6 +136,7 @@ void FieldModelPtr_simple_Simple::set(const ::simple::Simple* fbe_value) noexcep
 
     if (fbe_value != nullptr) {
         BaseFieldModel* temp = new FieldModel_simple_Simple(_buffer, 0);
+        if (ptr) delete ptr;
         ptr = temp;
         ptr->set(*fbe_value);
     }

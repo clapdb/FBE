@@ -665,6 +665,7 @@ void FieldModelPtr_variants_ptr_Simple::get(::variants_ptr::Simple** fbe_value) 
     if (fbe_begin == 0)
         return;
 
+    if (ptr) delete ptr;
     ptr = new FieldModel_variants_ptr_Simple(_buffer, 0);
 
     ::variants_ptr::Simple *tempModel = new ::variants_ptr::Simple();
@@ -710,6 +711,7 @@ void FieldModelPtr_variants_ptr_Simple::set(const ::variants_ptr::Simple* fbe_va
 
     if (fbe_value != nullptr) {
         BaseFieldModel* temp = new FieldModel_variants_ptr_Simple(_buffer, 0);
+        if (ptr) delete ptr;
         ptr = temp;
         ptr->set(*fbe_value);
     }
@@ -1008,6 +1010,7 @@ void FieldModelPtr_variants_ptr_Value::get(::variants_ptr::Value** fbe_value) no
     if (fbe_begin == 0)
         return;
 
+    if (ptr) delete ptr;
     ptr = new FieldModel_variants_ptr_Value(_buffer, 0);
 
     ::variants_ptr::Value *tempModel = new ::variants_ptr::Value();
@@ -1053,6 +1056,7 @@ void FieldModelPtr_variants_ptr_Value::set(const ::variants_ptr::Value* fbe_valu
 
     if (fbe_value != nullptr) {
         BaseFieldModel* temp = new FieldModel_variants_ptr_Value(_buffer, 0);
+        if (ptr) delete ptr;
         ptr = temp;
         ptr->set(*fbe_value);
     }
@@ -1387,6 +1391,7 @@ void FieldModelPtr_variants_ptr_ValueContainer::get(::variants_ptr::ValueContain
     if (fbe_begin == 0)
         return;
 
+    if (ptr) delete ptr;
     ptr = new FieldModel_variants_ptr_ValueContainer(_buffer, 0);
 
     ::variants_ptr::ValueContainer *tempModel = new ::variants_ptr::ValueContainer();
@@ -1432,6 +1437,7 @@ void FieldModelPtr_variants_ptr_ValueContainer::set(const ::variants_ptr::ValueC
 
     if (fbe_value != nullptr) {
         BaseFieldModel* temp = new FieldModel_variants_ptr_ValueContainer(_buffer, 0);
+        if (ptr) delete ptr;
         ptr = temp;
         ptr->set(*fbe_value);
     }
