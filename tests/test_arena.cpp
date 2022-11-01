@@ -194,7 +194,7 @@ TEST_CASE_METHOD(ArenaTest, "Arena (ptr import template)", "[ptr-based FBE]") {
         line->expression.alias_int.emplace(24, std::move(alias2));
 
         ::arena_common::Alias alias4(arena.get_memory_resource());
-        alias4.name.assign("an alias name 4");
+        alias4.name.assign("an alias name long enough to alloc on arena");
         alias4.optr = ::arena_common::Optr::EQ;
         line->expression.alias_int.emplace(42, std::move(alias4));
 
@@ -230,7 +230,7 @@ TEST_CASE_METHOD(ArenaTest, "Arena (ptr import template)", "[ptr-based FBE]") {
         REQUIRE(expression.alias_int.size() == 2);
         REQUIRE(expression.alias_int.at(24).name == "an alias name 3");
         REQUIRE(expression.alias_int.at(24).optr == ::arena_common::Optr::GT);
-        REQUIRE(expression.alias_int.at(42).name == "an alias name 4");
+        REQUIRE(expression.alias_int.at(42).name == "an alias name long enough to alloc on arena");
         REQUIRE(expression.alias_int.at(42).optr == ::arena_common::Optr::EQ);
         REQUIRE(*line == line_copy);
     });
