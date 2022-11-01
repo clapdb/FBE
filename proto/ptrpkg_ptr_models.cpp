@@ -90,6 +90,7 @@ void FieldModelPtr_ptrpkg_Line::get(::ptrpkg::Line** fbe_value) noexcept
     if (fbe_begin == 0)
         return;
 
+    if (ptr) delete ptr;
     ptr = new FieldModel_ptrpkg_Line(_buffer, 0);
 
     ::ptrpkg::Line *tempModel = new ::ptrpkg::Line();
@@ -135,6 +136,7 @@ void FieldModelPtr_ptrpkg_Line::set(const ::ptrpkg::Line* fbe_value) noexcept
 
     if (fbe_value != nullptr) {
         BaseFieldModel* temp = new FieldModel_ptrpkg_Line(_buffer, 0);
+        if (ptr) delete ptr;
         ptr = temp;
         ptr->set(*fbe_value);
     }

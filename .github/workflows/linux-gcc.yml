@@ -30,6 +30,6 @@ jobs:
           export CC=/usr/local/bin/gcc
           export CXX=/usr/local/bin/g++
           mkdir build.debug && cd build.debug
-          cmake -GNinja -DCMAKE_BUILD_TYPE=Release ..
+          cmake -GNinja -DCMAKE_BUILD_TYPE=Debug ..
           ninja fbe-tests
           ./fbe-tests

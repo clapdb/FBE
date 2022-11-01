@@ -455,7 +455,7 @@ inline void FieldModelCustomArray<T, TStruct, N>::get(TStruct* (&values)[S]) con
     auto fbe_model = (*this)[0];
     for (size_t i = 0; (i < S) && (i < N); ++i)
     {
-        TStruct* value = new TStruct();
+        TStruct* value = nullptr;
         fbe_model.get(&value);
         values[i] = value;
         fbe_model.fbe_shift(fbe_model.fbe_size());
@@ -481,7 +481,7 @@ inline void FieldModelCustomArray<T, TStruct, N>::get(std::array<TStruct*, S>& v
     auto fbe_model = (*this)[0];
     for (size_t i = 0; (i < S) && (i < N); ++i)
     {
-        TStruct* value = new TStruct();
+        TStruct* value = nullptr;
         fbe_model.get(&value);
         values[i] = value;
         fbe_model.fbe_shift(fbe_model.fbe_size());
@@ -579,7 +579,7 @@ inline void FieldModelCustomArray<T, TStruct, N>::get(std::vector<TStruct*>& val
     auto fbe_model = (*this)[0];
     for (size_t i = N; i-- > 0;)
     {
-        TStruct* value = new TStruct();
+        TStruct* value = nullptr;
         fbe_model.get(&value);
         values.emplace_back(value);
         fbe_model.fbe_shift(fbe_model.fbe_size());
@@ -850,7 +850,7 @@ inline void FieldModelCustomVector<T, TStruct>::get(std::vector<TStruct*>& value
     auto fbe_model = (*this)[0];
     for (size_t i = fbe_vector_size; i-- > 0;)
     {
-        TStruct* value = new TStruct();
+        TStruct* value = nullptr;
         fbe_model.get(&value);
         values.emplace_back(value);
         fbe_model.fbe_shift(fbe_model.fbe_size());
@@ -888,7 +888,7 @@ inline void FieldModelCustomVector<T, TStruct>::get(std::list<TStruct*>& values)
     auto fbe_model = (*this)[0];
     for (size_t i = fbe_vector_size; i-- > 0;)
     {
-        TStruct* value = new TStruct();
+        TStruct* value = nullptr;
         fbe_model.get(&value);
         values.emplace_back(value);
         fbe_model.fbe_shift(fbe_model.fbe_size());
@@ -926,7 +926,7 @@ inline void FieldModelCustomVector<T, TStruct>::get(std::set<TStruct*>& values) 
     auto fbe_model = (*this)[0];
     for (size_t i = fbe_vector_size; i-- > 0;)
     {
-        TStruct* value = new TStruct();
+        TStruct* value = nullptr;
         fbe_model.get(&value);
         values.emplace(value);
         fbe_model.fbe_shift(fbe_model.fbe_size());
@@ -1264,7 +1264,7 @@ inline void FieldModelCustomMap<TKey, TValue, TKStruct, TValueStruct>::get(std::
     for (size_t i = fbe_map_size; i-- > 0;)
     {
         TKStruct key;
-        TValueStruct* value = new TValueStruct();
+        TValueStruct* value = nullptr;
         fbe_model.first.get(key);
         fbe_model.second.get(&value);
         values.emplace(std::move(key), value);
@@ -1308,7 +1308,7 @@ inline void FieldModelCustomMap<TKey, TValue, TKStruct, TValueStruct>::get(std::
     for (size_t i = fbe_map_size; i-- > 0;)
     {
         TKStruct key;
-        TValueStruct* value = new TValueStruct();
+        TValueStruct* value = nullptr;
         fbe_model.first.get(key);
         fbe_model.second.get(&value);
         values.emplace(std::move(key), value);
@@ -3471,6 +3471,7 @@ void GeneratorCpp::GenerateStructFieldPtrModel_Source(const std::shared_ptr<Pack
     WriteLineIndent("return;");
     Indent(-1);
     WriteLine();
+    WriteLineIndent("if (ptr) delete ptr;");
     WriteLineIndent("ptr = new FieldModel_" + *p->name + "_" + *s->name + "(_buffer, 0);");
     WriteLine();
     WriteLineIndent(struct_name + " *tempModel = new " + struct_name + "();");
@@ -3538,6 +3539,7 @@ void GeneratorCpp::GenerateStructFieldPtrModel_Source(const std::shared_ptr<Pack
     WriteLineIndent("if (fbe_value != nullptr) {");
     Indent(1);
     WriteLineIndent("BaseFieldModel* temp = new FieldModel_" + *p->name + "_" + *s->name + "(_buffer, 0);");
+    WriteLineIndent("if (ptr) delete ptr;");
     WriteLineIndent("ptr = temp;");
     WriteLineIndent("ptr->set(*fbe_value);");
     Indent(-1);
