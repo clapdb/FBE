@@ -2452,6 +2452,7 @@ void GeneratorCpp::GenerateVariantIsEqualFunc(const std::shared_ptr<Package>& p,
             Indent(-1);
             Indent(-1);
             WriteLineIndent("}");
+            WriteLineIndent("return true;");
         } else if (v_value->map || v_value->hash) {
             // each element in lhs compares equal with element in rhs at the same position
             WriteLineIndent("for (auto & [k, v]: " + get_lhs_code + ")");
@@ -2473,6 +2474,7 @@ void GeneratorCpp::GenerateVariantIsEqualFunc(const std::shared_ptr<Package>& p,
             Indent(-1);
             Indent(-1);
             WriteLineIndent("}");
+            WriteLineIndent("return true;");
         } else if (v_value->list) {
             WriteLineIndent("for (auto l_iter = " + get_lhs_code + ".begin(), r_iter = " + get_rhs_code + ".begin(); r_iter != " + get_rhs_code + ".end(); l_iter++, r_iter++) {");
             Indent(1);
@@ -2488,29 +2490,23 @@ void GeneratorCpp::GenerateVariantIsEqualFunc(const std::shared_ptr<Package>& p,
             Indent(-1);
             Indent(-1);
             WriteLineIndent("}");
+            WriteLineIndent("return true;");
         } else if (v_value->ptr) {
-            WriteLineIndent("if (*" + get_lhs_code + " != *" + get_rhs_code + ")");
-            Indent(1);
-            WriteLineIndent("return false;");
-            Indent(-1);
+            WriteLineIndent("return *" + get_lhs_code + " == *" + get_rhs_code + ";");
         } else if (is_v_value_variant) {
-            WriteLineIndent("if (!is_equal(" + get_lhs_code + ", " + get_rhs_code + "))");
-            Indent(1);
-            WriteLineIndent("return false;");
-            Indent(-1);
+            WriteLineIndent("return is_equal(" + get_lhs_code + ", " + get_rhs_code + ");");
         } else {
-            WriteLineIndent("if (" + get_lhs_code + " != " + get_rhs_code + ")");
-            Indent(1);
-            WriteLineIndent("return false;");
-            Indent(-1);
+            WriteLineIndent("return " + get_lhs_code + " == " + get_rhs_code + ";");
         }
-        WriteLineIndent("break;");
         Indent(-1);
         WriteLineIndent("}");
     }
+    WriteLineIndent("default: ");
+    Indent(1);
+    WriteLineIndent("return true;");
+    Indent(-1);
     Indent(-1);
     WriteLineIndent("}");
-    WriteLineIndent("return true;");
     Indent(-1);
     WriteLineIndent("}");
 }
