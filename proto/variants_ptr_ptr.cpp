@@ -14,22 +14,17 @@ auto is_equal(const Expr& lhs, const Expr& rhs) -> bool {
         return false;
     switch (lhs.index()) {
         case 0: {
-            if (std::get<0>(lhs) != std::get<0>(rhs))
-                return false;
-            break;
+            return std::get<0>(lhs) == std::get<0>(rhs);
         }
         case 1: {
-            if (std::get<1>(lhs) != std::get<1>(rhs))
-                return false;
-            break;
+            return std::get<1>(lhs) == std::get<1>(rhs);
         }
         case 2: {
-            if (std::get<2>(lhs) != std::get<2>(rhs))
-                return false;
-            break;
+            return std::get<2>(lhs) == std::get<2>(rhs);
         }
+        default: 
+            return true;
     }
-    return true;
 }
 
 std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const Expr& value)
@@ -61,107 +56,131 @@ auto is_equal(const V& lhs, const V& rhs) -> bool {
         return false;
     switch (lhs.index()) {
         case 0: {
-            if (std::get<0>(lhs) != std::get<0>(rhs))
-                return false;
-            break;
+            return std::get<0>(lhs) == std::get<0>(rhs);
         }
         case 1: {
-            if (std::get<1>(lhs) != std::get<1>(rhs))
-                return false;
-            break;
+            return std::get<1>(lhs) == std::get<1>(rhs);
         }
         case 2: {
-            if (std::get<2>(lhs) != std::get<2>(rhs))
-                return false;
-            break;
+            return std::get<2>(lhs) == std::get<2>(rhs);
         }
         case 3: {
-            if (std::get<3>(lhs) != std::get<3>(rhs))
-                return false;
-            break;
+            return std::get<3>(lhs) == std::get<3>(rhs);
         }
         case 4: {
-            if (*std::get<4>(lhs) != *std::get<4>(rhs))
-                return false;
-            break;
+            return *std::get<4>(lhs) == *std::get<4>(rhs);
         }
         case 5: {
-            for (size_t i = 0; i < std::get<5>(lhs).size(); i++)
+            auto& lhs_value = std::get<5>(lhs);
+            auto& rhs_value = std::get<5>(rhs);
+            if (lhs_value.size() != rhs_value.size())
+                return false;
+            for (size_t i = 0; i < lhs_value.size(); i++)
             {
-                if (std::get<5>(lhs)[i] != std::get<5>(rhs)[i])
+                if (lhs_value[i] != rhs_value[i])
                     return false;
             }
-            break;
+            return true;
         }
         case 6: {
-            for (size_t i = 0; i < std::get<6>(lhs).size(); i++)
+            auto& lhs_value = std::get<6>(lhs);
+            auto& rhs_value = std::get<6>(rhs);
+            if (lhs_value.size() != rhs_value.size())
+                return false;
+            for (size_t i = 0; i < lhs_value.size(); i++)
             {
-                if (std::get<6>(lhs)[i] != std::get<6>(rhs)[i])
+                if (lhs_value[i] != rhs_value[i])
                     return false;
             }
-            break;
+            return true;
         }
         case 7: {
-            for (auto & [k, v]: std::get<7>(lhs))
+            auto& lhs_value = std::get<7>(lhs);
+            auto& rhs_value = std::get<7>(rhs);
+            if (lhs_value.size() != rhs_value.size())
+                return false;
+            for (auto & [k, v]: lhs_value)
             {
-                if (auto pos = std::get<7>(rhs).find(k); pos == std::get<7>(rhs).end())
+                auto pos = rhs_value.find(k);
+                if (pos == rhs_value.end())
                     return false;
-                if (auto other_v = std::get<7>(rhs).at(k); other_v != v)
+                if (pos->second != v)
                     return false;
             }
-            break;
+            return true;
         }
         case 8: {
-            for (size_t i = 0; i < std::get<8>(lhs).size(); i++)
+            auto& lhs_value = std::get<8>(lhs);
+            auto& rhs_value = std::get<8>(rhs);
+            if (lhs_value.size() != rhs_value.size())
+                return false;
+            for (size_t i = 0; i < lhs_value.size(); i++)
             {
-                if (std::get<8>(lhs)[i] != std::get<8>(rhs)[i])
+                if (lhs_value[i] != rhs_value[i])
                     return false;
             }
-            break;
+            return true;
         }
         case 9: {
-            for (size_t i = 0; i < std::get<9>(lhs).size(); i++)
+            auto& lhs_value = std::get<9>(lhs);
+            auto& rhs_value = std::get<9>(rhs);
+            if (lhs_value.size() != rhs_value.size())
+                return false;
+            for (size_t i = 0; i < lhs_value.size(); i++)
             {
-                if (std::get<9>(lhs)[i] != std::get<9>(rhs)[i])
+                if (lhs_value[i] != rhs_value[i])
                     return false;
             }
-            break;
+            return true;
         }
         case 10: {
-            for (auto & [k, v]: std::get<10>(lhs))
+            auto& lhs_value = std::get<10>(lhs);
+            auto& rhs_value = std::get<10>(rhs);
+            if (lhs_value.size() != rhs_value.size())
+                return false;
+            for (auto & [k, v]: lhs_value)
             {
-                if (auto pos = std::get<10>(rhs).find(k); pos == std::get<10>(rhs).end())
+                auto pos = rhs_value.find(k);
+                if (pos == rhs_value.end())
                     return false;
-                if (auto other_v = std::get<10>(rhs).at(k); other_v != v)
+                if (pos->second != v)
                     return false;
             }
-            break;
+            return true;
         }
         case 11: {
-            for (auto & [k, v]: std::get<11>(lhs))
+            auto& lhs_value = std::get<11>(lhs);
+            auto& rhs_value = std::get<11>(rhs);
+            if (lhs_value.size() != rhs_value.size())
+                return false;
+            for (auto & [k, v]: lhs_value)
             {
-                if (auto pos = std::get<11>(rhs).find(k); pos == std::get<11>(rhs).end())
+                auto pos = rhs_value.find(k);
+                if (pos == rhs_value.end())
                     return false;
-                if (auto other_v = std::get<11>(rhs).at(k); other_v != v)
+                if (pos->second != v)
                     return false;
             }
-            break;
+            return true;
         }
         case 12: {
-            for (size_t i = 0; i < std::get<12>(lhs).size(); i++)
+            auto& lhs_value = std::get<12>(lhs);
+            auto& rhs_value = std::get<12>(rhs);
+            if (lhs_value.size() != rhs_value.size())
+                return false;
+            for (size_t i = 0; i < lhs_value.size(); i++)
             {
-                if (*std::get<12>(lhs)[i] != *std::get<12>(rhs)[i])
+                if (*lhs_value[i] != *rhs_value[i])
                     return false;
             }
-            break;
+            return true;
         }
         case 13: {
-            if (!is_equal(std::get<13>(lhs), std::get<13>(rhs)))
-                return false;
-            break;
+            return is_equal(std::get<13>(lhs), std::get<13>(rhs));
         }
+        default: 
+            return true;
     }
-    return true;
 }
 
 std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const V& value)

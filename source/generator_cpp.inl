@@ -2437,42 +2437,57 @@ void GeneratorCpp::GenerateVariantIsEqualFunc(const std::shared_ptr<Package>& p,
         auto get_lhs_code = "std::get<" + std::to_string(index) + ">(lhs)";
         auto get_rhs_code = "std::get<" + std::to_string(index) + ">(rhs)";
         if (v_value-> vector) {
-            WriteLineIndent("for (size_t i = 0; i < " + get_lhs_code + ".size(); i++)");
+            WriteLineIndent("auto& lhs_value = " + get_lhs_code + ";");
+            WriteLineIndent("auto& rhs_value = " + get_rhs_code + ";");
+            WriteLineIndent("if (lhs_value.size() != rhs_value.size())");
+            Indent(1);
+            WriteLineIndent("return false;");
+            Indent(-1);
+            WriteLineIndent("for (size_t i = 0; i < lhs_value.size(); i++)");
             WriteLineIndent("{");
             Indent(1);
             if (v_value->ptr) {
-                WriteLineIndent("if (*" + get_lhs_code +"[i] != *" + get_rhs_code + "[i])");
+                WriteLineIndent("if (*lhs_value[i] != *rhs_value[i])");
             } else if (is_v_value_variant) {
-                WriteLineIndent("if (!is_equal(" + get_lhs_code +"[i], " + get_rhs_code + "[i]))");
+                WriteLineIndent("if (!is_equal(lhs_value[i], rhs_value[i]))");
             } else {
-                WriteLineIndent("if (" + get_lhs_code +"[i] != " + get_rhs_code + "[i])");
+                WriteLineIndent("if (lhs_value[i] != rhs_value[i])");
             }
             Indent(1);
             WriteLineIndent("return false;");
             Indent(-1);
             Indent(-1);
             WriteLineIndent("}");
+            WriteLineIndent("return true;");
         } else if (v_value->map || v_value->hash) {
+            WriteLineIndent("auto& lhs_value = " + get_lhs_code + ";");
+            WriteLineIndent("auto& rhs_value = " + get_rhs_code + ";");
+            WriteLineIndent("if (lhs_value.size() != rhs_value.size())");
+            Indent(1);
+            WriteLineIndent("return false;");
+            Indent(-1);
             // each element in lhs compares equal with element in rhs at the same position
-            WriteLineIndent("for (auto & [k, v]: " + get_lhs_code + ")");
+            WriteLineIndent("for (auto & [k, v]: lhs_value)");
             WriteLineIndent("{");
             Indent(1);
-            WriteLineIndent("if (auto pos = " + get_rhs_code + ".find(k); pos == " + get_rhs_code + ".end())");
+            WriteLineIndent("auto pos = rhs_value.find(k);");
+            WriteLineIndent("if (pos == rhs_value.end())");
             Indent(1);
             WriteLineIndent("return false;");
             Indent(-1);
             if (v_value->ptr) {
-                WriteLineIndent("if (auto other_v = " + get_rhs_code + ".at(k); *other_v != *v)");
+                WriteLineIndent("if (*pos->second != *v)");
             } else if (is_v_value_variant) {
-                WriteLineIndent("if (auto other_v = " + get_rhs_code + ".at(k); !is_equal(other_v, v))");
+                WriteLineIndent("if (!is_equal(pos->second, v))");
             } else {
-                WriteLineIndent("if (auto other_v = " + get_rhs_code + ".at(k); other_v != v)");
+                WriteLineIndent("if (pos->second != v)");
             }
             Indent(1);
             WriteLineIndent("return false;");
             Indent(-1);
             Indent(-1);
             WriteLineIndent("}");
+            WriteLineIndent("return true;");
         } else if (v_value->list) {
             WriteLineIndent("for (auto l_iter = " + get_lhs_code + ".begin(), r_iter = " + get_rhs_code + ".begin(); r_iter != " + get_rhs_code + ".end(); l_iter++, r_iter++) {");
             Indent(1);
@@ -2488,29 +2503,23 @@ void GeneratorCpp::GenerateVariantIsEqualFunc(const std::shared_ptr<Package>& p,
             Indent(-1);
             Indent(-1);
             WriteLineIndent("}");
+            WriteLineIndent("return true;");
         } else if (v_value->ptr) {
-            WriteLineIndent("if (*" + get_lhs_code + " != *" + get_rhs_code + ")");
-            Indent(1);
-            WriteLineIndent("return false;");
-            Indent(-1);
+            WriteLineIndent("return *" + get_lhs_code + " == *" + get_rhs_code + ";");
         } else if (is_v_value_variant) {
-            WriteLineIndent("if (!is_equal(" + get_lhs_code + ", " + get_rhs_code + "))");
-            Indent(1);
-            WriteLineIndent("return false;");
-            Indent(-1);
+            WriteLineIndent("return is_equal(" + get_lhs_code + ", " + get_rhs_code + ");");
         } else {
-            WriteLineIndent("if (" + get_lhs_code + " != " + get_rhs_code + ")");
-            Indent(1);
-            WriteLineIndent("return false;");
-            Indent(-1);
+            WriteLineIndent("return " + get_lhs_code + " == " + get_rhs_code + ";");
         }
-        WriteLineIndent("break;");
         Indent(-1);
         WriteLineIndent("}");
     }
+    WriteLineIndent("default: ");
+    Indent(1);
+    WriteLineIndent("return true;");
+    Indent(-1);
     Indent(-1);
     WriteLineIndent("}");
-    WriteLineIndent("return true;");
     Indent(-1);
     WriteLineIndent("}");
 }
