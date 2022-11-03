@@ -6717,6 +6717,15 @@ struct KeyWriter<TWriter, FBE::uuid_t>
 };
 
 template <class TWriter>
+struct KeyWriter<TWriter, char>
+{
+    static bool to_json_key(TWriter& writer, const char& key)
+    {
+        return writer.Key(&key, 1);
+    }
+};
+
+template <class TWriter>
 struct KeyWriter<TWriter, std::string>
 {
     static bool to_json_key(TWriter& writer, const std::string& key)

@@ -803,6 +803,212 @@ size_t AccountModel::deserialize(::proto::Account& value) const noexcept
 
 } // namespace proto
 
+FieldModel<::proto::CharMap>::FieldModel(FBEBuffer& buffer, size_t offset) noexcept : _buffer(buffer), _offset(offset)
+    , abbr(buffer, 4 + 4)
+{}
+
+size_t FieldModel<::proto::CharMap>::fbe_body() const noexcept
+{
+    size_t fbe_result = 4 + 4
+        + abbr.fbe_size()
+        ;
+    return fbe_result;
+}
+
+size_t FieldModel<::proto::CharMap>::fbe_extra() const noexcept
+{
+    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+        return 0;
+
+    uint32_t fbe_struct_offset = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset());
+    if ((fbe_struct_offset == 0) || ((_buffer.offset() + fbe_struct_offset + 4) > _buffer.size()))
+        return 0;
+
+    _buffer.shift(fbe_struct_offset);
+
+    size_t fbe_result = fbe_body()
+        + abbr.fbe_extra()
+        ;
+
+    _buffer.unshift(fbe_struct_offset);
+
+    return fbe_result;
+}
+
+bool FieldModel<::proto::CharMap>::verify(bool fbe_verify_type) const noexcept
+{
+    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+        return true;
+
+    uint32_t fbe_struct_offset = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset());
+    if ((fbe_struct_offset == 0) || ((_buffer.offset() + fbe_struct_offset + 4 + 4) > _buffer.size()))
+        return false;
+
+    uint32_t fbe_struct_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_struct_offset);
+    if (fbe_struct_size < (4 + 4))
+        return false;
+
+    uint32_t fbe_struct_type = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_struct_offset + 4);
+    if (fbe_verify_type && (fbe_struct_type != fbe_type()))
+        return false;
+
+    _buffer.shift(fbe_struct_offset);
+    bool fbe_result = verify_fields(fbe_struct_size);
+    _buffer.unshift(fbe_struct_offset);
+    return fbe_result;
+}
+
+bool FieldModel<::proto::CharMap>::verify_fields([[maybe_unused]] size_t fbe_struct_size) const noexcept
+{
+    size_t fbe_current_size = 4 + 4;
+
+    if ((fbe_current_size + abbr.fbe_size()) > fbe_struct_size)
+        return true;
+    if (!abbr.verify())
+        return false;
+    fbe_current_size += abbr.fbe_size();
+
+    return true;
+}
+
+size_t FieldModel<::proto::CharMap>::get_begin() const noexcept
+{
+    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+        return 0;
+
+    uint32_t fbe_struct_offset = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset());
+    assert(((fbe_struct_offset > 0) && ((_buffer.offset() + fbe_struct_offset + 4 + 4) <= _buffer.size())) && "Model is broken!");
+    if ((fbe_struct_offset == 0) || ((_buffer.offset() + fbe_struct_offset + 4 + 4) > _buffer.size()))
+        return 0;
+
+    uint32_t fbe_struct_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_struct_offset);
+    assert((fbe_struct_size >= (4 + 4)) && "Model is broken!");
+    if (fbe_struct_size < (4 + 4))
+        return 0;
+
+    _buffer.shift(fbe_struct_offset);
+    return fbe_struct_offset;
+}
+
+void FieldModel<::proto::CharMap>::get_end(size_t fbe_begin) const noexcept
+{
+    _buffer.unshift(fbe_begin);
+}
+
+void FieldModel<::proto::CharMap>::get(::proto::CharMap& fbe_value) const noexcept
+{
+    size_t fbe_begin = get_begin();
+    if (fbe_begin == 0)
+        return;
+
+    uint32_t fbe_struct_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset());
+    get_fields(fbe_value, fbe_struct_size);
+    get_end(fbe_begin);
+}
+
+void FieldModel<::proto::CharMap>::get_fields([[maybe_unused]] ::proto::CharMap& fbe_value, [[maybe_unused]] size_t fbe_struct_size) const noexcept
+{
+    size_t fbe_current_size = 4 + 4;
+
+    if ((fbe_current_size + abbr.fbe_size()) <= fbe_struct_size)
+        abbr.get(fbe_value.abbr);
+    else
+        fbe_value.abbr.clear();
+    fbe_current_size += abbr.fbe_size();
+}
+
+size_t FieldModel<::proto::CharMap>::set_begin()
+{
+    assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
+    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+        return 0;
+
+    uint32_t fbe_struct_size = (uint32_t)fbe_body();
+    uint32_t fbe_struct_offset = (uint32_t)(_buffer.allocate(fbe_struct_size) - _buffer.offset());
+    assert(((fbe_struct_offset > 0) && ((_buffer.offset() + fbe_struct_offset + fbe_struct_size) <= _buffer.size())) && "Model is broken!");
+    if ((fbe_struct_offset == 0) || ((_buffer.offset() + fbe_struct_offset + fbe_struct_size) > _buffer.size()))
+        return 0;
+
+    unaligned_store<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset(), fbe_struct_offset);
+    unaligned_store<uint32_t>(_buffer.data() + _buffer.offset() + fbe_struct_offset, fbe_struct_size);
+    unaligned_store<uint32_t>(_buffer.data() + _buffer.offset() + fbe_struct_offset + 4, (uint32_t)fbe_type());
+
+    _buffer.shift(fbe_struct_offset);
+    return fbe_struct_offset;
+}
+
+void FieldModel<::proto::CharMap>::set_end(size_t fbe_begin)
+{
+    _buffer.unshift(fbe_begin);
+}
+
+void FieldModel<::proto::CharMap>::set(const ::proto::CharMap& fbe_value) noexcept
+{
+    size_t fbe_begin = set_begin();
+    if (fbe_begin == 0)
+        return;
+
+    set_fields(fbe_value);
+    set_end(fbe_begin);
+}
+
+void FieldModel<::proto::CharMap>::set_fields([[maybe_unused]] const ::proto::CharMap& fbe_value) noexcept
+{
+    abbr.set(fbe_value.abbr);
+}
+
+namespace proto {
+
+bool CharMapModel::verify()
+{
+    if ((this->buffer().offset() + model.fbe_offset() - 4) > this->buffer().size())
+        return false;
+
+    uint32_t fbe_full_size = unaligned_load<uint32_t>(this->buffer().data() + this->buffer().offset() + model.fbe_offset() - 4);
+    if (fbe_full_size < model.fbe_size())
+        return false;
+
+    return model.verify();
+}
+
+size_t CharMapModel::create_begin()
+{
+    size_t fbe_begin = this->buffer().allocate(4 + model.fbe_size());
+    return fbe_begin;
+}
+
+size_t CharMapModel::create_end(size_t fbe_begin)
+{
+    size_t fbe_end = this->buffer().size();
+    uint32_t fbe_full_size = (uint32_t)(fbe_end - fbe_begin);
+    unaligned_store<uint32_t>(this->buffer().data() + this->buffer().offset() + model.fbe_offset() - 4, fbe_full_size);
+    return fbe_full_size;
+}
+
+size_t CharMapModel::serialize(const ::proto::CharMap& value)
+{
+    size_t fbe_begin = create_begin();
+    model.set(value);
+    size_t fbe_full_size = create_end(fbe_begin);
+    return fbe_full_size;
+}
+
+size_t CharMapModel::deserialize(::proto::CharMap& value) const noexcept
+{
+    if ((this->buffer().offset() + model.fbe_offset() - 4) > this->buffer().size())
+        return 0;
+
+    uint32_t fbe_full_size = unaligned_load<uint32_t>(this->buffer().data() + this->buffer().offset() + model.fbe_offset() - 4);
+    assert((fbe_full_size >= model.fbe_size()) && "Model is broken!");
+    if (fbe_full_size < model.fbe_size())
+        return 0;
+
+    model.get(value);
+    return fbe_full_size;
+}
+
+} // namespace proto
+
 FieldModel<::proto::OrderMessage>::FieldModel(FBEBuffer& buffer, size_t offset) noexcept : _buffer(buffer), _offset(offset)
     , body(buffer, 4 + 4)
 {}

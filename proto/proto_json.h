@@ -220,6 +220,36 @@ struct ValueReader<TJson, ::proto::Account>
 };
 
 template <class TWriter>
+struct ValueWriter<TWriter, ::proto::CharMap>
+{
+    static bool to_json(TWriter& writer, const ::proto::CharMap& value, bool scope = true)
+    {
+        if (scope)
+            if (!writer.StartObject())
+                return false;
+        if (!FBE::JSON::to_json_key(writer, "abbr") || !FBE::JSON::to_json(writer, value.abbr, true))
+            return false;
+        if (scope)
+            if (!writer.EndObject())
+                return false;
+        return true;
+    }
+};
+
+template <class TJson>
+struct ValueReader<TJson, ::proto::CharMap>
+{
+    static bool from_json(const TJson& json, ::proto::CharMap& value, const char* key = nullptr)
+    {
+        if (key != nullptr)
+            return FBE::JSON::from_json_child(json, value, key);
+        bool result = true;
+        result &= FBE::JSON::from_json(json, value.abbr, "abbr");
+        return result;
+    }
+};
+
+template <class TWriter>
 struct ValueWriter<TWriter, ::proto::OrderMessage>
 {
     static bool to_json(TWriter& writer, const ::proto::OrderMessage& value, bool scope = true)

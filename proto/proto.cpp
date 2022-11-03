@@ -258,6 +258,56 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const Account& v
     return stream;
 }
 
+CharMap::CharMap()
+    : abbr()
+{}
+
+CharMap::CharMap(const std::unordered_map<char, stdb::memory::string>& arg_abbr)
+    : abbr(arg_abbr)
+{}
+
+bool CharMap::operator==([[maybe_unused]] const CharMap& other) const noexcept
+{
+    return (
+        (abbr == other.abbr)
+        );
+}
+
+bool CharMap::operator<([[maybe_unused]] const CharMap& other) const noexcept
+{
+    return false;
+}
+
+std::string CharMap::string() const
+{
+    std::stringstream ss; ss << *this; return ss.str();
+}
+
+void CharMap::swap([[maybe_unused]] CharMap& other) noexcept
+{
+    using std::swap;
+    swap(abbr, other.abbr);
+}
+
+std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const CharMap& value)
+{
+    stream << "CharMap(";
+    {
+        bool first = true;
+        stream << "abbr=[" << value.abbr.size()<< "][{";
+        for (const auto& it : value.abbr)
+        {
+            stream << std::string(first ? "" : ",") << "'" << it.first << "'";
+            stream << "->";
+            stream << "\"" << it.second << "\"";
+            first = false;
+        }
+        stream << "}]";
+    }
+    stream << ")";
+    return stream;
+}
+
 OrderMessage::OrderMessage()
     : body()
 {}

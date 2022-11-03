@@ -279,6 +279,79 @@ private:
 
 } // namespace proto
 
+// Fast Binary Encoding ::proto::CharMap final model
+template <>
+class FinalModel<::proto::CharMap>
+{
+public:
+    FinalModel(FBEBuffer& buffer, size_t offset) noexcept;
+
+    // Get the allocation size
+    size_t fbe_allocation_size(const ::proto::CharMap& fbe_value) const noexcept;
+    // Get the final offset
+    size_t fbe_offset() const noexcept { return _offset; }
+    // Set the final offset
+    size_t fbe_offset(size_t offset) const noexcept { return _offset = offset; }
+    // Get the final type
+    static constexpr size_t fbe_type() noexcept { return 1; }
+
+    // Shift the current final offset
+    void fbe_shift(size_t size) noexcept { _offset += size; }
+    // Unshift the current final offset
+    void fbe_unshift(size_t size) noexcept { _offset -= size; }
+
+    // Check if the struct value is valid
+    size_t verify() const noexcept;
+    // Check if the struct fields are valid
+    size_t verify_fields() const noexcept;
+
+    // Get the struct value
+    size_t get(::proto::CharMap& fbe_value) const noexcept;
+    // Get the struct fields values
+    size_t get_fields(::proto::CharMap& fbe_value) const noexcept;
+
+    // Set the struct value
+    size_t set(const ::proto::CharMap& fbe_value) noexcept;
+    // Set the struct fields values
+    size_t set_fields(const ::proto::CharMap& fbe_value) noexcept;
+
+private:
+    FBEBuffer& _buffer;
+    mutable size_t _offset;
+
+public:
+    FinalModelMap<char, stdb::memory::string> abbr;
+};
+
+namespace proto {
+
+// Fast Binary Encoding CharMap final model
+class CharMapFinalModel : public FBE::Model
+{
+public:
+    CharMapFinalModel() : _model(this->buffer(), 8) {}
+    CharMapFinalModel(const std::shared_ptr<FBEBuffer>& buffer) : FBE::Model(buffer), _model(this->buffer(), 8) {}
+
+    // Get the model type
+    static constexpr size_t fbe_type() noexcept { return FinalModel<::proto::CharMap>::fbe_type(); }
+
+    // Check if the struct value is valid
+    bool verify();
+
+    // Serialize the struct value
+    size_t serialize(const ::proto::CharMap& value);
+    // Deserialize the struct value
+    size_t deserialize(::proto::CharMap& value) const noexcept;
+
+    // Move to the next struct value
+    void next(size_t prev) noexcept { _model.fbe_shift(prev); }
+
+private:
+    FinalModel<::proto::CharMap> _model;
+};
+
+} // namespace proto
+
 // Fast Binary Encoding ::proto::OrderMessage final model
 template <>
 class FinalModel<::proto::OrderMessage>
@@ -293,7 +366,7 @@ public:
     // Set the final offset
     size_t fbe_offset(size_t offset) const noexcept { return _offset = offset; }
     // Get the final type
-    static constexpr size_t fbe_type() noexcept { return 1; }
+    static constexpr size_t fbe_type() noexcept { return 2; }
 
     // Shift the current final offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -366,7 +439,7 @@ public:
     // Set the final offset
     size_t fbe_offset(size_t offset) const noexcept { return _offset = offset; }
     // Get the final type
-    static constexpr size_t fbe_type() noexcept { return 2; }
+    static constexpr size_t fbe_type() noexcept { return 3; }
 
     // Shift the current final offset
     void fbe_shift(size_t size) noexcept { _offset += size; }
@@ -439,7 +512,7 @@ public:
     // Set the final offset
     size_t fbe_offset(size_t offset) const noexcept { return _offset = offset; }
     // Get the final type
-    static constexpr size_t fbe_type() noexcept { return 3; }
+    static constexpr size_t fbe_type() noexcept { return 4; }
 
     // Shift the current final offset
     void fbe_shift(size_t size) noexcept { _offset += size; }

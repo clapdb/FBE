@@ -2,6 +2,7 @@
 // Created by Ivan Shynkarenka on 20.06.2018
 //
 
+#include "catch2/catch.hpp"
 #include "test.h"
 
 #include "../proto/proto_json.h"
@@ -60,6 +61,37 @@ TEST_CASE("Serialization (JSON): domain", "[FBE]")
     REQUIRE(account2.orders[2].price == 1.5);
     REQUIRE(account2.orders[2].volume == 10.0);
     REQUIRE(account1 == account2);
+}
+
+TEST_CASE("Serialization (JSON): char map", "[FBE]")
+{
+    // Define a source JSON string
+    rapidjson::Document json;
+    json.Parse(R"JSON({"abbr": {"A": "featureA", "B": "featureB"}})JSON");
+
+    // Create a new account from the source JSON string
+    proto::CharMap map1;
+    REQUIRE(FBE::JSON::from_json(json, map1));
+
+    // Serialize the account to the JSON stream
+    rapidjson::StringBuffer buffer;
+    rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
+    REQUIRE(FBE::JSON::to_json(writer, map1));
+
+    // Check the serialized JSON size
+    REQUIRE(buffer.GetSize() > 0);
+
+    // Parse the JSON document
+    json.Parse(buffer.GetString());
+
+    // Deserialize the account from the JSON stream
+    proto::CharMap map2;
+    REQUIRE(FBE::JSON::from_json(json, map2));
+
+    REQUIRE(map2.abbr.size() == 2);
+    REQUIRE(map2.abbr['A'] == "featureA");
+    REQUIRE(map2.abbr['B'] == "featureB");
+    REQUIRE(map1 == map2);
 }
 
 TEST_CASE("Serialization (JSON): struct simple", "[FBE]")

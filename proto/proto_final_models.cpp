@@ -597,6 +597,136 @@ size_t AccountFinalModel::deserialize(::proto::Account& value) const noexcept
 
 } // namespace proto
 
+FinalModel<::proto::CharMap>::FinalModel(FBEBuffer& buffer, size_t offset) noexcept : _buffer(buffer), _offset(offset)
+    , abbr(buffer, 0)
+{}
+
+size_t FinalModel<::proto::CharMap>::fbe_allocation_size(const ::proto::CharMap& fbe_value) const noexcept
+{
+    size_t fbe_result = 0
+        + abbr.fbe_allocation_size(fbe_value.abbr)
+        ;
+    return fbe_result;
+}
+
+size_t FinalModel<::proto::CharMap>::verify() const noexcept
+{
+    _buffer.shift(fbe_offset());
+    size_t fbe_result = verify_fields();
+    _buffer.unshift(fbe_offset());
+    return fbe_result;
+}
+
+size_t FinalModel<::proto::CharMap>::verify_fields() const noexcept
+{
+    size_t fbe_current_offset = 0;
+    size_t fbe_field_size;
+
+    abbr.fbe_offset(fbe_current_offset);
+    fbe_field_size = abbr.verify();
+    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
+        return std::numeric_limits<std::size_t>::max();
+    fbe_current_offset += fbe_field_size;
+
+    return fbe_current_offset;
+}
+
+size_t FinalModel<::proto::CharMap>::get(::proto::CharMap& fbe_value) const noexcept
+{
+    _buffer.shift(fbe_offset());
+    size_t fbe_result = get_fields(fbe_value);
+    _buffer.unshift(fbe_offset());
+    return fbe_result;
+}
+
+size_t FinalModel<::proto::CharMap>::get_fields([[maybe_unused]] ::proto::CharMap& fbe_value) const noexcept
+{
+    size_t fbe_current_offset = 0;
+    size_t fbe_current_size = 0;
+    size_t fbe_field_size;
+
+    abbr.fbe_offset(fbe_current_offset);
+    fbe_field_size = abbr.get(fbe_value.abbr);
+    fbe_current_offset += fbe_field_size;
+    fbe_current_size += fbe_field_size;
+
+    return fbe_current_size;
+}
+
+size_t FinalModel<::proto::CharMap>::set(const ::proto::CharMap& fbe_value) noexcept
+{
+    _buffer.shift(fbe_offset());
+    size_t fbe_result = set_fields(fbe_value);
+    _buffer.unshift(fbe_offset());
+    return fbe_result;
+}
+
+size_t FinalModel<::proto::CharMap>::set_fields([[maybe_unused]] const ::proto::CharMap& fbe_value) noexcept
+{
+    size_t fbe_current_offset = 0;
+    size_t fbe_current_size = 0;
+    size_t fbe_field_size;
+
+    abbr.fbe_offset(fbe_current_offset);
+    fbe_field_size = abbr.set(fbe_value.abbr);
+    fbe_current_offset += fbe_field_size;
+    fbe_current_size += fbe_field_size;
+
+    return fbe_current_size;
+}
+
+namespace proto {
+
+bool CharMapFinalModel::verify()
+{
+    if ((this->buffer().offset() + _model.fbe_offset()) > this->buffer().size())
+        return false;
+
+    size_t fbe_struct_size = unaligned_load<uint32_t>(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 8);
+    size_t fbe_struct_type = unaligned_load<uint32_t>(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 4);
+    if ((fbe_struct_size == 0) || (fbe_struct_type != fbe_type()))
+        return false;
+
+    return ((8 + _model.verify()) == fbe_struct_size);
+}
+
+size_t CharMapFinalModel::serialize(const ::proto::CharMap& value)
+{
+    size_t fbe_initial_size = this->buffer().size();
+
+    uint32_t fbe_struct_type = (uint32_t)fbe_type();
+    uint32_t fbe_struct_size = (uint32_t)(8 + _model.fbe_allocation_size(value));
+    uint32_t fbe_struct_offset = (uint32_t)(this->buffer().allocate(fbe_struct_size) - this->buffer().offset());
+    assert(((this->buffer().offset() + fbe_struct_offset + fbe_struct_size) <= this->buffer().size()) && "Model is broken!");
+    if ((this->buffer().offset() + fbe_struct_offset + fbe_struct_size) > this->buffer().size())
+        return 0;
+
+    fbe_struct_size = (uint32_t)(8 + _model.set(value));
+    this->buffer().resize(fbe_initial_size + fbe_struct_size);
+
+    *((uint32_t*)(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 8)) = fbe_struct_size;
+    *((uint32_t*)(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 4)) = fbe_struct_type;
+
+    return fbe_struct_size;
+}
+
+size_t CharMapFinalModel::deserialize(::proto::CharMap& value) const noexcept
+{
+    assert(((this->buffer().offset() + _model.fbe_offset()) <= this->buffer().size()) && "Model is broken!");
+    if ((this->buffer().offset() + _model.fbe_offset()) > this->buffer().size())
+        return 0;
+
+    size_t fbe_struct_size = unaligned_load<uint32_t>(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 8);
+    size_t fbe_struct_type = unaligned_load<uint32_t>(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 4);
+    assert(((fbe_struct_size > 0) && (fbe_struct_type == fbe_type())) && "Model is broken!");
+    if ((fbe_struct_size == 0) || (fbe_struct_type != fbe_type()))
+        return 8;
+
+    return 8 + _model.get(value);
+}
+
+} // namespace proto
+
 FinalModel<::proto::OrderMessage>::FinalModel(FBEBuffer& buffer, size_t offset) noexcept : _buffer(buffer), _offset(offset)
     , body(buffer, 0)
 {}

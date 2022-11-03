@@ -67,6 +67,11 @@ struct Account(3)
     Order[] orders;
 }
 
+struct CharMap
+{
+    string{char} abbr;
+}
+
 // Order message declaration
 message OrderMessage
 {
