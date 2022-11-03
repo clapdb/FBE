@@ -188,17 +188,15 @@ Account::Account()
     , wallet()
     , asset()
     , orders()
-    , abbr()
 {}
 
-Account::Account(int32_t arg_id, const stdb::memory::string& arg_name, const ::proto::State& arg_state, const ::proto::Balance& arg_wallet, const std::optional<::proto::Balance>& arg_asset, const std::vector<::proto::Order>& arg_orders, const std::unordered_map<char, stdb::memory::string>& arg_abbr)
+Account::Account(int32_t arg_id, const stdb::memory::string& arg_name, const ::proto::State& arg_state, const ::proto::Balance& arg_wallet, const std::optional<::proto::Balance>& arg_asset, const std::vector<::proto::Order>& arg_orders)
     : id(arg_id)
     , name(arg_name)
     , state(arg_state)
     , wallet(arg_wallet)
     , asset(arg_asset)
     , orders(arg_orders)
-    , abbr(arg_abbr)
 {}
 
 bool Account::operator==([[maybe_unused]] const Account& other) const noexcept
@@ -210,7 +208,6 @@ bool Account::operator==([[maybe_unused]] const Account& other) const noexcept
         && (wallet == other.wallet)
         && (asset == other.asset)
         && (orders == other.orders)
-        && (abbr == other.abbr)
         );
 }
 
@@ -237,7 +234,6 @@ void Account::swap([[maybe_unused]] Account& other) noexcept
     swap(wallet, other.wallet);
     swap(asset, other.asset);
     swap(orders, other.orders);
-    swap(abbr, other.abbr);
 }
 
 std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const Account& value)
@@ -258,9 +254,47 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const Account& v
         }
         stream << "]";
     }
+    stream << ")";
+    return stream;
+}
+
+CharMap::CharMap()
+    : abbr()
+{}
+
+CharMap::CharMap(const std::unordered_map<char, stdb::memory::string>& arg_abbr)
+    : abbr(arg_abbr)
+{}
+
+bool CharMap::operator==([[maybe_unused]] const CharMap& other) const noexcept
+{
+    return (
+        (abbr == other.abbr)
+        );
+}
+
+bool CharMap::operator<([[maybe_unused]] const CharMap& other) const noexcept
+{
+    return false;
+}
+
+std::string CharMap::string() const
+{
+    std::stringstream ss; ss << *this; return ss.str();
+}
+
+void CharMap::swap([[maybe_unused]] CharMap& other) noexcept
+{
+    using std::swap;
+    swap(abbr, other.abbr);
+}
+
+std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const CharMap& value)
+{
+    stream << "CharMap(";
     {
         bool first = true;
-        stream << ",abbr=[" << value.abbr.size()<< "][{";
+        stream << "abbr=[" << value.abbr.size()<< "][{";
         for (const auto& it : value.abbr)
         {
             stream << std::string(first ? "" : ",") << "'" << it.first << "'";

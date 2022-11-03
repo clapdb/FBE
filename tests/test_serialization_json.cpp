@@ -12,7 +12,7 @@ TEST_CASE("Serialization (JSON): domain", "[FBE]")
 {
     // Define a source JSON string
     rapidjson::Document json;
-    json.Parse(R"JSON({"id":1,"name":"Test","state":6,"wallet":{"currency":"USD","amount":1000.0},"asset":{"currency":"EUR","amount":100.0},"orders":[{"id":1,"symbol":"EURUSD","side":0,"type":0,"price":1.23456,"volume":1000.0},{"id":2,"symbol":"EURUSD","side":1,"type":1,"price":1.0,"volume":100.0},{"id":3,"symbol":"EURUSD","side":0,"type":2,"price":1.5,"volume":10.0}], "abbr": {"A": "featureA", "B": "featureB"}})JSON");
+    json.Parse(R"JSON({"id":1,"name":"Test","state":6,"wallet":{"currency":"USD","amount":1000.0},"asset":{"currency":"EUR","amount":100.0},"orders":[{"id":1,"symbol":"EURUSD","side":0,"type":0,"price":1.23456,"volume":1000.0},{"id":2,"symbol":"EURUSD","side":1,"type":1,"price":1.0,"volume":100.0},{"id":3,"symbol":"EURUSD","side":0,"type":2,"price":1.5,"volume":10.0}]})JSON");
 
     // Create a new account from the source JSON string
     proto::Account account1;
@@ -60,10 +60,38 @@ TEST_CASE("Serialization (JSON): domain", "[FBE]")
     REQUIRE(account2.orders[2].type == proto::OrderType::stop);
     REQUIRE(account2.orders[2].price == 1.5);
     REQUIRE(account2.orders[2].volume == 10.0);
-    REQUIRE(account2.abbr.size() == 2);
-    REQUIRE(account2.abbr['A'] == "featureA");
-    REQUIRE(account2.abbr['B'] == "featureB");
     REQUIRE(account1 == account2);
+}
+
+TEST_CASE("Serialization (JSON): char map", "[FBE]")
+{
+    // Define a source JSON string
+    rapidjson::Document json;
+    json.Parse(R"JSON({"abbr": {"A": "featureA", "B": "featureB"}})JSON");
+
+    // Create a new account from the source JSON string
+    proto::CharMap map1;
+    REQUIRE(FBE::JSON::from_json(json, map1));
+
+    // Serialize the account to the JSON stream
+    rapidjson::StringBuffer buffer;
+    rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
+    REQUIRE(FBE::JSON::to_json(writer, map1));
+
+    // Check the serialized JSON size
+    REQUIRE(buffer.GetSize() > 0);
+
+    // Parse the JSON document
+    json.Parse(buffer.GetString());
+
+    // Deserialize the account from the JSON stream
+    proto::CharMap map2;
+    REQUIRE(FBE::JSON::from_json(json, map2));
+
+    REQUIRE(map2.abbr.size() == 2);
+    REQUIRE(map2.abbr['A'] == "featureA");
+    REQUIRE(map2.abbr['B'] == "featureB");
+    REQUIRE(map1 == map2);
 }
 
 TEST_CASE("Serialization (JSON): struct simple", "[FBE]")

@@ -205,12 +205,11 @@ struct Account
     ::proto::Balance wallet;
     std::optional<::proto::Balance> asset;
     std::vector<::proto::Order> orders;
-    std::unordered_map<char, stdb::memory::string> abbr;
 
     size_t fbe_type() const noexcept { return 3; }
 
     Account();
-    Account(int32_t arg_id, const stdb::memory::string& arg_name, const ::proto::State& arg_state, const ::proto::Balance& arg_wallet, const std::optional<::proto::Balance>& arg_asset, const std::vector<::proto::Order>& arg_orders, const std::unordered_map<char, stdb::memory::string>& arg_abbr);
+    Account(int32_t arg_id, const stdb::memory::string& arg_name, const ::proto::State& arg_state, const ::proto::Balance& arg_wallet, const std::optional<::proto::Balance>& arg_asset, const std::vector<::proto::Order>& arg_orders);
     Account(const Account& other) = default;
     Account(Account&& other) = default;
     ~Account() = default;
@@ -255,11 +254,62 @@ struct std::hash<proto::Account>
 
 namespace proto {
 
+struct CharMap
+{
+    std::unordered_map<char, stdb::memory::string> abbr;
+
+    size_t fbe_type() const noexcept { return 1; }
+
+    CharMap();
+    explicit CharMap(const std::unordered_map<char, stdb::memory::string>& arg_abbr);
+    CharMap(const CharMap& other) = default;
+    CharMap(CharMap&& other) = default;
+    ~CharMap() = default;
+
+    CharMap& operator=(const CharMap& other) = default;
+    CharMap& operator=(CharMap&& other) = default;
+
+    bool operator==(const CharMap& other) const noexcept;
+    bool operator!=(const CharMap& other) const noexcept { return !operator==(other); }
+    bool operator<(const CharMap& other) const noexcept;
+    bool operator<=(const CharMap& other) const noexcept { return operator<(other) || operator==(other); }
+    bool operator>(const CharMap& other) const noexcept { return !operator<=(other); }
+    bool operator>=(const CharMap& other) const noexcept { return !operator<(other); }
+
+    std::string string() const;
+
+    friend std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const CharMap& value);
+
+    void swap(CharMap& other) noexcept;
+    friend void swap(CharMap& value1, CharMap& value2) noexcept { value1.swap(value2); }
+};
+
+} // namespace proto
+
+#if defined(FMT_VERSION)
+template <> struct fmt::formatter<proto::CharMap> : formatter<string_view> {};
+#endif
+
+template<>
+struct std::hash<proto::CharMap>
+{
+    typedef proto::CharMap argument_type;
+    typedef size_t result_type;
+
+    result_type operator() ([[maybe_unused]] const argument_type& value) const
+    {
+        result_type result = 17;
+        return result;
+    }
+};
+
+namespace proto {
+
 struct OrderMessage
 {
     ::proto::Order body;
 
-    size_t fbe_type() const noexcept { return 1; }
+    size_t fbe_type() const noexcept { return 2; }
 
     OrderMessage();
     explicit OrderMessage(const ::proto::Order& arg_body);
@@ -310,7 +360,7 @@ struct BalanceMessage
 {
     ::proto::Balance body;
 
-    size_t fbe_type() const noexcept { return 2; }
+    size_t fbe_type() const noexcept { return 3; }
 
     BalanceMessage();
     explicit BalanceMessage(const ::proto::Balance& arg_body);
@@ -361,7 +411,7 @@ struct AccountMessage
 {
     ::proto::Account body;
 
-    size_t fbe_type() const noexcept { return 3; }
+    size_t fbe_type() const noexcept { return 4; }
 
     AccountMessage();
     explicit AccountMessage(const ::proto::Account& arg_body);

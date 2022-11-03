@@ -65,6 +65,10 @@ struct Account(3)
     Balance wallet;
     Balance? asset;
     Order[] orders;
+}
+
+struct CharMap
+{
     string{char} abbr;
 }
 
