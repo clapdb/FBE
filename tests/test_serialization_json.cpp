@@ -2,6 +2,7 @@
 // Created by Ivan Shynkarenka on 20.06.2018
 //
 
+#include "catch2/catch.hpp"
 #include "test.h"
 
 #include "../proto/proto_json.h"
@@ -11,7 +12,7 @@ TEST_CASE("Serialization (JSON): domain", "[FBE]")
 {
     // Define a source JSON string
     rapidjson::Document json;
-    json.Parse(R"JSON({"id":1,"name":"Test","state":6,"wallet":{"currency":"USD","amount":1000.0},"asset":{"currency":"EUR","amount":100.0},"orders":[{"id":1,"symbol":"EURUSD","side":0,"type":0,"price":1.23456,"volume":1000.0},{"id":2,"symbol":"EURUSD","side":1,"type":1,"price":1.0,"volume":100.0},{"id":3,"symbol":"EURUSD","side":0,"type":2,"price":1.5,"volume":10.0}]})JSON");
+    json.Parse(R"JSON({"id":1,"name":"Test","state":6,"wallet":{"currency":"USD","amount":1000.0},"asset":{"currency":"EUR","amount":100.0},"orders":[{"id":1,"symbol":"EURUSD","side":0,"type":0,"price":1.23456,"volume":1000.0},{"id":2,"symbol":"EURUSD","side":1,"type":1,"price":1.0,"volume":100.0},{"id":3,"symbol":"EURUSD","side":0,"type":2,"price":1.5,"volume":10.0}], "abbr": {"A": "featureA", "B": "featureB"}})JSON");
 
     // Create a new account from the source JSON string
     proto::Account account1;
@@ -59,6 +60,9 @@ TEST_CASE("Serialization (JSON): domain", "[FBE]")
     REQUIRE(account2.orders[2].type == proto::OrderType::stop);
     REQUIRE(account2.orders[2].price == 1.5);
     REQUIRE(account2.orders[2].volume == 10.0);
+    REQUIRE(account2.abbr.size() == 2);
+    REQUIRE(account2.abbr['A'] == "featureA");
+    REQUIRE(account2.abbr['B'] == "featureB");
     REQUIRE(account1 == account2);
 }
 

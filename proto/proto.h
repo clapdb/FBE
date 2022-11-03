@@ -205,11 +205,12 @@ struct Account
     ::proto::Balance wallet;
     std::optional<::proto::Balance> asset;
     std::vector<::proto::Order> orders;
+    std::unordered_map<char, stdb::memory::string> abbr;
 
     size_t fbe_type() const noexcept { return 3; }
 
     Account();
-    Account(int32_t arg_id, const stdb::memory::string& arg_name, const ::proto::State& arg_state, const ::proto::Balance& arg_wallet, const std::optional<::proto::Balance>& arg_asset, const std::vector<::proto::Order>& arg_orders);
+    Account(int32_t arg_id, const stdb::memory::string& arg_name, const ::proto::State& arg_state, const ::proto::Balance& arg_wallet, const std::optional<::proto::Balance>& arg_asset, const std::vector<::proto::Order>& arg_orders, const std::unordered_map<char, stdb::memory::string>& arg_abbr);
     Account(const Account& other) = default;
     Account(Account&& other) = default;
     ~Account() = default;

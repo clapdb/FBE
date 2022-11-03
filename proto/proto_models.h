@@ -298,6 +298,7 @@ public:
     FieldModel<::proto::Balance> wallet;
     FieldModel<std::optional<::proto::Balance>> asset;
     FieldModelVector<::proto::Order> orders;
+    FieldModelMap<char, stdb::memory::string> abbr;
 };
 
 namespace proto {

@@ -524,6 +524,7 @@ FieldModel<::proto::Account>::FieldModel(FBEBuffer& buffer, size_t offset) noexc
     , wallet(buffer, state.fbe_offset() + state.fbe_size())
     , asset(buffer, wallet.fbe_offset() + wallet.fbe_size())
     , orders(buffer, asset.fbe_offset() + asset.fbe_size())
+    , abbr(buffer, orders.fbe_offset() + orders.fbe_size())
 {}
 
 size_t FieldModel<::proto::Account>::fbe_body() const noexcept
@@ -535,6 +536,7 @@ size_t FieldModel<::proto::Account>::fbe_body() const noexcept
         + wallet.fbe_size()
         + asset.fbe_size()
         + orders.fbe_size()
+        + abbr.fbe_size()
         ;
     return fbe_result;
 }
@@ -557,6 +559,7 @@ size_t FieldModel<::proto::Account>::fbe_extra() const noexcept
         + wallet.fbe_extra()
         + asset.fbe_extra()
         + orders.fbe_extra()
+        + abbr.fbe_extra()
         ;
 
     _buffer.unshift(fbe_struct_offset);
@@ -626,6 +629,12 @@ bool FieldModel<::proto::Account>::verify_fields([[maybe_unused]] size_t fbe_str
     if (!orders.verify())
         return false;
     fbe_current_size += orders.fbe_size();
+
+    if ((fbe_current_size + abbr.fbe_size()) > fbe_struct_size)
+        return true;
+    if (!abbr.verify())
+        return false;
+    fbe_current_size += abbr.fbe_size();
 
     return true;
 }
@@ -704,6 +713,12 @@ void FieldModel<::proto::Account>::get_fields([[maybe_unused]] ::proto::Account&
     else
         fbe_value.orders.clear();
     fbe_current_size += orders.fbe_size();
+
+    if ((fbe_current_size + abbr.fbe_size()) <= fbe_struct_size)
+        abbr.get(fbe_value.abbr);
+    else
+        fbe_value.abbr.clear();
+    fbe_current_size += abbr.fbe_size();
 }
 
 size_t FieldModel<::proto::Account>::set_begin()
@@ -749,6 +764,7 @@ void FieldModel<::proto::Account>::set_fields([[maybe_unused]] const ::proto::Ac
     wallet.set(fbe_value.wallet);
     asset.set(fbe_value.asset);
     orders.set(fbe_value.orders);
+    abbr.set(fbe_value.abbr);
 }
 
 namespace proto {

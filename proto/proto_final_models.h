@@ -248,6 +248,7 @@ public:
     FinalModel<::proto::Balance> wallet;
     FinalModel<std::optional<::proto::Balance>> asset;
     FinalModelVector<::proto::Order> orders;
+    FinalModelMap<char, stdb::memory::string> abbr;
 };
 
 namespace proto {

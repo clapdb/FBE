@@ -384,6 +384,7 @@ FinalModel<::proto::Account>::FinalModel(FBEBuffer& buffer, size_t offset) noexc
     , wallet(buffer, 0)
     , asset(buffer, 0)
     , orders(buffer, 0)
+    , abbr(buffer, 0)
 {}
 
 size_t FinalModel<::proto::Account>::fbe_allocation_size(const ::proto::Account& fbe_value) const noexcept
@@ -395,6 +396,7 @@ size_t FinalModel<::proto::Account>::fbe_allocation_size(const ::proto::Account&
         + wallet.fbe_allocation_size(fbe_value.wallet)
         + asset.fbe_allocation_size(fbe_value.asset)
         + orders.fbe_allocation_size(fbe_value.orders)
+        + abbr.fbe_allocation_size(fbe_value.abbr)
         ;
     return fbe_result;
 }
@@ -448,6 +450,12 @@ size_t FinalModel<::proto::Account>::verify_fields() const noexcept
         return std::numeric_limits<std::size_t>::max();
     fbe_current_offset += fbe_field_size;
 
+    abbr.fbe_offset(fbe_current_offset);
+    fbe_field_size = abbr.verify();
+    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
+        return std::numeric_limits<std::size_t>::max();
+    fbe_current_offset += fbe_field_size;
+
     return fbe_current_offset;
 }
 
@@ -495,6 +503,11 @@ size_t FinalModel<::proto::Account>::get_fields([[maybe_unused]] ::proto::Accoun
     fbe_current_offset += fbe_field_size;
     fbe_current_size += fbe_field_size;
 
+    abbr.fbe_offset(fbe_current_offset);
+    fbe_field_size = abbr.get(fbe_value.abbr);
+    fbe_current_offset += fbe_field_size;
+    fbe_current_size += fbe_field_size;
+
     return fbe_current_size;
 }
 
@@ -539,6 +552,11 @@ size_t FinalModel<::proto::Account>::set_fields([[maybe_unused]] const ::proto::
 
     orders.fbe_offset(fbe_current_offset);
     fbe_field_size = orders.set(fbe_value.orders);
+    fbe_current_offset += fbe_field_size;
+    fbe_current_size += fbe_field_size;
+
+    abbr.fbe_offset(fbe_current_offset);
+    fbe_field_size = abbr.set(fbe_value.abbr);
     fbe_current_offset += fbe_field_size;
     fbe_current_size += fbe_field_size;
 
