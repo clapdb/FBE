@@ -127,7 +127,7 @@ inline size_t FinalModelArray<T, N>::fbe_allocation_size(const std::array<T, S>&
 }
 
 template <typename T, size_t N>
-inline size_t FinalModelArray<T, N>::fbe_allocation_size(const std::vector<T>& values) const noexcept
+inline size_t FinalModelArray<T, N>::fbe_allocation_size(const stdb::container::stdb_vector<T>& values) const noexcept
 {
     size_t size = 0;
     FinalModel<T> fbe_model(_buffer, fbe_offset());
@@ -194,7 +194,7 @@ inline size_t FinalModelArray<T, N>::get(std::array<T, S>& values) const noexcep
 }
 
 template <typename T, size_t N>
-inline size_t FinalModelArray<T, N>::get(std::vector<T>& values) const noexcept
+inline size_t FinalModelArray<T, N>::get(stdb::container::stdb_vector<T>& values) const noexcept
 {
     values.clear();
 
@@ -210,7 +210,7 @@ inline size_t FinalModelArray<T, N>::get(std::vector<T>& values) const noexcept
     {
         T value = T();
         size_t offset = fbe_model.get(value);
-        values.emplace_back(value);
+        values.template emplace_back<Safety::Unsafe>(value);
         fbe_model.fbe_shift(offset);
         size += offset;
     }
@@ -256,7 +256,7 @@ inline size_t FinalModelArray<T, N>::set(const std::array<T, S>& values) noexcep
 }
 
 template <typename T, size_t N>
-inline size_t FinalModelArray<T, N>::set(const std::vector<T>& values) noexcept
+inline size_t FinalModelArray<T, N>::set(const stdb::container::stdb_vector<T>& values) noexcept
 {
     assert(((_buffer.offset() + fbe_offset()) <= _buffer.size()) && "Model is broken!");
     if ((_buffer.offset() + fbe_offset()) > _buffer.size())
@@ -274,7 +274,7 @@ inline size_t FinalModelArray<T, N>::set(const std::vector<T>& values) noexcept
 }
 
 template <typename T>
-inline size_t FinalModelVector<T>::fbe_allocation_size(const std::vector<T>& values) const noexcept
+inline size_t FinalModelVector<T>::fbe_allocation_size(const stdb::container::stdb_vector<T>& values) const noexcept
 {
     size_t size = 4;
     FinalModel<T> fbe_model(_buffer, fbe_offset() + 4);
@@ -325,7 +325,7 @@ inline size_t FinalModelVector<T>::verify() const noexcept
 }
 
 template <typename T>
-inline size_t FinalModelVector<T>::get(std::vector<T>& values) const noexcept
+inline size_t FinalModelVector<T>::get(stdb::container::stdb_vector<T>& values) const noexcept
 {
     values.clear();
 
@@ -345,7 +345,7 @@ inline size_t FinalModelVector<T>::get(std::vector<T>& values) const noexcept
     {
         T value = T();
         size_t offset = fbe_model.get(value);
-        values.emplace_back(value);
+        values.template emplace_back<Safety::Unsafe>(value);
         fbe_model.fbe_shift(offset);
         size += offset;
     }
@@ -405,7 +405,7 @@ inline size_t FinalModelVector<T>::get(std::set<T>& values) const noexcept
 }
 
 template <typename T>
-inline size_t FinalModelVector<T>::set(const std::vector<T>& values) noexcept
+inline size_t FinalModelVector<T>::set(const stdb::container::stdb_vector<T>& values) noexcept
 {
     assert(((_buffer.offset() + fbe_offset() + 4) <= _buffer.size()) && "Model is broken!");
     if ((_buffer.offset() + fbe_offset() + 4) > _buffer.size())

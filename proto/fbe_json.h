@@ -329,9 +329,9 @@ struct ValueWriter<TWriter, std::array<T, N>>
 };
 
 template <class TWriter, typename T>
-struct ValueWriter<TWriter, std::vector<T>>
+struct ValueWriter<TWriter, stdb::container::stdb_vector<T>>
 {
-    static bool to_json(TWriter& writer, const std::vector<T>& values, bool scope = true)
+    static bool to_json(TWriter& writer, const stdb::container::stdb_vector<T>& values, bool scope = true)
     {
         writer.StartArray();
         for (const auto& value : values)
@@ -892,9 +892,9 @@ struct ValueReader<TJson, std::array<T, N>>
 };
 
 template <class TJson, typename T>
-struct ValueReader<TJson, std::vector<T>>
+struct ValueReader<TJson, stdb::container::stdb_vector<T>>
 {
-    static bool from_json(const TJson& json, std::vector<T>& values)
+    static bool from_json(const TJson& json, stdb::container::stdb_vector<T>& values)
     {
         values.clear();
 
@@ -909,7 +909,7 @@ struct ValueReader<TJson, std::vector<T>>
             T temp = T();
             if (!FBE::JSON::from_json(item, temp))
                 return false;
-            values.emplace_back(temp);
+            values.template emplace_back<Safety::Unsafe>(temp);
         }
         return true;
     }

@@ -366,14 +366,14 @@ void FieldModel<::variants_ptr::V>::get(::variants_ptr::V& fbe_value) const noex
         }
         case 5: {
             FieldModelCustomVector<FieldModel_variants_ptr_Simple, ::variants_ptr::Simple> fbe_model(_buffer, 4);
-            fbe_value.emplace<std::vector<::variants_ptr::Simple>>();
+            fbe_value.emplace<stdb::container::stdb_vector<::variants_ptr::Simple>>();
             auto& value = std::get<5>(fbe_value);
             fbe_model.get(value);
             break;
         }
         case 6: {
             FieldModelVector<int32_t> fbe_model(_buffer, 4);
-            fbe_value.emplace<std::vector<int32_t>>();
+            fbe_value.emplace<stdb::container::stdb_vector<int32_t>>();
             auto& value = std::get<6>(fbe_value);
             fbe_model.get(value);
             break;
@@ -387,14 +387,14 @@ void FieldModel<::variants_ptr::V>::get(::variants_ptr::V& fbe_value) const noex
         }
         case 8: {
             FieldModelVector<FBE::buffer_t> fbe_model(_buffer, 4);
-            fbe_value.emplace<std::vector<FBE::buffer_t>>();
+            fbe_value.emplace<stdb::container::stdb_vector<FBE::buffer_t>>();
             auto& value = std::get<8>(fbe_value);
             fbe_model.get(value);
             break;
         }
         case 9: {
             FieldModelVector<stdb::memory::string> fbe_model(_buffer, 4);
-            fbe_value.emplace<std::vector<stdb::memory::string>>();
+            fbe_value.emplace<stdb::container::stdb_vector<stdb::memory::string>>();
             auto& value = std::get<9>(fbe_value);
             fbe_model.get(value);
             break;
@@ -415,7 +415,7 @@ void FieldModel<::variants_ptr::V>::get(::variants_ptr::V& fbe_value) const noex
         }
         case 12: {
             FieldModelCustomVector<FieldModelPtr_variants_ptr_Simple, ::variants_ptr::Simple> fbe_model(_buffer, 4);
-            fbe_value.emplace<std::vector<::variants_ptr::Simple*>>();
+            fbe_value.emplace<stdb::container::stdb_vector<::variants_ptr::Simple*>>();
             auto& value = std::get<12>(fbe_value);
             fbe_model.get(value);
             break;
@@ -506,7 +506,7 @@ void FieldModel<::variants_ptr::V>::set(const ::variants_ptr::V& fbe_value) noex
                 fbe_model.set(v);
                 set_end(fbe_begin);
             }
-            , [this, fbe_variant_index = fbe_value.index()](const std::vector<::variants_ptr::Simple>& v) {
+            , [this, fbe_variant_index = fbe_value.index()](const stdb::container::stdb_vector<::variants_ptr::Simple>& v) {
                 FieldModelCustomVector<FieldModel_variants_ptr_Simple, ::variants_ptr::Simple> fbe_model(_buffer, 4);
                 size_t fbe_begin = set_begin(fbe_model.fbe_size(), fbe_variant_index);
                 if (fbe_begin == 0)
@@ -514,7 +514,7 @@ void FieldModel<::variants_ptr::V>::set(const ::variants_ptr::V& fbe_value) noex
                 fbe_model.set(v);
                 set_end(fbe_begin);
             }
-            , [this, fbe_variant_index = fbe_value.index()](const std::vector<int32_t>& v) {
+            , [this, fbe_variant_index = fbe_value.index()](const stdb::container::stdb_vector<int32_t>& v) {
                 FieldModelVector<int32_t> fbe_model(_buffer, 4);
                 size_t fbe_begin = set_begin(fbe_model.fbe_size(), fbe_variant_index);
                 if (fbe_begin == 0)
@@ -530,7 +530,7 @@ void FieldModel<::variants_ptr::V>::set(const ::variants_ptr::V& fbe_value) noex
                 fbe_model.set(v);
                 set_end(fbe_begin);
             }
-            , [this, fbe_variant_index = fbe_value.index()](const std::vector<FBE::buffer_t>& v) {
+            , [this, fbe_variant_index = fbe_value.index()](const stdb::container::stdb_vector<FBE::buffer_t>& v) {
                 FieldModelVector<FBE::buffer_t> fbe_model(_buffer, 4);
                 size_t fbe_begin = set_begin(fbe_model.fbe_size(), fbe_variant_index);
                 if (fbe_begin == 0)
@@ -538,7 +538,7 @@ void FieldModel<::variants_ptr::V>::set(const ::variants_ptr::V& fbe_value) noex
                 fbe_model.set(v);
                 set_end(fbe_begin);
             }
-            , [this, fbe_variant_index = fbe_value.index()](const std::vector<stdb::memory::string>& v) {
+            , [this, fbe_variant_index = fbe_value.index()](const stdb::container::stdb_vector<stdb::memory::string>& v) {
                 FieldModelVector<stdb::memory::string> fbe_model(_buffer, 4);
                 size_t fbe_begin = set_begin(fbe_model.fbe_size(), fbe_variant_index);
                 if (fbe_begin == 0)
@@ -562,7 +562,7 @@ void FieldModel<::variants_ptr::V>::set(const ::variants_ptr::V& fbe_value) noex
                 fbe_model.set(v);
                 set_end(fbe_begin);
             }
-            , [this, fbe_variant_index = fbe_value.index()](const std::vector<::variants_ptr::Simple*> v) {
+            , [this, fbe_variant_index = fbe_value.index()](const stdb::container::stdb_vector<::variants_ptr::Simple*> v) {
                 FieldModelCustomVector<FieldModelPtr_variants_ptr_Simple, ::variants_ptr::Simple> fbe_model(_buffer, 4);
                 size_t fbe_begin = set_begin(fbe_model.fbe_size(), fbe_variant_index);
                 if (fbe_begin == 0)

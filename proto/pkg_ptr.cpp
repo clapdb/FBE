@@ -94,7 +94,7 @@ Detail::Detail()
     , extram()
 {}
 
-Detail::Detail(std::vector<::osa::Extra> arg_extrav, std::map<int32_t, ::osa::Extra> arg_extram)
+Detail::Detail(stdb::container::stdb_vector<::osa::Extra> arg_extrav, std::map<int32_t, ::osa::Extra> arg_extram)
     : extrav(std::move(arg_extrav))
     , extram(std::move(arg_extram))
 {}
