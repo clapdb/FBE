@@ -16,16 +16,18 @@ Info::Info()
     , extras1()
 {}
 
-Info::Info(const stdb::memory::string& arg_info, std::unique_ptr<::extra::Extra> arg_extra, std::vector<std::unique_ptr<::extra::Extra>> arg_extras, std::vector<std::unique_ptr<::extra::Extra>> arg_extras1)
+Info::Info(const stdb::memory::string& arg_info, std::unique_ptr<::extra::Extra> arg_extra, stdb::container::stdb_vector<std::unique_ptr<::extra::Extra>> arg_extras, stdb::container::stdb_vector<std::unique_ptr<::extra::Extra>> arg_extras1)
     : info(arg_info)
     , extra(arg_extra.release())
     , extras()
     , extras1()
 {
+    extras.reserve(arg_extras.size());
     for (auto& it : arg_extras)
-        extras.emplace_back(it.release());
+        extras.emplace_back<Safety::Unsafe>(it.release());
+    extras1.reserve(arg_extras1.size());
     for (auto& it : arg_extras1)
-        extras1.emplace_back(it.release());
+        extras1.emplace_back<Safety::Unsafe>(it.release());
 }
 
 Info::Info([[maybe_unused]] Info&& other) noexcept
@@ -142,7 +144,7 @@ Extra::Extra()
     , infopl()
 {}
 
-Extra::Extra(int64_t arg_num, const stdb::memory::string& arg_data, std::unique_ptr<::extra::Info> arg_info, std::unique_ptr<::extra::Info> arg_info2, ::extra::Info&& arg_info3, std::vector<::extra::Info> arg_infov, std::vector<std::unique_ptr<::extra::Info>> arg_infopv, std::list<::extra::Info> arg_infol, std::list<std::unique_ptr<::extra::Info>> arg_infopl)
+Extra::Extra(int64_t arg_num, const stdb::memory::string& arg_data, std::unique_ptr<::extra::Info> arg_info, std::unique_ptr<::extra::Info> arg_info2, ::extra::Info&& arg_info3, stdb::container::stdb_vector<::extra::Info> arg_infov, stdb::container::stdb_vector<std::unique_ptr<::extra::Info>> arg_infopv, std::list<::extra::Info> arg_infol, std::list<std::unique_ptr<::extra::Info>> arg_infopl)
     : num(arg_num)
     , data(arg_data)
     , info(arg_info.release())
@@ -153,8 +155,9 @@ Extra::Extra(int64_t arg_num, const stdb::memory::string& arg_data, std::unique_
     , infol(std::move(arg_infol))
     , infopl()
 {
+    infopv.reserve(arg_infopv.size());
     for (auto& it : arg_infopv)
-        infopv.emplace_back(it.release());
+        infopv.emplace_back<Safety::Unsafe>(it.release());
     for (auto& it : arg_infopl)
         infopl.emplace_back(it.release());
 }

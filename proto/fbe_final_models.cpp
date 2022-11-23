@@ -309,7 +309,7 @@ size_t FinalModel<buffer_t>::get(void* data, size_t size) const noexcept
     return 4 + fbe_bytes_size;
 }
 
-size_t FinalModel<buffer_t>::get(std::vector<uint8_t>& value) const noexcept
+size_t FinalModel<buffer_t>::get(stdb::container::stdb_vector<uint8_t>& value) const noexcept
 {
     value.clear();
 

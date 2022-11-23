@@ -768,9 +768,9 @@ TEST_CASE("Serialization: struct array", "[FBE]")
     struct1.f1[1] = (uint8_t)65;
     struct1.f2[0] = (uint8_t)97;
     struct1.f2[1] = std::nullopt;
-    struct1.f3[0] = std::vector<uint8_t>(3, 48);
-    struct1.f3[1] = std::vector<uint8_t>(3, 65);
-    struct1.f4[0] = std::vector<uint8_t>(3, 97);
+    struct1.f3[0] = stdb::container::stdb_vector<uint8_t>(3, 48);
+    struct1.f3[1] = stdb::container::stdb_vector<uint8_t>(3, 65);
+    struct1.f4[0] = stdb::container::stdb_vector<uint8_t>(3, 97);
     struct1.f4[1] = std::nullopt;
     struct1.f5[0] = test::EnumSimple::ENUM_VALUE_1;
     struct1.f5[1] = test::EnumSimple::ENUM_VALUE_2;
@@ -868,9 +868,9 @@ TEST_CASE("Serialization: struct vector", "[FBE]")
     struct1.f1.emplace_back((uint8_t)65);
     struct1.f2.emplace_back((uint8_t)97);
     struct1.f2.emplace_back(std::nullopt);
-    struct1.f3.emplace_back(std::vector<uint8_t>(3, 48));
-    struct1.f3.emplace_back(std::vector<uint8_t>(3, 65));
-    struct1.f4.emplace_back(std::vector<uint8_t>(3, 97));
+    struct1.f3.emplace_back(stdb::container::stdb_vector<uint8_t>(3, 48));
+    struct1.f3.emplace_back(stdb::container::stdb_vector<uint8_t>(3, 65));
+    struct1.f4.emplace_back(stdb::container::stdb_vector<uint8_t>(3, 97));
     struct1.f4.emplace_back(std::nullopt);
     struct1.f5.emplace_back(test::EnumSimple::ENUM_VALUE_1);
     struct1.f5.emplace_back(test::EnumSimple::ENUM_VALUE_2);
@@ -968,9 +968,9 @@ TEST_CASE("Serialization: struct list", "[FBE]")
     struct1.f1.emplace_back((uint8_t)65);
     struct1.f2.emplace_back((uint8_t)97);
     struct1.f2.emplace_back(std::nullopt);
-    struct1.f3.emplace_back(std::vector<uint8_t>(3, 48));
-    struct1.f3.emplace_back(std::vector<uint8_t>(3, 65));
-    struct1.f4.emplace_back(std::vector<uint8_t>(3, 97));
+    struct1.f3.emplace_back(stdb::container::stdb_vector<uint8_t>(3, 48));
+    struct1.f3.emplace_back(stdb::container::stdb_vector<uint8_t>(3, 65));
+    struct1.f4.emplace_back(stdb::container::stdb_vector<uint8_t>(3, 97));
     struct1.f4.emplace_back(std::nullopt);
     struct1.f5.emplace_back(test::EnumSimple::ENUM_VALUE_1);
     struct1.f5.emplace_back(test::EnumSimple::ENUM_VALUE_2);
@@ -1127,9 +1127,9 @@ TEST_CASE("Serialization: struct map", "[FBE]")
     struct1.f1.emplace(20, (uint8_t)65);
     struct1.f2.emplace(10, (uint8_t)97);
     struct1.f2.emplace(20, std::nullopt);
-    struct1.f3.emplace(10, std::vector<uint8_t>(3, 48));
-    struct1.f3.emplace(20, std::vector<uint8_t>(3, 65));
-    struct1.f4.emplace(10, std::vector<uint8_t>(3, 97));
+    struct1.f3.emplace(10, stdb::container::stdb_vector<uint8_t>(3, 48));
+    struct1.f3.emplace(20, stdb::container::stdb_vector<uint8_t>(3, 65));
+    struct1.f4.emplace(10, stdb::container::stdb_vector<uint8_t>(3, 97));
     struct1.f4.emplace(20, std::nullopt);
     struct1.f5.emplace(10, test::EnumSimple::ENUM_VALUE_1);
     struct1.f5.emplace(20, test::EnumSimple::ENUM_VALUE_2);
@@ -1214,9 +1214,9 @@ TEST_CASE("Serialization: struct hash", "[FBE]")
     struct1.f1.emplace("20", (uint8_t)65);
     struct1.f2.emplace("10", (uint8_t)97);
     struct1.f2.emplace("20", std::nullopt);
-    struct1.f3.emplace("10", std::vector<uint8_t>(3, 48));
-    struct1.f3.emplace("20", std::vector<uint8_t>(3, 65));
-    struct1.f4.emplace("10", std::vector<uint8_t>(3, 97));
+    struct1.f3.emplace("10", stdb::container::stdb_vector<uint8_t>(3, 48));
+    struct1.f3.emplace("20", stdb::container::stdb_vector<uint8_t>(3, 65));
+    struct1.f4.emplace("10", stdb::container::stdb_vector<uint8_t>(3, 97));
     struct1.f4.emplace("20", std::nullopt);
     struct1.f5.emplace("10", test::EnumSimple::ENUM_VALUE_1);
     struct1.f5.emplace("20", test::EnumSimple::ENUM_VALUE_2);
@@ -1408,7 +1408,7 @@ TEST_CASE("Serialization: variant", "[FBE]") {
     }
 
     SECTION ("vector of struct") {
-        std::vector<::variants::Simple> v;
+        stdb::container::stdb_vector<::variants::Simple> v;
         v.emplace_back(::variants::Simple{"simple1"});
         v.emplace_back(::variants::Simple{"simple2"});
 
@@ -1438,7 +1438,7 @@ TEST_CASE("Serialization: variant", "[FBE]") {
     }
 
     SECTION ("vector of primitive type") {
-        std::vector<int32_t> v {1,2,3};
+        stdb::container::stdb_vector<int32_t> v {1,2,3};
 
         ::variants::Value value;
         REQUIRE(value.v.index() == 0);
@@ -1497,8 +1497,8 @@ TEST_CASE("Serialization: variant", "[FBE]") {
     }
 
     SECTION ("container of bytes") {
-        std::vector<uint8_t> v {65, 66, 67, 68, 69};
-        std::vector<FBE::buffer_t> bytes_v;
+        stdb::container::stdb_vector<uint8_t> v {65, 66, 67, 68, 69};
+        stdb::container::stdb_vector<FBE::buffer_t> bytes_v;
         bytes_v.emplace_back(FBE::buffer_t(v));
 
         ::variants::Value value;
@@ -1526,7 +1526,7 @@ TEST_CASE("Serialization: variant", "[FBE]") {
     }
     
     SECTION ("vector of string") {
-        std::vector<stdb::memory::string> string_v {"hello", "world"};
+        stdb::container::stdb_vector<stdb::memory::string> string_v {"hello", "world"};
 
         ::variants::Value value;
         REQUIRE(value.v.index() == 0);
@@ -1555,7 +1555,7 @@ TEST_CASE("Serialization: variant", "[FBE]") {
 
     SECTION ("hash with primitive and bytes") {
         std::unordered_map<int32_t, FBE::buffer_t> m;
-        std::vector<uint8_t> v {65, 66, 67, 68, 69};
+        stdb::container::stdb_vector<uint8_t> v {65, 66, 67, 68, 69};
         m.emplace(42, FBE::buffer_t(v));
 
         ::variants::Value value;
@@ -1584,7 +1584,7 @@ TEST_CASE("Serialization: variant", "[FBE]") {
 
     SECTION ("hash with string and bytes") {
         std::unordered_map<stdb::memory::string, FBE::buffer_t> m;
-        std::vector<uint8_t> v {65, 66, 67, 68, 69};
+        stdb::container::stdb_vector<uint8_t> v {65, 66, 67, 68, 69};
         m.emplace("hello world", FBE::buffer_t(v));
 
         ::variants::Value value;

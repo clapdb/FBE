@@ -1108,7 +1108,7 @@ StructVector::StructVector()
     , f10()
 {}
 
-StructVector::StructVector(const std::vector<uint8_t>& arg_f1, const std::vector<std::optional<uint8_t>>& arg_f2, const std::vector<FBE::buffer_t>& arg_f3, const std::vector<std::optional<FBE::buffer_t>>& arg_f4, const std::vector<::test::EnumSimple>& arg_f5, const std::vector<std::optional<::test::EnumSimple>>& arg_f6, const std::vector<::test::FlagsSimple>& arg_f7, const std::vector<std::optional<::test::FlagsSimple>>& arg_f8, const std::vector<::test::StructSimple>& arg_f9, const std::vector<std::optional<::test::StructSimple>>& arg_f10)
+StructVector::StructVector(const stdb::container::stdb_vector<uint8_t>& arg_f1, const stdb::container::stdb_vector<std::optional<uint8_t>>& arg_f2, const stdb::container::stdb_vector<FBE::buffer_t>& arg_f3, const stdb::container::stdb_vector<std::optional<FBE::buffer_t>>& arg_f4, const stdb::container::stdb_vector<::test::EnumSimple>& arg_f5, const stdb::container::stdb_vector<std::optional<::test::EnumSimple>>& arg_f6, const stdb::container::stdb_vector<::test::FlagsSimple>& arg_f7, const stdb::container::stdb_vector<std::optional<::test::FlagsSimple>>& arg_f8, const stdb::container::stdb_vector<::test::StructSimple>& arg_f9, const stdb::container::stdb_vector<std::optional<::test::StructSimple>>& arg_f10)
     : f1(arg_f1)
     , f2(arg_f2)
     , f3(arg_f3)
