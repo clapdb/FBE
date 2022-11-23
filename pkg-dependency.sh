@@ -29,6 +29,7 @@ fbe_fedora_packages=(
     xxhash-devel
     rapidjson-devel
     uuid-devel
+    google-benchmark-devel
 )
 
 fbe_debian_packages=(
@@ -52,6 +53,7 @@ fbe_debian_packages=(
     libboost-dev
     libfmt-dev
     rapidjson-dev
+    libbenchmark-dev
 )
 
 fbe_darwin_packages=(
