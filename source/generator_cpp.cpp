@@ -223,6 +223,11 @@ namespace pmr = std::pmr;
 #include <variant>
 #include "string/string.hpp"
 #include "string/arena_string.hpp"
+#include "container/stdb_vector.hpp"
+
+namespace FBE {
+    using Safety = stdb::container::Safety;
+}
 
 #if defined(FMT_VERSION)
 #include <fmt/core.h>
@@ -450,31 +455,31 @@ void GeneratorCpp::GenerateBufferWrapper_Header()
     std::string code = R"CODE(
 //! Bytes buffer type
 /*!
-    Represents bytes buffer which is a lightweight wrapper around std::vector<uint8_t>
+    Represents bytes buffer which is a lightweight wrapper around stdb::container::stdb_vector<uint8_t>
     with similar interface.
 */
 class buffer_t
 {
 public:
-    typedef std::vector<uint8_t>::iterator iterator;
-    typedef std::vector<uint8_t>::const_iterator const_iterator;
-    typedef std::vector<uint8_t>::reverse_iterator reverse_iterator;
-    typedef std::vector<uint8_t>::const_reverse_iterator const_reverse_iterator;
+    typedef stdb::container::stdb_vector<uint8_t>::Iterator iterator;
+    typedef stdb::container::stdb_vector<uint8_t>::ConstIterator const_iterator;
+    typedef stdb::container::stdb_vector<uint8_t>::ReverseIterator reverse_iterator;
+    typedef stdb::container::stdb_vector<uint8_t>::ConstReverseIterator const_reverse_iterator;
 
     buffer_t() = default;
     buffer_t(size_t capacity) { reserve(capacity); }
     buffer_t(const std::string& str) { assign(str); }
     buffer_t(size_t size, uint8_t value) { assign(size, value); }
     buffer_t(const uint8_t* data, size_t size) { assign(data, size); }
-    buffer_t(const std::vector<uint8_t>& other) : _data(other) {}
-    buffer_t(std::vector<uint8_t>&& other) : _data(std::move(other)) {}
+    buffer_t(const stdb::container::stdb_vector<uint8_t>& other) : _data(other) {}
+    buffer_t(stdb::container::stdb_vector<uint8_t>&& other) : _data(std::move(other)) {}
     buffer_t(const buffer_t& other) = default;
     buffer_t(buffer_t&& other) = default;
     ~buffer_t() = default;
 
     buffer_t& operator=(const std::string& str) { assign(str); return *this; }
-    buffer_t& operator=(const std::vector<uint8_t>& other) { _data = other; return *this; }
-    buffer_t& operator=(std::vector<uint8_t>&& other) { _data = std::move(other); return *this; }
+    buffer_t& operator=(const stdb::container::stdb_vector<uint8_t>& other) { _data = other; return *this; }
+    buffer_t& operator=(stdb::container::stdb_vector<uint8_t>&& other) { _data = std::move(other); return *this; }
     buffer_t& operator=(const buffer_t& other) = default;
     buffer_t& operator=(buffer_t&& other) = default;
 
@@ -489,8 +494,8 @@ public:
     size_t size() const { return _data.size(); }
     size_t max_size() const { return _data.max_size(); }
 
-    std::vector<uint8_t>& buffer() noexcept { return _data; }
-    const std::vector<uint8_t>& buffer() const noexcept { return _data; }
+    stdb::container::stdb_vector<uint8_t>& buffer() noexcept { return _data; }
+    const stdb::container::stdb_vector<uint8_t>& buffer() const noexcept { return _data; }
     uint8_t* data() noexcept { return _data.data(); }
     const uint8_t* data() const noexcept { return _data.data(); }
     uint8_t& at(size_t index) { return _data.at(index); }
@@ -505,14 +510,14 @@ public:
     void shrink_to_fit() { _data.shrink_to_fit(); }
 
     void assign(const std::string& str) { assign((const uint8_t*)str.c_str(), str.size()); }
-    void assign(const std::vector<uint8_t>& vec) { assign(vec.begin(), vec.end()); }
+    void assign(const stdb::container::stdb_vector<uint8_t>& vec) { assign(vec.begin(), vec.end()); }
     void assign(size_t size, uint8_t value) { _data.assign(size, value); }
     void assign(const uint8_t* data, size_t size) { _data.assign(data, data + size); }
     template <class InputIterator>
     void assign(InputIterator first, InputIterator last) { _data.assign(first, last); }
     iterator insert(const_iterator position, uint8_t value) { return _data.insert(position, value); }
     iterator insert(const_iterator position, const std::string& str) { return insert(position, (const uint8_t*)str.c_str(), str.size()); }
-    iterator insert(const_iterator position, const std::vector<uint8_t>& vec) { return insert(position, vec.begin(), vec.end()); }
+    iterator insert(const_iterator position, const stdb::container::stdb_vector<uint8_t>& vec) { return insert(position, vec.begin(), vec.end()); }
     iterator insert(const_iterator position, size_t size, uint8_t value) { return _data.insert(position, size, value); }
     iterator insert(const_iterator position, const uint8_t* data, size_t size) { return _data.insert(position, data, data + size); }
     template <class InputIterator>
@@ -557,7 +562,7 @@ public:
     { value1.swap(value2); }
 
 private:
-    std::vector<uint8_t> _data;
+    stdb::container::stdb_vector<uint8_t> _data;
 };
 )CODE";
 
@@ -1509,7 +1514,7 @@ public:
     // Initialize the read buffer with the given byte buffer and offset
     explicit FBEBuffer(const void* data, size_t size, size_t offset = 0) { attach(data, size, offset); }
     // Initialize the read buffer with the given byte vector and offset
-    explicit FBEBuffer(const std::vector<uint8_t>& buffer, size_t offset = 0) { attach(buffer, offset); }
+    explicit FBEBuffer(const stdb::container::stdb_vector<uint8_t>& buffer, size_t offset = 0) { attach(buffer, offset); }
     // Initialize the read buffer with another buffer and offset
     explicit FBEBuffer(const FBEBuffer& buffer, size_t offset = 0) { attach(buffer.data(), buffer.size(), offset); }
     // Initialize the write buffer with the given capacity
@@ -1531,12 +1536,12 @@ public:
     // Attach the given buffer with a given offset to the current read buffer
     void attach(const void* data, size_t size, size_t offset = 0);
     // Attach the given byte vector with a given offset to the current read buffer
-    void attach(const std::vector<uint8_t>& buffer, size_t offset = 0);
+    void attach(const stdb::container::stdb_vector<uint8_t>& buffer, size_t offset = 0);
 
     // Clone the given buffer with a given offset to the current buffer
     void clone(const void* data, size_t size, size_t offset = 0);
     // Clone the given vector with a given offset to the current buffer
-    void clone(const std::vector<uint8_t>& buffer, size_t offset = 0);
+    void clone(const stdb::container::stdb_vector<uint8_t>& buffer, size_t offset = 0);
 
     // Allocate memory in the current write buffer and return offset to the allocated memory block
     size_t allocate(size_t size);
@@ -1589,7 +1594,7 @@ void FBEBuffer::attach(const void* data, size_t size, size_t offset)
     _offset = offset;
 }
 
-void FBEBuffer::attach(const std::vector<uint8_t>& buffer, size_t offset)
+void FBEBuffer::attach(const stdb::container::stdb_vector<uint8_t>& buffer, size_t offset)
 {
     assert((buffer.data() != nullptr) && "Invalid buffer!");
     if (buffer.data() == nullptr)
@@ -1620,7 +1625,7 @@ void FBEBuffer::clone(const void* data, size_t size, size_t offset)
     _offset = offset;
 }
 
-void FBEBuffer::clone(const std::vector<uint8_t>& buffer, size_t offset)
+void FBEBuffer::clone(const stdb::container::stdb_vector<uint8_t>& buffer, size_t offset)
 {
     assert((offset <= buffer.size()) && "Invalid offset!");
     if (offset > buffer.size())
@@ -1733,7 +1738,7 @@ public:
 
     // Attach the model buffer
     void attach(const void* data, size_t size, size_t offset = 0) { _buffer->attach(data, size, offset); }
-    void attach(const std::vector<uint8_t>& buffer, size_t offset = 0) { _buffer->attach(buffer, offset); }
+    void attach(const stdb::container::stdb_vector<uint8_t>& buffer, size_t offset = 0) { _buffer->attach(buffer, offset); }
     void attach(const FBEBuffer& buffer, size_t offset = 0) { _buffer->attach(buffer.data(), buffer.size(), offset); }
 
     // Model buffer operations
@@ -2258,7 +2263,7 @@ public:
     template <size_t N>
     size_t get(std::array<uint8_t, N>& data) const noexcept { return get(data.data(), data.size()); }
     // Get the bytes value
-    void get(std::vector<uint8_t>& value) const noexcept;
+    void get(stdb::container::stdb_vector<uint8_t>& value) const noexcept;
     // Get the bytes value
     void get(buffer_t& value) const noexcept { get(value.buffer()); }
 
@@ -2271,7 +2276,7 @@ public:
     template <size_t N>
     void set(const std::array<uint8_t, N>& data) { set(data.data(), data.size()); }
     // Set the bytes value
-    void set(const std::vector<uint8_t>& value) { set(value.data(), value.size()); }
+    void set(const stdb::container::stdb_vector<uint8_t>& value) { set(value.data(), value.size()); }
     // Set the bytes value
     void set(const buffer_t& value) { set(value.buffer()); }
 
@@ -2349,7 +2354,7 @@ size_t FieldModel<buffer_t>::get(void* data, size_t size) const noexcept
     return result;
 }
 
-void FieldModel<buffer_t>::get(std::vector<uint8_t>& value) const noexcept
+void FieldModel<buffer_t>::get(stdb::container::stdb_vector<uint8_t>& value) const noexcept
 {
     value.clear();
 
@@ -3700,8 +3705,8 @@ public:
     // Get the array as std::array
     template <size_t S>
     void get(std::array<T, S>& values) const noexcept;
-    // Get the array as std::vector
-    void get(std::vector<T>& values) const noexcept;
+    // Get the array as stdb::container::stdb_vector
+    void get(stdb::container::stdb_vector<T>& values) const noexcept;
 
     // Set the array as C-array
     template <size_t S>
@@ -3709,8 +3714,8 @@ public:
     // Set the array as std::array
     template <size_t S>
     void set(const std::array<T, S>& values) noexcept;
-    // Set the array as std::vector
-    void set(const std::vector<T>& values) noexcept;
+    // Set the array as stdb::container::stdb_vector
+    void set(const stdb::container::stdb_vector<T>& values) noexcept;
 
 private:
     FBEBuffer& _buffer;
@@ -3795,7 +3800,7 @@ inline void FieldModelArray<T, N>::get(std::array<T, S>& values) const noexcept
 }
 
 template <typename T, size_t N>
-inline void FieldModelArray<T, N>::get(std::vector<T>& values) const noexcept
+inline void FieldModelArray<T, N>::get(stdb::container::stdb_vector<T>& values) const noexcept
 {
     values.clear();
     values.reserve(N);
@@ -3805,7 +3810,7 @@ inline void FieldModelArray<T, N>::get(std::vector<T>& values) const noexcept
     {
         T value = T();
         fbe_model.get(value);
-        values.emplace_back(value);
+        values.template emplace_back<Safety::Unsafe>(value);
         fbe_model.fbe_shift(fbe_model.fbe_size());
     }
 }
@@ -3843,7 +3848,7 @@ inline void FieldModelArray<T, N>::set(const std::array<T, S>& values) noexcept
 }
 
 template <typename T, size_t N>
-inline void FieldModelArray<T, N>::set(const std::vector<T>& values) noexcept
+inline void FieldModelArray<T, N>::set(const stdb::container::stdb_vector<T>& values) noexcept
 {
     assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
     if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
@@ -3900,8 +3905,8 @@ public:
     // Check if the vector is valid
     bool verify() const noexcept;
 
-    // Get the vector as std::vector
-    void get(std::vector<T>& values) const noexcept;
+    // Get the vector as stdb::container::stdb_vector
+    void get(stdb::container::stdb_vector<T>& values) const noexcept;
     // Get the vector as std::list
     void get(std::list<T>& values) const noexcept;
     // Get the vector as std::set
@@ -3914,8 +3919,8 @@ public:
     // Get the vector as pmr::set
     void get(pmr::set<T>& values) const noexcept;
 
-    // Set the vector as std::vector
-    void set(const std::vector<T>& values) noexcept;
+    // Set the vector as stdb::container::stdb_vector
+    void set(const stdb::container::stdb_vector<T>& values) noexcept;
     // Set the vector as std::list
     void set(const std::list<T>& values) noexcept;
     // Set the vector as std::set
@@ -4049,7 +4054,7 @@ inline bool FieldModelVector<T>::verify() const noexcept
 }
 
 template <typename T>
-inline void FieldModelVector<T>::get(std::vector<T>& values) const noexcept
+inline void FieldModelVector<T>::get(stdb::container::stdb_vector<T>& values) const noexcept
 {
     values.clear();
 
@@ -4064,7 +4069,7 @@ inline void FieldModelVector<T>::get(std::vector<T>& values) const noexcept
     {
         T value = T();
         fbe_model.get(value);
-        values.emplace_back(std::move(value));
+        values.template emplace_back<Safety::Unsafe>(std::move(value));
         fbe_model.fbe_shift(fbe_model.fbe_size());
     }
 }
@@ -4167,7 +4172,7 @@ inline void FieldModelVector<T>::get(pmr::set<T>& values) const noexcept
 }
 
 template <typename T>
-inline void FieldModelVector<T>::set(const std::vector<T>& values) noexcept
+inline void FieldModelVector<T>::set(const stdb::container::stdb_vector<T>& values) noexcept
 {
     assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
     if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
@@ -5129,7 +5134,7 @@ public:
     size_t fbe_allocation_size(const uint8_t (&data)[N]) const noexcept { return 4 + N; }
     template <size_t N>
     size_t fbe_allocation_size(const std::array<uint8_t, N>& data) const noexcept { return 4 + N; }
-    size_t fbe_allocation_size(const std::vector<uint8_t>& value) const noexcept { return 4 + value.size(); }
+    size_t fbe_allocation_size(const stdb::container::stdb_vector<uint8_t>& value) const noexcept { return 4 + value.size(); }
     size_t fbe_allocation_size(const buffer_t& value) const noexcept { return 4 + value.size(); }
 
     // Get the field offset
@@ -5154,7 +5159,7 @@ public:
     template <size_t N>
     size_t get(std::array<uint8_t, N>& data) const noexcept { return get(data.data(), data.size()); }
     // Get the bytes value
-    size_t get(std::vector<uint8_t>& value) const noexcept;
+    size_t get(stdb::container::stdb_vector<uint8_t>& value) const noexcept;
     // Get the bytes value
     size_t get(buffer_t& value) const noexcept { return get(value.buffer()); }
 
@@ -5167,7 +5172,7 @@ public:
     template <size_t N>
     size_t set(const std::array<uint8_t, N>& data) { return set(data.data(), data.size()); }
     // Set the bytes value
-    size_t set(const std::vector<uint8_t>& value) { return set(value.data(), value.size()); }
+    size_t set(const stdb::container::stdb_vector<uint8_t>& value) { return set(value.data(), value.size()); }
     // Set the bytes value
     size_t set(const buffer_t& value) { return set(value.buffer()); }
 
@@ -5218,7 +5223,7 @@ size_t FinalModel<buffer_t>::get(void* data, size_t size) const noexcept
     return 4 + fbe_bytes_size;
 }
 
-size_t FinalModel<buffer_t>::get(std::vector<uint8_t>& value) const noexcept
+size_t FinalModel<buffer_t>::get(stdb::container::stdb_vector<uint8_t>& value) const noexcept
 {
     value.clear();
 
@@ -5570,7 +5575,7 @@ public:
     size_t fbe_allocation_size(const T (&values)[S]) const noexcept;
     template <size_t S>
     size_t fbe_allocation_size(const std::array<T, S>& values) const noexcept;
-    size_t fbe_allocation_size(const std::vector<T>& values) const noexcept;
+    size_t fbe_allocation_size(const stdb::container::stdb_vector<T>& values) const noexcept;
 
     // Get the field offset
     size_t fbe_offset() const noexcept { return _offset; }
@@ -5591,8 +5596,8 @@ public:
     // Get the array as std::array
     template <size_t S>
     size_t get(std::array<T, S>& values) const noexcept;
-    // Get the array as std::vector
-    size_t get(std::vector<T>& values) const noexcept;
+    // Get the array as stdb::container::stdb_vector
+    size_t get(stdb::container::stdb_vector<T>& values) const noexcept;
 
     // Set the array as C-array
     template <size_t S>
@@ -5600,8 +5605,8 @@ public:
     // Set the array as std::array
     template <size_t S>
     size_t set(const std::array<T, S>& values) noexcept;
-    // Set the array as std::vector
-    size_t set(const std::vector<T>& values) noexcept;
+    // Set the array as stdb::container::stdb_vector
+    size_t set(const stdb::container::stdb_vector<T>& values) noexcept;
 
 private:
     FBEBuffer& _buffer;
@@ -5641,7 +5646,7 @@ inline size_t FinalModelArray<T, N>::fbe_allocation_size(const std::array<T, S>&
 }
 
 template <typename T, size_t N>
-inline size_t FinalModelArray<T, N>::fbe_allocation_size(const std::vector<T>& values) const noexcept
+inline size_t FinalModelArray<T, N>::fbe_allocation_size(const stdb::container::stdb_vector<T>& values) const noexcept
 {
     size_t size = 0;
     FinalModel<T> fbe_model(_buffer, fbe_offset());
@@ -5708,7 +5713,7 @@ inline size_t FinalModelArray<T, N>::get(std::array<T, S>& values) const noexcep
 }
 
 template <typename T, size_t N>
-inline size_t FinalModelArray<T, N>::get(std::vector<T>& values) const noexcept
+inline size_t FinalModelArray<T, N>::get(stdb::container::stdb_vector<T>& values) const noexcept
 {
     values.clear();
 
@@ -5724,7 +5729,7 @@ inline size_t FinalModelArray<T, N>::get(std::vector<T>& values) const noexcept
     {
         T value = T();
         size_t offset = fbe_model.get(value);
-        values.emplace_back(value);
+        values.template emplace_back<Safety::Unsafe>(value);
         fbe_model.fbe_shift(offset);
         size += offset;
     }
@@ -5770,7 +5775,7 @@ inline size_t FinalModelArray<T, N>::set(const std::array<T, S>& values) noexcep
 }
 
 template <typename T, size_t N>
-inline size_t FinalModelArray<T, N>::set(const std::vector<T>& values) noexcept
+inline size_t FinalModelArray<T, N>::set(const stdb::container::stdb_vector<T>& values) noexcept
 {
     assert(((_buffer.offset() + fbe_offset()) <= _buffer.size()) && "Model is broken!");
     if ((_buffer.offset() + fbe_offset()) > _buffer.size())
@@ -5805,7 +5810,7 @@ public:
     FinalModelVector(FBEBuffer& buffer, size_t offset) noexcept : _buffer(buffer), _offset(offset) {}
 
     // Get the allocation size
-    size_t fbe_allocation_size(const std::vector<T>& values) const noexcept;
+    size_t fbe_allocation_size(const stdb::container::stdb_vector<T>& values) const noexcept;
     size_t fbe_allocation_size(const std::list<T>& values) const noexcept;
     size_t fbe_allocation_size(const std::set<T>& values) const noexcept;
 
@@ -5822,15 +5827,15 @@ public:
     // Check if the vector is valid
     size_t verify() const noexcept;
 
-    // Get the vector as std::vector
-    size_t get(std::vector<T>& values) const noexcept;
+    // Get the vector as stdb::container::stdb_vector
+    size_t get(stdb::container::stdb_vector<T>& values) const noexcept;
     // Get the vector as std::list
     size_t get(std::list<T>& values) const noexcept;
     // Get the vector as std::set
     size_t get(std::set<T>& values) const noexcept;
 
-    // Set the vector as std::vector
-    size_t set(const std::vector<T>& values) noexcept;
+    // Set the vector as stdb::container::stdb_vector
+    size_t set(const stdb::container::stdb_vector<T>& values) noexcept;
     // Set the vector as std::list
     size_t set(const std::list<T>& values) noexcept;
     // Set the vector as std::set
@@ -5852,7 +5857,7 @@ void GeneratorCpp::GenerateFBEFinalModelVector_Inline()
 {
     std::string code = R"CODE(
 template <typename T>
-inline size_t FinalModelVector<T>::fbe_allocation_size(const std::vector<T>& values) const noexcept
+inline size_t FinalModelVector<T>::fbe_allocation_size(const stdb::container::stdb_vector<T>& values) const noexcept
 {
     size_t size = 4;
     FinalModel<T> fbe_model(_buffer, fbe_offset() + 4);
@@ -5903,7 +5908,7 @@ inline size_t FinalModelVector<T>::verify() const noexcept
 }
 
 template <typename T>
-inline size_t FinalModelVector<T>::get(std::vector<T>& values) const noexcept
+inline size_t FinalModelVector<T>::get(stdb::container::stdb_vector<T>& values) const noexcept
 {
     values.clear();
 
@@ -5923,7 +5928,7 @@ inline size_t FinalModelVector<T>::get(std::vector<T>& values) const noexcept
     {
         T value = T();
         size_t offset = fbe_model.get(value);
-        values.emplace_back(value);
+        values.template emplace_back<Safety::Unsafe>(value);
         fbe_model.fbe_shift(offset);
         size += offset;
     }
@@ -5983,7 +5988,7 @@ inline size_t FinalModelVector<T>::get(std::set<T>& values) const noexcept
 }
 
 template <typename T>
-inline size_t FinalModelVector<T>::set(const std::vector<T>& values) noexcept
+inline size_t FinalModelVector<T>::set(const stdb::container::stdb_vector<T>& values) noexcept
 {
     assert(((_buffer.offset() + fbe_offset() + 4) <= _buffer.size()) && "Model is broken!");
     if ((_buffer.offset() + fbe_offset() + 4) > _buffer.size())
@@ -6983,9 +6988,9 @@ struct ValueWriter<TWriter, std::array<T, N>>
 };
 
 template <class TWriter, typename T>
-struct ValueWriter<TWriter, std::vector<T>>
+struct ValueWriter<TWriter, stdb::container::stdb_vector<T>>
 {
-    static bool to_json(TWriter& writer, const std::vector<T>& values, bool scope = true)
+    static bool to_json(TWriter& writer, const stdb::container::stdb_vector<T>& values, bool scope = true)
     {
         writer.StartArray();
         for (const auto& value : values)
@@ -7553,9 +7558,9 @@ struct ValueReader<TJson, std::array<T, N>>
 };
 
 template <class TJson, typename T>
-struct ValueReader<TJson, std::vector<T>>
+struct ValueReader<TJson, stdb::container::stdb_vector<T>>
 {
-    static bool from_json(const TJson& json, std::vector<T>& values)
+    static bool from_json(const TJson& json, stdb::container::stdb_vector<T>& values)
     {
         values.clear();
 
@@ -7570,7 +7575,7 @@ struct ValueReader<TJson, std::vector<T>>
             T temp = T();
             if (!FBE::JSON::from_json(item, temp))
                 return false;
-            values.emplace_back(temp);
+            values.template emplace_back<Safety::Unsafe>(temp);
         }
         return true;
     }
@@ -12088,8 +12093,8 @@ std::string GeneratorCpp::ConvertTypeName(const std::string& package, const Stru
     }
     if (field.array)
         return "std::array<" + ConvertTypeName(package, *field.type, field.optional) + ", " + std::to_string(field.N) + ">";
-    else if (field.vector)
-        return prefix + "::vector<" + ConvertTypeName(package, *field.type, field.optional) + ">";
+    else if (field.vector) 
+        return (Arena() ? "pmr::vector<" : "stdb::container::stdb_vector<") + ConvertTypeName(package, *field.type, field.optional) + ">";
     else if (field.list)
         return prefix + "::list<" + ConvertTypeName(package, *field.type, field.optional) + ">";
     else if (field.set)
