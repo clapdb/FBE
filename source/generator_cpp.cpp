@@ -467,10 +467,10 @@ void GeneratorCpp::GenerateBufferWrapper_Header()
 class buffer_t
 {
 public:
-    typedef FastVec<uint8_t>::Iterator iterator;
-    typedef FastVec<uint8_t>::ConstIterator const_iterator;
-    typedef FastVec<uint8_t>::ReverseIterator reverse_iterator;
-    typedef FastVec<uint8_t>::ConstReverseIterator const_reverse_iterator;
+    typedef FastVec<uint8_t>::iterator iterator;
+    typedef FastVec<uint8_t>::const_iterator const_iterator;
+    typedef FastVec<uint8_t>::reverse_iterator reverse_iterator;
+    typedef FastVec<uint8_t>::const_reverse_iterator const_reverse_iterator;
 
     buffer_t() = default;
     buffer_t(size_t capacity) { reserve(capacity); }
