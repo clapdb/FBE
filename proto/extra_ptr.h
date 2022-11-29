@@ -39,13 +39,13 @@ struct Info : FBE::Base
 {
     stdb::memory::string info;
     ::extra::Extra* extra;
-    stdb::container::stdb_vector<::extra::Extra*> extras;
-    stdb::container::stdb_vector<::extra::Extra*> extras1;
+    FastVec<::extra::Extra*> extras;
+    FastVec<::extra::Extra*> extras1;
 
     size_t fbe_type() const noexcept { return 1; }
 
     Info();
-    Info(const stdb::memory::string& arg_info, std::unique_ptr<::extra::Extra> arg_extra, stdb::container::stdb_vector<std::unique_ptr<::extra::Extra>> arg_extras, stdb::container::stdb_vector<std::unique_ptr<::extra::Extra>> arg_extras1);
+    Info(const stdb::memory::string& arg_info, std::unique_ptr<::extra::Extra> arg_extra, FastVec<std::unique_ptr<::extra::Extra>> arg_extras, FastVec<std::unique_ptr<::extra::Extra>> arg_extras1);
     Info(const Info& other) = default;
     Info(Info&& other) noexcept;
     ~Info() override;
@@ -94,15 +94,15 @@ struct Extra : FBE::Base
     ::extra::Info* info;
     ::extra::Info* info2;
     ::extra::Info info3;
-    stdb::container::stdb_vector<::extra::Info> infov;
-    stdb::container::stdb_vector<::extra::Info*> infopv;
+    FastVec<::extra::Info> infov;
+    FastVec<::extra::Info*> infopv;
     std::list<::extra::Info> infol;
     std::list<::extra::Info*> infopl;
 
     size_t fbe_type() const noexcept { return 2; }
 
     Extra();
-    Extra(int64_t arg_num, const stdb::memory::string& arg_data, std::unique_ptr<::extra::Info> arg_info, std::unique_ptr<::extra::Info> arg_info2, ::extra::Info&& arg_info3, stdb::container::stdb_vector<::extra::Info> arg_infov, stdb::container::stdb_vector<std::unique_ptr<::extra::Info>> arg_infopv, std::list<::extra::Info> arg_infol, std::list<std::unique_ptr<::extra::Info>> arg_infopl);
+    Extra(int64_t arg_num, const stdb::memory::string& arg_data, std::unique_ptr<::extra::Info> arg_info, std::unique_ptr<::extra::Info> arg_info2, ::extra::Info&& arg_info3, FastVec<::extra::Info> arg_infov, FastVec<std::unique_ptr<::extra::Info>> arg_infopv, std::list<::extra::Info> arg_infol, std::list<std::unique_ptr<::extra::Info>> arg_infopl);
     Extra(const Extra& other) = default;
     Extra(Extra&& other) noexcept;
     ~Extra() override;

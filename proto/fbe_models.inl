@@ -236,7 +236,7 @@ inline void FieldModelArray<T, N>::get(std::array<T, S>& values) const noexcept
 }
 
 template <typename T, size_t N>
-inline void FieldModelArray<T, N>::get(stdb::container::stdb_vector<T>& values) const noexcept
+inline void FieldModelArray<T, N>::get(FastVec<T>& values) const noexcept
 {
     values.clear();
     values.reserve(N);
@@ -246,7 +246,11 @@ inline void FieldModelArray<T, N>::get(stdb::container::stdb_vector<T>& values) 
     {
         T value = T();
         fbe_model.get(value);
+        #if defined(USING_STD_VECTOR)
+        values.emplace_back(value);
+        #else
         values.template emplace_back<Safety::Unsafe>(value);
+        #endif
         fbe_model.fbe_shift(fbe_model.fbe_size());
     }
 }
@@ -284,7 +288,7 @@ inline void FieldModelArray<T, N>::set(const std::array<T, S>& values) noexcept
 }
 
 template <typename T, size_t N>
-inline void FieldModelArray<T, N>::set(const stdb::container::stdb_vector<T>& values) noexcept
+inline void FieldModelArray<T, N>::set(const FastVec<T>& values) noexcept
 {
     assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
     if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
@@ -404,7 +408,7 @@ inline bool FieldModelVector<T>::verify() const noexcept
 }
 
 template <typename T>
-inline void FieldModelVector<T>::get(stdb::container::stdb_vector<T>& values) const noexcept
+inline void FieldModelVector<T>::get(FastVec<T>& values) const noexcept
 {
     values.clear();
 
@@ -419,7 +423,11 @@ inline void FieldModelVector<T>::get(stdb::container::stdb_vector<T>& values) co
     {
         T value = T();
         fbe_model.get(value);
+        #if defined(USING_STD_VECTOR)
+        values.emplace_back(std::move(value));
+        #else
         values.template emplace_back<Safety::Unsafe>(std::move(value));
+        #endif
         fbe_model.fbe_shift(fbe_model.fbe_size());
     }
 }
@@ -522,7 +530,7 @@ inline void FieldModelVector<T>::get(pmr::set<T>& values) const noexcept
 }
 
 template <typename T>
-inline void FieldModelVector<T>::set(const stdb::container::stdb_vector<T>& values) noexcept
+inline void FieldModelVector<T>::set(const FastVec<T>& values) noexcept
 {
     assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
     if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
