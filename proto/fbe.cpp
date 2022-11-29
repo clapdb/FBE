@@ -356,7 +356,7 @@ void FBEBuffer::attach(const void* data, size_t size, size_t offset)
     _offset = offset;
 }
 
-void FBEBuffer::attach(const stdb::container::stdb_vector<uint8_t>& buffer, size_t offset)
+void FBEBuffer::attach(const FastVec<uint8_t>& buffer, size_t offset)
 {
     assert((buffer.data() != nullptr) && "Invalid buffer!");
     if (buffer.data() == nullptr)
@@ -387,7 +387,7 @@ void FBEBuffer::clone(const void* data, size_t size, size_t offset)
     _offset = offset;
 }
 
-void FBEBuffer::clone(const stdb::container::stdb_vector<uint8_t>& buffer, size_t offset)
+void FBEBuffer::clone(const FastVec<uint8_t>& buffer, size_t offset)
 {
     assert((offset <= buffer.size()) && "Invalid offset!");
     if (offset > buffer.size())

@@ -37,7 +37,7 @@ struct Value;
 using Expr = std::variant<bool, int32_t, stdb::memory::string>;
 std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const Expr& value);
 
-using V = std::variant<stdb::memory::string, int32_t, double, ::variants::Simple, stdb::container::stdb_vector<::variants::Simple>, stdb::container::stdb_vector<int32_t>, std::unordered_map<int32_t, ::variants::Simple>, stdb::container::stdb_vector<FBE::buffer_t>, stdb::container::stdb_vector<stdb::memory::string>, std::unordered_map<int32_t, FBE::buffer_t>, std::unordered_map<stdb::memory::string, FBE::buffer_t>, ::variants::Expr>;
+using V = std::variant<stdb::memory::string, int32_t, double, ::variants::Simple, FastVec<::variants::Simple>, FastVec<int32_t>, std::unordered_map<int32_t, ::variants::Simple>, FastVec<FBE::buffer_t>, FastVec<stdb::memory::string>, std::unordered_map<int32_t, FBE::buffer_t>, std::unordered_map<stdb::memory::string, FBE::buffer_t>, ::variants::Expr>;
 std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const V& value);
 
 struct Simple

@@ -126,13 +126,13 @@ public:
     template <size_t S>
     void set(const std::array<TStruct*, S>& values) noexcept;
 
-    // Get the array as stdb::container::stdb_vector
-    void get(stdb::container::stdb_vector<TStruct>& values) const noexcept;
-    void get(stdb::container::stdb_vector<TStruct*>& values) const noexcept;
+    // Get the array as FastVec
+    void get(FastVec<TStruct>& values) const noexcept;
+    void get(FastVec<TStruct*>& values) const noexcept;
 
-    // Set the array as stdb::container::stdb_vector
-    void set(const stdb::container::stdb_vector<TStruct>& values) noexcept;
-    void set(const stdb::container::stdb_vector<TStruct*>& values) noexcept;
+    // Set the array as FastVec
+    void set(const FastVec<TStruct>& values) noexcept;
+    void set(const FastVec<TStruct*>& values) noexcept;
 
     // Get the array as pmr::vector
     void get(pmr::vector<TStruct>& values) const noexcept;
@@ -179,9 +179,9 @@ public:
     // Check if the vector is valid
     bool verify() const noexcept;
 
-    // Get the vector as stdb::container::stdb_vector
-    void get(stdb::container::stdb_vector<TStruct>& values) const noexcept;
-    void get(stdb::container::stdb_vector<TStruct*>& values) const noexcept;
+    // Get the vector as FastVec
+    void get(FastVec<TStruct>& values) const noexcept;
+    void get(FastVec<TStruct*>& values) const noexcept;
     // Get the vector as std::list
     void get(std::list<TStruct>& values) const noexcept;
     void get(std::list<TStruct*>& values) const noexcept;
@@ -189,9 +189,9 @@ public:
     void get(std::set<TStruct>& values) const noexcept;
     void get(std::set<TStruct*>& values) const noexcept;
 
-    // Set the vector as stdb::container::stdb_vector
-    void set(const stdb::container::stdb_vector<TStruct>& values) noexcept;
-    void set(const stdb::container::stdb_vector<TStruct*>& values) noexcept;
+    // Set the vector as FastVec
+    void set(const FastVec<TStruct>& values) noexcept;
+    void set(const FastVec<TStruct*>& values) noexcept;
     // Set the vector as std::list
     void set(const std::list<TStruct>& values) noexcept;
     void set(const std::list<TStruct*>& values) noexcept;

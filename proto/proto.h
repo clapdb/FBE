@@ -204,12 +204,12 @@ struct Account
     ::proto::State state;
     ::proto::Balance wallet;
     std::optional<::proto::Balance> asset;
-    stdb::container::stdb_vector<::proto::Order> orders;
+    FastVec<::proto::Order> orders;
 
     size_t fbe_type() const noexcept { return 3; }
 
     Account();
-    Account(int32_t arg_id, const stdb::memory::string& arg_name, const ::proto::State& arg_state, const ::proto::Balance& arg_wallet, const std::optional<::proto::Balance>& arg_asset, const stdb::container::stdb_vector<::proto::Order>& arg_orders);
+    Account(int32_t arg_id, const stdb::memory::string& arg_name, const ::proto::State& arg_state, const ::proto::Balance& arg_wallet, const std::optional<::proto::Balance>& arg_asset, const FastVec<::proto::Order>& arg_orders);
     Account(const Account& other) = default;
     Account(Account&& other) = default;
     ~Account() = default;

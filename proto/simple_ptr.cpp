@@ -19,7 +19,7 @@ Simple::Simple()
     , sm()
 {}
 
-Simple::Simple(const stdb::memory::string& arg_info, std::unique_ptr<::simple::Simple> arg_simple, int32_t arg_depth, stdb::container::stdb_vector<std::unique_ptr<::simple::Simple>> arg_spv, stdb::container::stdb_vector<::simple::Simple> arg_sv, std::map<int32_t, std::unique_ptr<::simple::Simple>> arg_spm, std::map<int32_t, ::simple::Simple> arg_sm)
+Simple::Simple(const stdb::memory::string& arg_info, std::unique_ptr<::simple::Simple> arg_simple, int32_t arg_depth, FastVec<std::unique_ptr<::simple::Simple>> arg_spv, FastVec<::simple::Simple> arg_sv, std::map<int32_t, std::unique_ptr<::simple::Simple>> arg_spm, std::map<int32_t, ::simple::Simple> arg_sm)
     : info(arg_info)
     , simple(arg_simple.release())
     , depth(arg_depth)
@@ -30,7 +30,11 @@ Simple::Simple(const stdb::memory::string& arg_info, std::unique_ptr<::simple::S
 {
     spv.reserve(arg_spv.size());
     for (auto& it : arg_spv)
+        #if defined(USING_STD_VECTOR)
+        spv.emplace_back(it.release());
+        #else
         spv.emplace_back<Safety::Unsafe>(it.release());
+        #endif
     for (auto& it: arg_spm)
         spm.emplace(it.first, it.second.release());
 }

@@ -61,6 +61,12 @@ namespace pmr = std::pmr;
 #include "container/stdb_vector.hpp"
 
 namespace FBE {
+    template <typename T>
+    #if defined(USING_STD_VECTOR)
+    using FastVec = std::vector<T>;
+    #else
+    using FastVec = stdb::container::stdb_vector<T>;
+    #endif
     using Safety = stdb::container::Safety;
 }
 
@@ -121,31 +127,31 @@ template<class... Ts> overloaded(Ts...) -> overloaded<Ts...>;  // deduction guid
 
 //! Bytes buffer type
 /*!
-    Represents bytes buffer which is a lightweight wrapper around stdb::container::stdb_vector<uint8_t>
+    Represents bytes buffer which is a lightweight wrapper around FastVec<uint8_t>
     with similar interface.
 */
 class buffer_t
 {
 public:
-    typedef stdb::container::stdb_vector<uint8_t>::Iterator iterator;
-    typedef stdb::container::stdb_vector<uint8_t>::ConstIterator const_iterator;
-    typedef stdb::container::stdb_vector<uint8_t>::ReverseIterator reverse_iterator;
-    typedef stdb::container::stdb_vector<uint8_t>::ConstReverseIterator const_reverse_iterator;
+    typedef FastVec<uint8_t>::iterator iterator;
+    typedef FastVec<uint8_t>::const_iterator const_iterator;
+    typedef FastVec<uint8_t>::reverse_iterator reverse_iterator;
+    typedef FastVec<uint8_t>::const_reverse_iterator const_reverse_iterator;
 
     buffer_t() = default;
     buffer_t(size_t capacity) { reserve(capacity); }
     buffer_t(const std::string& str) { assign(str); }
     buffer_t(size_t size, uint8_t value) { assign(size, value); }
     buffer_t(const uint8_t* data, size_t size) { assign(data, size); }
-    buffer_t(const stdb::container::stdb_vector<uint8_t>& other) : _data(other) {}
-    buffer_t(stdb::container::stdb_vector<uint8_t>&& other) : _data(std::move(other)) {}
+    buffer_t(const FastVec<uint8_t>& other) : _data(other) {}
+    buffer_t(FastVec<uint8_t>&& other) : _data(std::move(other)) {}
     buffer_t(const buffer_t& other) = default;
     buffer_t(buffer_t&& other) = default;
     ~buffer_t() = default;
 
     buffer_t& operator=(const std::string& str) { assign(str); return *this; }
-    buffer_t& operator=(const stdb::container::stdb_vector<uint8_t>& other) { _data = other; return *this; }
-    buffer_t& operator=(stdb::container::stdb_vector<uint8_t>&& other) { _data = std::move(other); return *this; }
+    buffer_t& operator=(const FastVec<uint8_t>& other) { _data = other; return *this; }
+    buffer_t& operator=(FastVec<uint8_t>&& other) { _data = std::move(other); return *this; }
     buffer_t& operator=(const buffer_t& other) = default;
     buffer_t& operator=(buffer_t&& other) = default;
 
@@ -160,8 +166,8 @@ public:
     size_t size() const { return _data.size(); }
     size_t max_size() const { return _data.max_size(); }
 
-    stdb::container::stdb_vector<uint8_t>& buffer() noexcept { return _data; }
-    const stdb::container::stdb_vector<uint8_t>& buffer() const noexcept { return _data; }
+    FastVec<uint8_t>& buffer() noexcept { return _data; }
+    const FastVec<uint8_t>& buffer() const noexcept { return _data; }
     uint8_t* data() noexcept { return _data.data(); }
     const uint8_t* data() const noexcept { return _data.data(); }
     uint8_t& at(size_t index) { return _data.at(index); }
@@ -176,14 +182,14 @@ public:
     void shrink_to_fit() { _data.shrink_to_fit(); }
 
     void assign(const std::string& str) { assign((const uint8_t*)str.c_str(), str.size()); }
-    void assign(const stdb::container::stdb_vector<uint8_t>& vec) { assign(vec.begin(), vec.end()); }
+    void assign(const FastVec<uint8_t>& vec) { assign(vec.begin(), vec.end()); }
     void assign(size_t size, uint8_t value) { _data.assign(size, value); }
     void assign(const uint8_t* data, size_t size) { _data.assign(data, data + size); }
     template <class InputIterator>
     void assign(InputIterator first, InputIterator last) { _data.assign(first, last); }
     iterator insert(const_iterator position, uint8_t value) { return _data.insert(position, value); }
     iterator insert(const_iterator position, const std::string& str) { return insert(position, (const uint8_t*)str.c_str(), str.size()); }
-    iterator insert(const_iterator position, const stdb::container::stdb_vector<uint8_t>& vec) { return insert(position, vec.begin(), vec.end()); }
+    iterator insert(const_iterator position, const FastVec<uint8_t>& vec) { return insert(position, vec.begin(), vec.end()); }
     iterator insert(const_iterator position, size_t size, uint8_t value) { return _data.insert(position, size, value); }
     iterator insert(const_iterator position, const uint8_t* data, size_t size) { return _data.insert(position, data, data + size); }
     template <class InputIterator>
@@ -228,7 +234,7 @@ public:
     { value1.swap(value2); }
 
 private:
-    stdb::container::stdb_vector<uint8_t> _data;
+    FastVec<uint8_t> _data;
 };
 
 //! PMR bytes buffer type
@@ -765,7 +771,7 @@ public:
     // Initialize the read buffer with the given byte buffer and offset
     explicit FBEBuffer(const void* data, size_t size, size_t offset = 0) { attach(data, size, offset); }
     // Initialize the read buffer with the given byte vector and offset
-    explicit FBEBuffer(const stdb::container::stdb_vector<uint8_t>& buffer, size_t offset = 0) { attach(buffer, offset); }
+    explicit FBEBuffer(const FastVec<uint8_t>& buffer, size_t offset = 0) { attach(buffer, offset); }
     // Initialize the read buffer with another buffer and offset
     explicit FBEBuffer(const FBEBuffer& buffer, size_t offset = 0) { attach(buffer.data(), buffer.size(), offset); }
     // Initialize the write buffer with the given capacity
@@ -787,12 +793,12 @@ public:
     // Attach the given buffer with a given offset to the current read buffer
     void attach(const void* data, size_t size, size_t offset = 0);
     // Attach the given byte vector with a given offset to the current read buffer
-    void attach(const stdb::container::stdb_vector<uint8_t>& buffer, size_t offset = 0);
+    void attach(const FastVec<uint8_t>& buffer, size_t offset = 0);
 
     // Clone the given buffer with a given offset to the current buffer
     void clone(const void* data, size_t size, size_t offset = 0);
     // Clone the given vector with a given offset to the current buffer
-    void clone(const stdb::container::stdb_vector<uint8_t>& buffer, size_t offset = 0);
+    void clone(const FastVec<uint8_t>& buffer, size_t offset = 0);
 
     // Allocate memory in the current write buffer and return offset to the allocated memory block
     size_t allocate(size_t size);
@@ -836,7 +842,7 @@ public:
 
     // Attach the model buffer
     void attach(const void* data, size_t size, size_t offset = 0) { _buffer->attach(data, size, offset); }
-    void attach(const stdb::container::stdb_vector<uint8_t>& buffer, size_t offset = 0) { _buffer->attach(buffer, offset); }
+    void attach(const FastVec<uint8_t>& buffer, size_t offset = 0) { _buffer->attach(buffer, offset); }
     void attach(const FBEBuffer& buffer, size_t offset = 0) { _buffer->attach(buffer.data(), buffer.size(), offset); }
 
     // Model buffer operations
