@@ -63,6 +63,11 @@ add_subdirectory("modules/cpp-optparse")
 # Link libraries
 #list(APPEND LINKLIBS cppcommon)
 
+option(USING_STD_VECTOR "using std vector" OFF)
+if (USING_STD_VECTOR)
+  add_definitions(-DUSING_STD_VECTOR)
+endif()
+
 # System directories
 #include_directories("${CMAKE_CURRENT_SOURCE_DIR}/CppCommon")
 include_directories(SYSTEM "${CMAKE_CURRENT_SOURCE_DIR}/modules")

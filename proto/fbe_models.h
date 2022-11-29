@@ -186,7 +186,7 @@ public:
     template <size_t N>
     size_t get(std::array<uint8_t, N>& data) const noexcept { return get(data.data(), data.size()); }
     // Get the bytes value
-    void get(stdb::container::stdb_vector<uint8_t>& value) const noexcept;
+    void get(FastVec<uint8_t>& value) const noexcept;
     // Get the bytes value
     void get(buffer_t& value) const noexcept { get(value.buffer()); }
 
@@ -199,7 +199,7 @@ public:
     template <size_t N>
     void set(const std::array<uint8_t, N>& data) { set(data.data(), data.size()); }
     // Set the bytes value
-    void set(const stdb::container::stdb_vector<uint8_t>& value) { set(value.data(), value.size()); }
+    void set(const FastVec<uint8_t>& value) { set(value.data(), value.size()); }
     // Set the bytes value
     void set(const buffer_t& value) { set(value.buffer()); }
 
@@ -452,8 +452,8 @@ public:
     // Get the array as std::array
     template <size_t S>
     void get(std::array<T, S>& values) const noexcept;
-    // Get the array as stdb::container::stdb_vector
-    void get(stdb::container::stdb_vector<T>& values) const noexcept;
+    // Get the array as FastVec
+    void get(FastVec<T>& values) const noexcept;
 
     // Set the array as C-array
     template <size_t S>
@@ -461,8 +461,8 @@ public:
     // Set the array as std::array
     template <size_t S>
     void set(const std::array<T, S>& values) noexcept;
-    // Set the array as stdb::container::stdb_vector
-    void set(const stdb::container::stdb_vector<T>& values) noexcept;
+    // Set the array as FastVec
+    void set(const FastVec<T>& values) noexcept;
 
 private:
     FBEBuffer& _buffer;
@@ -503,8 +503,8 @@ public:
     // Check if the vector is valid
     bool verify() const noexcept;
 
-    // Get the vector as stdb::container::stdb_vector
-    void get(stdb::container::stdb_vector<T>& values) const noexcept;
+    // Get the vector as FastVec
+    void get(FastVec<T>& values) const noexcept;
     // Get the vector as std::list
     void get(std::list<T>& values) const noexcept;
     // Get the vector as std::set
@@ -517,8 +517,8 @@ public:
     // Get the vector as pmr::set
     void get(pmr::set<T>& values) const noexcept;
 
-    // Set the vector as stdb::container::stdb_vector
-    void set(const stdb::container::stdb_vector<T>& values) noexcept;
+    // Set the vector as FastVec
+    void set(const FastVec<T>& values) noexcept;
     // Set the vector as std::list
     void set(const std::list<T>& values) noexcept;
     // Set the vector as std::set

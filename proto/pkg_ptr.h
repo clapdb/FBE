@@ -88,13 +88,13 @@ namespace pkg {
 
 struct Detail : FBE::Base
 {
-    stdb::container::stdb_vector<::osa::Extra> extrav;
+    FastVec<::osa::Extra> extrav;
     std::map<int32_t, ::osa::Extra> extram;
 
     size_t fbe_type() const noexcept { return 2; }
 
     Detail();
-    Detail(stdb::container::stdb_vector<::osa::Extra> arg_extrav, std::map<int32_t, ::osa::Extra> arg_extram);
+    Detail(FastVec<::osa::Extra> arg_extrav, std::map<int32_t, ::osa::Extra> arg_extram);
     Detail(const Detail& other) = default;
     Detail(Detail&& other) noexcept;
     ~Detail() override;

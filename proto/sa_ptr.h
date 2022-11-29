@@ -172,12 +172,12 @@ struct Complex : FBE::Base
     std::optional<::sa::Sex> sex;
     std::optional<::sa::MyFLags> flag;
     std::optional<::sa::Extra> extra;
-    stdb::container::stdb_vector<int64_t> nums;
+    FastVec<int64_t> nums;
 
     size_t fbe_type() const noexcept { return 3; }
 
     Complex();
-    Complex(const stdb::memory::string& arg_name, std::optional<::sa::Sex> arg_sex, std::optional<::sa::MyFLags> arg_flag, std::optional<::sa::Extra> arg_extra, stdb::container::stdb_vector<int64_t> arg_nums);
+    Complex(const stdb::memory::string& arg_name, std::optional<::sa::Sex> arg_sex, std::optional<::sa::MyFLags> arg_flag, std::optional<::sa::Extra> arg_extra, FastVec<int64_t> arg_nums);
     Complex(const Complex& other) = default;
     Complex(Complex&& other) noexcept;
     ~Complex() override;
