@@ -63,8 +63,8 @@ add_subdirectory("modules/cpp-optparse")
 # Link libraries
 #list(APPEND LINKLIBS cppcommon)
 
-option(USING_STD_VECTOR "using std vector" OFF)
-if (USING_STD_VECTOR)
+option(FBE_USING_STD_VECTOR "using std vector" OFF)
+if (FBE_USING_STD_VECTOR)
   add_definitions(-DUSING_STD_VECTOR)
 endif()
 
