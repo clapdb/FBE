@@ -190,7 +190,7 @@ Account::Account()
     , orders()
 {}
 
-Account::Account(int32_t arg_id, const stdb::memory::string& arg_name, const ::proto::State& arg_state, const ::proto::Balance& arg_wallet, const std::optional<::proto::Balance>& arg_asset, const stdb::container::stdb_vector<::proto::Order>& arg_orders)
+Account::Account(int32_t arg_id, const stdb::memory::string& arg_name, const ::proto::State& arg_state, const ::proto::Balance& arg_wallet, const std::optional<::proto::Balance>& arg_asset, const FastVec<::proto::Order>& arg_orders)
     : id(arg_id)
     , name(arg_name)
     , state(arg_state)

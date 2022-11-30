@@ -16,7 +16,7 @@ Info::Info()
     , extras1()
 {}
 
-Info::Info(const stdb::memory::string& arg_info, std::unique_ptr<::extra::Extra> arg_extra, stdb::container::stdb_vector<std::unique_ptr<::extra::Extra>> arg_extras, stdb::container::stdb_vector<std::unique_ptr<::extra::Extra>> arg_extras1)
+Info::Info(const stdb::memory::string& arg_info, std::unique_ptr<::extra::Extra> arg_extra, FastVec<std::unique_ptr<::extra::Extra>> arg_extras, FastVec<std::unique_ptr<::extra::Extra>> arg_extras1)
     : info(arg_info)
     , extra(arg_extra.release())
     , extras()
@@ -24,10 +24,18 @@ Info::Info(const stdb::memory::string& arg_info, std::unique_ptr<::extra::Extra>
 {
     extras.reserve(arg_extras.size());
     for (auto& it : arg_extras)
+        #if defined(USING_STD_VECTOR)
+        extras.emplace_back(it.release());
+        #else
         extras.emplace_back<Safety::Unsafe>(it.release());
+        #endif
     extras1.reserve(arg_extras1.size());
     for (auto& it : arg_extras1)
+        #if defined(USING_STD_VECTOR)
+        extras1.emplace_back(it.release());
+        #else
         extras1.emplace_back<Safety::Unsafe>(it.release());
+        #endif
 }
 
 Info::Info([[maybe_unused]] Info&& other) noexcept
@@ -144,7 +152,7 @@ Extra::Extra()
     , infopl()
 {}
 
-Extra::Extra(int64_t arg_num, const stdb::memory::string& arg_data, std::unique_ptr<::extra::Info> arg_info, std::unique_ptr<::extra::Info> arg_info2, ::extra::Info&& arg_info3, stdb::container::stdb_vector<::extra::Info> arg_infov, stdb::container::stdb_vector<std::unique_ptr<::extra::Info>> arg_infopv, std::list<::extra::Info> arg_infol, std::list<std::unique_ptr<::extra::Info>> arg_infopl)
+Extra::Extra(int64_t arg_num, const stdb::memory::string& arg_data, std::unique_ptr<::extra::Info> arg_info, std::unique_ptr<::extra::Info> arg_info2, ::extra::Info&& arg_info3, FastVec<::extra::Info> arg_infov, FastVec<std::unique_ptr<::extra::Info>> arg_infopv, std::list<::extra::Info> arg_infol, std::list<std::unique_ptr<::extra::Info>> arg_infopl)
     : num(arg_num)
     , data(arg_data)
     , info(arg_info.release())
@@ -157,7 +165,11 @@ Extra::Extra(int64_t arg_num, const stdb::memory::string& arg_data, std::unique_
 {
     infopv.reserve(arg_infopv.size());
     for (auto& it : arg_infopv)
+        #if defined(USING_STD_VECTOR)
+        infopv.emplace_back(it.release());
+        #else
         infopv.emplace_back<Safety::Unsafe>(it.release());
+        #endif
     for (auto& it : arg_infopl)
         infopl.emplace_back(it.release());
 }

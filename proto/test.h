@@ -543,21 +543,21 @@ namespace test {
 
 struct StructVector
 {
-    stdb::container::stdb_vector<uint8_t> f1;
-    stdb::container::stdb_vector<std::optional<uint8_t>> f2;
-    stdb::container::stdb_vector<FBE::buffer_t> f3;
-    stdb::container::stdb_vector<std::optional<FBE::buffer_t>> f4;
-    stdb::container::stdb_vector<::test::EnumSimple> f5;
-    stdb::container::stdb_vector<std::optional<::test::EnumSimple>> f6;
-    stdb::container::stdb_vector<::test::FlagsSimple> f7;
-    stdb::container::stdb_vector<std::optional<::test::FlagsSimple>> f8;
-    stdb::container::stdb_vector<::test::StructSimple> f9;
-    stdb::container::stdb_vector<std::optional<::test::StructSimple>> f10;
+    FastVec<uint8_t> f1;
+    FastVec<std::optional<uint8_t>> f2;
+    FastVec<FBE::buffer_t> f3;
+    FastVec<std::optional<FBE::buffer_t>> f4;
+    FastVec<::test::EnumSimple> f5;
+    FastVec<std::optional<::test::EnumSimple>> f6;
+    FastVec<::test::FlagsSimple> f7;
+    FastVec<std::optional<::test::FlagsSimple>> f8;
+    FastVec<::test::StructSimple> f9;
+    FastVec<std::optional<::test::StructSimple>> f10;
 
     size_t fbe_type() const noexcept { return 130; }
 
     StructVector();
-    StructVector(const stdb::container::stdb_vector<uint8_t>& arg_f1, const stdb::container::stdb_vector<std::optional<uint8_t>>& arg_f2, const stdb::container::stdb_vector<FBE::buffer_t>& arg_f3, const stdb::container::stdb_vector<std::optional<FBE::buffer_t>>& arg_f4, const stdb::container::stdb_vector<::test::EnumSimple>& arg_f5, const stdb::container::stdb_vector<std::optional<::test::EnumSimple>>& arg_f6, const stdb::container::stdb_vector<::test::FlagsSimple>& arg_f7, const stdb::container::stdb_vector<std::optional<::test::FlagsSimple>>& arg_f8, const stdb::container::stdb_vector<::test::StructSimple>& arg_f9, const stdb::container::stdb_vector<std::optional<::test::StructSimple>>& arg_f10);
+    StructVector(const FastVec<uint8_t>& arg_f1, const FastVec<std::optional<uint8_t>>& arg_f2, const FastVec<FBE::buffer_t>& arg_f3, const FastVec<std::optional<FBE::buffer_t>>& arg_f4, const FastVec<::test::EnumSimple>& arg_f5, const FastVec<std::optional<::test::EnumSimple>>& arg_f6, const FastVec<::test::FlagsSimple>& arg_f7, const FastVec<std::optional<::test::FlagsSimple>>& arg_f8, const FastVec<::test::StructSimple>& arg_f9, const FastVec<std::optional<::test::StructSimple>>& arg_f10);
     StructVector(const StructVector& other) = default;
     StructVector(StructVector&& other) = default;
     ~StructVector() = default;

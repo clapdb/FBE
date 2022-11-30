@@ -28,20 +28,27 @@
 #include <iostream>
 #include <vector>
 
+template <typename T>
+#if defined(USING_STD_VECTOR)
+using FastVec = std::vector<T>;
+#else
+using FastVec = stdb::container::stdb_vector<T>;
+#endif
+
 TEST_CASE("Serialization (simple self-reference)", "[Ptr-based FBE]")
 {
-    stdb::container::stdb_vector<std::unique_ptr<::simple::Simple>> v;
+    FastVec<std::unique_ptr<::simple::Simple>> v;
     v.push_back(std::make_unique<::simple::Simple>(::simple::Simple(
-        "v-info", nullptr, 1024, stdb::container::stdb_vector<std::unique_ptr<::simple::Simple>>(),
-        stdb::container::stdb_vector<::simple::Simple>(),
+        "v-info", nullptr, 1024, FastVec<std::unique_ptr<::simple::Simple>>(),
+        FastVec<::simple::Simple>(),
         std::map<int32_t, std::unique_ptr<::simple::Simple>>(),
         std::map<int32_t, ::simple::Simple>())));
 
     auto simplep = std::make_unique<::simple::Simple>(
         ::simple::Simple(
             "single-info", nullptr, 2048,
-            stdb::container::stdb_vector<std::unique_ptr<::simple::Simple>>(),
-            stdb::container::stdb_vector<::simple::Simple>(),
+            FastVec<std::unique_ptr<::simple::Simple>>(),
+            FastVec<::simple::Simple>(),
             std::map<int32_t, std::unique_ptr<::simple::Simple>>(),
             std::map<int32_t, ::simple::Simple>()
         )
@@ -59,20 +66,20 @@ TEST_CASE("Serialization (simple self-reference)", "[Ptr-based FBE]")
                     "info 3",
                     std::make_unique<::simple::Simple>( 
                         "info 4", nullptr, 4, std::move(v),
-                        stdb::container::stdb_vector<::simple::Simple>(),
+                        FastVec<::simple::Simple>(),
                         std::map<int32_t, std::unique_ptr<::simple::Simple>>(),
                         std::map<int32_t, ::simple::Simple>()
                     ),
-                    3, stdb::container::stdb_vector<std::unique_ptr<::simple::Simple>>(),
-                    stdb::container::stdb_vector<::simple::Simple>(),
+                    3, FastVec<std::unique_ptr<::simple::Simple>>(),
+                    FastVec<::simple::Simple>(),
                     std::map<int32_t, std::unique_ptr<::simple::Simple>>(),
                     std::map<int32_t, ::simple::Simple>())),
-                2, stdb::container::stdb_vector<std::unique_ptr<::simple::Simple>>(),
-                stdb::container::stdb_vector<::simple::Simple>(),
+                2, FastVec<std::unique_ptr<::simple::Simple>>(),
+                FastVec<::simple::Simple>(),
                 std::map<int32_t, std::unique_ptr<::simple::Simple>>(),
                 std::map<int32_t, ::simple::Simple>())),
-            1, stdb::container::stdb_vector<std::unique_ptr<::simple::Simple>>(),
-            stdb::container::stdb_vector<::simple::Simple>(),
+            1, FastVec<std::unique_ptr<::simple::Simple>>(),
+            FastVec<::simple::Simple>(),
             std::map<int32_t, std::unique_ptr<::simple::Simple>>(),
             std::map<int32_t, ::simple::Simple>()),
         10,
@@ -163,14 +170,14 @@ TEST_CASE("Serialization (extra circular-dependency)", "[Ptr-based FBE]")
                 ::extra::Info("v-embedded-struct-info-data", nullptr, {}, {})),
             std::make_unique<::extra::Info>(
                 ::extra::Info("v-embedded-struct-info2-data", nullptr, {}, {})),
-            std::move(embedded_info), stdb::container::stdb_vector<::extra::Info>(),
-            stdb::container::stdb_vector<std::unique_ptr<::extra::Info>>(),
+            std::move(embedded_info), FastVec<::extra::Info>(),
+            FastVec<std::unique_ptr<::extra::Info>>(),
             std::list<::extra::Info>(),
             std::list<std::unique_ptr<::extra::Info>>()),
         {},
         {}};
-    stdb::container::stdb_vector<::extra::Info> v;
-    stdb::container::stdb_vector<std::unique_ptr<::extra::Info>> pv;
+    FastVec<::extra::Info> v;
+    FastVec<std::unique_ptr<::extra::Info>> pv;
     v.emplace_back(std::move(embedded_info3));
     pv.emplace_back(std::make_unique<::extra::Info>(::extra::Info(
         "pv-info-data",
@@ -180,8 +187,8 @@ TEST_CASE("Serialization (extra circular-dependency)", "[Ptr-based FBE]")
                 ::extra::Info("pv-embedded-struct-info-data", nullptr, {}, {})),
             std::make_unique<::extra::Info>(
                 ::extra::Info("pv-embedded-struct-info2-data", nullptr, {}, {})),
-            std::move(embedded_info2), stdb::container::stdb_vector<::extra::Info>(),
-            stdb::container::stdb_vector<std::unique_ptr<::extra::Info>>(),
+            std::move(embedded_info2), FastVec<::extra::Info>(),
+            FastVec<std::unique_ptr<::extra::Info>>(),
             std::list<::extra::Info>(),
             std::list<std::unique_ptr<::extra::Info>>()),
         {}, {})));
@@ -558,7 +565,7 @@ TEST_CASE("Serialization (variant)", "[Ptr-based FBE]") {
     }
 
     SECTION ("vector of struct") {
-        stdb::container::stdb_vector<::variants_ptr::Simple> v;
+        FastVec<::variants_ptr::Simple> v;
         v.emplace_back(::variants_ptr::Simple{"simple1"});
         v.emplace_back(::variants_ptr::Simple{"simple2"});
 
@@ -588,7 +595,7 @@ TEST_CASE("Serialization (variant)", "[Ptr-based FBE]") {
     }
 
     SECTION ("vector of primitive type") {
-        stdb::container::stdb_vector<int32_t> v {1,2,3};
+        FastVec<int32_t> v {1,2,3};
 
         ::variants_ptr::Value value;
         REQUIRE(value.v.index() == 0);
@@ -647,8 +654,8 @@ TEST_CASE("Serialization (variant)", "[Ptr-based FBE]") {
     }
     
     SECTION ("container of bytes") {
-        stdb::container::stdb_vector<uint8_t> v {65, 66, 67, 68, 69};
-        stdb::container::stdb_vector<FBE::buffer_t> bytes_v;
+        FastVec<uint8_t> v {65, 66, 67, 68, 69};
+        FastVec<FBE::buffer_t> bytes_v;
         bytes_v.emplace_back(FBE::buffer_t(v));
 
         ::variants_ptr::Value value;
@@ -676,7 +683,7 @@ TEST_CASE("Serialization (variant)", "[Ptr-based FBE]") {
     }
     
     SECTION ("vector of string") {
-        stdb::container::stdb_vector<stdb::memory::string> string_v {"hello", "world"};
+        FastVec<stdb::memory::string> string_v {"hello", "world"};
 
         ::variants_ptr::Value value;
         REQUIRE(value.v.index() == 0);
@@ -705,7 +712,7 @@ TEST_CASE("Serialization (variant)", "[Ptr-based FBE]") {
 
     SECTION ("hash with primitive and bytes") {
         std::unordered_map<int32_t, FBE::buffer_t> m;
-        stdb::container::stdb_vector<uint8_t> v {65, 66, 67, 68, 69};
+        FastVec<uint8_t> v {65, 66, 67, 68, 69};
         m.emplace(42, FBE::buffer_t(v));
 
         ::variants_ptr::Value value;
@@ -734,7 +741,7 @@ TEST_CASE("Serialization (variant)", "[Ptr-based FBE]") {
 
     SECTION ("hash with string and bytes") {
         std::unordered_map<stdb::memory::string, FBE::buffer_t> m;
-        stdb::container::stdb_vector<uint8_t> v {65, 66, 67, 68, 69};
+        FastVec<uint8_t> v {65, 66, 67, 68, 69};
         m.emplace("hello world", FBE::buffer_t(v));
 
         ::variants_ptr::Value value;
@@ -762,7 +769,7 @@ TEST_CASE("Serialization (variant)", "[Ptr-based FBE]") {
     }
 
     SECTION ("vector of pointer") {
-        stdb::container::stdb_vector<::variants_ptr::Simple*> v;
+        FastVec<::variants_ptr::Simple*> v;
         auto simple1 = std::make_unique<::variants_ptr::Simple>("simple1");
         auto simple2 = std::make_unique<::variants_ptr::Simple>("simple2");
         v.emplace_back(simple1.get());
@@ -877,11 +884,11 @@ TEST_CASE("Serialization (import template)", "[Ptr-based FBE]") {
         ::variants::Expr expr {"42"};
         line.v.emplace<::variants::Expr>(std::move(expr));
 
-        stdb::container::stdb_vector<::variants::Simple> vs;
+        FastVec<::variants::Simple> vs;
         vs.emplace_back(::variants::Simple{"simple1"});
         vs.emplace_back(::variants::Simple{"simple2"});\
         ::variants::V v1;
-        v1.emplace<stdb::container::stdb_vector<::variants::Simple>>(std::move(vs));
+        v1.emplace<FastVec<::variants::Simple>>(std::move(vs));
         line.vv.emplace_back(std::move(v1));
         ::variants::V v2 {stdb::memory::string("hello")};
         line.vv.emplace_back(std::move(v2));
@@ -908,10 +915,10 @@ TEST_CASE("Serialization (import template)", "[Ptr-based FBE]") {
 
         REQUIRE(std::holds_alternative<::variants::Expr>(line_copy.v));
         REQUIRE(line_copy.vv.size() == 2);
-        REQUIRE(std::holds_alternative<stdb::container::stdb_vector<::variants::Simple>>(line_copy.vv.at(0)));
-        REQUIRE(std::get<stdb::container::stdb_vector<::variants::Simple>>(line_copy.vv.at(0)).size() == 2);
-        REQUIRE(std::get<stdb::container::stdb_vector<::variants::Simple>>(line_copy.vv.at(0)).at(0).name == "simple1");
-        REQUIRE(std::get<stdb::container::stdb_vector<::variants::Simple>>(line_copy.vv.at(0)).at(1).name == "simple2");
+        REQUIRE(std::holds_alternative<FastVec<::variants::Simple>>(line_copy.vv.at(0)));
+        REQUIRE(std::get<FastVec<::variants::Simple>>(line_copy.vv.at(0)).size() == 2);
+        REQUIRE(std::get<FastVec<::variants::Simple>>(line_copy.vv.at(0)).at(0).name == "simple1");
+        REQUIRE(std::get<FastVec<::variants::Simple>>(line_copy.vv.at(0)).at(1).name == "simple2");
         REQUIRE(std::holds_alternative<stdb::memory::string>(line_copy.vv.at(1)));
         REQUIRE(std::get<stdb::memory::string>(line_copy.vv.at(1)) == "hello");
         REQUIRE(std::holds_alternative<stdb::memory::string>(line_copy.vv.at(1)));
@@ -957,8 +964,8 @@ TEST_CASE("Serialization (import template)", "[Ptr-based FBE]") {
     SECTION("struct") {
         ::template_variant::Line3 line;
 
-        stdb::container::stdb_vector<uint8_t> v {65, 66, 67, 68, 69};
-        stdb::container::stdb_vector<FBE::buffer_t> bytes_v;
+        FastVec<uint8_t> v {65, 66, 67, 68, 69};
+        FastVec<FBE::buffer_t> bytes_v;
         bytes_v.emplace_back(FBE::buffer_t(v));
 
         REQUIRE(line.value.v.index() == 0);

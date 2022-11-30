@@ -322,7 +322,7 @@ size_t FieldModel<buffer_t>::get(void* data, size_t size) const noexcept
     return result;
 }
 
-void FieldModel<buffer_t>::get(stdb::container::stdb_vector<uint8_t>& value) const noexcept
+void FieldModel<buffer_t>::get(FastVec<uint8_t>& value) const noexcept
 {
     value.clear();
 
