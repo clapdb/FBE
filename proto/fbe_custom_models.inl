@@ -167,7 +167,7 @@ inline void FieldModelCustomArray<T, TStruct, N>::set(const std::array<TStruct*,
 }
 
 template <typename T, typename TStruct, size_t N>
-inline void FieldModelCustomArray<T, TStruct, N>::get(stdb::container::stdb_vector<TStruct>& values) const noexcept
+inline void FieldModelCustomArray<T, TStruct, N>::get(FastVec<TStruct>& values) const noexcept
 {
     values.clear();
     values.reserve(N);
@@ -177,13 +177,17 @@ inline void FieldModelCustomArray<T, TStruct, N>::get(stdb::container::stdb_vect
     {
         TStruct value;
         fbe_model.get(value);
+        #if defined(USING_STD_VECTOR)
+        values.emplace_back(std::move(value));
+        #else
         values.template emplace_back<Safety::Unsafe>(std::move(value));
+        #endif
         fbe_model.fbe_shift(fbe_model.fbe_size());
     }
 }
 
 template <typename T, typename TStruct, size_t N>
-inline void FieldModelCustomArray<T, TStruct, N>::get(stdb::container::stdb_vector<TStruct*>& values) const noexcept
+inline void FieldModelCustomArray<T, TStruct, N>::get(FastVec<TStruct*>& values) const noexcept
 {
     values.clear();
     values.reserve(N);
@@ -193,13 +197,17 @@ inline void FieldModelCustomArray<T, TStruct, N>::get(stdb::container::stdb_vect
     {
         TStruct* value = nullptr;
         fbe_model.get(&value);
+        #if defined(USING_STD_VECTOR)
+        values.emplace_back(std::move(value));
+        #else
         values.template emplace_back<Safety::Unsafe>(std::move(value));
+        #endif
         fbe_model.fbe_shift(fbe_model.fbe_size());
     }
 }
 
 template <typename T, typename TStruct, size_t N>
-inline void FieldModelCustomArray<T, TStruct, N>::set(const stdb::container::stdb_vector<TStruct>& values) noexcept
+inline void FieldModelCustomArray<T, TStruct, N>::set(const FastVec<TStruct>& values) noexcept
 {
     assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
     if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
@@ -214,7 +222,7 @@ inline void FieldModelCustomArray<T, TStruct, N>::set(const stdb::container::std
 }
 
 template <typename T, typename TStruct, size_t N>
-inline void FieldModelCustomArray<T, TStruct, N>::set(const stdb::container::stdb_vector<TStruct*>& values) noexcept
+inline void FieldModelCustomArray<T, TStruct, N>::set(const FastVec<TStruct*>& values) noexcept
 {
     assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
     if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
@@ -239,7 +247,11 @@ inline void FieldModelCustomArray<T, TStruct, N>::get(pmr::vector<TStruct>& valu
     {
         TStruct value;
         fbe_model.get(value);
+        #if defined(USING_STD_VECTOR)
         values.emplace_back(std::move(value));
+        #else
+        values.emplace_back(std::move(value));
+        #endif
         fbe_model.fbe_shift(fbe_model.fbe_size());
     }
 }
@@ -255,7 +267,11 @@ inline void FieldModelCustomArray<T, TStruct, N>::get(pmr::vector<TStruct*>& val
     {
         TStruct* value = nullptr;
         fbe_model.get(&value);
+        #if defined(USING_STD_VECTOR)
         values.emplace_back(std::move(value));
+        #else
+        values.emplace_back(std::move(value));
+        #endif
         fbe_model.fbe_shift(fbe_model.fbe_size());
     }
 }
@@ -396,7 +412,7 @@ inline bool FieldModelCustomVector<T, TStruct>::verify() const noexcept
 }
 
 template <typename T, typename TStruct>
-inline void FieldModelCustomVector<T, TStruct>::get(stdb::container::stdb_vector<TStruct>& values) const noexcept
+inline void FieldModelCustomVector<T, TStruct>::get(FastVec<TStruct>& values) const noexcept
 {
     values.clear();
 
@@ -411,13 +427,17 @@ inline void FieldModelCustomVector<T, TStruct>::get(stdb::container::stdb_vector
     {
         TStruct value = TStruct();
         fbe_model.get(value);
+        #if defined(USING_STD_VECTOR)
+        values.emplace_back(std::move(value));
+        #else
         values.template emplace_back<Safety::Unsafe>(std::move(value));
+        #endif
         fbe_model.fbe_shift(fbe_model.fbe_size());
     }
 }
 
 template <typename T, typename TStruct>
-inline void FieldModelCustomVector<T, TStruct>::get(stdb::container::stdb_vector<TStruct*>& values) const noexcept
+inline void FieldModelCustomVector<T, TStruct>::get(FastVec<TStruct*>& values) const noexcept
 {
     values.clear();
 
@@ -432,7 +452,11 @@ inline void FieldModelCustomVector<T, TStruct>::get(stdb::container::stdb_vector
     {
         TStruct* value = nullptr;
         fbe_model.get(&value);
+        #if defined(USING_STD_VECTOR)
+        values.emplace_back(value);
+        #else
         values.template emplace_back<Safety::Unsafe>(value);
+        #endif
         fbe_model.fbe_shift(fbe_model.fbe_size());
     }
 }
@@ -514,7 +538,7 @@ inline void FieldModelCustomVector<T, TStruct>::get(std::set<TStruct*>& values) 
 }
 
 template <typename T, typename TStruct>
-inline void FieldModelCustomVector<T, TStruct>::set(const stdb::container::stdb_vector<TStruct>& values) noexcept
+inline void FieldModelCustomVector<T, TStruct>::set(const FastVec<TStruct>& values) noexcept
 {
     assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
     if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
@@ -529,7 +553,7 @@ inline void FieldModelCustomVector<T, TStruct>::set(const stdb::container::stdb_
 }
 
 template <typename T, typename TStruct>
-inline void FieldModelCustomVector<T, TStruct>::set(const stdb::container::stdb_vector<TStruct*>& values) noexcept
+inline void FieldModelCustomVector<T, TStruct>::set(const FastVec<TStruct*>& values) noexcept
 {
     assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
     if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
@@ -619,7 +643,11 @@ inline void FieldModelCustomVector<T, TStruct>::get(pmr::vector<TStruct>& values
     {
         TStruct value = TStruct();
         fbe_model.get(value);
+        #if defined(USING_STD_VECTOR)
         values.emplace_back(std::move(value));
+        #else
+        values.emplace_back(std::move(value));
+        #endif
         fbe_model.fbe_shift(fbe_model.fbe_size());
     }
 }
@@ -640,7 +668,11 @@ inline void FieldModelCustomVector<T, TStruct>::get(pmr::vector<TStruct*>& value
     {
         TStruct* value = nullptr;
         fbe_model.get(&value);
+        #if defined(USING_STD_VECTOR)
         values.emplace_back(value);
+        #else
+        values.emplace_back(value);
+        #endif
         fbe_model.fbe_shift(fbe_model.fbe_size());
     }
 }

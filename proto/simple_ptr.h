@@ -38,15 +38,15 @@ struct Simple : FBE::Base
     stdb::memory::string info;
     ::simple::Simple* simple;
     int32_t depth;
-    stdb::container::stdb_vector<::simple::Simple*> spv;
-    stdb::container::stdb_vector<::simple::Simple> sv;
+    FastVec<::simple::Simple*> spv;
+    FastVec<::simple::Simple> sv;
     std::map<int32_t, ::simple::Simple*> spm;
     std::map<int32_t, ::simple::Simple> sm;
 
     size_t fbe_type() const noexcept { return 1; }
 
     Simple();
-    Simple(const stdb::memory::string& arg_info, std::unique_ptr<::simple::Simple> arg_simple, int32_t arg_depth, stdb::container::stdb_vector<std::unique_ptr<::simple::Simple>> arg_spv, stdb::container::stdb_vector<::simple::Simple> arg_sv, std::map<int32_t, std::unique_ptr<::simple::Simple>> arg_spm, std::map<int32_t, ::simple::Simple> arg_sm);
+    Simple(const stdb::memory::string& arg_info, std::unique_ptr<::simple::Simple> arg_simple, int32_t arg_depth, FastVec<std::unique_ptr<::simple::Simple>> arg_spv, FastVec<::simple::Simple> arg_sv, std::map<int32_t, std::unique_ptr<::simple::Simple>> arg_spm, std::map<int32_t, ::simple::Simple> arg_sm);
     Simple(const Simple& other) = default;
     Simple(Simple&& other) noexcept;
     ~Simple() override;
