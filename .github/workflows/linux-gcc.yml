@@ -17,7 +17,7 @@ jobs:
       - name: 'Setup gcc'
         uses: egor-tensin/setup-gcc@v1
         with:
-          version: 11
+          version: 12
 
       - name: 'Setup cmake'
         run: cmake --version

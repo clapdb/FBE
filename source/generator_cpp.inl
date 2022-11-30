@@ -361,18 +361,18 @@ public:
 )CODE";
 
     std::string code_extra = R"CODE(
-    // Get the array as std::vector
-    void get(std::vector<TStruct>& values) const noexcept;
-    void get(std::vector<TStruct*>& values) const noexcept;
+    // Get the array as stdb::container::stdb_vector
+    void get(stdb::container::stdb_vector<TStruct>& values) const noexcept;
+    void get(stdb::container::stdb_vector<TStruct*>& values) const noexcept;
 
-    // Set the array as std::vector
-    void set(const std::vector<TStruct>& values) noexcept;
-    void set(const std::vector<TStruct*>& values) noexcept;
+    // Set the array as stdb::container::stdb_vector
+    void set(const stdb::container::stdb_vector<TStruct>& values) noexcept;
+    void set(const stdb::container::stdb_vector<TStruct*>& values) noexcept;
 )CODE";
 
     code += code_extra;
 
-    code_extra = std::regex_replace(code_extra, std::regex("std::vector"), "pmr::vector");
+    code_extra = std::regex_replace(code_extra, std::regex("stdb::container::stdb_vector"), "pmr::vector");
     code_extra = std::regex_replace(code_extra, std::regex("std::list"), "pmr::list");
     code += code_extra;
 
@@ -555,7 +555,7 @@ inline void FieldModelCustomArray<T, TStruct, N>::set(const std::array<TStruct*,
 
 std::string code_extra = R"CODE(
 template <typename T, typename TStruct, size_t N>
-inline void FieldModelCustomArray<T, TStruct, N>::get(std::vector<TStruct>& values) const noexcept
+inline void FieldModelCustomArray<T, TStruct, N>::get(stdb::container::stdb_vector<TStruct>& values) const noexcept
 {
     values.clear();
     values.reserve(N);
@@ -565,13 +565,13 @@ inline void FieldModelCustomArray<T, TStruct, N>::get(std::vector<TStruct>& valu
     {
         TStruct value;
         fbe_model.get(value);
-        values.emplace_back(std::move(value));
+        values.template emplace_back<Safety::Unsafe>(std::move(value));
         fbe_model.fbe_shift(fbe_model.fbe_size());
     }
 }
 
 template <typename T, typename TStruct, size_t N>
-inline void FieldModelCustomArray<T, TStruct, N>::get(std::vector<TStruct*>& values) const noexcept
+inline void FieldModelCustomArray<T, TStruct, N>::get(stdb::container::stdb_vector<TStruct*>& values) const noexcept
 {
     values.clear();
     values.reserve(N);
@@ -581,13 +581,13 @@ inline void FieldModelCustomArray<T, TStruct, N>::get(std::vector<TStruct*>& val
     {
         TStruct* value = nullptr;
         fbe_model.get(&value);
-        values.emplace_back(value);
+        values.template emplace_back<Safety::Unsafe>(std::move(value));
         fbe_model.fbe_shift(fbe_model.fbe_size());
     }
 }
 
 template <typename T, typename TStruct, size_t N>
-inline void FieldModelCustomArray<T, TStruct, N>::set(const std::vector<TStruct>& values) noexcept
+inline void FieldModelCustomArray<T, TStruct, N>::set(const stdb::container::stdb_vector<TStruct>& values) noexcept
 {
     assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
     if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
@@ -602,7 +602,7 @@ inline void FieldModelCustomArray<T, TStruct, N>::set(const std::vector<TStruct>
 }
 
 template <typename T, typename TStruct, size_t N>
-inline void FieldModelCustomArray<T, TStruct, N>::set(const std::vector<TStruct*>& values) noexcept
+inline void FieldModelCustomArray<T, TStruct, N>::set(const stdb::container::stdb_vector<TStruct*>& values) noexcept
 {
     assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
     if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
@@ -618,7 +618,8 @@ inline void FieldModelCustomArray<T, TStruct, N>::set(const std::vector<TStruct*
 )CODE";
     code += code_extra;
 
-    code_extra = std::regex_replace(code_extra, std::regex("std::vector"), "pmr::vector");
+    code_extra = std::regex_replace(code_extra, std::regex("stdb::container::stdb_vector"), "pmr::vector");
+    code_extra = std::regex_replace(code_extra, std::regex("values.template emplace_back<Safety::Unsafe>"), "values.emplace_back");
     code_extra = std::regex_replace(code_extra, std::regex("std::list"), "pmr::list");
     code += code_extra;
 
@@ -665,9 +666,9 @@ public:
 )CODE";
 
     std::string code_extra = R"CODE(
-    // Get the vector as std::vector
-    void get(std::vector<TStruct>& values) const noexcept;
-    void get(std::vector<TStruct*>& values) const noexcept;
+    // Get the vector as stdb::container::stdb_vector
+    void get(stdb::container::stdb_vector<TStruct>& values) const noexcept;
+    void get(stdb::container::stdb_vector<TStruct*>& values) const noexcept;
     // Get the vector as std::list
     void get(std::list<TStruct>& values) const noexcept;
     void get(std::list<TStruct*>& values) const noexcept;
@@ -675,9 +676,9 @@ public:
     void get(std::set<TStruct>& values) const noexcept;
     void get(std::set<TStruct*>& values) const noexcept;
 
-    // Set the vector as std::vector
-    void set(const std::vector<TStruct>& values) noexcept;
-    void set(const std::vector<TStruct*>& values) noexcept;
+    // Set the vector as stdb::container::stdb_vector
+    void set(const stdb::container::stdb_vector<TStruct>& values) noexcept;
+    void set(const stdb::container::stdb_vector<TStruct*>& values) noexcept;
     // Set the vector as std::list
     void set(const std::list<TStruct>& values) noexcept;
     void set(const std::list<TStruct*>& values) noexcept;
@@ -687,7 +688,7 @@ public:
 )CODE";
 
     code += code_extra;
-    code_extra = std::regex_replace(code_extra, std::regex("std::vector"), "pmr::vector");
+    code_extra = std::regex_replace(code_extra, std::regex("stdb::container::stdb_vector"), "pmr::vector");
     code_extra = std::regex_replace(code_extra, std::regex("std::list"), "pmr::list");
     code_extra = std::regex_replace(code_extra, std::regex("std::set"), "pmr::set");
     code += code_extra;
@@ -816,7 +817,7 @@ inline bool FieldModelCustomVector<T, TStruct>::verify() const noexcept
 
 std::string code_extra = R"CODE(
 template <typename T, typename TStruct>
-inline void FieldModelCustomVector<T, TStruct>::get(std::vector<TStruct>& values) const noexcept
+inline void FieldModelCustomVector<T, TStruct>::get(stdb::container::stdb_vector<TStruct>& values) const noexcept
 {
     values.clear();
 
@@ -831,13 +832,13 @@ inline void FieldModelCustomVector<T, TStruct>::get(std::vector<TStruct>& values
     {
         TStruct value = TStruct();
         fbe_model.get(value);
-        values.emplace_back(std::move(value));
+        values.template emplace_back<Safety::Unsafe>(std::move(value));
         fbe_model.fbe_shift(fbe_model.fbe_size());
     }
 }
 
 template <typename T, typename TStruct>
-inline void FieldModelCustomVector<T, TStruct>::get(std::vector<TStruct*>& values) const noexcept
+inline void FieldModelCustomVector<T, TStruct>::get(stdb::container::stdb_vector<TStruct*>& values) const noexcept
 {
     values.clear();
 
@@ -852,7 +853,7 @@ inline void FieldModelCustomVector<T, TStruct>::get(std::vector<TStruct*>& value
     {
         TStruct* value = nullptr;
         fbe_model.get(&value);
-        values.emplace_back(value);
+        values.template emplace_back<Safety::Unsafe>(value);
         fbe_model.fbe_shift(fbe_model.fbe_size());
     }
 }
@@ -934,7 +935,7 @@ inline void FieldModelCustomVector<T, TStruct>::get(std::set<TStruct*>& values) 
 }
 
 template <typename T, typename TStruct>
-inline void FieldModelCustomVector<T, TStruct>::set(const std::vector<TStruct>& values) noexcept
+inline void FieldModelCustomVector<T, TStruct>::set(const stdb::container::stdb_vector<TStruct>& values) noexcept
 {
     assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
     if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
@@ -949,7 +950,7 @@ inline void FieldModelCustomVector<T, TStruct>::set(const std::vector<TStruct>& 
 }
 
 template <typename T, typename TStruct>
-inline void FieldModelCustomVector<T, TStruct>::set(const std::vector<TStruct*>& values) noexcept
+inline void FieldModelCustomVector<T, TStruct>::set(const stdb::container::stdb_vector<TStruct*>& values) noexcept
 {
     assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
     if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
@@ -1026,7 +1027,8 @@ inline void FieldModelCustomVector<T, TStruct>::set(const std::set<TStruct*>& va
 
     code += code_extra;
 
-    code_extra = std::regex_replace(code_extra, std::regex("std::vector"), "pmr::vector");
+    code_extra = std::regex_replace(code_extra, std::regex("stdb::container::stdb_vector"), "pmr::vector");
+    code_extra = std::regex_replace(code_extra, std::regex("values.template emplace_back<Safety::Unsafe>"), "values.emplace_back");
     code_extra = std::regex_replace(code_extra, std::regex("std::list"), "pmr::list");
     code_extra = std::regex_replace(code_extra, std::regex("std::set"), "pmr::set");
     code += code_extra;
@@ -2072,7 +2074,13 @@ void GeneratorCpp::GeneratePtrStruct_Source(const std::shared_ptr<Package>& p, c
                         Indent(1);
                         WriteLineIndent(*field->name + ".emplace(it.first, it.second.release());");
                         Indent(-1);
-                    } else if (field->vector || field->list) {
+                    } else if (field->vector) {
+                        WriteLineIndent(*field->name + ".reserve(arg_" + *field->name + ".size());");
+                        WriteLineIndent("for (auto& it : arg_" + *field->name + ")");
+                        Indent(1);
+                        WriteLineIndent(*field->name + ".emplace_back" + (Arena() ? "" : "<Safety::Unsafe>") + "(it.release());");
+                        Indent(-1);
+                    } else if (field->list) {
                         WriteLineIndent("for (auto& it : arg_" + *field->name + ")");
                         Indent(1);
                         WriteLineIndent(*field->name + ".emplace_back(it.release());");
@@ -3811,7 +3819,7 @@ GeneratorCpp::ConvertPtrTypeName(const std::string &package, const StructField &
     else if (field.optional)
         return "std::optional<" + ConvertPtrTypeName(package, *field.type) + ">";
     else if (field.vector)
-        return prefix + "::vector<" + ConvertPtrTypeName(package, *field.type, field.optional, typeptr, as_argument) + ">";
+        return (Arena() ? "pmr::vector<" : "stdb::container::stdb_vector<") + ConvertPtrTypeName(package, *field.type, field.optional, typeptr, as_argument) + ">";
     else if (field.list)
         return prefix + "::list<" + ConvertPtrTypeName(package, *field.type, field.optional, typeptr, as_argument) + ">";
     else if (field.set)
@@ -3833,7 +3841,7 @@ std::string GeneratorCpp::ConvertVariantTypeName(const std::string& package, con
         prefix = "pmr";
     }
     if (variant.vector)
-        return prefix + "::vector<" + ConvertPtrTypeName(package, *variant.type, false, variant.ptr, false) + ">";
+        return (Arena() ? "pmr::vector<" : "stdb::container::stdb_vector<") + ConvertPtrTypeName(package, *variant.type, false, variant.ptr, false) + ">";
     else if (variant.list)
         return prefix + "::list<" + ConvertPtrTypeName(package, *variant.type, false, variant.ptr, false) + ">";
     else if (variant.map)

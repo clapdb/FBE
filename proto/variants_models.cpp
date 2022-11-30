@@ -347,14 +347,14 @@ void FieldModel<::variants::V>::get(::variants::V& fbe_value) const noexcept
         }
         case 4: {
             FieldModelVector<::variants::Simple> fbe_model(_buffer, 4);
-            fbe_value.emplace<std::vector<::variants::Simple>>();
+            fbe_value.emplace<stdb::container::stdb_vector<::variants::Simple>>();
             auto& value = std::get<4>(fbe_value);
             fbe_model.get(value);
             break;
         }
         case 5: {
             FieldModelVector<int32_t> fbe_model(_buffer, 4);
-            fbe_value.emplace<std::vector<int32_t>>();
+            fbe_value.emplace<stdb::container::stdb_vector<int32_t>>();
             auto& value = std::get<5>(fbe_value);
             fbe_model.get(value);
             break;
@@ -368,14 +368,14 @@ void FieldModel<::variants::V>::get(::variants::V& fbe_value) const noexcept
         }
         case 7: {
             FieldModelVector<FBE::buffer_t> fbe_model(_buffer, 4);
-            fbe_value.emplace<std::vector<FBE::buffer_t>>();
+            fbe_value.emplace<stdb::container::stdb_vector<FBE::buffer_t>>();
             auto& value = std::get<7>(fbe_value);
             fbe_model.get(value);
             break;
         }
         case 8: {
             FieldModelVector<stdb::memory::string> fbe_model(_buffer, 4);
-            fbe_value.emplace<std::vector<stdb::memory::string>>();
+            fbe_value.emplace<stdb::container::stdb_vector<stdb::memory::string>>();
             auto& value = std::get<8>(fbe_value);
             fbe_model.get(value);
             break;
@@ -472,7 +472,7 @@ void FieldModel<::variants::V>::set(const ::variants::V& fbe_value) noexcept
                 fbe_model.set(v);
                 set_end(fbe_begin);
             }
-            , [this, fbe_variant_index = fbe_value.index()](const std::vector<::variants::Simple>& v) {
+            , [this, fbe_variant_index = fbe_value.index()](const stdb::container::stdb_vector<::variants::Simple>& v) {
                 FieldModelVector<::variants::Simple> fbe_model(_buffer, 4);
                 size_t fbe_begin = set_begin(fbe_model.fbe_size(), fbe_variant_index);
                 if (fbe_begin == 0)
@@ -480,7 +480,7 @@ void FieldModel<::variants::V>::set(const ::variants::V& fbe_value) noexcept
                 fbe_model.set(v);
                 set_end(fbe_begin);
             }
-            , [this, fbe_variant_index = fbe_value.index()](const std::vector<int32_t>& v) {
+            , [this, fbe_variant_index = fbe_value.index()](const stdb::container::stdb_vector<int32_t>& v) {
                 FieldModelVector<int32_t> fbe_model(_buffer, 4);
                 size_t fbe_begin = set_begin(fbe_model.fbe_size(), fbe_variant_index);
                 if (fbe_begin == 0)
@@ -496,7 +496,7 @@ void FieldModel<::variants::V>::set(const ::variants::V& fbe_value) noexcept
                 fbe_model.set(v);
                 set_end(fbe_begin);
             }
-            , [this, fbe_variant_index = fbe_value.index()](const std::vector<FBE::buffer_t>& v) {
+            , [this, fbe_variant_index = fbe_value.index()](const stdb::container::stdb_vector<FBE::buffer_t>& v) {
                 FieldModelVector<FBE::buffer_t> fbe_model(_buffer, 4);
                 size_t fbe_begin = set_begin(fbe_model.fbe_size(), fbe_variant_index);
                 if (fbe_begin == 0)
@@ -504,7 +504,7 @@ void FieldModel<::variants::V>::set(const ::variants::V& fbe_value) noexcept
                 fbe_model.set(v);
                 set_end(fbe_begin);
             }
-            , [this, fbe_variant_index = fbe_value.index()](const std::vector<stdb::memory::string>& v) {
+            , [this, fbe_variant_index = fbe_value.index()](const stdb::container::stdb_vector<stdb::memory::string>& v) {
                 FieldModelVector<stdb::memory::string> fbe_model(_buffer, 4);
                 size_t fbe_begin = set_begin(fbe_model.fbe_size(), fbe_variant_index);
                 if (fbe_begin == 0)

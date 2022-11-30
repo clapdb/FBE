@@ -465,7 +465,7 @@ ValueContainer::ValueContainer()
     , vm()
 {}
 
-ValueContainer::ValueContainer(std::vector<::variants_ptr::V> arg_vv, std::unordered_map<int32_t, ::variants_ptr::V> arg_vm)
+ValueContainer::ValueContainer(stdb::container::stdb_vector<::variants_ptr::V> arg_vv, std::unordered_map<int32_t, ::variants_ptr::V> arg_vm)
     : vv(std::move(arg_vv))
     , vm(std::move(arg_vm))
 {}

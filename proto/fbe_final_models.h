@@ -180,7 +180,7 @@ public:
     size_t fbe_allocation_size(const uint8_t (&data)[N]) const noexcept { return 4 + N; }
     template <size_t N>
     size_t fbe_allocation_size(const std::array<uint8_t, N>& data) const noexcept { return 4 + N; }
-    size_t fbe_allocation_size(const std::vector<uint8_t>& value) const noexcept { return 4 + value.size(); }
+    size_t fbe_allocation_size(const stdb::container::stdb_vector<uint8_t>& value) const noexcept { return 4 + value.size(); }
     size_t fbe_allocation_size(const buffer_t& value) const noexcept { return 4 + value.size(); }
 
     // Get the field offset
@@ -205,7 +205,7 @@ public:
     template <size_t N>
     size_t get(std::array<uint8_t, N>& data) const noexcept { return get(data.data(), data.size()); }
     // Get the bytes value
-    size_t get(std::vector<uint8_t>& value) const noexcept;
+    size_t get(stdb::container::stdb_vector<uint8_t>& value) const noexcept;
     // Get the bytes value
     size_t get(buffer_t& value) const noexcept { return get(value.buffer()); }
 
@@ -218,7 +218,7 @@ public:
     template <size_t N>
     size_t set(const std::array<uint8_t, N>& data) { return set(data.data(), data.size()); }
     // Set the bytes value
-    size_t set(const std::vector<uint8_t>& value) { return set(value.data(), value.size()); }
+    size_t set(const stdb::container::stdb_vector<uint8_t>& value) { return set(value.data(), value.size()); }
     // Set the bytes value
     size_t set(const buffer_t& value) { return set(value.buffer()); }
 
@@ -337,7 +337,7 @@ public:
     size_t fbe_allocation_size(const T (&values)[S]) const noexcept;
     template <size_t S>
     size_t fbe_allocation_size(const std::array<T, S>& values) const noexcept;
-    size_t fbe_allocation_size(const std::vector<T>& values) const noexcept;
+    size_t fbe_allocation_size(const stdb::container::stdb_vector<T>& values) const noexcept;
 
     // Get the field offset
     size_t fbe_offset() const noexcept { return _offset; }
@@ -358,8 +358,8 @@ public:
     // Get the array as std::array
     template <size_t S>
     size_t get(std::array<T, S>& values) const noexcept;
-    // Get the array as std::vector
-    size_t get(std::vector<T>& values) const noexcept;
+    // Get the array as stdb::container::stdb_vector
+    size_t get(stdb::container::stdb_vector<T>& values) const noexcept;
 
     // Set the array as C-array
     template <size_t S>
@@ -367,8 +367,8 @@ public:
     // Set the array as std::array
     template <size_t S>
     size_t set(const std::array<T, S>& values) noexcept;
-    // Set the array as std::vector
-    size_t set(const std::vector<T>& values) noexcept;
+    // Set the array as stdb::container::stdb_vector
+    size_t set(const stdb::container::stdb_vector<T>& values) noexcept;
 
 private:
     FBEBuffer& _buffer;
@@ -383,7 +383,7 @@ public:
     FinalModelVector(FBEBuffer& buffer, size_t offset) noexcept : _buffer(buffer), _offset(offset) {}
 
     // Get the allocation size
-    size_t fbe_allocation_size(const std::vector<T>& values) const noexcept;
+    size_t fbe_allocation_size(const stdb::container::stdb_vector<T>& values) const noexcept;
     size_t fbe_allocation_size(const std::list<T>& values) const noexcept;
     size_t fbe_allocation_size(const std::set<T>& values) const noexcept;
 
@@ -400,15 +400,15 @@ public:
     // Check if the vector is valid
     size_t verify() const noexcept;
 
-    // Get the vector as std::vector
-    size_t get(std::vector<T>& values) const noexcept;
+    // Get the vector as stdb::container::stdb_vector
+    size_t get(stdb::container::stdb_vector<T>& values) const noexcept;
     // Get the vector as std::list
     size_t get(std::list<T>& values) const noexcept;
     // Get the vector as std::set
     size_t get(std::set<T>& values) const noexcept;
 
-    // Set the vector as std::vector
-    size_t set(const std::vector<T>& values) noexcept;
+    // Set the vector as stdb::container::stdb_vector
+    size_t set(const stdb::container::stdb_vector<T>& values) noexcept;
     // Set the vector as std::list
     size_t set(const std::list<T>& values) noexcept;
     // Set the vector as std::set

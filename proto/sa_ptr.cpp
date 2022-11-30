@@ -202,7 +202,7 @@ Complex::Complex()
     , nums()
 {}
 
-Complex::Complex(const stdb::memory::string& arg_name, std::optional<::sa::Sex> arg_sex, std::optional<::sa::MyFLags> arg_flag, std::optional<::sa::Extra> arg_extra, std::vector<int64_t> arg_nums)
+Complex::Complex(const stdb::memory::string& arg_name, std::optional<::sa::Sex> arg_sex, std::optional<::sa::MyFLags> arg_flag, std::optional<::sa::Extra> arg_extra, stdb::container::stdb_vector<int64_t> arg_nums)
     : name(arg_name)
     , sex()
     , flag()

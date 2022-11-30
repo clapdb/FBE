@@ -543,21 +543,21 @@ namespace test {
 
 struct StructVector
 {
-    std::vector<uint8_t> f1;
-    std::vector<std::optional<uint8_t>> f2;
-    std::vector<FBE::buffer_t> f3;
-    std::vector<std::optional<FBE::buffer_t>> f4;
-    std::vector<::test::EnumSimple> f5;
-    std::vector<std::optional<::test::EnumSimple>> f6;
-    std::vector<::test::FlagsSimple> f7;
-    std::vector<std::optional<::test::FlagsSimple>> f8;
-    std::vector<::test::StructSimple> f9;
-    std::vector<std::optional<::test::StructSimple>> f10;
+    stdb::container::stdb_vector<uint8_t> f1;
+    stdb::container::stdb_vector<std::optional<uint8_t>> f2;
+    stdb::container::stdb_vector<FBE::buffer_t> f3;
+    stdb::container::stdb_vector<std::optional<FBE::buffer_t>> f4;
+    stdb::container::stdb_vector<::test::EnumSimple> f5;
+    stdb::container::stdb_vector<std::optional<::test::EnumSimple>> f6;
+    stdb::container::stdb_vector<::test::FlagsSimple> f7;
+    stdb::container::stdb_vector<std::optional<::test::FlagsSimple>> f8;
+    stdb::container::stdb_vector<::test::StructSimple> f9;
+    stdb::container::stdb_vector<std::optional<::test::StructSimple>> f10;
 
     size_t fbe_type() const noexcept { return 130; }
 
     StructVector();
-    StructVector(const std::vector<uint8_t>& arg_f1, const std::vector<std::optional<uint8_t>>& arg_f2, const std::vector<FBE::buffer_t>& arg_f3, const std::vector<std::optional<FBE::buffer_t>>& arg_f4, const std::vector<::test::EnumSimple>& arg_f5, const std::vector<std::optional<::test::EnumSimple>>& arg_f6, const std::vector<::test::FlagsSimple>& arg_f7, const std::vector<std::optional<::test::FlagsSimple>>& arg_f8, const std::vector<::test::StructSimple>& arg_f9, const std::vector<std::optional<::test::StructSimple>>& arg_f10);
+    StructVector(const stdb::container::stdb_vector<uint8_t>& arg_f1, const stdb::container::stdb_vector<std::optional<uint8_t>>& arg_f2, const stdb::container::stdb_vector<FBE::buffer_t>& arg_f3, const stdb::container::stdb_vector<std::optional<FBE::buffer_t>>& arg_f4, const stdb::container::stdb_vector<::test::EnumSimple>& arg_f5, const stdb::container::stdb_vector<std::optional<::test::EnumSimple>>& arg_f6, const stdb::container::stdb_vector<::test::FlagsSimple>& arg_f7, const stdb::container::stdb_vector<std::optional<::test::FlagsSimple>>& arg_f8, const stdb::container::stdb_vector<::test::StructSimple>& arg_f9, const stdb::container::stdb_vector<std::optional<::test::StructSimple>>& arg_f10);
     StructVector(const StructVector& other) = default;
     StructVector(StructVector&& other) = default;
     ~StructVector() = default;
