@@ -60,6 +60,7 @@ private:
     bool _arena{false};
     bool _import_ptr{false};
 
+    void GenerateBannerComments(const std::string& source);
     void GenerateHeader(const std::string& source);
     void GenerateInline(const std::string& source);
     void GenerateSource(const std::string& source);
