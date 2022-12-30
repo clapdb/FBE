@@ -212,7 +212,7 @@ void GeneratorCpp::GenerateImports(const std::shared_ptr<Package>& p)
     WriteLine();
     WriteLineIndent("#include \"fbe.h\"");
     if (Arena()) {
-        WriteLineIndent("#include \"" + ArenaHeader() + "\"");
+        WriteLineIndent("#include \"" + ArenaHeader() + "\""); // TODO(liuqi): Not here.
     }
 
     // Generate packages import
@@ -220,13 +220,13 @@ void GeneratorCpp::GenerateImports(const std::shared_ptr<Package>& p)
     {
         WriteLine();
         for (const auto& import : p->import->imports)
-            WriteLineIndent("#include \"" + *import + (ImportPtr() ? "_ptr" : "") + ".h\"");
+            WriteLineIndent("#include \"" + ConvertFileName(*import, FileType::Struct, true, ImportPtr()) + "\"");
     }
 
     // Generate domain namespace using
     WriteLine();
-    WriteLineIndent("namespace " + *p->name + " {");
-    WriteLineIndent("using namespace FBE;");
+    WriteLineIndent("namespace " + ConvertNamespace(*p->name) + " {");
+    WriteLineIndent("using namespace FBE;"); // TODO(liuqi): FBE是否要使用ConvertNamespace来生成。
     if (Arena()) {
         WriteLineIndent("using allocator_type = pmr::polymorphic_allocator<char>;");
     }
@@ -235,12 +235,12 @@ void GeneratorCpp::GenerateImports(const std::shared_ptr<Package>& p)
         for (const auto& import : p->import->imports)
             WriteLineIndent("using namespace ::" + *import + ";");
     }
-    WriteLineIndent("} // namespace " + *p->name);
+    WriteLineIndent("} // namespace " + ConvertNamespace(*p->name));
 
     // Generate FBE namespace using
     WriteLine();
     WriteLineIndent("namespace FBE {");
-    WriteLineIndent("using namespace ::" + *p->name + ";");
+    WriteLineIndent("using namespace ::" + ConvertNamespace(*p->name) + ";"); // TODO(liuqi): 是否有必要保留
     WriteLineIndent("} // namespace FBE");
 }
 
@@ -248,14 +248,14 @@ void GeneratorCpp::GenerateImportsModels(const std::shared_ptr<Package>& p, bool
 {
     // Generate common imports
     WriteLine();
-    WriteLineIndent("#include \"" + *p->name + (ptr ? "_ptr" : "") + ".h\"");
+    WriteLineIndent("#include \"" + ConvertFileName(*p->name, FileType::Struct, true, ptr) + "\""); // import structs
 
     // Generate packages import
     if (p->import)
     {
         WriteLine();
         for (const auto& import : p->import->imports)
-            WriteLineIndent("#include \"" + *import + (ImportPtr() ? "_ptr" : "") + (final ? "_final" : "") + "_models.h\"");
+            WriteLineIndent("#include \"" + ConvertFileName(*import, FileType::Model, true, ImportPtr(), final) + "\"");
     }
 }
 
@@ -573,7 +573,6 @@ void GeneratorCpp::GenerateFBEFieldModelBytes_Source()
 
     Write(code);
 }
-
 
 void GeneratorCpp::GenerateFBEFieldModelPMRBytes_Header()
 {
@@ -1383,7 +1382,7 @@ void GeneratorCpp::GeneratePackage_Header(const std::shared_ptr<Package>& p)
     create_dir(output);
 
     // Generate the output file
-    output /= *p->name + ".h";
+    output /= ConvertFileName(*p->name, FileType::Struct, true);
     WriteBegin();
 
     // Generate package header
@@ -1394,7 +1393,7 @@ void GeneratorCpp::GeneratePackage_Header(const std::shared_ptr<Package>& p)
 
     // Generate namespace begin
     WriteLine();
-    WriteLineIndent("namespace " + *p->name + " {");
+    WriteLineIndent("namespace " + ConvertNamespace(*p->name) + " {");
 
     // Generate namespace body
     if (p->body)
@@ -1423,7 +1422,7 @@ void GeneratorCpp::GeneratePackage_Header(const std::shared_ptr<Package>& p)
 
     // Generate namespace end
     WriteLine();
-    WriteLineIndent("} // namespace " + *p->name);
+    WriteLineIndent("} // namespace " + ConvertNamespace(*p->name));
 
     // Generate package footer
     GenerateFooter();
@@ -1448,18 +1447,18 @@ void GeneratorCpp::GeneratePackage_Source(const std::shared_ptr<Package>& p)
     create_dir(output);
 
     // Generate the output file
-    output /= *p->name + ".cpp";
+    output /= ConvertFileName(*p->name, FileType::Struct, false);
     WriteBegin();
 
     // Generate package source
     GenerateSource(fs::path(_input).filename().string());
 
     // Generate imports
-    GenerateImports(*p->name + ".h");
+    GenerateImports(ConvertFileName(*p->name, FileType::Struct, true));
 
     // Generate namespace begin
     WriteLine();
-    WriteLineIndent("namespace " + *p->name + " {");
+    WriteLineIndent("namespace " + ConvertNamespace(*p->name) + " {");
 
     // Generate namespace body
     if (p->body)
@@ -1510,7 +1509,7 @@ void GeneratorCpp::GeneratePackage_Source(const std::shared_ptr<Package>& p)
 
     // Generate namespace end
     WriteLine();
-    WriteLineIndent("} // namespace " + *p->name);
+    WriteLineIndent("} // namespace " + ConvertNamespace(*p->name));
 
     // Generate package footer
     GenerateFooter();
@@ -1581,7 +1580,7 @@ void GeneratorCpp::GeneratePackageModels_Header(const std::shared_ptr<Package>& 
     create_dir(output);
 
     // Generate the output file
-    output /= *p->name + "_models.h";
+    output /= ConvertFileName(*p->name, FileType::Model, true);
     WriteBegin();
 
     // Generate package models header
@@ -1646,14 +1645,14 @@ void GeneratorCpp::GeneratePackageModels_Source(const std::shared_ptr<Package>& 
     create_dir(output);
 
     // Generate the output file
-    output /= *p->name + "_models.cpp";
+    output /= ConvertFileName(*p->name, FileType::Model, false);
     WriteBegin();
 
     // Generate package models source
     GenerateSource(fs::path(_input).filename().string());
 
     // Generate imports
-    GenerateImports(*p->name + "_models.h");
+    GenerateImports(ConvertFileName(*p->name, FileType::Model, true));
 
     // Generate namespace begin
     WriteLine();
@@ -5381,7 +5380,7 @@ void GeneratorCpp::GeneratePtrPackage_Header(const std::shared_ptr<Package>& p)
     create_dir(output);
 
     // Generate the output file
-    output /= *p->name + "_ptr.h";
+    output /= ConvertFileName(*p->name, FileType::Struct, true, true);
     WriteBegin();
 
     // Generate package header
@@ -5393,7 +5392,7 @@ void GeneratorCpp::GeneratePtrPackage_Header(const std::shared_ptr<Package>& p)
 
     // Generate namespace begin
     WriteLine();
-    WriteLineIndent("namespace " + *p->name + " {");
+    WriteLineIndent("namespace " + ConvertNamespace(*p->name) + " {");
 
     // Generate namespace body
     if (p->body)
@@ -5422,7 +5421,7 @@ void GeneratorCpp::GeneratePtrPackage_Header(const std::shared_ptr<Package>& p)
 
     // Generate namespace end
     WriteLine();
-    WriteLineIndent("} // namespace " + *p->name);
+    WriteLineIndent("} // namespace " + ConvertNamespace(*p->name));
 
     // Generate package footer
     GenerateFooter();
@@ -5440,18 +5439,19 @@ void GeneratorCpp::GeneratePtrPackage_Source(const std::shared_ptr<Package>& p)
     create_dir(output);
 
     // Generate the output file
-    output /= *p->name + "_ptr.cpp";
+    output /= ConvertFileName(*p->name, FileType::Struct, false, true);
     WriteBegin();
 
     // Generate package source
     GenerateSource(fs::path(_input).filename().string());
 
     // Generate imports
-    GenerateImports(*p->name + "_ptr.h");
+    GenerateImports(ConvertFileName(*p->name, FileType::Struct, true, true));
+
 
     // Generate namespace begin
     WriteLine();
-    WriteLineIndent("namespace " + *p->name + " {");
+    WriteLineIndent("namespace " + ConvertNamespace(*p->name) + " {");
 
     // Generate namespace body
     if (p->body)
@@ -5502,7 +5502,7 @@ void GeneratorCpp::GeneratePtrPackage_Source(const std::shared_ptr<Package>& p)
 
     // Generate namespace end
     WriteLine();
-    WriteLineIndent("} // namespace " + *p->name);
+    WriteLineIndent("} // namespace " + ConvertNamespace(*p->name));
 
     // Generate package footer
     GenerateFooter();
@@ -5520,7 +5520,7 @@ void GeneratorCpp::GeneratePtrPackageModels_Header(const std::shared_ptr<Package
     create_dir(output);
 
     // Generate the output file
-    output /= *p->name + "_ptr_models.h";
+    output /= ConvertFileName(*p->name, FileType::Model, true, true);
     WriteBegin();
 
     // Generate package models header
@@ -5591,14 +5591,14 @@ void GeneratorCpp::GeneratePtrPackageModels_Source(const std::shared_ptr<Package
     create_dir(output);
 
     // Generate the output file
-    output /= *p->name + "_ptr_models.cpp";
+    output /= ConvertFileName(*p->name, FileType::Model, false, true);
     WriteBegin();
 
     // Generate package models source
     GenerateSource(fs::path(_input).filename().string());
 
     // Generate imports
-    GenerateImports(*p->name + "_ptr_models.h");
+    GenerateImports(ConvertFileName(*p->name, FileType::Model, true, true));
 
     // Generate namespace begin
     WriteLine();
@@ -5818,11 +5818,6 @@ void GeneratorCpp::GeneratePtrStruct_Header(const std::shared_ptr<Package>& p, c
     // Generate namespace begin
     WriteLine();
     WriteLineIndent("namespace " + *p->name + " {");
-}
-
-bool GeneratorCpp::IsCurrentPackageType(const std::string& field_type, const std::string& delimiter) {
-    auto found_delimiter = field_type.find(delimiter);
-    return found_delimiter == std::string::npos;
 }
 
 void GeneratorCpp::GeneratePtrStruct_Source(const std::shared_ptr<Package>& p, const std::shared_ptr<StructType>& s)
@@ -8242,6 +8237,37 @@ std::string GeneratorCpp::ConvertPtrVariantFieldModelType(const std::shared_ptr<
     else
         variant_field_model_type = "FieldModel<" + ConvertTypeName(*p->name, *variant->type, false) + ">";
     return variant_field_model_type;
+}
+
+bool GeneratorCpp::IsCurrentPackageType(const std::string& field_type, const std::string& delimiter) {
+    auto found_delimiter = field_type.find(delimiter);
+    return found_delimiter == std::string::npos;
+}
+
+std::string GeneratorCpp::ConvertNamespace(const std::string& package) {
+    // return package + (Arena() ? "_pmr" : ""); // avoid conflicting with STL pmr
+    return package; // avoid conflicting with STL pmr
+}
+
+std::string GeneratorCpp::ConvertFileName(const std::string& package, FileType file_type, bool is_header, bool is_ptr, bool is_final) {
+    std::string filename = package + (is_ptr ? "_ptr" : "") + (is_final ? "_final" : "");
+    switch (file_type) {
+        case FileType::Struct:
+            break;
+        case FileType::Model:
+            filename += "_models";
+            break;
+        // case FileType::JSON:
+        //     filename += "_json";
+        //     break;
+        // case FileType::PROTOCOL:
+        //     filename += "_protocol";
+        //     break;
+        default:
+            break;
+    }
+    return filename + (is_header ? ".h" : ".cpp");
+    // return package + (Arena() ? "_pmr" : "") + (ImportPtr() ? "_ptr" : "") + (is_header ? ".h" : ".cpp");
 }
 
 } // namespace FBE
