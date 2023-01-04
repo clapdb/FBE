@@ -60,6 +60,7 @@ private:
     bool _arena{false};
     bool _import_ptr{false};
 
+    void GenerateBannerComments(const std::string& source);
     void GenerateHeader(const std::string& source);
     void GenerateInline(const std::string& source);
     void GenerateSource(const std::string& source);
@@ -101,11 +102,6 @@ private:
     void GenerateFBEFieldModelBytes_Source();
     void GenerateFBEFieldModelPMRBytes_Header();
     void GenerateFBEFieldModelPMRBytes_Source();
-//    void GenerateFBEFieldModelString_Header();
-//    void GenerateFBEFieldModelString_Source();
-    // TODO(liuqi): exists for backwards compatibility
-//    void GenerateFBEFieldModelPMRString_Header();
-//    void GenerateFBEFieldModelPMRString_Source();
     void GenerateFBEFieldModelMemoryString_Header();
     void GenerateFBEFieldModelMemoryString_Source();
     void GenerateFBEFieldModelMemoryArenaString_Header();
