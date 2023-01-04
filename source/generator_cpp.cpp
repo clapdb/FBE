@@ -8023,49 +8023,7 @@ bool GeneratorCpp::IsStructType(const std::shared_ptr<Package>& p, const std::st
 }
 
 std::string GeneratorCpp::ConvertPtrTypeName(const std::string& package, const std::string& type) {
-    if (type == "bool")
-        return "bool";
-    else if (type == "byte")
-        return "uint8_t";
-    else if (type == "bytes")
-        return Arena() ? "FBE::pmr_buffer_t" : "FBE::buffer_t";
-    else if (type == "char")
-        return "char";
-    else if (type == "wchar")
-        return "wchar_t";
-    else if (type == "int8")
-        return "int8_t";
-    else if (type == "uint8")
-        return "uint8_t";
-    else if (type == "int16")
-        return "int16_t";
-    else if (type == "uint16")
-        return "uint16_t";
-    else if (type == "int32")
-        return "int32_t";
-    else if (type == "uint32")
-        return "uint32_t";
-    else if (type == "int64")
-        return "int64_t";
-    else if (type == "uint64")
-        return "uint64_t";
-    else if (type == "float")
-        return "float";
-    else if (type == "double")
-        return "double";
-    else if (type == "decimal")
-        return "FBE::decimal_t";
-    else if (type == "string") 
-        return Arena()? "stdb::memory::arena_string": "stdb::memory::string";
-    else if (type == "timestamp")
-        return "uint64_t";
-    else if (type == "uuid")
-        return "FBE::uuid_t";
-    
-    std::string result = type;
-    bool pkg = !replace_all(result, ".", "::");
-    std::string ret = (pkg ? ("::" + package) : "") + "::" + result;
-    return ret;
+    return ConvertTypeName(package, type, false);
 }
 
 // because of the y file. optional and typeptr will not be true in the same, and the ptr will never pointer to primitive type.
