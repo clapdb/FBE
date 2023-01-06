@@ -6,8 +6,8 @@
 */
 #include <string>
 
-#include "arena.h"
-#include "arena_ptr_ptr.h"
+#include "arena_pmr.h"
+#include "arena_ptr_ptr_pmr.h"
 #include "catch2/catch.hpp"
 #include "test.h"
 #include "arena/arena.hpp"

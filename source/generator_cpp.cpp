@@ -8224,6 +8224,9 @@ std::string GeneratorCpp::ConvertFileName(const std::string& package, FileType f
     std::string filename = package + (is_ptr ? "_ptr" : "") + (is_final ? "_final" : "");
     switch (file_type) {
         case FileType::Struct:
+            if (Arena()) {
+                filename += "_pmr";
+            }
             break;
         case FileType::Model:
             filename += "_models";

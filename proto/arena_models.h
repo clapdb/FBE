@@ -21,7 +21,7 @@
 
 #include "fbe_models.h"
 
-#include "arena.h"
+#include "arena_pmr.h"
 
 #include "arena_common_models.h"
 

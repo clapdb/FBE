@@ -21,7 +21,7 @@
 
 #include "fbe_models.h"
 
-#include "arena_common.h"
+#include "arena_common_pmr.h"
 
 namespace FBE {
 
