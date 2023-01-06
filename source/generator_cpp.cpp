@@ -220,6 +220,7 @@ void GeneratorCpp::GenerateImports(const std::shared_ptr<Package>& p)
     {
         WriteLine();
         for (const auto& import : p->import->imports)
+            // TODO(liuqi): 这里需要注意下，ptr是允许引入template-based FBE的，所以这里不能随便添加ImportPtr()的。可以考虑修改FBE的import语法，添加ptr hint
             WriteLineIndent("#include \"" + ConvertFileName(*import, FileType::Struct, true, ImportPtr()) + "\"");
     }
 
@@ -233,7 +234,7 @@ void GeneratorCpp::GenerateImports(const std::shared_ptr<Package>& p)
     if (p->import)
     {
         for (const auto& import : p->import->imports)
-            WriteLineIndent("using namespace ::" + *import + ";");
+            WriteLineIndent("using namespace ::" + ConvertNamespace(*import) + ";");
     }
     WriteLineIndent("} // namespace " + ConvertNamespace(*p->name));
 
@@ -1814,7 +1815,7 @@ void GeneratorCpp::GeneratePackageProtocol_Header(const std::shared_ptr<Package>
     WriteLine();
     WriteLineIndent("namespace FBE {");
     WriteLine();
-    WriteLineIndent("namespace " + *p->name + " {");
+    WriteLineIndent("namespace " + ConvertNamespace(*p->name) + " {");
 
     // Generate protocol version
     GenerateProtocolVersion(p);
@@ -1828,7 +1829,7 @@ void GeneratorCpp::GeneratePackageProtocol_Header(const std::shared_ptr<Package>
 
     // Generate namespace end
     WriteLine();
-    WriteLineIndent("} // namespace " + *p->name);
+    WriteLineIndent("} // namespace " + ConvertNamespace(*p->name));
     WriteLine();
     WriteLineIndent("} // namespace FBE");
 
@@ -1864,7 +1865,7 @@ void GeneratorCpp::GeneratePackageProtocol_Source(const std::shared_ptr<Package>
     WriteLine();
     WriteLineIndent("namespace FBE {");
     WriteLine();
-    WriteLineIndent("namespace " + *p->name + " {");
+    WriteLineIndent("namespace " + ConvertNamespace(*p->name) + " {");
 
     // Generate sender & receiver
     GenerateSender_Source(p, final);
@@ -1875,7 +1876,7 @@ void GeneratorCpp::GeneratePackageProtocol_Source(const std::shared_ptr<Package>
 
     // Generate namespace end
     WriteLine();
-    WriteLineIndent("} // namespace " + *p->name);
+    WriteLineIndent("} // namespace " + ConvertNamespace(*p->name));
     WriteLine();
     WriteLineIndent("} // namespace FBE");
 
@@ -1933,7 +1934,7 @@ void GeneratorCpp::GenerateEnum(const std::shared_ptr<Package>& p, const std::sh
     // Generate enum formatter declaration
     WriteLine();
     WriteLineIndent("#if defined(FMT_VERSION)");
-    WriteLineIndent("} template <> struct fmt::formatter<" + *p->name + "::" + *e->name + "> : formatter<string_view> {}; namespace " + *p->name + " {");
+    WriteLineIndent("} template <> struct fmt::formatter<" + ConvertNamespace(*p->name) + "::" + *e->name + "> : formatter<string_view> {}; namespace " + ConvertNamespace(*p->name) + " {");
     WriteLineIndent("#endif");
 
     // Generate enum logging stream operator declaration
@@ -1993,7 +1994,7 @@ void GeneratorCpp::GenerateEnumLoggingStream(const std::shared_ptr<EnumType>& e)
 
 void GeneratorCpp::GenerateEnumJson(const std::shared_ptr<Package>& p, const std::shared_ptr<EnumType>& e)
 {
-    std::string enum_name = "::" + *p->name + "::" + *e->name;
+    std::string enum_name = "::" + ConvertNamespace(*p->name) + "::" + *e->name;
     std::string enum_type = (e->base && !e->base->empty()) ? *e->base : "int32";
     std::string enum_base_type = ConvertEnumType(enum_type);
 
@@ -2033,7 +2034,7 @@ struct ValueReader<TJson, _ENUM_NAME_>
 
 void GeneratorCpp::GenerateEnumFieldModel(const std::shared_ptr<Package>& p, const std::shared_ptr<EnumType>& e)
 {
-    std::string enum_name = "::" + *p->name + "::" + *e->name;
+    std::string enum_name = "::" + ConvertNamespace(*p->name) + "::" + *e->name;
     std::string enum_type = (e->base && !e->base->empty()) ? *e->base : "int32";
     std::string enum_base_type = ConvertEnumType(enum_type);
 
@@ -2058,7 +2059,7 @@ public:
 
 void GeneratorCpp::GenerateEnumFinalModel(const std::shared_ptr<Package>& p, const std::shared_ptr<EnumType>& e)
 {
-    std::string enum_name = "::" + *p->name + "::" + *e->name;
+    std::string enum_name = "::" + ConvertNamespace(*p->name) + "::" + *e->name;
     std::string enum_type = (e->base && !e->base->empty()) ? *e->base : "int32";
     std::string enum_base_type = ConvertEnumType(enum_type);
 
@@ -2126,7 +2127,7 @@ void GeneratorCpp::GenerateFlags(const std::shared_ptr<Package>& p, const std::s
     // Generate flags formatter declaration
     WriteLine();
     WriteLineIndent("#if defined(FMT_VERSION)");
-    WriteLineIndent("} template <> struct fmt::formatter<" + *p->name + "::" + *f->name + "> : formatter<string_view> {}; namespace " + *p->name + " {");
+    WriteLineIndent("} template <> struct fmt::formatter<" + ConvertNamespace(*p->name) + "::" + *f->name + "> : formatter<string_view> {}; namespace " + ConvertNamespace(*p->name) + " {");
     WriteLineIndent("#endif");
 
     // Generate flags logging stream operator declaration
@@ -2201,7 +2202,7 @@ void GeneratorCpp::GenerateFlagsLoggingStream(const std::shared_ptr<FlagsType>& 
 
 void GeneratorCpp::GenerateFlagsJson(const std::shared_ptr<Package>& p, const std::shared_ptr<FlagsType>& f)
 {
-    std::string flags_name = "::" + *p->name + "::" + *f->name;
+    std::string flags_name = "::" + ConvertNamespace(*p->name) + "::" + *f->name;
     std::string flags_type = (f->base && !f->base->empty()) ? *f->base : "int32";
     std::string flags_base_type = ConvertEnumType(flags_type);
 
@@ -2241,7 +2242,7 @@ struct ValueReader<TJson, _FLAGS_NAME_>
 
 void GeneratorCpp::GenerateFlagsFieldModel(const std::shared_ptr<Package>& p, const std::shared_ptr<FlagsType>& f)
 {
-    std::string flags_name = "::" + *p->name + "::" + *f->name;
+    std::string flags_name = "::" + ConvertNamespace(*p->name) + "::" + *f->name;
     std::string flags_type = (f->base && !f->base->empty()) ? *f->base : "int32";
     std::string flags_base_type = ConvertEnumType(flags_type);
 
@@ -2266,7 +2267,7 @@ public:
 
 void GeneratorCpp::GenerateFlagsFinalModel(const std::shared_ptr<Package>& p, const std::shared_ptr<FlagsType>& f)
 {
-    std::string flags_name = "::" + *p->name + "::" + *f->name;
+    std::string flags_name = "::" + ConvertNamespace(*p->name) + "::" + *f->name;
     std::string flags_type = (f->base && !f->base->empty()) ? *f->base : "int32";
     std::string flags_base_type = ConvertEnumType(flags_type);
 
@@ -2525,7 +2526,7 @@ void GeneratorCpp::GenerateStruct_Header(const std::shared_ptr<Package>& p, cons
 
     // Generate namespace end
     WriteLine();
-    WriteLineIndent("} // namespace " + *p->name);
+    WriteLineIndent("} // namespace " + ConvertNamespace(*p->name));
 
     // Generate struct formatter
     GenerateStructFormatter(p, s);
@@ -2535,7 +2536,7 @@ void GeneratorCpp::GenerateStruct_Header(const std::shared_ptr<Package>& p, cons
 
     // Generate namespace begin
     WriteLine();
-    WriteLineIndent("namespace " + *p->name + " {");
+    WriteLineIndent("namespace " + ConvertNamespace(*p->name) + " {");
 }
 
 void GeneratorCpp::GenerateStruct_Source(const std::shared_ptr<Package>& p, const std::shared_ptr<StructType>& s)
@@ -3025,7 +3026,7 @@ void GeneratorCpp::GenerateStructFormatter(const std::shared_ptr<Package>& p, co
     // Generate struct formatter
     WriteLine();
     WriteLineIndent("#if defined(FMT_VERSION)");
-    WriteLineIndent("template <> struct fmt::formatter<" + *p->name + "::" + *s->name + "> : formatter<string_view> {};");
+    WriteLineIndent("template <> struct fmt::formatter<" + ConvertNamespace(*p->name) + "::" + *s->name + "> : formatter<string_view> {};");
     WriteLineIndent("#endif");
 }
 
@@ -3034,10 +3035,10 @@ void GeneratorCpp::GenerateStructHash(const std::shared_ptr<Package>& p, const s
     // Generate struct hash
     WriteLine();
     WriteLineIndent("template<>");
-    WriteLineIndent("struct std::hash<" + *p->name + "::" + *s->name + ">");
+    WriteLineIndent("struct std::hash<" + ConvertNamespace(*p->name) + "::" + *s->name + ">");
     WriteLineIndent("{");
     Indent(1);
-    WriteLineIndent("typedef " + *p->name + "::" + *s->name + " argument_type;");
+    WriteLineIndent("typedef " + ConvertNamespace(*p->name) + "::" + *s->name + " argument_type;");
     WriteLineIndent("typedef size_t result_type;");
     WriteLine();
     WriteLineIndent("result_type operator() ([[maybe_unused]] const argument_type& value) const");
@@ -3059,7 +3060,7 @@ void GeneratorCpp::GenerateStructHash(const std::shared_ptr<Package>& p, const s
 
 void GeneratorCpp::GenerateStructJson(const std::shared_ptr<Package>& p, const std::shared_ptr<StructType>& s)
 {
-    std::string struct_name = "::" + *p->name + "::" + *s->name;
+    std::string struct_name = "::" + ConvertNamespace(*p->name) + "::" + *s->name;
 
     // Generate to_json() function
     WriteLine();
@@ -3135,7 +3136,7 @@ void GeneratorCpp::GenerateStructJson(const std::shared_ptr<Package>& p, const s
 
 void GeneratorCpp::GenerateStructFieldModel_Header(const std::shared_ptr<Package>& p, const std::shared_ptr<StructType>& s)
 {
-    std::string struct_name = "::" + *p->name + "::" + *s->name;
+    std::string struct_name = "::" + ConvertNamespace(*p->name) + "::" + *s->name;
 
     // Generate struct field model begin
     WriteLine();
@@ -3242,7 +3243,7 @@ void GeneratorCpp::GenerateStructFieldModel_Header(const std::shared_ptr<Package
 
 void GeneratorCpp::GenerateStructFieldModel_Source(const std::shared_ptr<Package>& p, const std::shared_ptr<StructType>& s)
 {
-    std::string struct_name = "::" + *p->name + "::" + *s->name;
+    std::string struct_name = "::" + ConvertNamespace(*p->name) + "::" + *s->name;
     std::string model_name = "FieldModel<" + struct_name + ">";
 
     // Generate struct field model constructor
@@ -3570,9 +3571,9 @@ void GeneratorCpp::GenerateStructModel_Header(const std::shared_ptr<Package>& p,
 {
     // Generate namespace begin
     WriteLine();
-    WriteLineIndent("namespace " + *p->name + " {");
+    WriteLineIndent("namespace " + ConvertNamespace(*p->name) + " {");
 
-    std::string struct_name = "::" + *p->name + "::" + *s->name;
+    std::string struct_name = "::" + ConvertNamespace(*p->name) + "::" + *s->name;
 
     // Generate struct model begin
     WriteLine();
@@ -3630,16 +3631,16 @@ void GeneratorCpp::GenerateStructModel_Header(const std::shared_ptr<Package>& p,
 
     // Generate namespace end
     WriteLine();
-    WriteLineIndent("} // namespace " + *p->name);
+    WriteLineIndent("} // namespace " + ConvertNamespace(*p->name));
 }
 
 void GeneratorCpp::GenerateStructModel_Source(const std::shared_ptr<Package>& p, const std::shared_ptr<StructType>& s)
 {
     // Generate namespace begin
     WriteLine();
-    WriteLineIndent("namespace " + *p->name + " {");
+    WriteLineIndent("namespace " + ConvertNamespace(*p->name) + " {");
 
-    std::string struct_name = "::" + *p->name + "::" + *s->name;
+    std::string struct_name = "::" + ConvertNamespace(*p->name) + "::" + *s->name;
     std::string model_name = *s->name + "Model";
 
     // Generate struct model verify() method
@@ -3720,12 +3721,12 @@ void GeneratorCpp::GenerateStructModel_Source(const std::shared_ptr<Package>& p,
 
     // Generate namespace end
     WriteLine();
-    WriteLineIndent("} // namespace " + *p->name);
+    WriteLineIndent("} // namespace " + ConvertNamespace(*p->name));
 }
 
 void GeneratorCpp::GenerateStructFinalModel_Header(const std::shared_ptr<Package>& p, const std::shared_ptr<StructType>& s)
 {
-    std::string struct_name = "::" + *p->name + "::" + *s->name;
+    std::string struct_name = "::" + ConvertNamespace(*p->name) + "::" + *s->name;
 
     // Generate struct final model begin
     WriteLine();
@@ -3816,7 +3817,7 @@ void GeneratorCpp::GenerateStructFinalModel_Header(const std::shared_ptr<Package
 
 void GeneratorCpp::GenerateStructFinalModel_Source(const std::shared_ptr<Package>& p, const std::shared_ptr<StructType>& s)
 {
-    std::string struct_name = "::" + *p->name + "::" + *s->name;
+    std::string struct_name = "::" + ConvertNamespace(*p->name) + "::" + *s->name;
     std::string model_name = "FinalModel<" + struct_name + ">";
 
     // Generate struct final model constructor
@@ -4006,9 +4007,9 @@ void GeneratorCpp::GenerateStructModelFinal_Header(const std::shared_ptr<Package
 {
     // Generate namespace begin
     WriteLine();
-    WriteLineIndent("namespace " + *p->name + " {");
+    WriteLineIndent("namespace " + ConvertNamespace(*p->name) + " {");
 
-    std::string struct_name = "::" + *p->name + "::" + *s->name;
+    std::string struct_name = "::" + ConvertNamespace(*p->name) + "::" + *s->name;
 
     // Generate struct model final begin
     WriteLine();
@@ -4057,16 +4058,16 @@ void GeneratorCpp::GenerateStructModelFinal_Header(const std::shared_ptr<Package
 
     // Generate namespace end
     WriteLine();
-    WriteLineIndent("} // namespace " + *p->name);
+    WriteLineIndent("} // namespace " + ConvertNamespace(*p->name));
 }
 
 void GeneratorCpp::GenerateStructModelFinal_Source(const std::shared_ptr<Package>& p, const std::shared_ptr<StructType>& s)
 {
     // Generate namespace begin
     WriteLine();
-    WriteLineIndent("namespace " + *p->name + " {");
+    WriteLineIndent("namespace " + ConvertNamespace(*p->name) + " {");
 
-    std::string struct_name = "::" + *p->name + "::" + *s->name;
+    std::string struct_name = "::" + ConvertNamespace(*p->name) + "::" + *s->name;
     std::string model_name = *s->name + "FinalModel";
 
     // Generate struct model final verify() method
@@ -4141,7 +4142,7 @@ void GeneratorCpp::GenerateStructModelFinal_Source(const std::shared_ptr<Package
 
     // Generate namespace end
     WriteLine();
-    WriteLineIndent("} // namespace " + *p->name);
+    WriteLineIndent("} // namespace " + ConvertNamespace(*p->name));
 }
 
 void GeneratorCpp::GenerateProtocolVersion(const std::shared_ptr<Package>& p)
@@ -4226,7 +4227,7 @@ void GeneratorCpp::GenerateSender_Header(const std::shared_ptr<Package>& p, bool
         {
             if (s->message)
             {
-                std::string struct_name = "::" + *p->name + "::" + *s->name;
+                std::string struct_name = "::" + ConvertNamespace(*p->name) + "::" + *s->name;
                 if (first)
                     WriteLine();
                 WriteLineIndent("size_t send(const " + struct_name + "& value);");
@@ -4245,7 +4246,7 @@ void GeneratorCpp::GenerateSender_Header(const std::shared_ptr<Package>& p, bool
         WriteLineIndent("// Sender models accessors");
         for (const auto& s : p->body->structs)
             if (s->message)
-                WriteLineIndent("FBE::" + *p->name + "::" + *s->name + model + " " + *s->name + "Model;");
+                WriteLineIndent("FBE::" + ConvertNamespace(*p->name) + "::" + *s->name + model + " " + *s->name + "Model;");
     }
 
     // Generate sender end
@@ -4264,15 +4265,15 @@ void GeneratorCpp::GenerateSender_Source(const std::shared_ptr<Package>& p, bool
         {
             if (s->message)
             {
-                std::string struct_name = "::" + *p->name + "::" + *s->name;
+                std::string struct_name = "::" + ConvertNamespace(*p->name) + "::" + *s->name;
                 WriteLine();
                 WriteLineIndent("size_t " + sender + "::send(const " + struct_name + "& value)");
                 WriteLineIndent("{");
                 Indent(1);
                 WriteLineIndent("// Serialize the value into the FBE stream");
                 WriteLineIndent("size_t serialized = " + *s->name + "Model.serialize(value);");
-                WriteLineIndent("assert((serialized > 0) && \"" + *p->name + "::" + *s->name + " serialization failed!\");");
-                WriteLineIndent("assert(" + *s->name + "Model.verify() && \"" + *p->name + "::" + *s->name + " validation failed!\");");
+                WriteLineIndent("assert((serialized > 0) && \"" + ConvertNamespace(*p->name) + "::" + *s->name + " serialization failed!\");");
+                WriteLineIndent("assert(" + *s->name + "Model.verify() && \"" + ConvertNamespace(*p->name) + "::" + *s->name + " validation failed!\");");
                 WriteLine();
                 WriteLineIndent("// Log the value");
                 WriteLineIndent("if (this->_logging)");
@@ -4338,7 +4339,7 @@ void GeneratorCpp::GenerateReceiver_Header(const std::shared_ptr<Package>& p, bo
         {
             if (s->message)
             {
-                std::string struct_name = "::" + *p->name + "::" + *s->name;
+                std::string struct_name = "::" + ConvertNamespace(*p->name) + "::" + *s->name;
                 WriteLineIndent("virtual void onReceive(const " + struct_name + "& value) {}");
             }
         }
@@ -4361,7 +4362,7 @@ void GeneratorCpp::GenerateReceiver_Header(const std::shared_ptr<Package>& p, bo
         {
             if (s->message)
             {
-                std::string struct_name = "::" + *p->name + "::" + *s->name;
+                std::string struct_name = "::" + ConvertNamespace(*p->name) + "::" + *s->name;
                 WriteLineIndent(struct_name + " " + *s->name + "Value;");
             }
         }
@@ -4369,7 +4370,7 @@ void GeneratorCpp::GenerateReceiver_Header(const std::shared_ptr<Package>& p, bo
         WriteLineIndent("// Receiver models accessors");
         for (const auto& s : p->body->structs)
             if (s->message)
-                WriteLineIndent("FBE::" + *p->name + "::" + *s->name + model + " " + *s->name + "Model;");
+                WriteLineIndent("FBE::" + ConvertNamespace(*p->name) + "::" + *s->name + model + " " + *s->name + "Model;");
     }
 
     // Generate receiver end
@@ -4396,15 +4397,15 @@ void GeneratorCpp::GenerateReceiver_Source(const std::shared_ptr<Package>& p, bo
         {
             if (s->message)
             {
-                std::string struct_name = "::" + *p->name + "::" + *s->name;
-                WriteLineIndent("case FBE::" + *p->name + "::" + *s->name + model + "::fbe_type():");
+                std::string struct_name = "::" + ConvertNamespace(*p->name) + "::" + *s->name;
+                WriteLineIndent("case FBE::" + ConvertNamespace(*p->name) + "::" + *s->name + model + "::fbe_type():");
                 WriteLineIndent("{");
                 Indent(1);
                 WriteLineIndent("// Deserialize the value from the FBE stream");
                 WriteLineIndent(*s->name + "Model.attach(data, size);");
-                WriteLineIndent("assert(" + *s->name + "Model.verify() && \"" + *p->name + "::" + *s->name + " validation failed!\");");
+                WriteLineIndent("assert(" + *s->name + "Model.verify() && \"" + ConvertNamespace(*p->name) + "::" + *s->name + " validation failed!\");");
                 WriteLineIndent("[[maybe_unused]] size_t deserialized = " + *s->name + "Model.deserialize(" + *s->name + "Value);");
-                WriteLineIndent("assert((deserialized > 0) && \"" + *p->name + "::" + *s->name + " deserialization failed!\");");
+                WriteLineIndent("assert((deserialized > 0) && \"" + ConvertNamespace(*p->name) + "::" + *s->name + " deserialization failed!\");");
                 WriteLine();
                 WriteLineIndent("// Log the value");
                 WriteLineIndent("if (this->_logging)");
@@ -4489,7 +4490,7 @@ void GeneratorCpp::GenerateProxy_Header(const std::shared_ptr<Package>& p, bool 
         {
             if (s->message)
             {
-                std::string struct_model = "FBE::" + *p->name + "::" + *s->name + model;
+                std::string struct_model = "FBE::" + ConvertNamespace(*p->name) + "::" + *s->name + model;
                 WriteLineIndent("virtual void onProxy(" + struct_model + "& model, size_t type, const void* data, size_t size) {}");
             }
         }
@@ -4510,7 +4511,7 @@ void GeneratorCpp::GenerateProxy_Header(const std::shared_ptr<Package>& p, bool 
         WriteLineIndent("// Proxy models accessors");
         for (const auto& s : p->body->structs)
             if (s->message)
-                WriteLineIndent("FBE::" + *p->name + "::" + *s->name + model + " " + *s->name + "Model;");
+                WriteLineIndent("FBE::" + ConvertNamespace(*p->name) + "::" + *s->name + model + " " + *s->name + "Model;");
     }
 
     // Generate proxy end
@@ -4537,13 +4538,13 @@ void GeneratorCpp::GenerateProxy_Source(const std::shared_ptr<Package>& p, bool 
         {
             if (s->message)
             {
-                std::string struct_name = "::" + *p->name + "::" + *s->name;
-                WriteLineIndent("case FBE::" + *p->name + "::" + *s->name + model + "::fbe_type():");
+                std::string struct_name = "::" + ConvertNamespace(*p->name) + "::" + *s->name;
+                WriteLineIndent("case FBE::" + ConvertNamespace(*p->name) + "::" + *s->name + model + "::fbe_type():");
                 WriteLineIndent("{");
                 Indent(1);
                 WriteLineIndent("// Attach the FBE stream to the proxy model");
                 WriteLineIndent(*s->name + "Model.attach(data, size);");
-                WriteLineIndent("assert(" + *s->name + "Model.verify() && \"" + *p->name + "::" + *s->name + " validation failed!\");");
+                WriteLineIndent("assert(" + *s->name + "Model.verify() && \"" + ConvertNamespace(*p->name) + "::" + *s->name + " validation failed!\");");
                 WriteLine();
                 WriteLineIndent("size_t fbe_begin = " + *s->name + "Model.model.get_begin();");
                 WriteLineIndent("if (fbe_begin == 0)");
@@ -4672,7 +4673,7 @@ void GeneratorCpp::GenerateClient_Header(const std::shared_ptr<Package>& p, bool
         {
             if (s->message && s->request)
             {
-                std::string request_name = "::" + *p->name + "::" + *s->name;
+                std::string request_name = "::" + ConvertNamespace(*p->name) + "::" + *s->name;
                 std::string response_name = (s->response) ? ConvertTypeName(*p->name, *s->response->response, false) : "";
                 std::string response_field = (s->response) ? *s->response->response : "";
                 replace_all(response_field, ".", "");
@@ -4875,7 +4876,7 @@ void GeneratorCpp::GenerateClient_Source(const std::shared_ptr<Package>& p, bool
         {
             if (s->message && s->request)
             {
-                std::string request_name = "::" + *p->name + "::" + *s->name;
+                std::string request_name = "::" + ConvertNamespace(*p->name) + "::" + *s->name;
                 std::string response_name = (s->response) ? ConvertTypeName(*p->name, *s->response->response, false) : "";
                 std::string response_field = (s->response) ? *s->response->response : "";
                 replace_all(response_field, ".", "");
@@ -5810,14 +5811,14 @@ void GeneratorCpp::GeneratePtrStruct_Header(const std::shared_ptr<Package>& p, c
 
     // Generate namespace end
     WriteLine();
-    WriteLineIndent("} // namespace " + *p->name);
+    WriteLineIndent("} // namespace " + ConvertNamespace(*p->name));
 
     // Generate struct hash
     GenerateStructHash(p, s);
 
     // Generate namespace begin
     WriteLine();
-    WriteLineIndent("namespace " + *p->name + " {");
+    WriteLineIndent("namespace " + ConvertNamespace(*p->name) + " {");
 }
 
 void GeneratorCpp::GeneratePtrStruct_Source(const std::shared_ptr<Package>& p, const std::shared_ptr<StructType>& s)
@@ -6434,7 +6435,7 @@ void GeneratorCpp::GenerateVariantIsEqualFunc(const std::shared_ptr<Package>& p,
 
 void GeneratorCpp::GenerateVariantFieldModel_Header(const std::shared_ptr<Package>& p, const std::shared_ptr<VariantType>& v)
 {
-    std::string variant_name = "::" + *p->name + "::" + *v->name;
+    std::string variant_name = "::" + ConvertNamespace(*p->name) + "::" + *v->name;
     std::string class_name = "FieldModel<" + variant_name + ">";
 
     // Generate variant field model begin
@@ -6498,7 +6499,7 @@ void GeneratorCpp::GenerateVariantFieldModel_Header(const std::shared_ptr<Packag
 
 void GeneratorCpp::GenerateVariantFieldModel_Source(const std::shared_ptr<Package>& p, const std::shared_ptr<VariantType>& v)
 {
-    std::string variant_name = "::" + *p->name + "::" + *v->name;
+    std::string variant_name = "::" + ConvertNamespace(*p->name) + "::" + *v->name;
     std::string class_name = "FieldModel<" + variant_name + ">";
 
     // Generate variant field model begin
@@ -6721,7 +6722,7 @@ void GeneratorCpp::GenerateVariantFieldModel_Source(const std::shared_ptr<Packag
 
 void GeneratorCpp::GenerateStructFieldPtrModel_Header(const std::shared_ptr<Package>& p, const std::shared_ptr<StructType>& s)
 {
-    std::string struct_name = "::" + *p->name + "::" + *s->name;
+    std::string struct_name = "::" + ConvertNamespace(*p->name) + "::" + *s->name;
     std::string class_name = "FieldModelPtr_" + *p->name + "_" + *s->name;
 
     // Generate struct field ptr model begin
@@ -6808,7 +6809,7 @@ void GeneratorCpp::GenerateStructFieldPtrModel_Header(const std::shared_ptr<Pack
 
 void GeneratorCpp::GeneratePtrStructFieldModel_Header(const std::shared_ptr<Package>& p, const std::shared_ptr<StructType>& s)
 {
-    std::string struct_name = "::" + *p->name + "::" + *s->name;
+    std::string struct_name = "::" + ConvertNamespace(*p->name) + "::" + *s->name;
     std::string class_name = "FieldModel_" + *p->name + "_" + *s->name;
 
     // Generate struct field model begin
@@ -6909,7 +6910,7 @@ void GeneratorCpp::GeneratePtrStructFieldModel_Header(const std::shared_ptr<Pack
 
 void GeneratorCpp::GeneratePtrStructFieldModel_Source(const std::shared_ptr<Package>& p, const std::shared_ptr<StructType>& s)
 {
-    std::string struct_name = "::" + *p->name + "::" + *s->name;
+    std::string struct_name = "::" + ConvertNamespace(*p->name) + "::" + *s->name;
     std::string class_name = "FieldModel_" + *p->name + "_" + *s->name;
 
     // Generate struct field model constructor
@@ -7245,7 +7246,7 @@ void GeneratorCpp::GeneratePtrStructFieldModel_Source(const std::shared_ptr<Pack
             for (const auto& field : s->body->fields)
             {
                 if (IsStructType(p, *field->type) && !field->ptr && !IsContainerType(*field) && !field->optional)
-                    WriteLineIndent(*field->name + ".set(static_cast<const ::" + *p->name + "::" + *field->type + "&>(" + "fbe_value." + *field->name + "));");
+                    WriteLineIndent(*field->name + ".set(static_cast<const ::" + ConvertNamespace(*p->name) + "::" + *field->type + "&>(" + "fbe_value." + *field->name + "));");
                 else
                     WriteLineIndent(*field->name + ".set(fbe_value." + *field->name + ");");
             }
@@ -7256,7 +7257,7 @@ void GeneratorCpp::GeneratePtrStructFieldModel_Source(const std::shared_ptr<Pack
 
 void GeneratorCpp::GenerateStructFieldPtrModel_Source(const std::shared_ptr<Package>& p, const std::shared_ptr<StructType>& s)
 {
-    std::string struct_name = "::" + *p->name + "::" + *s->name;
+    std::string struct_name = "::" + ConvertNamespace(*p->name) + "::" + *s->name;
     std::string class_name = "FieldModelPtr_" + *p->name + "_" + *s->name;
 
     // Generate struct field model constructor
@@ -7470,9 +7471,9 @@ void GeneratorCpp::GeneratePtrStructModel_Header(const std::shared_ptr<Package>&
 {
     // Generate namespace begin
     WriteLine();
-    WriteLineIndent("namespace " + *p->name + " {");
+    WriteLineIndent("namespace " + ConvertNamespace(*p->name) + " {");
 
-    std::string struct_name = "::" + *p->name + "::" + *s->name;
+    std::string struct_name = "::" + ConvertNamespace(*p->name) + "::" + *s->name;
     std::string class_name = "FieldModel_" + *p->name + "_" + *s->name;
 
     // Generate struct model begin
@@ -7531,16 +7532,16 @@ void GeneratorCpp::GeneratePtrStructModel_Header(const std::shared_ptr<Package>&
 
     // Generate namespace end
     WriteLine();
-    WriteLineIndent("} // namespace " + *p->name);
+    WriteLineIndent("} // namespace " + ConvertNamespace(*p->name));
 }
 
 void GeneratorCpp::GeneratePtrStructModel_Source(const std::shared_ptr<Package>& p, const std::shared_ptr<StructType>& s)
 {
     // Generate namespace begin
     WriteLine();
-    WriteLineIndent("namespace " + *p->name + " {");
+    WriteLineIndent("namespace " + ConvertNamespace(*p->name) + " {");
 
-    std::string struct_name = "::" + *p->name + "::" + *s->name;
+    std::string struct_name = "::" + ConvertNamespace(*p->name) + "::" + *s->name;
     std::string model_name = *s->name + "Model";
 
     // Generate struct model verify() method
@@ -7621,7 +7622,7 @@ void GeneratorCpp::GeneratePtrStructModel_Source(const std::shared_ptr<Package>&
 
     // Generate namespace end
     WriteLine();
-    WriteLineIndent("} // namespace " + *p->name);
+    WriteLineIndent("} // namespace " + ConvertNamespace(*p->name));
 }
 
 bool GeneratorCpp::IsKnownType(const std::string& type)
@@ -7726,9 +7727,15 @@ std::string GeneratorCpp::ConvertTypeName(const std::string& package, const std:
     else if (type == "uuid")
         return "FBE::uuid_t";
 
-    std::string result = type;
-    bool pkg = !replace_all(result, ".", "::");
-    return (pkg ? ("::" + package) : "") + "::" + result;
+    // split by .
+    auto items = split(type, ".", true);
+    if (items.size() == 1)
+        return "::" + ConvertNamespace(package) + "::" + type;
+    std::string result = "::" + ConvertNamespace(items[0]);
+    for (size_t i = 1; i < items.size(); ++i) {
+        result += "::" + items[i];
+    }
+    return result;
 }
 
 std::string GeneratorCpp::ConvertTypeName(const std::string& package, const StructField& field)
@@ -7826,6 +7833,7 @@ std::string GeneratorCpp::ConvertConstant(const std::string& type, const std::st
     if (IsKnownType(type))
         return ConvertConstantPrefix(type) + value + ConvertConstantSuffix(type);
 
+    // TODO(liuqi): check using ConvertNamespace
     bool first = true;
     std::string result;
     auto items = split(value, '|', true);
@@ -7920,9 +7928,14 @@ std::string GeneratorCpp::ConvertDefault(const std::string& package, const std::
     else if (type == "uuid")
         return "FBE::uuid_t::nil()";
 
-    std::string result = type + "()";
-    bool pkg = !replace_all(result, ".", "::");
-    return (pkg ? ("::" + package) : "") + "::" + result;
+    auto items = split(type, ".", true);
+    if (items.size() == 1)
+        return  "::" + ConvertNamespace(package) + "::" + type + "()";
+    std::string result = "::" + ConvertNamespace(items[0]);
+    for (size_t i = 1; i < items.size(); ++i) {
+        result += "::" + items[i];
+    }
+    return result + "()";
 }
 
 std::string GeneratorCpp::ConvertDefault(const std::string& package, const StructField& field)
@@ -8121,6 +8134,7 @@ std::string GeneratorCpp::ConvertPtrFieldModelType(const std::shared_ptr<Package
     std::string field_model_type;
     if (IsStructType(p, *field->type) || (ImportPtr() && !IsCurrentPackageType(*field->type))) {
         std::string model_name = std::string("FieldModel") + (field->ptr ? "Ptr" : "") + "_" +  (IsCurrentPackageType(*field->type) ? (*p->name + "_") : "") + *field->type;
+        // TODO(liuqi): pmr和non-pmr是不能混合使用的。
         replace_all(model_name, ".", "_");
         if (IsContainerType(*field)) {
             field_model_type = "FieldModel";
@@ -8203,8 +8217,7 @@ bool GeneratorCpp::IsCurrentPackageType(const std::string& field_type, const std
 }
 
 std::string GeneratorCpp::ConvertNamespace(const std::string& package) {
-    // return package + (Arena() ? "_pmr" : ""); // avoid conflicting with STL pmr
-    return package; // avoid conflicting with STL pmr
+    return package + (Arena() ? "_pmr" : ""); // we prefer _pmr over ::pmr to avoid conflicting with STL pmr
 }
 
 std::string GeneratorCpp::ConvertFileName(const std::string& package, FileType file_type, bool is_header, bool is_ptr, bool is_final) {

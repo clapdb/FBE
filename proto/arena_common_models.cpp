@@ -9,17 +9,17 @@
 
 namespace FBE {
 
-FieldModel<::arena_common::Expr>::FieldModel(FBEBuffer& buffer, size_t offset) noexcept : _buffer(buffer), _offset(offset)
+FieldModel<::arena_common_pmr::Expr>::FieldModel(FBEBuffer& buffer, size_t offset) noexcept : _buffer(buffer), _offset(offset)
 {}
 
-size_t FieldModel<::arena_common::Expr>::fbe_body() const noexcept
+size_t FieldModel<::arena_common_pmr::Expr>::fbe_body() const noexcept
 {
     // variant type's fbe_size not included
     size_t fbe_result = 4;
     return fbe_result;
 }
 
-size_t FieldModel<::arena_common::Expr>::fbe_extra() const noexcept
+size_t FieldModel<::arena_common_pmr::Expr>::fbe_extra() const noexcept
 {
     if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
         return 0;
@@ -37,7 +37,7 @@ size_t FieldModel<::arena_common::Expr>::fbe_extra() const noexcept
     return fbe_result;
 }
 
-bool FieldModel<::arena_common::Expr>::verify() const noexcept
+bool FieldModel<::arena_common_pmr::Expr>::verify() const noexcept
 {
     if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
         return true;
@@ -76,7 +76,7 @@ bool FieldModel<::arena_common::Expr>::verify() const noexcept
     return true;
 }
 
-void FieldModel<::arena_common::Expr>::get(::arena_common::Expr& fbe_value) const noexcept
+void FieldModel<::arena_common_pmr::Expr>::get(::arena_common_pmr::Expr& fbe_value) const noexcept
 {
     if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
         return;
@@ -117,7 +117,7 @@ void FieldModel<::arena_common::Expr>::get(::arena_common::Expr& fbe_value) cons
     _buffer.unshift(fbe_variant_offset);
 }
 
-size_t FieldModel<::arena_common::Expr>::set_begin(size_t variant_type_fbe_size, size_t variant_type_index)
+size_t FieldModel<::arena_common_pmr::Expr>::set_begin(size_t variant_type_fbe_size, size_t variant_type_index)
 {
     assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
     if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
@@ -136,13 +136,13 @@ size_t FieldModel<::arena_common::Expr>::set_begin(size_t variant_type_fbe_size,
     return fbe_variant_offset;
 }
 
-void FieldModel<::arena_common::Expr>::set_end(size_t fbe_begin)
+void FieldModel<::arena_common_pmr::Expr>::set_end(size_t fbe_begin)
 {
     _buffer.unshift(fbe_begin);
 }
 
 // Set the variant value
-void FieldModel<::arena_common::Expr>::set(const ::arena_common::Expr& fbe_value) noexcept
+void FieldModel<::arena_common_pmr::Expr>::set(const ::arena_common_pmr::Expr& fbe_value) noexcept
 {
     assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
     if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
@@ -181,13 +181,13 @@ void FieldModel<::arena_common::Expr>::set(const ::arena_common::Expr& fbe_value
 }
 
 
-FieldModel<::arena_common::Alias>::FieldModel(FBEBuffer& buffer, size_t offset) noexcept : _buffer(buffer), _offset(offset)
+FieldModel<::arena_common_pmr::Alias>::FieldModel(FBEBuffer& buffer, size_t offset) noexcept : _buffer(buffer), _offset(offset)
     , name(buffer, 4 + 4)
     , optr(buffer, name.fbe_offset() + name.fbe_size())
     , expr(buffer, optr.fbe_offset() + optr.fbe_size())
 {}
 
-size_t FieldModel<::arena_common::Alias>::fbe_body() const noexcept
+size_t FieldModel<::arena_common_pmr::Alias>::fbe_body() const noexcept
 {
     size_t fbe_result = 4 + 4
         + name.fbe_size()
@@ -197,7 +197,7 @@ size_t FieldModel<::arena_common::Alias>::fbe_body() const noexcept
     return fbe_result;
 }
 
-size_t FieldModel<::arena_common::Alias>::fbe_extra() const noexcept
+size_t FieldModel<::arena_common_pmr::Alias>::fbe_extra() const noexcept
 {
     if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
         return 0;
@@ -219,7 +219,7 @@ size_t FieldModel<::arena_common::Alias>::fbe_extra() const noexcept
     return fbe_result;
 }
 
-bool FieldModel<::arena_common::Alias>::verify(bool fbe_verify_type) const noexcept
+bool FieldModel<::arena_common_pmr::Alias>::verify(bool fbe_verify_type) const noexcept
 {
     if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
         return true;
@@ -242,7 +242,7 @@ bool FieldModel<::arena_common::Alias>::verify(bool fbe_verify_type) const noexc
     return fbe_result;
 }
 
-bool FieldModel<::arena_common::Alias>::verify_fields([[maybe_unused]] size_t fbe_struct_size) const noexcept
+bool FieldModel<::arena_common_pmr::Alias>::verify_fields([[maybe_unused]] size_t fbe_struct_size) const noexcept
 {
     size_t fbe_current_size = 4 + 4;
 
@@ -267,7 +267,7 @@ bool FieldModel<::arena_common::Alias>::verify_fields([[maybe_unused]] size_t fb
     return true;
 }
 
-size_t FieldModel<::arena_common::Alias>::get_begin() const noexcept
+size_t FieldModel<::arena_common_pmr::Alias>::get_begin() const noexcept
 {
     if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
         return 0;
@@ -286,12 +286,12 @@ size_t FieldModel<::arena_common::Alias>::get_begin() const noexcept
     return fbe_struct_offset;
 }
 
-void FieldModel<::arena_common::Alias>::get_end(size_t fbe_begin) const noexcept
+void FieldModel<::arena_common_pmr::Alias>::get_end(size_t fbe_begin) const noexcept
 {
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModel<::arena_common::Alias>::get(::arena_common::Alias& fbe_value) const noexcept
+void FieldModel<::arena_common_pmr::Alias>::get(::arena_common_pmr::Alias& fbe_value) const noexcept
 {
     size_t fbe_begin = get_begin();
     if (fbe_begin == 0)
@@ -302,7 +302,7 @@ void FieldModel<::arena_common::Alias>::get(::arena_common::Alias& fbe_value) co
     get_end(fbe_begin);
 }
 
-void FieldModel<::arena_common::Alias>::get_fields([[maybe_unused]] ::arena_common::Alias& fbe_value, [[maybe_unused]] size_t fbe_struct_size) const noexcept
+void FieldModel<::arena_common_pmr::Alias>::get_fields([[maybe_unused]] ::arena_common_pmr::Alias& fbe_value, [[maybe_unused]] size_t fbe_struct_size) const noexcept
 {
     size_t fbe_current_size = 4 + 4;
 
@@ -315,17 +315,17 @@ void FieldModel<::arena_common::Alias>::get_fields([[maybe_unused]] ::arena_comm
     if ((fbe_current_size + optr.fbe_size()) <= fbe_struct_size)
         optr.get(fbe_value.optr);
     else
-        fbe_value.optr = ::arena_common::Optr();
+        fbe_value.optr = ::arena_common_pmr::Optr();
     fbe_current_size += optr.fbe_size();
 
     if ((fbe_current_size + expr.fbe_size()) <= fbe_struct_size)
         expr.get(fbe_value.expr);
     else
-        fbe_value.expr = ::arena_common::Expr();
+        fbe_value.expr = ::arena_common_pmr::Expr();
     fbe_current_size += expr.fbe_size();
 }
 
-size_t FieldModel<::arena_common::Alias>::set_begin()
+size_t FieldModel<::arena_common_pmr::Alias>::set_begin()
 {
     assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
     if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
@@ -345,12 +345,12 @@ size_t FieldModel<::arena_common::Alias>::set_begin()
     return fbe_struct_offset;
 }
 
-void FieldModel<::arena_common::Alias>::set_end(size_t fbe_begin)
+void FieldModel<::arena_common_pmr::Alias>::set_end(size_t fbe_begin)
 {
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModel<::arena_common::Alias>::set(const ::arena_common::Alias& fbe_value) noexcept
+void FieldModel<::arena_common_pmr::Alias>::set(const ::arena_common_pmr::Alias& fbe_value) noexcept
 {
     size_t fbe_begin = set_begin();
     if (fbe_begin == 0)
@@ -360,14 +360,14 @@ void FieldModel<::arena_common::Alias>::set(const ::arena_common::Alias& fbe_val
     set_end(fbe_begin);
 }
 
-void FieldModel<::arena_common::Alias>::set_fields([[maybe_unused]] const ::arena_common::Alias& fbe_value) noexcept
+void FieldModel<::arena_common_pmr::Alias>::set_fields([[maybe_unused]] const ::arena_common_pmr::Alias& fbe_value) noexcept
 {
     name.set(fbe_value.name);
     optr.set(fbe_value.optr);
     expr.set(fbe_value.expr);
 }
 
-namespace arena_common {
+namespace arena_common_pmr {
 
 bool AliasModel::verify()
 {
@@ -395,7 +395,7 @@ size_t AliasModel::create_end(size_t fbe_begin)
     return fbe_full_size;
 }
 
-size_t AliasModel::serialize(const ::arena_common::Alias& value)
+size_t AliasModel::serialize(const ::arena_common_pmr::Alias& value)
 {
     size_t fbe_begin = create_begin();
     model.set(value);
@@ -403,7 +403,7 @@ size_t AliasModel::serialize(const ::arena_common::Alias& value)
     return fbe_full_size;
 }
 
-size_t AliasModel::deserialize(::arena_common::Alias& value) const noexcept
+size_t AliasModel::deserialize(::arena_common_pmr::Alias& value) const noexcept
 {
     if ((this->buffer().offset() + model.fbe_offset() - 4) > this->buffer().size())
         return 0;
@@ -417,15 +417,15 @@ size_t AliasModel::deserialize(::arena_common::Alias& value) const noexcept
     return fbe_full_size;
 }
 
-} // namespace arena_common
+} // namespace arena_common_pmr
 
-FieldModel<::arena_common::Expression>::FieldModel(FBEBuffer& buffer, size_t offset) noexcept : _buffer(buffer), _offset(offset)
+FieldModel<::arena_common_pmr::Expression>::FieldModel(FBEBuffer& buffer, size_t offset) noexcept : _buffer(buffer), _offset(offset)
     , keys(buffer, 4 + 4)
     , aliases(buffer, keys.fbe_offset() + keys.fbe_size())
     , alias_int(buffer, aliases.fbe_offset() + aliases.fbe_size())
 {}
 
-size_t FieldModel<::arena_common::Expression>::fbe_body() const noexcept
+size_t FieldModel<::arena_common_pmr::Expression>::fbe_body() const noexcept
 {
     size_t fbe_result = 4 + 4
         + keys.fbe_size()
@@ -435,7 +435,7 @@ size_t FieldModel<::arena_common::Expression>::fbe_body() const noexcept
     return fbe_result;
 }
 
-size_t FieldModel<::arena_common::Expression>::fbe_extra() const noexcept
+size_t FieldModel<::arena_common_pmr::Expression>::fbe_extra() const noexcept
 {
     if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
         return 0;
@@ -457,7 +457,7 @@ size_t FieldModel<::arena_common::Expression>::fbe_extra() const noexcept
     return fbe_result;
 }
 
-bool FieldModel<::arena_common::Expression>::verify(bool fbe_verify_type) const noexcept
+bool FieldModel<::arena_common_pmr::Expression>::verify(bool fbe_verify_type) const noexcept
 {
     if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
         return true;
@@ -480,7 +480,7 @@ bool FieldModel<::arena_common::Expression>::verify(bool fbe_verify_type) const 
     return fbe_result;
 }
 
-bool FieldModel<::arena_common::Expression>::verify_fields([[maybe_unused]] size_t fbe_struct_size) const noexcept
+bool FieldModel<::arena_common_pmr::Expression>::verify_fields([[maybe_unused]] size_t fbe_struct_size) const noexcept
 {
     size_t fbe_current_size = 4 + 4;
 
@@ -505,7 +505,7 @@ bool FieldModel<::arena_common::Expression>::verify_fields([[maybe_unused]] size
     return true;
 }
 
-size_t FieldModel<::arena_common::Expression>::get_begin() const noexcept
+size_t FieldModel<::arena_common_pmr::Expression>::get_begin() const noexcept
 {
     if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
         return 0;
@@ -524,12 +524,12 @@ size_t FieldModel<::arena_common::Expression>::get_begin() const noexcept
     return fbe_struct_offset;
 }
 
-void FieldModel<::arena_common::Expression>::get_end(size_t fbe_begin) const noexcept
+void FieldModel<::arena_common_pmr::Expression>::get_end(size_t fbe_begin) const noexcept
 {
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModel<::arena_common::Expression>::get(::arena_common::Expression& fbe_value) const noexcept
+void FieldModel<::arena_common_pmr::Expression>::get(::arena_common_pmr::Expression& fbe_value) const noexcept
 {
     size_t fbe_begin = get_begin();
     if (fbe_begin == 0)
@@ -540,7 +540,7 @@ void FieldModel<::arena_common::Expression>::get(::arena_common::Expression& fbe
     get_end(fbe_begin);
 }
 
-void FieldModel<::arena_common::Expression>::get_fields([[maybe_unused]] ::arena_common::Expression& fbe_value, [[maybe_unused]] size_t fbe_struct_size) const noexcept
+void FieldModel<::arena_common_pmr::Expression>::get_fields([[maybe_unused]] ::arena_common_pmr::Expression& fbe_value, [[maybe_unused]] size_t fbe_struct_size) const noexcept
 {
     size_t fbe_current_size = 4 + 4;
 
@@ -563,7 +563,7 @@ void FieldModel<::arena_common::Expression>::get_fields([[maybe_unused]] ::arena
     fbe_current_size += alias_int.fbe_size();
 }
 
-size_t FieldModel<::arena_common::Expression>::set_begin()
+size_t FieldModel<::arena_common_pmr::Expression>::set_begin()
 {
     assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
     if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
@@ -583,12 +583,12 @@ size_t FieldModel<::arena_common::Expression>::set_begin()
     return fbe_struct_offset;
 }
 
-void FieldModel<::arena_common::Expression>::set_end(size_t fbe_begin)
+void FieldModel<::arena_common_pmr::Expression>::set_end(size_t fbe_begin)
 {
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModel<::arena_common::Expression>::set(const ::arena_common::Expression& fbe_value) noexcept
+void FieldModel<::arena_common_pmr::Expression>::set(const ::arena_common_pmr::Expression& fbe_value) noexcept
 {
     size_t fbe_begin = set_begin();
     if (fbe_begin == 0)
@@ -598,14 +598,14 @@ void FieldModel<::arena_common::Expression>::set(const ::arena_common::Expressio
     set_end(fbe_begin);
 }
 
-void FieldModel<::arena_common::Expression>::set_fields([[maybe_unused]] const ::arena_common::Expression& fbe_value) noexcept
+void FieldModel<::arena_common_pmr::Expression>::set_fields([[maybe_unused]] const ::arena_common_pmr::Expression& fbe_value) noexcept
 {
     keys.set(fbe_value.keys);
     aliases.set(fbe_value.aliases);
     alias_int.set(fbe_value.alias_int);
 }
 
-namespace arena_common {
+namespace arena_common_pmr {
 
 bool ExpressionModel::verify()
 {
@@ -633,7 +633,7 @@ size_t ExpressionModel::create_end(size_t fbe_begin)
     return fbe_full_size;
 }
 
-size_t ExpressionModel::serialize(const ::arena_common::Expression& value)
+size_t ExpressionModel::serialize(const ::arena_common_pmr::Expression& value)
 {
     size_t fbe_begin = create_begin();
     model.set(value);
@@ -641,7 +641,7 @@ size_t ExpressionModel::serialize(const ::arena_common::Expression& value)
     return fbe_full_size;
 }
 
-size_t ExpressionModel::deserialize(::arena_common::Expression& value) const noexcept
+size_t ExpressionModel::deserialize(::arena_common_pmr::Expression& value) const noexcept
 {
     if ((this->buffer().offset() + model.fbe_offset() - 4) > this->buffer().size())
         return 0;
@@ -655,6 +655,6 @@ size_t ExpressionModel::deserialize(::arena_common::Expression& value) const noe
     return fbe_full_size;
 }
 
-} // namespace arena_common
+} // namespace arena_common_pmr
 
 } // namespace FBE

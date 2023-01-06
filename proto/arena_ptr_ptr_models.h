@@ -58,9 +58,9 @@ public:
     void get_end(size_t fbe_begin) const noexcept;
 
     // Get the struct value
-    void get(::arena_ptr::Line** fbe_value) noexcept;
+    void get(::arena_ptr_pmr::Line** fbe_value) noexcept;
     // Get the struct fields values
-    void get_fields(::arena_ptr::Line& fbe_value, size_t fbe_struct_size) noexcept;
+    void get_fields(::arena_ptr_pmr::Line& fbe_value, size_t fbe_struct_size) noexcept;
 
     // Set the struct value (begin phase)
     size_t set_begin(bool has_value);
@@ -68,9 +68,9 @@ public:
     void set_end(size_t fbe_begin);
 
     // Set the struct value
-    void set(const ::arena_ptr::Line* fbe_value) noexcept;
+    void set(const ::arena_ptr_pmr::Line* fbe_value) noexcept;
     // Set the struct fields values
-    void set_fields(const ::arena_ptr::Line* fbe_value) noexcept;
+    void set_fields(const ::arena_ptr_pmr::Line* fbe_value) noexcept;
 
 private:
     FBEBuffer& _buffer;
@@ -111,9 +111,9 @@ public:
     void get_end(size_t fbe_begin) const noexcept;
 
     // Get the struct value
-    void get(::arena_ptr::Line2** fbe_value) noexcept;
+    void get(::arena_ptr_pmr::Line2** fbe_value) noexcept;
     // Get the struct fields values
-    void get_fields(::arena_ptr::Line2& fbe_value, size_t fbe_struct_size) noexcept;
+    void get_fields(::arena_ptr_pmr::Line2& fbe_value, size_t fbe_struct_size) noexcept;
 
     // Set the struct value (begin phase)
     size_t set_begin(bool has_value);
@@ -121,9 +121,9 @@ public:
     void set_end(size_t fbe_begin);
 
     // Set the struct value
-    void set(const ::arena_ptr::Line2* fbe_value) noexcept;
+    void set(const ::arena_ptr_pmr::Line2* fbe_value) noexcept;
     // Set the struct fields values
-    void set_fields(const ::arena_ptr::Line2* fbe_value) noexcept;
+    void set_fields(const ::arena_ptr_pmr::Line2* fbe_value) noexcept;
 
 private:
     FBEBuffer& _buffer;
@@ -133,7 +133,7 @@ public:
     BaseFieldModel* ptr{nullptr};
 };
 
-// Fast Binary Encoding ::arena_ptr::Line field model
+// Fast Binary Encoding ::arena_ptr_pmr::Line field model
 class FieldModel_arena_ptr_Line : public BaseFieldModel
 {
 public:
@@ -185,10 +185,10 @@ private:
     size_t _offset;
 
 public:
-    FieldModel<::arena_common::Expression> expression;
+    FieldModel<::arena_common_pmr::Expression> expression;
 };
 
-namespace arena_ptr {
+namespace arena_ptr_pmr {
 
 // Fast Binary Encoding Line model
 class LineModel : public FBE::Model
@@ -211,9 +211,9 @@ public:
     size_t create_end(size_t fbe_begin);
 
     // Serialize the struct value
-    size_t serialize(const ::arena_ptr::Line& value);
+    size_t serialize(const ::arena_ptr_pmr::Line& value);
     // Deserialize the struct value
-    size_t deserialize(::arena_ptr::Line& value) noexcept;
+    size_t deserialize(::arena_ptr_pmr::Line& value) noexcept;
 
     // Move to the next struct value
     void next(size_t prev) noexcept { model.fbe_shift(prev); }
@@ -222,9 +222,9 @@ public:
     FieldModel_arena_ptr_Line model;
 };
 
-} // namespace arena_ptr
+} // namespace arena_ptr_pmr
 
-// Fast Binary Encoding ::arena_ptr::Line2 field model
+// Fast Binary Encoding ::arena_ptr_pmr::Line2 field model
 class FieldModel_arena_ptr_Line2 : public BaseFieldModel
 {
 public:
@@ -279,7 +279,7 @@ public:
     FieldModel<FBE::pmr_buffer_t> bytes_v;
 };
 
-namespace arena_ptr {
+namespace arena_ptr_pmr {
 
 // Fast Binary Encoding Line2 model
 class Line2Model : public FBE::Model
@@ -302,9 +302,9 @@ public:
     size_t create_end(size_t fbe_begin);
 
     // Serialize the struct value
-    size_t serialize(const ::arena_ptr::Line2& value);
+    size_t serialize(const ::arena_ptr_pmr::Line2& value);
     // Deserialize the struct value
-    size_t deserialize(::arena_ptr::Line2& value) noexcept;
+    size_t deserialize(::arena_ptr_pmr::Line2& value) noexcept;
 
     // Move to the next struct value
     void next(size_t prev) noexcept { model.fbe_shift(prev); }
@@ -313,6 +313,6 @@ public:
     FieldModel_arena_ptr_Line2 model;
 };
 
-} // namespace arena_ptr
+} // namespace arena_ptr_pmr
 
 } // namespace FBE

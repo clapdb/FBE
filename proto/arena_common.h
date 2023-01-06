@@ -22,16 +22,16 @@
 #include "fbe.h"
 #include "arena/arena.hpp"
 
-namespace arena_common {
+namespace arena_common_pmr {
 using namespace FBE;
 using allocator_type = pmr::polymorphic_allocator<char>;
-} // namespace arena_common
+} // namespace arena_common_pmr
 
 namespace FBE {
-using namespace ::arena_common;
+using namespace ::arena_common_pmr;
 } // namespace FBE
 
-namespace arena_common {
+namespace arena_common_pmr {
 
 enum class Optr : uint8_t
 {
@@ -45,7 +45,7 @@ enum class Optr : uint8_t
 std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] Optr value);
 
 #if defined(FMT_VERSION)
-} template <> struct fmt::formatter<arena_common::Optr> : formatter<string_view> {}; namespace arena_common {
+} template <> struct fmt::formatter<arena_common_pmr::Optr> : formatter<string_view> {}; namespace arena_common_pmr {
 #endif
 
 #if defined(LOGGING_PROTOCOL)
@@ -63,14 +63,14 @@ struct Alias
     ArenaManagedCreateOnlyTag;
 
     stdb::memory::arena_string name;
-    ::arena_common::Optr optr;
-    ::arena_common::Expr expr;
+    ::arena_common_pmr::Optr optr;
+    ::arena_common_pmr::Expr expr;
 
     size_t fbe_type() const noexcept { return 1; }
 
     Alias();
     explicit Alias(allocator_type alloc);
-    Alias(const stdb::memory::arena_string& arg_name, const ::arena_common::Optr& arg_optr, const ::arena_common::Expr& arg_expr);
+    Alias(const stdb::memory::arena_string& arg_name, const ::arena_common_pmr::Optr& arg_optr, const ::arena_common_pmr::Expr& arg_expr);
     Alias(const Alias& other) = default;
     Alias(Alias&& other) = default;
     ~Alias() = default;
@@ -93,16 +93,16 @@ struct Alias
     friend void swap(Alias& value1, Alias& value2) noexcept { value1.swap(value2); }
 };
 
-} // namespace arena_common
+} // namespace arena_common_pmr
 
 #if defined(FMT_VERSION)
-template <> struct fmt::formatter<arena_common::Alias> : formatter<string_view> {};
+template <> struct fmt::formatter<arena_common_pmr::Alias> : formatter<string_view> {};
 #endif
 
 template<>
-struct std::hash<arena_common::Alias>
+struct std::hash<arena_common_pmr::Alias>
 {
-    typedef arena_common::Alias argument_type;
+    typedef arena_common_pmr::Alias argument_type;
     typedef size_t result_type;
 
     result_type operator() ([[maybe_unused]] const argument_type& value) const
@@ -112,21 +112,21 @@ struct std::hash<arena_common::Alias>
     }
 };
 
-namespace arena_common {
+namespace arena_common_pmr {
 
 struct Expression
 {
     ArenaManagedCreateOnlyTag;
 
     pmr::vector<stdb::memory::arena_string> keys;
-    pmr::vector<::arena_common::Alias> aliases;
-    pmr::map<int32_t, ::arena_common::Alias> alias_int;
+    pmr::vector<::arena_common_pmr::Alias> aliases;
+    pmr::map<int32_t, ::arena_common_pmr::Alias> alias_int;
 
     size_t fbe_type() const noexcept { return 2; }
 
     Expression();
     explicit Expression(allocator_type alloc);
-    Expression(const pmr::vector<stdb::memory::arena_string>& arg_keys, const pmr::vector<::arena_common::Alias>& arg_aliases, const pmr::map<int32_t, ::arena_common::Alias>& arg_alias_int);
+    Expression(const pmr::vector<stdb::memory::arena_string>& arg_keys, const pmr::vector<::arena_common_pmr::Alias>& arg_aliases, const pmr::map<int32_t, ::arena_common_pmr::Alias>& arg_alias_int);
     Expression(const Expression& other) = default;
     Expression(Expression&& other) = default;
     ~Expression() = default;
@@ -149,16 +149,16 @@ struct Expression
     friend void swap(Expression& value1, Expression& value2) noexcept { value1.swap(value2); }
 };
 
-} // namespace arena_common
+} // namespace arena_common_pmr
 
 #if defined(FMT_VERSION)
-template <> struct fmt::formatter<arena_common::Expression> : formatter<string_view> {};
+template <> struct fmt::formatter<arena_common_pmr::Expression> : formatter<string_view> {};
 #endif
 
 template<>
-struct std::hash<arena_common::Expression>
+struct std::hash<arena_common_pmr::Expression>
 {
-    typedef arena_common::Expression argument_type;
+    typedef arena_common_pmr::Expression argument_type;
     typedef size_t result_type;
 
     result_type operator() ([[maybe_unused]] const argument_type& value) const
@@ -168,6 +168,6 @@ struct std::hash<arena_common::Expression>
     }
 };
 
-namespace arena_common {
+namespace arena_common_pmr {
 
-} // namespace arena_common
+} // namespace arena_common_pmr

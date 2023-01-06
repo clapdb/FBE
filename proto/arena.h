@@ -24,32 +24,32 @@
 
 #include "arena_common.h"
 
-namespace arena {
+namespace arena_pmr {
 using namespace FBE;
 using allocator_type = pmr::polymorphic_allocator<char>;
-using namespace ::arena_common;
-} // namespace arena
+using namespace ::arena_common_pmr;
+} // namespace arena_pmr
 
 namespace FBE {
-using namespace ::arena;
+using namespace ::arena_pmr;
 } // namespace FBE
 
-namespace arena {
+namespace arena_pmr {
 
 struct Item
 {
     ArenaManagedCreateOnlyTag;
 
-    ::arena_common::Optr optr;
-    ::arena_common::Alias alias;
-    pmr::vector<::arena_common::Expression> expressions;
-    pmr::map<int32_t, ::arena_common::Alias> aliases_int;
+    ::arena_common_pmr::Optr optr;
+    ::arena_common_pmr::Alias alias;
+    pmr::vector<::arena_common_pmr::Expression> expressions;
+    pmr::map<int32_t, ::arena_common_pmr::Alias> aliases_int;
 
     size_t fbe_type() const noexcept { return 1; }
 
     Item();
     explicit Item(allocator_type alloc);
-    Item(const ::arena_common::Optr& arg_optr, const ::arena_common::Alias& arg_alias, const pmr::vector<::arena_common::Expression>& arg_expressions, const pmr::map<int32_t, ::arena_common::Alias>& arg_aliases_int);
+    Item(const ::arena_common_pmr::Optr& arg_optr, const ::arena_common_pmr::Alias& arg_alias, const pmr::vector<::arena_common_pmr::Expression>& arg_expressions, const pmr::map<int32_t, ::arena_common_pmr::Alias>& arg_aliases_int);
     Item(const Item& other) = default;
     Item(Item&& other) = default;
     ~Item() = default;
@@ -72,16 +72,16 @@ struct Item
     friend void swap(Item& value1, Item& value2) noexcept { value1.swap(value2); }
 };
 
-} // namespace arena
+} // namespace arena_pmr
 
 #if defined(FMT_VERSION)
-template <> struct fmt::formatter<arena::Item> : formatter<string_view> {};
+template <> struct fmt::formatter<arena_pmr::Item> : formatter<string_view> {};
 #endif
 
 template<>
-struct std::hash<arena::Item>
+struct std::hash<arena_pmr::Item>
 {
-    typedef arena::Item argument_type;
+    typedef arena_pmr::Item argument_type;
     typedef size_t result_type;
 
     result_type operator() ([[maybe_unused]] const argument_type& value) const
@@ -91,7 +91,7 @@ struct std::hash<arena::Item>
     }
 };
 
-namespace arena {
+namespace arena_pmr {
 
 struct Item2
 {
@@ -126,16 +126,16 @@ struct Item2
     friend void swap(Item2& value1, Item2& value2) noexcept { value1.swap(value2); }
 };
 
-} // namespace arena
+} // namespace arena_pmr
 
 #if defined(FMT_VERSION)
-template <> struct fmt::formatter<arena::Item2> : formatter<string_view> {};
+template <> struct fmt::formatter<arena_pmr::Item2> : formatter<string_view> {};
 #endif
 
 template<>
-struct std::hash<arena::Item2>
+struct std::hash<arena_pmr::Item2>
 {
-    typedef arena::Item2 argument_type;
+    typedef arena_pmr::Item2 argument_type;
     typedef size_t result_type;
 
     result_type operator() ([[maybe_unused]] const argument_type& value) const
@@ -145,6 +145,6 @@ struct std::hash<arena::Item2>
     }
 };
 
-namespace arena {
+namespace arena_pmr {
 
-} // namespace arena
+} // namespace arena_pmr

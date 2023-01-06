@@ -7,7 +7,7 @@
 
 #include "arena.h"
 
-namespace arena {
+namespace arena_pmr {
 
 Item::Item()
     : optr()
@@ -17,13 +17,13 @@ Item::Item()
 {}
 
 Item::Item([[maybe_unused]] allocator_type alloc)
-    : optr(assign_member<::arena_common::Optr>(alloc))
-    , alias(assign_member<::arena_common::Alias>(alloc))
+    : optr(assign_member<::arena_common_pmr::Optr>(alloc))
+    , alias(assign_member<::arena_common_pmr::Alias>(alloc))
     , expressions(alloc)
     , aliases_int(alloc)
 {}
 
-Item::Item(const ::arena_common::Optr& arg_optr, const ::arena_common::Alias& arg_alias, const pmr::vector<::arena_common::Expression>& arg_expressions, const pmr::map<int32_t, ::arena_common::Alias>& arg_aliases_int)
+Item::Item(const ::arena_common_pmr::Optr& arg_optr, const ::arena_common_pmr::Alias& arg_alias, const pmr::vector<::arena_common_pmr::Expression>& arg_expressions, const pmr::map<int32_t, ::arena_common_pmr::Alias>& arg_aliases_int)
     : optr(arg_optr)
     , alias(arg_alias)
     , expressions(arg_expressions)
@@ -133,4 +133,4 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const Item2& val
     return stream;
 }
 
-} // namespace arena
+} // namespace arena_pmr

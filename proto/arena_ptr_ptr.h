@@ -24,31 +24,31 @@
 
 #include "arena_common.h"
 
-namespace arena_ptr {
+namespace arena_ptr_pmr {
 using namespace FBE;
 using allocator_type = pmr::polymorphic_allocator<char>;
-using namespace ::arena_common;
-} // namespace arena_ptr
+using namespace ::arena_common_pmr;
+} // namespace arena_ptr_pmr
 
 namespace FBE {
-using namespace ::arena_ptr;
+using namespace ::arena_ptr_pmr;
 } // namespace FBE
 
 #include "fbe_ptr.h"
 
-namespace arena_ptr {
+namespace arena_ptr_pmr {
 
 struct Line : FBE::Base
 {
     ArenaManagedCreateOnlyTag;
 
-    ::arena_common::Expression expression;
+    ::arena_common_pmr::Expression expression;
 
     size_t fbe_type() const noexcept { return 1; }
 
     Line();
     explicit Line(allocator_type alloc);
-    explicit Line(::arena_common::Expression&& arg_expression);
+    explicit Line(::arena_common_pmr::Expression&& arg_expression);
     Line(const Line& other) = default;
     Line(Line&& other) noexcept;
     ~Line() override;
@@ -71,12 +71,12 @@ struct Line : FBE::Base
     friend void swap(Line& value1, Line& value2) noexcept { value1.swap(value2); }
 };
 
-} // namespace arena_ptr
+} // namespace arena_ptr_pmr
 
 template<>
-struct std::hash<arena_ptr::Line>
+struct std::hash<arena_ptr_pmr::Line>
 {
-    typedef arena_ptr::Line argument_type;
+    typedef arena_ptr_pmr::Line argument_type;
     typedef size_t result_type;
 
     result_type operator() ([[maybe_unused]] const argument_type& value) const
@@ -86,7 +86,7 @@ struct std::hash<arena_ptr::Line>
     }
 };
 
-namespace arena_ptr {
+namespace arena_ptr_pmr {
 
 struct Line2 : FBE::Base
 {
@@ -121,12 +121,12 @@ struct Line2 : FBE::Base
     friend void swap(Line2& value1, Line2& value2) noexcept { value1.swap(value2); }
 };
 
-} // namespace arena_ptr
+} // namespace arena_ptr_pmr
 
 template<>
-struct std::hash<arena_ptr::Line2>
+struct std::hash<arena_ptr_pmr::Line2>
 {
-    typedef arena_ptr::Line2 argument_type;
+    typedef arena_ptr_pmr::Line2 argument_type;
     typedef size_t result_type;
 
     result_type operator() ([[maybe_unused]] const argument_type& value) const
@@ -136,6 +136,6 @@ struct std::hash<arena_ptr::Line2>
     }
 };
 
-namespace arena_ptr {
+namespace arena_ptr_pmr {
 
-} // namespace arena_ptr
+} // namespace arena_ptr_pmr

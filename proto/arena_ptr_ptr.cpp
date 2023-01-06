@@ -7,17 +7,17 @@
 
 #include "arena_ptr_ptr.h"
 
-namespace arena_ptr {
+namespace arena_ptr_pmr {
 
 Line::Line()
     : expression()
 {}
 
 Line::Line([[maybe_unused]] allocator_type alloc)
-    : expression(assign_member<::arena_common::Expression>(alloc))
+    : expression(assign_member<::arena_common_pmr::Expression>(alloc))
 {}
 
-Line::Line(::arena_common::Expression&& arg_expression)
+Line::Line(::arena_common_pmr::Expression&& arg_expression)
     : expression(std::move(arg_expression))
 {}
 
@@ -129,4 +129,4 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const Line2& val
     return stream;
 }
 
-} // namespace arena_ptr
+} // namespace arena_ptr_pmr

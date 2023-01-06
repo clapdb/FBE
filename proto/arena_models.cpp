@@ -9,14 +9,14 @@
 
 namespace FBE {
 
-FieldModel<::arena::Item>::FieldModel(FBEBuffer& buffer, size_t offset) noexcept : _buffer(buffer), _offset(offset)
+FieldModel<::arena_pmr::Item>::FieldModel(FBEBuffer& buffer, size_t offset) noexcept : _buffer(buffer), _offset(offset)
     , optr(buffer, 4 + 4)
     , alias(buffer, optr.fbe_offset() + optr.fbe_size())
     , expressions(buffer, alias.fbe_offset() + alias.fbe_size())
     , aliases_int(buffer, expressions.fbe_offset() + expressions.fbe_size())
 {}
 
-size_t FieldModel<::arena::Item>::fbe_body() const noexcept
+size_t FieldModel<::arena_pmr::Item>::fbe_body() const noexcept
 {
     size_t fbe_result = 4 + 4
         + optr.fbe_size()
@@ -27,7 +27,7 @@ size_t FieldModel<::arena::Item>::fbe_body() const noexcept
     return fbe_result;
 }
 
-size_t FieldModel<::arena::Item>::fbe_extra() const noexcept
+size_t FieldModel<::arena_pmr::Item>::fbe_extra() const noexcept
 {
     if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
         return 0;
@@ -50,7 +50,7 @@ size_t FieldModel<::arena::Item>::fbe_extra() const noexcept
     return fbe_result;
 }
 
-bool FieldModel<::arena::Item>::verify(bool fbe_verify_type) const noexcept
+bool FieldModel<::arena_pmr::Item>::verify(bool fbe_verify_type) const noexcept
 {
     if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
         return true;
@@ -73,7 +73,7 @@ bool FieldModel<::arena::Item>::verify(bool fbe_verify_type) const noexcept
     return fbe_result;
 }
 
-bool FieldModel<::arena::Item>::verify_fields([[maybe_unused]] size_t fbe_struct_size) const noexcept
+bool FieldModel<::arena_pmr::Item>::verify_fields([[maybe_unused]] size_t fbe_struct_size) const noexcept
 {
     size_t fbe_current_size = 4 + 4;
 
@@ -104,7 +104,7 @@ bool FieldModel<::arena::Item>::verify_fields([[maybe_unused]] size_t fbe_struct
     return true;
 }
 
-size_t FieldModel<::arena::Item>::get_begin() const noexcept
+size_t FieldModel<::arena_pmr::Item>::get_begin() const noexcept
 {
     if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
         return 0;
@@ -123,12 +123,12 @@ size_t FieldModel<::arena::Item>::get_begin() const noexcept
     return fbe_struct_offset;
 }
 
-void FieldModel<::arena::Item>::get_end(size_t fbe_begin) const noexcept
+void FieldModel<::arena_pmr::Item>::get_end(size_t fbe_begin) const noexcept
 {
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModel<::arena::Item>::get(::arena::Item& fbe_value) const noexcept
+void FieldModel<::arena_pmr::Item>::get(::arena_pmr::Item& fbe_value) const noexcept
 {
     size_t fbe_begin = get_begin();
     if (fbe_begin == 0)
@@ -139,20 +139,20 @@ void FieldModel<::arena::Item>::get(::arena::Item& fbe_value) const noexcept
     get_end(fbe_begin);
 }
 
-void FieldModel<::arena::Item>::get_fields([[maybe_unused]] ::arena::Item& fbe_value, [[maybe_unused]] size_t fbe_struct_size) const noexcept
+void FieldModel<::arena_pmr::Item>::get_fields([[maybe_unused]] ::arena_pmr::Item& fbe_value, [[maybe_unused]] size_t fbe_struct_size) const noexcept
 {
     size_t fbe_current_size = 4 + 4;
 
     if ((fbe_current_size + optr.fbe_size()) <= fbe_struct_size)
         optr.get(fbe_value.optr);
     else
-        fbe_value.optr = ::arena_common::Optr();
+        fbe_value.optr = ::arena_common_pmr::Optr();
     fbe_current_size += optr.fbe_size();
 
     if ((fbe_current_size + alias.fbe_size()) <= fbe_struct_size)
         alias.get(fbe_value.alias);
     else
-        fbe_value.alias = ::arena_common::Alias();
+        fbe_value.alias = ::arena_common_pmr::Alias();
     fbe_current_size += alias.fbe_size();
 
     if ((fbe_current_size + expressions.fbe_size()) <= fbe_struct_size)
@@ -168,7 +168,7 @@ void FieldModel<::arena::Item>::get_fields([[maybe_unused]] ::arena::Item& fbe_v
     fbe_current_size += aliases_int.fbe_size();
 }
 
-size_t FieldModel<::arena::Item>::set_begin()
+size_t FieldModel<::arena_pmr::Item>::set_begin()
 {
     assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
     if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
@@ -188,12 +188,12 @@ size_t FieldModel<::arena::Item>::set_begin()
     return fbe_struct_offset;
 }
 
-void FieldModel<::arena::Item>::set_end(size_t fbe_begin)
+void FieldModel<::arena_pmr::Item>::set_end(size_t fbe_begin)
 {
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModel<::arena::Item>::set(const ::arena::Item& fbe_value) noexcept
+void FieldModel<::arena_pmr::Item>::set(const ::arena_pmr::Item& fbe_value) noexcept
 {
     size_t fbe_begin = set_begin();
     if (fbe_begin == 0)
@@ -203,7 +203,7 @@ void FieldModel<::arena::Item>::set(const ::arena::Item& fbe_value) noexcept
     set_end(fbe_begin);
 }
 
-void FieldModel<::arena::Item>::set_fields([[maybe_unused]] const ::arena::Item& fbe_value) noexcept
+void FieldModel<::arena_pmr::Item>::set_fields([[maybe_unused]] const ::arena_pmr::Item& fbe_value) noexcept
 {
     optr.set(fbe_value.optr);
     alias.set(fbe_value.alias);
@@ -211,7 +211,7 @@ void FieldModel<::arena::Item>::set_fields([[maybe_unused]] const ::arena::Item&
     aliases_int.set(fbe_value.aliases_int);
 }
 
-namespace arena {
+namespace arena_pmr {
 
 bool ItemModel::verify()
 {
@@ -239,7 +239,7 @@ size_t ItemModel::create_end(size_t fbe_begin)
     return fbe_full_size;
 }
 
-size_t ItemModel::serialize(const ::arena::Item& value)
+size_t ItemModel::serialize(const ::arena_pmr::Item& value)
 {
     size_t fbe_begin = create_begin();
     model.set(value);
@@ -247,7 +247,7 @@ size_t ItemModel::serialize(const ::arena::Item& value)
     return fbe_full_size;
 }
 
-size_t ItemModel::deserialize(::arena::Item& value) const noexcept
+size_t ItemModel::deserialize(::arena_pmr::Item& value) const noexcept
 {
     if ((this->buffer().offset() + model.fbe_offset() - 4) > this->buffer().size())
         return 0;
@@ -261,13 +261,13 @@ size_t ItemModel::deserialize(::arena::Item& value) const noexcept
     return fbe_full_size;
 }
 
-} // namespace arena
+} // namespace arena_pmr
 
-FieldModel<::arena::Item2>::FieldModel(FBEBuffer& buffer, size_t offset) noexcept : _buffer(buffer), _offset(offset)
+FieldModel<::arena_pmr::Item2>::FieldModel(FBEBuffer& buffer, size_t offset) noexcept : _buffer(buffer), _offset(offset)
     , bytes_v(buffer, 4 + 4)
 {}
 
-size_t FieldModel<::arena::Item2>::fbe_body() const noexcept
+size_t FieldModel<::arena_pmr::Item2>::fbe_body() const noexcept
 {
     size_t fbe_result = 4 + 4
         + bytes_v.fbe_size()
@@ -275,7 +275,7 @@ size_t FieldModel<::arena::Item2>::fbe_body() const noexcept
     return fbe_result;
 }
 
-size_t FieldModel<::arena::Item2>::fbe_extra() const noexcept
+size_t FieldModel<::arena_pmr::Item2>::fbe_extra() const noexcept
 {
     if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
         return 0;
@@ -295,7 +295,7 @@ size_t FieldModel<::arena::Item2>::fbe_extra() const noexcept
     return fbe_result;
 }
 
-bool FieldModel<::arena::Item2>::verify(bool fbe_verify_type) const noexcept
+bool FieldModel<::arena_pmr::Item2>::verify(bool fbe_verify_type) const noexcept
 {
     if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
         return true;
@@ -318,7 +318,7 @@ bool FieldModel<::arena::Item2>::verify(bool fbe_verify_type) const noexcept
     return fbe_result;
 }
 
-bool FieldModel<::arena::Item2>::verify_fields([[maybe_unused]] size_t fbe_struct_size) const noexcept
+bool FieldModel<::arena_pmr::Item2>::verify_fields([[maybe_unused]] size_t fbe_struct_size) const noexcept
 {
     size_t fbe_current_size = 4 + 4;
 
@@ -331,7 +331,7 @@ bool FieldModel<::arena::Item2>::verify_fields([[maybe_unused]] size_t fbe_struc
     return true;
 }
 
-size_t FieldModel<::arena::Item2>::get_begin() const noexcept
+size_t FieldModel<::arena_pmr::Item2>::get_begin() const noexcept
 {
     if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
         return 0;
@@ -350,12 +350,12 @@ size_t FieldModel<::arena::Item2>::get_begin() const noexcept
     return fbe_struct_offset;
 }
 
-void FieldModel<::arena::Item2>::get_end(size_t fbe_begin) const noexcept
+void FieldModel<::arena_pmr::Item2>::get_end(size_t fbe_begin) const noexcept
 {
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModel<::arena::Item2>::get(::arena::Item2& fbe_value) const noexcept
+void FieldModel<::arena_pmr::Item2>::get(::arena_pmr::Item2& fbe_value) const noexcept
 {
     size_t fbe_begin = get_begin();
     if (fbe_begin == 0)
@@ -366,7 +366,7 @@ void FieldModel<::arena::Item2>::get(::arena::Item2& fbe_value) const noexcept
     get_end(fbe_begin);
 }
 
-void FieldModel<::arena::Item2>::get_fields([[maybe_unused]] ::arena::Item2& fbe_value, [[maybe_unused]] size_t fbe_struct_size) const noexcept
+void FieldModel<::arena_pmr::Item2>::get_fields([[maybe_unused]] ::arena_pmr::Item2& fbe_value, [[maybe_unused]] size_t fbe_struct_size) const noexcept
 {
     size_t fbe_current_size = 4 + 4;
 
@@ -377,7 +377,7 @@ void FieldModel<::arena::Item2>::get_fields([[maybe_unused]] ::arena::Item2& fbe
     fbe_current_size += bytes_v.fbe_size();
 }
 
-size_t FieldModel<::arena::Item2>::set_begin()
+size_t FieldModel<::arena_pmr::Item2>::set_begin()
 {
     assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
     if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
@@ -397,12 +397,12 @@ size_t FieldModel<::arena::Item2>::set_begin()
     return fbe_struct_offset;
 }
 
-void FieldModel<::arena::Item2>::set_end(size_t fbe_begin)
+void FieldModel<::arena_pmr::Item2>::set_end(size_t fbe_begin)
 {
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModel<::arena::Item2>::set(const ::arena::Item2& fbe_value) noexcept
+void FieldModel<::arena_pmr::Item2>::set(const ::arena_pmr::Item2& fbe_value) noexcept
 {
     size_t fbe_begin = set_begin();
     if (fbe_begin == 0)
@@ -412,12 +412,12 @@ void FieldModel<::arena::Item2>::set(const ::arena::Item2& fbe_value) noexcept
     set_end(fbe_begin);
 }
 
-void FieldModel<::arena::Item2>::set_fields([[maybe_unused]] const ::arena::Item2& fbe_value) noexcept
+void FieldModel<::arena_pmr::Item2>::set_fields([[maybe_unused]] const ::arena_pmr::Item2& fbe_value) noexcept
 {
     bytes_v.set(fbe_value.bytes_v);
 }
 
-namespace arena {
+namespace arena_pmr {
 
 bool Item2Model::verify()
 {
@@ -445,7 +445,7 @@ size_t Item2Model::create_end(size_t fbe_begin)
     return fbe_full_size;
 }
 
-size_t Item2Model::serialize(const ::arena::Item2& value)
+size_t Item2Model::serialize(const ::arena_pmr::Item2& value)
 {
     size_t fbe_begin = create_begin();
     model.set(value);
@@ -453,7 +453,7 @@ size_t Item2Model::serialize(const ::arena::Item2& value)
     return fbe_full_size;
 }
 
-size_t Item2Model::deserialize(::arena::Item2& value) const noexcept
+size_t Item2Model::deserialize(::arena_pmr::Item2& value) const noexcept
 {
     if ((this->buffer().offset() + model.fbe_offset() - 4) > this->buffer().size())
         return 0;
@@ -467,6 +467,6 @@ size_t Item2Model::deserialize(::arena::Item2& value) const noexcept
     return fbe_full_size;
 }
 
-} // namespace arena
+} // namespace arena_pmr
 
 } // namespace FBE
