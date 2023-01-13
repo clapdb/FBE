@@ -51,11 +51,11 @@ void GeneratorJavaScript::GenerateBig(const fs::path& path)
 /* eslint-disable */
 
 /*
- *  big.js v5.1.2
- *  A small, fast, easy-to-use library for arbitrary-precision decimal arithmetic.
- *  Copyright (c) 2017 Michael Mclaughlin <M8ch88l@gmail.com>
- *  https://github.com/MikeMcl/big.js/LICENCE
- */
+* Copyright (C) 2020 Beijing Jinyi Data Technology Co., Ltd. All rights reserved.
+*
+* This source code is licensed under the MIT license found in the
+* LICENSE file in the root directory of this source tree.
+*/
 ;(function (GLOBAL) {
   'use strict';
   var Big,
