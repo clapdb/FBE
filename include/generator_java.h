@@ -1,3 +1,9 @@
+/*
+* Copyright (C) 2020 Beijing Jinyi Data Technology Co., Ltd. All rights reserved.
+*
+* This source code is licensed under the MIT license found in the
+* LICENSE file in the root directory of this source tree.
+*/
 /*!
     \file generator_java.h
     \brief Fast binary encoding Java generator definition
