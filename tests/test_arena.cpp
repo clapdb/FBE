@@ -11,8 +11,8 @@
 #include "catch2/catch.hpp"
 #include "test.h"
 #include "arena/arena.hpp"
-#include "../proto/arena_models.h"
-#include "../proto/arena_ptr_ptr_models.h"
+#include "../proto/arena_pmr_models.h"
+#include "../proto/arena_ptr_ptr_pmr_models.h"
 
 using stdb::memory::Arena;
 using stdb::memory::ArenaContainStatus;

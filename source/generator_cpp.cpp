@@ -2577,13 +2577,14 @@ void GeneratorCpp::GenerateStruct_Source(const std::shared_ptr<Package>& p, cons
         if (s->body)
         {
             auto enums = p->body->enums;
+            auto flags = p->body->flags;
             for (const auto& field : s->body->fields)
             {
                 WriteIndent();
                 Write(std::string(first ? ": " : ", ") + *field->name + "(");
                 // priority: container > optional > imported type > bytes/string/primitive type/custom type > variant
                 if (IsContainerType(*field)) {
-                    Write("alloc");
+                    Write(field->array ? "" : "alloc");
                 } else if (field->optional) {
                     Write("std::nullopt");
                 } else if (!IsCurrentPackageType(*field->type)) {
@@ -2592,9 +2593,12 @@ void GeneratorCpp::GenerateStruct_Source(const std::shared_ptr<Package>& p, cons
                     Write("alloc");
                 } else if (field->value || IsPrimitiveType(*field->type, field->optional)) {
                     Write(ConvertDefault(*p->name, *field));
-                } else if (!IsVariantType(p, *field->type) && std::find_if(enums.begin(), enums.end(),
+                    // TODO(liuqi): FBE::uuid_t and FBE::decimal_t should support arena
+                } else if (*field->type != "uuid" && *field->type != "decimal" && !IsVariantType(p, *field->type) && std::find_if(enums.begin(), enums.end(),
                  [t = *field->type](const std::shared_ptr<EnumType>& e) -> bool { 
-                     return *e->name == t; }) == enums.end()) {
+                     return *e->name == t; }) == enums.end() && std::find_if(flags.begin(), flags.end(),
+                 [t = *field->type](const std::shared_ptr<FlagsType>& e) -> bool { 
+                     return *e->name == t; }) == flags.end()) {
                     Write("alloc");
                 }
                 Write(")");
@@ -5867,27 +5871,30 @@ void GeneratorCpp::GeneratePtrStruct_Source(const std::shared_ptr<Package>& p, c
         if (s->body)
         {
             auto enums = p->body->enums;
+            auto flags = p->body->flags;
             for (const auto& field : s->body->fields)
             {
                 WriteIndent();
                 Write(std::string(first ? ": " : ", ") + *field->name + "(");
                 // priority: container > optional > imported type > ptr > bytes/string/primitive type/custom type > variant
                 if (IsContainerType(*field)) {
-                    Write("alloc");
+                    Write(field->array ? "" : "alloc");
                 } else if (field->optional) {
                     Write("std::nullopt");
-                } else if (!IsCurrentPackageType(*field->type)) {
-                    Write(std::string("assign_member<") + ConvertTypeName(*p->name, *field) + ">(alloc)");
                 } else if (field->ptr) {
                     Write("nullptr");
+                } else if (!IsCurrentPackageType(*field->type)) {
+                    Write(std::string("assign_member<") + ConvertTypeName(*p->name, *field) + ">(alloc)");
                 } else if (*field->type == "bytes" || *field->type == "string") {
                     Write("alloc");
                 } else if (field->value || IsPrimitiveType(*field->type, field->optional)) {
                     Write(ConvertDefault(*p->name, *field));
                 // only struct(no optional or enum) should be initialized with arena
-                } else if (!IsVariantType(p, *field->type) && std::find_if(enums.begin(), enums.end(),
+                } else if (*field->type != "uuid" && *field->type != "decimal" && !IsVariantType(p, *field->type) && std::find_if(enums.begin(), enums.end(),
                  [t = *field->type](const std::shared_ptr<EnumType>& e) -> bool { 
-                     return *e->name == t; }) == enums.end()) {
+                     return *e->name == t; }) == enums.end() && std::find_if(flags.begin(), flags.end(),
+                 [t = *field->type](const std::shared_ptr<FlagsType>& e) -> bool { 
+                     return *e->name == t; }) == flags.end()) {
                     Write("alloc");
                 }
                 Write(")");
@@ -8222,11 +8229,12 @@ std::string GeneratorCpp::ConvertNamespace(const std::string& package) {
 
 std::string GeneratorCpp::ConvertFileName(const std::string& package, FileType file_type, bool is_header, bool is_ptr, bool is_final) {
     std::string filename = package + (is_ptr ? "_ptr" : "") + (is_final ? "_final" : "");
+    // final is in conflicting with pmr
+    if (!is_final && Arena()) {
+        filename += "_pmr";
+    }
     switch (file_type) {
         case FileType::Struct:
-            if (Arena()) {
-                filename += "_pmr";
-            }
             break;
         case FileType::Model:
             filename += "_models";
