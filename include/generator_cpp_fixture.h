@@ -113,10 +113,10 @@ namespace FBE {
 class buffer_t
 {
 public:
-    typedef FastVec<uint8_t>::iterator iterator;
-    typedef FastVec<uint8_t>::const_iterator const_iterator;
-    typedef FastVec<uint8_t>::reverse_iterator reverse_iterator;
-    typedef FastVec<uint8_t>::const_reverse_iterator const_reverse_iterator;
+    using iterator = FastVec<uint8_t>::iterator;
+    using const_iterator = FastVec<uint8_t>::const_iterator;
+    using reverse_iterator = FastVec<uint8_t>::reverse_iterator;
+    using const_reverse_iterator = FastVec<uint8_t>::const_reverse_iterator;
 
     buffer_t() = default;
     buffer_t(size_t capacity) { reserve(capacity); }
@@ -289,12 +289,11 @@ buffer_t buffer_t::base64decode(const std::string& str)
 class pmr_buffer_t
 {
 public:
-    typedef pmr::vector<uint8_t>::iterator iterator;
-    typedef pmr::vector<uint8_t>::const_iterator const_iterator;
-    typedef pmr::vector<uint8_t>::reverse_iterator reverse_iterator;
-    typedef pmr::vector<uint8_t>::const_reverse_iterator const_reverse_iterator;
+    using iterator = pmr::vector<uint8_t>::iterator;
+    using const_iterator = pmr::vector<uint8_t>::const_iterator;
+    using reverse_iterator = pmr::vector<uint8_t>::reverse_iterator;
+    using const_reverse_iterator = pmr::vector<uint8_t>::const_reverse_iterator;
     using allocator_type = pmr::polymorphic_allocator<char>;
-
 
     pmr_buffer_t() = default;
     explicit pmr_buffer_t(allocator_type alloc): _data(alloc) {}
