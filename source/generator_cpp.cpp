@@ -212,7 +212,7 @@ void GeneratorCpp::GenerateImports(const std::shared_ptr<Package>& p)
     WriteLine();
     WriteLineIndent("#include \"fbe.h\"");
     if (Arena()) {
-        WriteLineIndent("#include \"" + ArenaHeader() + "\""); // TODO(liuqi): Not here.
+        WriteLineIndent("#include \"" + ArenaHeader() + "\"");
     }
 
     // Generate packages import
@@ -220,14 +220,13 @@ void GeneratorCpp::GenerateImports(const std::shared_ptr<Package>& p)
     {
         WriteLine();
         for (const auto& import : p->import->imports)
-            // TODO(liuqi): 这里需要注意下，ptr是允许引入template-based FBE的，所以这里不能随便添加ImportPtr()的。可以考虑修改FBE的import语法，添加ptr hint
             WriteLineIndent("#include \"" + ConvertFileName(*import, FileType::Struct, true, ImportPtr()) + "\"");
     }
 
     // Generate domain namespace using
     WriteLine();
     WriteLineIndent("namespace " + ConvertNamespace(*p->name) + " {");
-    WriteLineIndent("using namespace FBE;"); // TODO(liuqi): FBE是否要使用ConvertNamespace来生成。
+    WriteLineIndent("using namespace FBE;");
     if (Arena()) {
         WriteLineIndent("using allocator_type = pmr::polymorphic_allocator<char>;");
     }
@@ -241,7 +240,7 @@ void GeneratorCpp::GenerateImports(const std::shared_ptr<Package>& p)
     // Generate FBE namespace using
     WriteLine();
     WriteLineIndent("namespace FBE {");
-    WriteLineIndent("using namespace ::" + ConvertNamespace(*p->name) + ";"); // TODO(liuqi): 是否有必要保留
+    WriteLineIndent("using namespace ::" + ConvertNamespace(*p->name) + ";");
     WriteLineIndent("} // namespace FBE");
 }
 
@@ -8142,7 +8141,6 @@ std::string GeneratorCpp::ConvertPtrFieldModelType(const std::shared_ptr<Package
     std::string field_model_type;
     if (IsStructType(p, *field->type) || (ImportPtr() && !IsCurrentPackageType(*field->type))) {
         std::string model_name = std::string("FieldModel") + (Arena() ? "PMR" : "") + (field->ptr ? "Ptr" : "") + "_" +  (IsCurrentPackageType(*field->type) ? (*p->name + "_") : "") + *field->type;
-        // TODO(liuqi): pmr和non-pmr是不能混合使用的。
         replace_all(model_name, ".", "_");
         if (IsContainerType(*field)) {
             field_model_type = "FieldModel";
@@ -8250,7 +8248,6 @@ std::string GeneratorCpp::ConvertFileName(const std::string& package, FileType f
             break;
     }
     return filename + (is_header ? ".h" : ".cpp");
-    // return package + (Arena() ? "_pmr" : "") + (ImportPtr() ? "_ptr" : "") + (is_header ? ".h" : ".cpp");
 }
 
 } // namespace FBE

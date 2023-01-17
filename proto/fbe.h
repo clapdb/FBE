@@ -261,9 +261,10 @@ public:
     explicit pmr_buffer_t(pmr::vector<uint8_t>&& other) : _data(std::move(other)) {}
     pmr_buffer_t(const pmr_buffer_t& other) = default;
     explicit pmr_buffer_t(pmr_buffer_t&& other) = default;
-    // FIXME(liuqi)
     pmr_buffer_t(const pmr_buffer_t& other, allocator_type alloc): _data(alloc) {
-        _data = other.buffer();
+        for (const uint8_t v: other.buffer()) {
+            _data.emplace_back(v);
+        }
     };
     ~pmr_buffer_t() = default;
 
