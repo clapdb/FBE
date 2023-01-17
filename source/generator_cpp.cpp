@@ -6730,7 +6730,8 @@ void GeneratorCpp::GenerateVariantFieldModel_Source(const std::shared_ptr<Packag
 void GeneratorCpp::GenerateStructFieldPtrModel_Header(const std::shared_ptr<Package>& p, const std::shared_ptr<StructType>& s)
 {
     std::string struct_name = "::" + ConvertNamespace(*p->name) + "::" + *s->name;
-    std::string class_name = "FieldModelPtr_" + *p->name + "_" + *s->name;
+    std::string class_name = std::string("FieldModel") + (Arena() ? "PMR" : "") + "Ptr_" + *p->name + "_" + *s->name;
+
 
     // Generate struct field ptr model begin
     WriteLine();
@@ -6817,7 +6818,7 @@ void GeneratorCpp::GenerateStructFieldPtrModel_Header(const std::shared_ptr<Pack
 void GeneratorCpp::GeneratePtrStructFieldModel_Header(const std::shared_ptr<Package>& p, const std::shared_ptr<StructType>& s)
 {
     std::string struct_name = "::" + ConvertNamespace(*p->name) + "::" + *s->name;
-    std::string class_name = "FieldModel_" + *p->name + "_" + *s->name;
+    std::string class_name = std::string("FieldModel") + (Arena() ? "PMR_" : "_") + *p->name + "_" + *s->name;
 
     // Generate struct field model begin
     WriteLine();
@@ -6918,7 +6919,7 @@ void GeneratorCpp::GeneratePtrStructFieldModel_Header(const std::shared_ptr<Pack
 void GeneratorCpp::GeneratePtrStructFieldModel_Source(const std::shared_ptr<Package>& p, const std::shared_ptr<StructType>& s)
 {
     std::string struct_name = "::" + ConvertNamespace(*p->name) + "::" + *s->name;
-    std::string class_name = "FieldModel_" + *p->name + "_" + *s->name;
+    std::string class_name = std::string("FieldModel") + (Arena() ? "PMR_" : "_") + *p->name + "_" + *s->name;
 
     // Generate struct field model constructor
     WriteLine();
@@ -7265,7 +7266,7 @@ void GeneratorCpp::GeneratePtrStructFieldModel_Source(const std::shared_ptr<Pack
 void GeneratorCpp::GenerateStructFieldPtrModel_Source(const std::shared_ptr<Package>& p, const std::shared_ptr<StructType>& s)
 {
     std::string struct_name = "::" + ConvertNamespace(*p->name) + "::" + *s->name;
-    std::string class_name = "FieldModelPtr_" + *p->name + "_" + *s->name;
+    std::string class_name = std::string("FieldModel") + (Arena() ? "PMR" : "") + "Ptr_" + *p->name + "_" + *s->name;
 
     // Generate struct field model constructor
     WriteLine();
@@ -7396,7 +7397,7 @@ void GeneratorCpp::GenerateStructFieldPtrModel_Source(const std::shared_ptr<Pack
     Indent(-1);
     WriteLine();
     WriteLineIndent("if (ptr) delete ptr;");
-    WriteLineIndent("ptr = new FieldModel_" + *p->name + "_" + *s->name + "(_buffer, 0);");
+    WriteLineIndent(std::string("ptr = new FieldModel") + (Arena() ? "PMR_" : "_") + *p->name + "_" + *s->name + "(_buffer, 0);");
     WriteLine();
     WriteLineIndent(struct_name + " *tempModel = new " + struct_name + "();");
     WriteLineIndent("ptr->get(*tempModel);");
@@ -7462,7 +7463,7 @@ void GeneratorCpp::GenerateStructFieldPtrModel_Source(const std::shared_ptr<Pack
     WriteLine();
     WriteLineIndent("if (fbe_value != nullptr) {");
     Indent(1);
-    WriteLineIndent("BaseFieldModel* temp = new FieldModel_" + *p->name + "_" + *s->name + "(_buffer, 0);");
+    WriteLineIndent(std::string("BaseFieldModel* temp = new FieldModel") + (Arena() ? "PMR_" : "_") + *p->name + "_" + *s->name + "(_buffer, 0);");
     WriteLineIndent("if (ptr) delete ptr;");
     WriteLineIndent("ptr = temp;");
     WriteLineIndent("ptr->set(*fbe_value);");
@@ -7481,7 +7482,7 @@ void GeneratorCpp::GeneratePtrStructModel_Header(const std::shared_ptr<Package>&
     WriteLineIndent("namespace " + ConvertNamespace(*p->name) + " {");
 
     std::string struct_name = "::" + ConvertNamespace(*p->name) + "::" + *s->name;
-    std::string class_name = "FieldModel_" + *p->name + "_" + *s->name;
+    std::string class_name = std::string("FieldModel") + (Arena() ? "PMR_" : "_") + *p->name + "_" + *s->name;
 
     // Generate struct model begin
     WriteLine();
@@ -8140,7 +8141,7 @@ std::string GeneratorCpp::ConvertPtrTypeNameAsArgument(const std::string& packag
 std::string GeneratorCpp::ConvertPtrFieldModelType(const std::shared_ptr<Package>& p, const std::shared_ptr<StructField>& field) {
     std::string field_model_type;
     if (IsStructType(p, *field->type) || (ImportPtr() && !IsCurrentPackageType(*field->type))) {
-        std::string model_name = std::string("FieldModel") + (field->ptr ? "Ptr" : "") + "_" +  (IsCurrentPackageType(*field->type) ? (*p->name + "_") : "") + *field->type;
+        std::string model_name = std::string("FieldModel") + (Arena() ? "PMR" : "") + (field->ptr ? "Ptr" : "") + "_" +  (IsCurrentPackageType(*field->type) ? (*p->name + "_") : "") + *field->type;
         // TODO(liuqi): pmr和non-pmr是不能混合使用的。
         replace_all(model_name, ".", "_");
         if (IsContainerType(*field)) {
@@ -8184,7 +8185,7 @@ std::string GeneratorCpp::ConvertPtrVariantFieldModelType(const std::shared_ptr<
     std::string variant_field_model_type;
     if (Ptr()) {
         if (IsStructType(p, *variant->type) && !IsKnownType(*variant->type)) {
-            std::string model_name = std::string("FieldModel") + (variant->ptr ? "Ptr" : "") + "_" + *p->name + "_" + *variant->type;
+            std::string model_name = std::string("FieldModel") + (Arena() ? "PMR" : "") + (variant->ptr ? "Ptr" : "") + "_" + *p->name + "_" + *variant->type;
             if (IsContainerType(*variant)) {
                 variant_field_model_type = "FieldModel";
                 if (variant->vector || variant->list)
