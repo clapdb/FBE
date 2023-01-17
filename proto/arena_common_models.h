@@ -21,20 +21,20 @@
 
 #include "fbe_models.h"
 
-#include "arena_common_pmr.h"
+#include "arena_common.h"
 
 namespace FBE {
 
-// Fast Binary Encoding ::arena_common_pmr::Optr field model
+// Fast Binary Encoding ::arena_common::Optr field model
 template <>
-class FieldModel<::arena_common_pmr::Optr> : public FieldModelBase<::arena_common_pmr::Optr, uint8_t>
+class FieldModel<::arena_common::Optr> : public FieldModelBase<::arena_common::Optr, uint8_t>
 {
 public:
-    using FieldModelBase<::arena_common_pmr::Optr, uint8_t>::FieldModelBase;
+    using FieldModelBase<::arena_common::Optr, uint8_t>::FieldModelBase;
 };
 
 template <>
-class FieldModel<::arena_common_pmr::Expr>
+class FieldModel<::arena_common::Expr>
 {
 public:
     FieldModel(FBEBuffer& buffer, size_t offset) noexcept;
@@ -57,7 +57,7 @@ public:
     bool verify() const noexcept;
 
     // Get the variant value
-    void get(::arena_common_pmr::Expr& fbe_value) const noexcept;
+    void get(::arena_common::Expr& fbe_value) const noexcept;
 
     // Set the variant value (begin phase)
     size_t set_begin(size_t variant_type_fbe_size, size_t variant_type_index);
@@ -65,16 +65,16 @@ public:
     void set_end(size_t fbe_begin);
 
     // Set the variant value
-    void set(const ::arena_common_pmr::Expr& fbe_value) noexcept;
+    void set(const ::arena_common::Expr& fbe_value) noexcept;
 
 private:
     FBEBuffer& _buffer;
     size_t _offset;
 };
 
-// Fast Binary Encoding ::arena_common_pmr::Alias field model
+// Fast Binary Encoding ::arena_common::Alias field model
 template <>
-class FieldModel<::arena_common_pmr::Alias>
+class FieldModel<::arena_common::Alias>
 {
 public:
     FieldModel(FBEBuffer& buffer, size_t offset) noexcept;
@@ -106,9 +106,9 @@ public:
     void get_end(size_t fbe_begin) const noexcept;
 
     // Get the struct value
-    void get(::arena_common_pmr::Alias& fbe_value) const noexcept;
+    void get(::arena_common::Alias& fbe_value) const noexcept;
     // Get the struct fields values
-    void get_fields(::arena_common_pmr::Alias& fbe_value, size_t fbe_struct_size) const noexcept;
+    void get_fields(::arena_common::Alias& fbe_value, size_t fbe_struct_size) const noexcept;
 
     // Set the struct value (begin phase)
     size_t set_begin();
@@ -116,21 +116,21 @@ public:
     void set_end(size_t fbe_begin);
 
     // Set the struct value
-    void set(const ::arena_common_pmr::Alias& fbe_value) noexcept;
+    void set(const ::arena_common::Alias& fbe_value) noexcept;
     // Set the struct fields values
-    void set_fields(const ::arena_common_pmr::Alias& fbe_value) noexcept;
+    void set_fields(const ::arena_common::Alias& fbe_value) noexcept;
 
 private:
     FBEBuffer& _buffer;
     size_t _offset;
 
 public:
-    FieldModel<stdb::memory::arena_string> name;
-    FieldModel<::arena_common_pmr::Optr> optr;
-    FieldModel<::arena_common_pmr::Expr> expr;
+    FieldModel<stdb::memory::string> name;
+    FieldModel<::arena_common::Optr> optr;
+    FieldModel<::arena_common::Expr> expr;
 };
 
-namespace arena_common_pmr {
+namespace arena_common {
 
 // Fast Binary Encoding Alias model
 class AliasModel : public FBE::Model
@@ -142,7 +142,7 @@ public:
     // Get the model size
     size_t fbe_size() const noexcept { return model.fbe_size() + model.fbe_extra(); }
     // Get the model type
-    static constexpr size_t fbe_type() noexcept { return FieldModel<::arena_common_pmr::Alias>::fbe_type(); }
+    static constexpr size_t fbe_type() noexcept { return FieldModel<::arena_common::Alias>::fbe_type(); }
 
     // Check if the struct value is valid
     bool verify();
@@ -153,22 +153,22 @@ public:
     size_t create_end(size_t fbe_begin);
 
     // Serialize the struct value
-    size_t serialize(const ::arena_common_pmr::Alias& value);
+    size_t serialize(const ::arena_common::Alias& value);
     // Deserialize the struct value
-    size_t deserialize(::arena_common_pmr::Alias& value) const noexcept;
+    size_t deserialize(::arena_common::Alias& value) const noexcept;
 
     // Move to the next struct value
     void next(size_t prev) noexcept { model.fbe_shift(prev); }
 
 public:
-    FieldModel<::arena_common_pmr::Alias> model;
+    FieldModel<::arena_common::Alias> model;
 };
 
-} // namespace arena_common_pmr
+} // namespace arena_common
 
-// Fast Binary Encoding ::arena_common_pmr::Expression field model
+// Fast Binary Encoding ::arena_common::Expression field model
 template <>
-class FieldModel<::arena_common_pmr::Expression>
+class FieldModel<::arena_common::Expression>
 {
 public:
     FieldModel(FBEBuffer& buffer, size_t offset) noexcept;
@@ -200,9 +200,9 @@ public:
     void get_end(size_t fbe_begin) const noexcept;
 
     // Get the struct value
-    void get(::arena_common_pmr::Expression& fbe_value) const noexcept;
+    void get(::arena_common::Expression& fbe_value) const noexcept;
     // Get the struct fields values
-    void get_fields(::arena_common_pmr::Expression& fbe_value, size_t fbe_struct_size) const noexcept;
+    void get_fields(::arena_common::Expression& fbe_value, size_t fbe_struct_size) const noexcept;
 
     // Set the struct value (begin phase)
     size_t set_begin();
@@ -210,21 +210,21 @@ public:
     void set_end(size_t fbe_begin);
 
     // Set the struct value
-    void set(const ::arena_common_pmr::Expression& fbe_value) noexcept;
+    void set(const ::arena_common::Expression& fbe_value) noexcept;
     // Set the struct fields values
-    void set_fields(const ::arena_common_pmr::Expression& fbe_value) noexcept;
+    void set_fields(const ::arena_common::Expression& fbe_value) noexcept;
 
 private:
     FBEBuffer& _buffer;
     size_t _offset;
 
 public:
-    FieldModelVector<stdb::memory::arena_string> keys;
-    FieldModelVector<::arena_common_pmr::Alias> aliases;
-    FieldModelMap<int32_t, ::arena_common_pmr::Alias> alias_int;
+    FieldModelVector<stdb::memory::string> keys;
+    FieldModelVector<::arena_common::Alias> aliases;
+    FieldModelMap<int32_t, ::arena_common::Alias> alias_int;
 };
 
-namespace arena_common_pmr {
+namespace arena_common {
 
 // Fast Binary Encoding Expression model
 class ExpressionModel : public FBE::Model
@@ -236,7 +236,7 @@ public:
     // Get the model size
     size_t fbe_size() const noexcept { return model.fbe_size() + model.fbe_extra(); }
     // Get the model type
-    static constexpr size_t fbe_type() noexcept { return FieldModel<::arena_common_pmr::Expression>::fbe_type(); }
+    static constexpr size_t fbe_type() noexcept { return FieldModel<::arena_common::Expression>::fbe_type(); }
 
     // Check if the struct value is valid
     bool verify();
@@ -247,17 +247,17 @@ public:
     size_t create_end(size_t fbe_begin);
 
     // Serialize the struct value
-    size_t serialize(const ::arena_common_pmr::Expression& value);
+    size_t serialize(const ::arena_common::Expression& value);
     // Deserialize the struct value
-    size_t deserialize(::arena_common_pmr::Expression& value) const noexcept;
+    size_t deserialize(::arena_common::Expression& value) const noexcept;
 
     // Move to the next struct value
     void next(size_t prev) noexcept { model.fbe_shift(prev); }
 
 public:
-    FieldModel<::arena_common_pmr::Expression> model;
+    FieldModel<::arena_common::Expression> model;
 };
 
-} // namespace arena_common_pmr
+} // namespace arena_common
 
 } // namespace FBE

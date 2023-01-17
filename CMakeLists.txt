@@ -150,7 +150,7 @@ if(NOT FBEC_MODULE)
     set(FBE_TARGET "${FBE_FILE}_TARGET")
     add_custom_command(
       OUTPUT ${FBE_OUTPUT_FILE}
-      COMMAND $<TARGET_FILE:fbec> --cpp --input ${FBE_INPUT_FILE} --output ${FBE_OUTPUT_DIR} --arena
+      COMMAND $<TARGET_FILE:fbec> --cpp --input ${FBE_INPUT_FILE} --output ${FBE_OUTPUT_DIR}
       DEPENDS ${FBE_INPUT_FILE} COMMENT "Generating FBE proto for ${FBE_INPUT_FILE}..." VERBATIM
     )
     add_custom_target(${FBE_TARGET} DEPENDS ${FBE_OUTPUT_FILE})
@@ -214,7 +214,7 @@ if(NOT FBEC_MODULE)
     set(FBE_TARGET "${FBE_FILE}_PTR_TARGET")
     add_custom_command(
       OUTPUT ${FBE_OUTPUT_FILE}
-      COMMAND $<TARGET_FILE:fbec> --cpp --ptr --input ${FBE_INPUT_FILE} --output ${FBE_OUTPUT_DIR} --arena
+      COMMAND $<TARGET_FILE:fbec> --cpp --ptr --input ${FBE_INPUT_FILE} --output ${FBE_OUTPUT_DIR}
       DEPENDS ${FBE_INPUT_FILE} COMMENT "Generating FBE proto for ${FBE_INPUT_FILE}..." VERBATIM
     )
     add_custom_target(${FBE_TARGET} DEPENDS ${FBE_OUTPUT_FILE})
@@ -232,7 +232,7 @@ if(NOT FBEC_MODULE)
     set(FBE_TARGET "${FBE_FILE}_PTR_TARGET")
     add_custom_command(
       OUTPUT ${FBE_OUTPUT_FILE}
-      COMMAND $<TARGET_FILE:fbec> --cpp --ptr --input ${FBE_INPUT_FILE} --output ${FBE_OUTPUT_DIR} --arena
+      COMMAND $<TARGET_FILE:fbec> --cpp --ptr --input ${FBE_INPUT_FILE} --output ${FBE_OUTPUT_DIR}
       DEPENDS ${FBE_INPUT_FILE} COMMENT "Generating FBE proto for ${FBE_INPUT_FILE}..." VERBATIM
     )
     add_custom_target(${FBE_TARGET} DEPENDS ${FBE_OUTPUT_FILE})

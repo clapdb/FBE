@@ -21,15 +21,15 @@
 
 #include "fbe_models.h"
 
-#include "arena_pmr.h"
+#include "arena.h"
 
 #include "arena_common_models.h"
 
 namespace FBE {
 
-// Fast Binary Encoding ::arena_pmr::Item field model
+// Fast Binary Encoding ::arena::Item field model
 template <>
-class FieldModel<::arena_pmr::Item>
+class FieldModel<::arena::Item>
 {
 public:
     FieldModel(FBEBuffer& buffer, size_t offset) noexcept;
@@ -61,9 +61,9 @@ public:
     void get_end(size_t fbe_begin) const noexcept;
 
     // Get the struct value
-    void get(::arena_pmr::Item& fbe_value) const noexcept;
+    void get(::arena::Item& fbe_value) const noexcept;
     // Get the struct fields values
-    void get_fields(::arena_pmr::Item& fbe_value, size_t fbe_struct_size) const noexcept;
+    void get_fields(::arena::Item& fbe_value, size_t fbe_struct_size) const noexcept;
 
     // Set the struct value (begin phase)
     size_t set_begin();
@@ -71,22 +71,22 @@ public:
     void set_end(size_t fbe_begin);
 
     // Set the struct value
-    void set(const ::arena_pmr::Item& fbe_value) noexcept;
+    void set(const ::arena::Item& fbe_value) noexcept;
     // Set the struct fields values
-    void set_fields(const ::arena_pmr::Item& fbe_value) noexcept;
+    void set_fields(const ::arena::Item& fbe_value) noexcept;
 
 private:
     FBEBuffer& _buffer;
     size_t _offset;
 
 public:
-    FieldModel<::arena_common_pmr::Optr> optr;
-    FieldModel<::arena_common_pmr::Alias> alias;
-    FieldModelVector<::arena_common_pmr::Expression> expressions;
-    FieldModelMap<int32_t, ::arena_common_pmr::Alias> aliases_int;
+    FieldModel<::arena_common::Optr> optr;
+    FieldModel<::arena_common::Alias> alias;
+    FieldModelVector<::arena_common::Expression> expressions;
+    FieldModelMap<int32_t, ::arena_common::Alias> aliases_int;
 };
 
-namespace arena_pmr {
+namespace arena {
 
 // Fast Binary Encoding Item model
 class ItemModel : public FBE::Model
@@ -98,7 +98,7 @@ public:
     // Get the model size
     size_t fbe_size() const noexcept { return model.fbe_size() + model.fbe_extra(); }
     // Get the model type
-    static constexpr size_t fbe_type() noexcept { return FieldModel<::arena_pmr::Item>::fbe_type(); }
+    static constexpr size_t fbe_type() noexcept { return FieldModel<::arena::Item>::fbe_type(); }
 
     // Check if the struct value is valid
     bool verify();
@@ -109,22 +109,22 @@ public:
     size_t create_end(size_t fbe_begin);
 
     // Serialize the struct value
-    size_t serialize(const ::arena_pmr::Item& value);
+    size_t serialize(const ::arena::Item& value);
     // Deserialize the struct value
-    size_t deserialize(::arena_pmr::Item& value) const noexcept;
+    size_t deserialize(::arena::Item& value) const noexcept;
 
     // Move to the next struct value
     void next(size_t prev) noexcept { model.fbe_shift(prev); }
 
 public:
-    FieldModel<::arena_pmr::Item> model;
+    FieldModel<::arena::Item> model;
 };
 
-} // namespace arena_pmr
+} // namespace arena
 
-// Fast Binary Encoding ::arena_pmr::Item2 field model
+// Fast Binary Encoding ::arena::Item2 field model
 template <>
-class FieldModel<::arena_pmr::Item2>
+class FieldModel<::arena::Item2>
 {
 public:
     FieldModel(FBEBuffer& buffer, size_t offset) noexcept;
@@ -156,9 +156,9 @@ public:
     void get_end(size_t fbe_begin) const noexcept;
 
     // Get the struct value
-    void get(::arena_pmr::Item2& fbe_value) const noexcept;
+    void get(::arena::Item2& fbe_value) const noexcept;
     // Get the struct fields values
-    void get_fields(::arena_pmr::Item2& fbe_value, size_t fbe_struct_size) const noexcept;
+    void get_fields(::arena::Item2& fbe_value, size_t fbe_struct_size) const noexcept;
 
     // Set the struct value (begin phase)
     size_t set_begin();
@@ -166,19 +166,19 @@ public:
     void set_end(size_t fbe_begin);
 
     // Set the struct value
-    void set(const ::arena_pmr::Item2& fbe_value) noexcept;
+    void set(const ::arena::Item2& fbe_value) noexcept;
     // Set the struct fields values
-    void set_fields(const ::arena_pmr::Item2& fbe_value) noexcept;
+    void set_fields(const ::arena::Item2& fbe_value) noexcept;
 
 private:
     FBEBuffer& _buffer;
     size_t _offset;
 
 public:
-    FieldModel<FBE::pmr_buffer_t> bytes_v;
+    FieldModel<FBE::buffer_t> bytes_v;
 };
 
-namespace arena_pmr {
+namespace arena {
 
 // Fast Binary Encoding Item2 model
 class Item2Model : public FBE::Model
@@ -190,7 +190,7 @@ public:
     // Get the model size
     size_t fbe_size() const noexcept { return model.fbe_size() + model.fbe_extra(); }
     // Get the model type
-    static constexpr size_t fbe_type() noexcept { return FieldModel<::arena_pmr::Item2>::fbe_type(); }
+    static constexpr size_t fbe_type() noexcept { return FieldModel<::arena::Item2>::fbe_type(); }
 
     // Check if the struct value is valid
     bool verify();
@@ -201,17 +201,17 @@ public:
     size_t create_end(size_t fbe_begin);
 
     // Serialize the struct value
-    size_t serialize(const ::arena_pmr::Item2& value);
+    size_t serialize(const ::arena::Item2& value);
     // Deserialize the struct value
-    size_t deserialize(::arena_pmr::Item2& value) const noexcept;
+    size_t deserialize(::arena::Item2& value) const noexcept;
 
     // Move to the next struct value
     void next(size_t prev) noexcept { model.fbe_shift(prev); }
 
 public:
-    FieldModel<::arena_pmr::Item2> model;
+    FieldModel<::arena::Item2> model;
 };
 
-} // namespace arena_pmr
+} // namespace arena
 
 } // namespace FBE
