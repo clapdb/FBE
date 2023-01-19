@@ -175,7 +175,7 @@ private:
     size_t _offset;
 
 public:
-    FieldModel<FBE::pmr_buffer_t> bytes_v;
+    FieldModel<FBE::buffer_t> bytes_v;
 };
 
 namespace arena {

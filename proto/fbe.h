@@ -133,10 +133,10 @@ template<class... Ts> overloaded(Ts...) -> overloaded<Ts...>;  // deduction guid
 class buffer_t
 {
 public:
-    typedef FastVec<uint8_t>::iterator iterator;
-    typedef FastVec<uint8_t>::const_iterator const_iterator;
-    typedef FastVec<uint8_t>::reverse_iterator reverse_iterator;
-    typedef FastVec<uint8_t>::const_reverse_iterator const_reverse_iterator;
+    using iterator = FastVec<uint8_t>::iterator;
+    using const_iterator = FastVec<uint8_t>::const_iterator;
+    using reverse_iterator = FastVec<uint8_t>::reverse_iterator;
+    using const_reverse_iterator = FastVec<uint8_t>::const_reverse_iterator;
 
     buffer_t() = default;
     buffer_t(size_t capacity) { reserve(capacity); }
@@ -245,12 +245,11 @@ private:
 class pmr_buffer_t
 {
 public:
-    typedef pmr::vector<uint8_t>::iterator iterator;
-    typedef pmr::vector<uint8_t>::const_iterator const_iterator;
-    typedef pmr::vector<uint8_t>::reverse_iterator reverse_iterator;
-    typedef pmr::vector<uint8_t>::const_reverse_iterator const_reverse_iterator;
+    using iterator = pmr::vector<uint8_t>::iterator;
+    using const_iterator = pmr::vector<uint8_t>::const_iterator;
+    using reverse_iterator = pmr::vector<uint8_t>::reverse_iterator;
+    using const_reverse_iterator = pmr::vector<uint8_t>::const_reverse_iterator;
     using allocator_type = pmr::polymorphic_allocator<char>;
-
 
     pmr_buffer_t() = default;
     explicit pmr_buffer_t(allocator_type alloc): _data(alloc) {}
@@ -260,8 +259,13 @@ public:
     pmr_buffer_t(const uint8_t* data, size_t size) { assign(data, size); }
     explicit pmr_buffer_t(const pmr::vector<uint8_t>& other) : _data(other) {}
     explicit pmr_buffer_t(pmr::vector<uint8_t>&& other) : _data(std::move(other)) {}
-    explicit pmr_buffer_t(const pmr_buffer_t& other) = default;
+    pmr_buffer_t(const pmr_buffer_t& other) = default;
     explicit pmr_buffer_t(pmr_buffer_t&& other) = default;
+    pmr_buffer_t(const pmr_buffer_t& other, allocator_type alloc): _data(alloc) {
+        for (const uint8_t v: other.buffer()) {
+            _data.emplace_back(v);
+        }
+    };
     ~pmr_buffer_t() = default;
 
     pmr_buffer_t& operator=(const stdb::memory::arena_string& str) { assign(str); return *this; }

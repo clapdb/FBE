@@ -16,14 +16,7 @@ Item::Item()
     , aliases_int()
 {}
 
-Item::Item([[maybe_unused]] allocator_type alloc)
-    : optr(assign_member<::arena_common::Optr>(alloc))
-    , alias(assign_member<::arena_common::Alias>(alloc))
-    , expressions(alloc)
-    , aliases_int(alloc)
-{}
-
-Item::Item(const ::arena_common::Optr& arg_optr, const ::arena_common::Alias& arg_alias, const pmr::vector<::arena_common::Expression>& arg_expressions, const pmr::map<int32_t, ::arena_common::Alias>& arg_aliases_int)
+Item::Item(const ::arena_common::Optr& arg_optr, const ::arena_common::Alias& arg_alias, const FastVec<::arena_common::Expression>& arg_expressions, const std::map<int32_t, ::arena_common::Alias>& arg_aliases_int)
     : optr(arg_optr)
     , alias(arg_alias)
     , expressions(arg_expressions)
@@ -94,11 +87,7 @@ Item2::Item2()
     : bytes_v()
 {}
 
-Item2::Item2([[maybe_unused]] allocator_type alloc)
-    : bytes_v(alloc)
-{}
-
-Item2::Item2(const FBE::pmr_buffer_t& arg_bytes_v)
+Item2::Item2(const FBE::buffer_t& arg_bytes_v)
     : bytes_v(arg_bytes_v)
 {}
 

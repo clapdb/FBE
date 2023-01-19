@@ -20,11 +20,9 @@
 #endif
 
 #include "fbe.h"
-#include "arena/arena.hpp"
 
 namespace arena_common {
 using namespace FBE;
-using allocator_type = pmr::polymorphic_allocator<char>;
 } // namespace arena_common
 
 namespace FBE {
@@ -55,22 +53,19 @@ CppLogging::Record& operator<<(CppLogging::Record& record, Optr value);
 struct Alias;
 struct Expression;
 
-using Expr = std::variant<bool, int32_t, stdb::memory::arena_string>;
+using Expr = std::variant<bool, int32_t, stdb::memory::string>;
 std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const Expr& value);
 
 struct Alias
 {
-    ArenaManagedCreateOnlyTag;
-
-    stdb::memory::arena_string name;
+    stdb::memory::string name;
     ::arena_common::Optr optr;
     ::arena_common::Expr expr;
 
     size_t fbe_type() const noexcept { return 1; }
 
     Alias();
-    explicit Alias(allocator_type alloc);
-    Alias(const stdb::memory::arena_string& arg_name, const ::arena_common::Optr& arg_optr, const ::arena_common::Expr& arg_expr);
+    Alias(const stdb::memory::string& arg_name, const ::arena_common::Optr& arg_optr, const ::arena_common::Expr& arg_expr);
     Alias(const Alias& other) = default;
     Alias(Alias&& other) = default;
     ~Alias() = default;
@@ -116,17 +111,14 @@ namespace arena_common {
 
 struct Expression
 {
-    ArenaManagedCreateOnlyTag;
-
-    pmr::vector<stdb::memory::arena_string> keys;
-    pmr::vector<::arena_common::Alias> aliases;
-    pmr::map<int32_t, ::arena_common::Alias> alias_int;
+    FastVec<stdb::memory::string> keys;
+    FastVec<::arena_common::Alias> aliases;
+    std::map<int32_t, ::arena_common::Alias> alias_int;
 
     size_t fbe_type() const noexcept { return 2; }
 
     Expression();
-    explicit Expression(allocator_type alloc);
-    Expression(const pmr::vector<stdb::memory::arena_string>& arg_keys, const pmr::vector<::arena_common::Alias>& arg_aliases, const pmr::map<int32_t, ::arena_common::Alias>& arg_alias_int);
+    Expression(const FastVec<stdb::memory::string>& arg_keys, const FastVec<::arena_common::Alias>& arg_aliases, const std::map<int32_t, ::arena_common::Alias>& arg_alias_int);
     Expression(const Expression& other) = default;
     Expression(Expression&& other) = default;
     ~Expression() = default;

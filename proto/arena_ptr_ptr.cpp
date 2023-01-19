@@ -13,10 +13,6 @@ Line::Line()
     : expression()
 {}
 
-Line::Line([[maybe_unused]] allocator_type alloc)
-    : expression(assign_member<::arena_common::Expression>(alloc))
-{}
-
 Line::Line(::arena_common::Expression&& arg_expression)
     : expression(std::move(arg_expression))
 {}
@@ -73,11 +69,7 @@ Line2::Line2()
     : bytes_v()
 {}
 
-Line2::Line2([[maybe_unused]] allocator_type alloc)
-    : bytes_v(alloc)
-{}
-
-Line2::Line2(const FBE::pmr_buffer_t& arg_bytes_v)
+Line2::Line2(const FBE::buffer_t& arg_bytes_v)
     : bytes_v(arg_bytes_v)
 {}
 

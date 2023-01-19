@@ -19,6 +19,14 @@
 
 namespace FBE {
 
+enum class FileType: uint8_t {
+    Struct = 0,
+    Model,
+    // TODO(liuqi): support JSON and PROTOCOL
+    // JSON,
+    // PROTOCOL
+};
+
 class GeneratorCpp : public Generator
 {
 public:
@@ -261,6 +269,9 @@ private:
 
     std::string ConvertLoggingStreamType(const std::string& type, const std::string& name, bool optional);
     std::string ConvertLoggingStreamValue(const std::string& type, const std::string& name, bool optional, bool separate);
+
+    std::string ConvertNamespace(const std::string& package);
+    std::string ConvertFileName(const std::string& package, FileType file_type, bool is_header, bool is_ptr = false, bool is_final = false);
 };
 
 } // namespace FBE

@@ -20,13 +20,11 @@
 #endif
 
 #include "fbe.h"
-#include "arena/arena.hpp"
 
 #include "arena_common.h"
 
 namespace arena_ptr {
 using namespace FBE;
-using allocator_type = pmr::polymorphic_allocator<char>;
 using namespace ::arena_common;
 } // namespace arena_ptr
 
@@ -40,14 +38,11 @@ namespace arena_ptr {
 
 struct Line : FBE::Base
 {
-    ArenaManagedCreateOnlyTag;
-
     ::arena_common::Expression expression;
 
     size_t fbe_type() const noexcept { return 1; }
 
     Line();
-    explicit Line(allocator_type alloc);
     explicit Line(::arena_common::Expression&& arg_expression);
     Line(const Line& other) = default;
     Line(Line&& other) noexcept;
@@ -90,15 +85,12 @@ namespace arena_ptr {
 
 struct Line2 : FBE::Base
 {
-    ArenaManagedCreateOnlyTag;
-
-    FBE::pmr_buffer_t bytes_v;
+    FBE::buffer_t bytes_v;
 
     size_t fbe_type() const noexcept { return 2; }
 
     Line2();
-    explicit Line2(allocator_type alloc);
-    explicit Line2(const FBE::pmr_buffer_t& arg_bytes_v);
+    explicit Line2(const FBE::buffer_t& arg_bytes_v);
     Line2(const Line2& other) = default;
     Line2(Line2&& other) noexcept;
     ~Line2() override;
