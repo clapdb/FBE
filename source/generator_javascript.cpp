@@ -3301,6 +3301,7 @@ exports.UUID = UUID
     Store(common);
 }
 
+// See https://github.com/feross/ieee754/blob/master/index.js
 void GeneratorJavaScript::GenerateIEEE754(const fs::path& path)
 {
     // Generate the common file
@@ -3325,12 +3326,12 @@ void GeneratorJavaScript::GenerateIEEE754(const fs::path& path)
  */
 let ieee754read = function (buffer, offset, isLE, mLen, nBytes) {
   let e, m
-  let eLen = (nBytes * 8) - mLen - 1
-  let eMax = (1 << eLen) - 1
-  let eBias = eMax >> 1
+  const eLen = (nBytes * 8) - mLen - 1
+  const eMax = (1 << eLen) - 1
+  const eBias = eMax >> 1
   let nBits = -7
   let i = isLE ? (nBytes - 1) : 0
-  let d = isLE ? -1 : 1
+  const d = isLE ? -1 : 1
   let s = buffer[offset + i]
 
   i += d
@@ -3338,12 +3339,20 @@ let ieee754read = function (buffer, offset, isLE, mLen, nBytes) {
   e = s & ((1 << (-nBits)) - 1)
   s >>= (-nBits)
   nBits += eLen
-  for (; nBits > 0; e = (e * 256) + buffer[offset + i], i += d, nBits -= 8);
+  while (nBits > 0) {
+    e = (e * 256) + buffer[offset + i]
+    i += d
+    nBits -= 8
+  }
 
   m = e & ((1 << (-nBits)) - 1)
   e >>= (-nBits)
   nBits += mLen
-  for (; nBits > 0; m = (m * 256) + buffer[offset + i], i += d, nBits -= 8);
+  while (nBits > 0) {
+    m = (m * 256) + buffer[offset + i]
+    i += d
+    nBits -= 8
+  }
 
   if (e === 0) {
     e = 1 - eBias
@@ -3370,12 +3379,12 @@ exports.ieee754read = ieee754read
 let ieee754write = function (buffer, offset, value, isLE, mLen, nBytes) {
   let e, m, c
   let eLen = (nBytes * 8) - mLen - 1
-  let eMax = (1 << eLen) - 1
-  let eBias = eMax >> 1
-  let rt = (mLen === 23 ? Math.pow(2, -24) - Math.pow(2, -77) : 0)
+  const eMax = (1 << eLen) - 1
+  const eBias = eMax >> 1
+  const rt = (mLen === 23 ? Math.pow(2, -24) - Math.pow(2, -77) : 0)
   let i = isLE ? 0 : (nBytes - 1)
-  let d = isLE ? 1 : -1
-  let s = value < 0 || (value === 0 && 1 / value < 0) ? 1 : 0
+  const d = isLE ? 1 : -1
+  const s = value < 0 || (value === 0 && 1 / value < 0) ? 1 : 0
 
   value = Math.abs(value)
 
@@ -3410,11 +3419,21 @@ let ieee754write = function (buffer, offset, value, isLE, mLen, nBytes) {
     }
   }
 
-  for (; mLen >= 8; buffer[offset + i] = m & 0xff, i += d, m /= 256, mLen -= 8);
+  while (mLen >= 8) {
+    buffer[offset + i] = m & 0xff
+    i += d
+    m /= 256
+    mLen -= 8
+  }
 
   e = (e << mLen) | m
   eLen += mLen
-  for (; eLen > 0; buffer[offset + i] = e & 0xff, i += d, e /= 256, eLen -= 8);
+  while (eLen > 0) {
+    buffer[offset + i] = e & 0xff
+    i += d
+    e /= 256
+    eLen -= 8
+  }
 
   buffer[offset + i - d] |= s * 128
 }
