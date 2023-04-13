@@ -58,7 +58,6 @@ include_directories("modules/Catch2/single_include")
 # Modules
 add_subdirectory("modules/Catch2")
 add_subdirectory("modules/memory")
-add_subdirectory("modules/cpp-optparse")
 
 # Link libraries
 #list(APPEND LINKLIBS cppcommon)
@@ -101,7 +100,7 @@ else()
   set_target_properties(fbec PROPERTIES COMPILE_FLAGS "${PEDANTIC_COMPILE_FLAGS} -Wno-register -Wno-sign-compare" FOLDER "compiler")
 endif()
 target_include_directories(fbec PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
-target_link_libraries(fbec ${LINKLIBS} cpp-optparse)
+target_link_libraries(fbec ${LINKLIBS} optparse)
 list(APPEND INSTALL_TARGETS fbec)
 
 # Additional module components: benchmarks, examples, plugins, tests, tools and install
