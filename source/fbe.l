@@ -217,14 +217,14 @@ int main(int argc, char** argv)
     auto options = parser.parse_args(argc, argv);
 
     // Print help
-    if (*options.get<bool>("help"))
+    if (options.get<bool>("help").value_or(false))
     {
         parser.print_help();
         return 0;
     }
 
     // Print usage
-    if (*options.get<bool>("usage"))
+    if (options.get<bool>("usage").value_or(false))
     {
         parser.print_usage();
         return 0;
@@ -235,25 +235,25 @@ int main(int argc, char** argv)
     auto input_opt = options.get<string>("input");
     auto output_opt = options.get<string>("output");
     auto indent_opt = options.get<int>("indent");
-    bool tabs = *options.get<bool>("tabs");
-    bool quiet = *options.get<bool>("quiet");
-    bool cpp = *options.get<bool>("cpp");
-    bool cpp_logging = *options.get<bool>("cpp-logging");
-    bool csharp = *options.get<bool>("csharp");
-    bool go = *options.get<bool>("go");
-    bool java = *options.get<bool>("java");
-    bool java7 = *options.get<bool>("java7");
-    bool javascript = *options.get<bool>("javascript");
-    bool kotlin = *options.get<bool>("kotlin");
-    bool kotlin7 = *options.get<bool>("kotlin7");
-    bool python = *options.get<bool>("python");
-    bool ruby = *options.get<bool>("ruby");
-    bool swift = *options.get<bool>("swift");
-    bool final = *options.get<bool>("final");
-    bool json = *options.get<bool>("json");
-    bool proto = *options.get<bool>("proto");
-    bool ptr = *options.get<bool>("ptr");
-    bool import_ptr = *options.get<bool>("import-ptr");
+    bool tabs = options.get<bool>("tabs").value_or(false);
+    bool quiet = options.get<bool>("quiet").value_or(false);
+    bool cpp = options.get<bool>("cpp").value_or(false);
+    bool cpp_logging = options.get<bool>("cpp-logging").value_or(false);
+    bool csharp = options.get<bool>("csharp").value_or(false);
+    bool go = options.get<bool>("go").value_or(false);
+    bool java = options.get<bool>("java").value_or(false);
+    bool java7 = options.get<bool>("java7").value_or(false);
+    bool javascript = options.get<bool>("javascript").value_or(false);
+    bool kotlin = options.get<bool>("kotlin").value_or(false);
+    bool kotlin7 = options.get<bool>("kotlin7").value_or(false);
+    bool python = options.get<bool>("python").value_or(false);
+    bool ruby = options.get<bool>("ruby").value_or(false);
+    bool swift = options.get<bool>("swift").value_or(false);
+    bool final = options.get<bool>("final").value_or(false);
+    bool json = options.get<bool>("json").value_or(false);
+    bool proto = options.get<bool>("proto").value_or(false);
+    bool ptr = options.get<bool>("ptr").value_or(false);
+    bool import_ptr = options.get<bool>("import-ptr").value_or(false);
     char space = tabs ? '\t' : ' ';
 
     std::string input{input_opt.value_or("")};
