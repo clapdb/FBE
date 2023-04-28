@@ -67,10 +67,6 @@ namespace FBE {
     using Safety = stdb::container::Safety;
 }
 
-#if defined(FMT_VERSION)
-#include <fmt/core.h>
-#endif
-
 #if defined(unix) || defined(__unix) || defined(__unix__) || defined(__APPLE__)
 #include <time.h>
 #include <uuid/uuid.h>
@@ -628,18 +624,6 @@ private:
 
 } // namespace FBE
 
-#if defined(FMT_VERSION)
-template <>
-struct fmt::formatter<FBE::decimal_t> : formatter<fmt::string_view>
-{
-    template <typename FormatContext>
-    auto format(const FBE::decimal_t& value, FormatContext& ctx) const
-    {
-        return formatter<fmt::string_view>::format((double)value, ctx);
-    }
-};
-#endif
-
 template <>
 struct std::hash<FBE::decimal_t>
 {
@@ -878,18 +862,6 @@ private:
 };
 
 } // namespace FBE
-
-#if defined(FMT_VERSION)
-template <>
-struct fmt::formatter<FBE::uuid_t> : formatter<fmt::string_view>
-{
-    template <typename FormatContext>
-    auto format(const FBE::uuid_t& value, FormatContext& ctx) const
-    {
-        return formatter<fmt::string_view>::format(value.string(), ctx);
-    }
-};
-#endif
 
 template <>
 struct std::hash<FBE::uuid_t>
