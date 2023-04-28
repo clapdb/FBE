@@ -72,10 +72,6 @@ struct Simple
 
 } // namespace variants
 
-#if defined(FMT_VERSION)
-template <> struct fmt::formatter<variants::Simple> : formatter<string_view> {};
-#endif
-
 template<>
 struct std::hash<variants::Simple>
 {
@@ -122,10 +118,6 @@ struct Value
 };
 
 } // namespace variants
-
-#if defined(FMT_VERSION)
-template <> struct fmt::formatter<variants::Value> : formatter<string_view> {};
-#endif
 
 template<>
 struct std::hash<variants::Value>

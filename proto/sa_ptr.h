@@ -41,10 +41,6 @@ enum class Sex
 
 std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] Sex value);
 
-#if defined(FMT_VERSION)
-} template <> struct fmt::formatter<sa::Sex> : formatter<string_view> {}; namespace sa {
-#endif
-
 #if defined(LOGGING_PROTOCOL)
 CppLogging::Record& operator<<(CppLogging::Record& record, Sex value);
 #endif
@@ -57,10 +53,6 @@ enum class MyFLags
 };
 
 std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] MyFLags value);
-
-#if defined(FMT_VERSION)
-} template <> struct fmt::formatter<sa::MyFLags> : formatter<string_view> {}; namespace sa {
-#endif
 
 #if defined(LOGGING_PROTOCOL)
 CppLogging::Record& operator<<(CppLogging::Record& record, MyFLags value);

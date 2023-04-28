@@ -1930,12 +1930,6 @@ void GeneratorCpp::GenerateEnum(const std::shared_ptr<Package>& p, const std::sh
     WriteLine();
     WriteLineIndent("std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] " + *e->name + " value);");
 
-    // Generate enum formatter declaration
-    WriteLine();
-    WriteLineIndent("#if defined(FMT_VERSION)");
-    WriteLineIndent("} template <> struct fmt::formatter<" + ConvertNamespace(*p->name) + "::" + *e->name + "> : formatter<string_view> {}; namespace " + ConvertNamespace(*p->name) + " {");
-    WriteLineIndent("#endif");
-
     // Generate enum logging stream operator declaration
     WriteLine();
     WriteLineIndent("#if defined(LOGGING_PROTOCOL)");
@@ -2122,12 +2116,6 @@ void GeneratorCpp::GenerateFlags(const std::shared_ptr<Package>& p, const std::s
     // Generate flags output stream operator declaration
     WriteLine();
     WriteLineIndent("std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] " + *f->name + " value);");
-
-    // Generate flags formatter declaration
-    WriteLine();
-    WriteLineIndent("#if defined(FMT_VERSION)");
-    WriteLineIndent("} template <> struct fmt::formatter<" + ConvertNamespace(*p->name) + "::" + *f->name + "> : formatter<string_view> {}; namespace " + ConvertNamespace(*p->name) + " {");
-    WriteLineIndent("#endif");
 
     // Generate flags logging stream operator declaration
     WriteLine();
@@ -2526,9 +2514,6 @@ void GeneratorCpp::GenerateStruct_Header(const std::shared_ptr<Package>& p, cons
     // Generate namespace end
     WriteLine();
     WriteLineIndent("} // namespace " + ConvertNamespace(*p->name));
-
-    // Generate struct formatter
-    GenerateStructFormatter(p, s);
 
     // Generate struct hash
     GenerateStructHash(p, s);
@@ -3021,15 +3006,6 @@ void GeneratorCpp::GenerateStructLoggingStream(const std::shared_ptr<Package>& p
     // Generate struct logging stream operator end
     Indent(-1);
     WriteLineIndent("}");
-    WriteLineIndent("#endif");
-}
-
-void GeneratorCpp::GenerateStructFormatter(const std::shared_ptr<Package>& p, const std::shared_ptr<StructType>& s)
-{
-    // Generate struct formatter
-    WriteLine();
-    WriteLineIndent("#if defined(FMT_VERSION)");
-    WriteLineIndent("template <> struct fmt::formatter<" + ConvertNamespace(*p->name) + "::" + *s->name + "> : formatter<string_view> {};");
     WriteLineIndent("#endif");
 }
 

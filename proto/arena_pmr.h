@@ -74,10 +74,6 @@ struct Item
 
 } // namespace arena_pmr
 
-#if defined(FMT_VERSION)
-template <> struct fmt::formatter<arena_pmr::Item> : formatter<string_view> {};
-#endif
-
 template<>
 struct std::hash<arena_pmr::Item>
 {
@@ -127,10 +123,6 @@ struct Item2
 };
 
 } // namespace arena_pmr
-
-#if defined(FMT_VERSION)
-template <> struct fmt::formatter<arena_pmr::Item2> : formatter<string_view> {};
-#endif
 
 template<>
 struct std::hash<arena_pmr::Item2>

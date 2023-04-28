@@ -45,10 +45,6 @@ enum class OrderSide : uint8_t
 
 std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] OrderSide value);
 
-#if defined(FMT_VERSION)
-} template <> struct fmt::formatter<protoex_pmr::OrderSide> : formatter<string_view> {}; namespace protoex_pmr {
-#endif
-
 #if defined(LOGGING_PROTOCOL)
 CppLogging::Record& operator<<(CppLogging::Record& record, OrderSide value);
 #endif
@@ -62,10 +58,6 @@ enum class OrderType : uint8_t
 };
 
 std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] OrderType value);
-
-#if defined(FMT_VERSION)
-} template <> struct fmt::formatter<protoex_pmr::OrderType> : formatter<string_view> {}; namespace protoex_pmr {
-#endif
 
 #if defined(LOGGING_PROTOCOL)
 CppLogging::Record& operator<<(CppLogging::Record& record, OrderType value);
@@ -87,10 +79,6 @@ enum class StateEx : uint8_t
 FBE_ENUM_FLAGS(StateEx)
 
 std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] StateEx value);
-
-#if defined(FMT_VERSION)
-} template <> struct fmt::formatter<protoex_pmr::StateEx> : formatter<string_view> {}; namespace protoex_pmr {
-#endif
 
 #if defined(LOGGING_PROTOCOL)
 CppLogging::Record& operator<<(CppLogging::Record& record, StateEx value);
@@ -137,10 +125,6 @@ struct Order
 };
 
 } // namespace protoex_pmr
-
-#if defined(FMT_VERSION)
-template <> struct fmt::formatter<protoex_pmr::Order> : formatter<string_view> {};
-#endif
 
 template<>
 struct std::hash<protoex_pmr::Order>
@@ -192,10 +176,6 @@ struct Balance : public ::proto_pmr::Balance
 };
 
 } // namespace protoex_pmr
-
-#if defined(FMT_VERSION)
-template <> struct fmt::formatter<protoex_pmr::Balance> : formatter<string_view> {};
-#endif
 
 template<>
 struct std::hash<protoex_pmr::Balance>
@@ -253,10 +233,6 @@ struct Account
 
 } // namespace protoex_pmr
 
-#if defined(FMT_VERSION)
-template <> struct fmt::formatter<protoex_pmr::Account> : formatter<string_view> {};
-#endif
-
 template<>
 struct std::hash<protoex_pmr::Account>
 {
@@ -308,10 +284,6 @@ struct OrderMessage
 
 } // namespace protoex_pmr
 
-#if defined(FMT_VERSION)
-template <> struct fmt::formatter<protoex_pmr::OrderMessage> : formatter<string_view> {};
-#endif
-
 template<>
 struct std::hash<protoex_pmr::OrderMessage>
 {
@@ -362,10 +334,6 @@ struct BalanceMessage
 
 } // namespace protoex_pmr
 
-#if defined(FMT_VERSION)
-template <> struct fmt::formatter<protoex_pmr::BalanceMessage> : formatter<string_view> {};
-#endif
-
 template<>
 struct std::hash<protoex_pmr::BalanceMessage>
 {
@@ -415,10 +383,6 @@ struct AccountMessage
 };
 
 } // namespace protoex_pmr
-
-#if defined(FMT_VERSION)
-template <> struct fmt::formatter<protoex_pmr::AccountMessage> : formatter<string_view> {};
-#endif
 
 template<>
 struct std::hash<protoex_pmr::AccountMessage>

@@ -41,10 +41,6 @@ enum class OrderSide : uint8_t
 
 std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] OrderSide value);
 
-#if defined(FMT_VERSION)
-} template <> struct fmt::formatter<proto_pmr::OrderSide> : formatter<string_view> {}; namespace proto_pmr {
-#endif
-
 #if defined(LOGGING_PROTOCOL)
 CppLogging::Record& operator<<(CppLogging::Record& record, OrderSide value);
 #endif
@@ -57,10 +53,6 @@ enum class OrderType : uint8_t
 };
 
 std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] OrderType value);
-
-#if defined(FMT_VERSION)
-} template <> struct fmt::formatter<proto_pmr::OrderType> : formatter<string_view> {}; namespace proto_pmr {
-#endif
 
 #if defined(LOGGING_PROTOCOL)
 CppLogging::Record& operator<<(CppLogging::Record& record, OrderType value);
@@ -80,10 +72,6 @@ enum class State : uint8_t
 FBE_ENUM_FLAGS(State)
 
 std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] State value);
-
-#if defined(FMT_VERSION)
-} template <> struct fmt::formatter<proto_pmr::State> : formatter<string_view> {}; namespace proto_pmr {
-#endif
 
 #if defined(LOGGING_PROTOCOL)
 CppLogging::Record& operator<<(CppLogging::Record& record, State value);
@@ -128,10 +116,6 @@ struct Order
 };
 
 } // namespace proto_pmr
-
-#if defined(FMT_VERSION)
-template <> struct fmt::formatter<proto_pmr::Order> : formatter<string_view> {};
-#endif
 
 template<>
 struct std::hash<proto_pmr::Order>
@@ -184,10 +168,6 @@ struct Balance
 };
 
 } // namespace proto_pmr
-
-#if defined(FMT_VERSION)
-template <> struct fmt::formatter<proto_pmr::Balance> : formatter<string_view> {};
-#endif
 
 template<>
 struct std::hash<proto_pmr::Balance>
@@ -245,10 +225,6 @@ struct Account
 
 } // namespace proto_pmr
 
-#if defined(FMT_VERSION)
-template <> struct fmt::formatter<proto_pmr::Account> : formatter<string_view> {};
-#endif
-
 template<>
 struct std::hash<proto_pmr::Account>
 {
@@ -300,10 +276,6 @@ struct CharMap
 
 } // namespace proto_pmr
 
-#if defined(FMT_VERSION)
-template <> struct fmt::formatter<proto_pmr::CharMap> : formatter<string_view> {};
-#endif
-
 template<>
 struct std::hash<proto_pmr::CharMap>
 {
@@ -353,10 +325,6 @@ struct OrderMessage
 };
 
 } // namespace proto_pmr
-
-#if defined(FMT_VERSION)
-template <> struct fmt::formatter<proto_pmr::OrderMessage> : formatter<string_view> {};
-#endif
 
 template<>
 struct std::hash<proto_pmr::OrderMessage>
@@ -408,10 +376,6 @@ struct BalanceMessage
 
 } // namespace proto_pmr
 
-#if defined(FMT_VERSION)
-template <> struct fmt::formatter<proto_pmr::BalanceMessage> : formatter<string_view> {};
-#endif
-
 template<>
 struct std::hash<proto_pmr::BalanceMessage>
 {
@@ -461,10 +425,6 @@ struct AccountMessage
 };
 
 } // namespace proto_pmr
-
-#if defined(FMT_VERSION)
-template <> struct fmt::formatter<proto_pmr::AccountMessage> : formatter<string_view> {};
-#endif
 
 template<>
 struct std::hash<proto_pmr::AccountMessage>

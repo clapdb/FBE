@@ -77,10 +77,6 @@ struct Simple
 
 } // namespace variants_pmr
 
-#if defined(FMT_VERSION)
-template <> struct fmt::formatter<variants_pmr::Simple> : formatter<string_view> {};
-#endif
-
 template<>
 struct std::hash<variants_pmr::Simple>
 {
@@ -130,10 +126,6 @@ struct Value
 };
 
 } // namespace variants_pmr
-
-#if defined(FMT_VERSION)
-template <> struct fmt::formatter<variants_pmr::Value> : formatter<string_view> {};
-#endif
 
 template<>
 struct std::hash<variants_pmr::Value>

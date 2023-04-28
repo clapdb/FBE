@@ -39,10 +39,6 @@ enum class Sex
 
 std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] Sex value);
 
-#if defined(FMT_VERSION)
-} template <> struct fmt::formatter<osa::Sex> : formatter<string_view> {}; namespace osa {
-#endif
-
 #if defined(LOGGING_PROTOCOL)
 CppLogging::Record& operator<<(CppLogging::Record& record, Sex value);
 #endif
@@ -55,10 +51,6 @@ enum class MyFLags
 };
 
 std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] MyFLags value);
-
-#if defined(FMT_VERSION)
-} template <> struct fmt::formatter<osa::MyFLags> : formatter<string_view> {}; namespace osa {
-#endif
 
 #if defined(LOGGING_PROTOCOL)
 CppLogging::Record& operator<<(CppLogging::Record& record, MyFLags value);
@@ -98,10 +90,6 @@ struct Extra
 };
 
 } // namespace osa
-
-#if defined(FMT_VERSION)
-template <> struct fmt::formatter<osa::Extra> : formatter<string_view> {};
-#endif
 
 template<>
 struct std::hash<osa::Extra>
@@ -152,10 +140,6 @@ struct Simple
 };
 
 } // namespace osa
-
-#if defined(FMT_VERSION)
-template <> struct fmt::formatter<osa::Simple> : formatter<string_view> {};
-#endif
 
 template<>
 struct std::hash<osa::Simple>
