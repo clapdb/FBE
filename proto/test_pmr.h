@@ -48,10 +48,6 @@ enum class EnumSimple
 
 std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] EnumSimple value);
 
-#if defined(FMT_VERSION)
-} template <> struct fmt::formatter<test_pmr::EnumSimple> : formatter<string_view> {}; namespace test_pmr {
-#endif
-
 #if defined(LOGGING_PROTOCOL)
 CppLogging::Record& operator<<(CppLogging::Record& record, EnumSimple value);
 #endif
@@ -68,10 +64,6 @@ enum class EnumTyped : uint8_t
 
 std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] EnumTyped value);
 
-#if defined(FMT_VERSION)
-} template <> struct fmt::formatter<test_pmr::EnumTyped> : formatter<string_view> {}; namespace test_pmr {
-#endif
-
 #if defined(LOGGING_PROTOCOL)
 CppLogging::Record& operator<<(CppLogging::Record& record, EnumTyped value);
 #endif
@@ -81,10 +73,6 @@ enum class EnumEmpty
 };
 
 std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] EnumEmpty value);
-
-#if defined(FMT_VERSION)
-} template <> struct fmt::formatter<test_pmr::EnumEmpty> : formatter<string_view> {}; namespace test_pmr {
-#endif
 
 #if defined(LOGGING_PROTOCOL)
 CppLogging::Record& operator<<(CppLogging::Record& record, EnumEmpty value);
@@ -103,10 +91,6 @@ enum class FlagsSimple
 FBE_ENUM_FLAGS(FlagsSimple)
 
 std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] FlagsSimple value);
-
-#if defined(FMT_VERSION)
-} template <> struct fmt::formatter<test_pmr::FlagsSimple> : formatter<string_view> {}; namespace test_pmr {
-#endif
 
 #if defined(LOGGING_PROTOCOL)
 CppLogging::Record& operator<<(CppLogging::Record& record, FlagsSimple value);
@@ -130,10 +114,6 @@ FBE_ENUM_FLAGS(FlagsTyped)
 
 std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] FlagsTyped value);
 
-#if defined(FMT_VERSION)
-} template <> struct fmt::formatter<test_pmr::FlagsTyped> : formatter<string_view> {}; namespace test_pmr {
-#endif
-
 #if defined(LOGGING_PROTOCOL)
 CppLogging::Record& operator<<(CppLogging::Record& record, FlagsTyped value);
 #endif
@@ -145,10 +125,6 @@ enum class FlagsEmpty
 FBE_ENUM_FLAGS(FlagsEmpty)
 
 std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] FlagsEmpty value);
-
-#if defined(FMT_VERSION)
-} template <> struct fmt::formatter<test_pmr::FlagsEmpty> : formatter<string_view> {}; namespace test_pmr {
-#endif
 
 #if defined(LOGGING_PROTOCOL)
 CppLogging::Record& operator<<(CppLogging::Record& record, FlagsEmpty value);
@@ -232,10 +208,6 @@ struct StructSimple
 };
 
 } // namespace test_pmr
-
-#if defined(FMT_VERSION)
-template <> struct fmt::formatter<test_pmr::StructSimple> : formatter<string_view> {};
-#endif
 
 template<>
 struct std::hash<test_pmr::StructSimple>
@@ -353,10 +325,6 @@ struct StructOptional : public ::test_pmr::StructSimple
 
 } // namespace test_pmr
 
-#if defined(FMT_VERSION)
-template <> struct fmt::formatter<test_pmr::StructOptional> : formatter<string_view> {};
-#endif
-
 template<>
 struct std::hash<test_pmr::StructOptional>
 {
@@ -419,10 +387,6 @@ struct StructNested : public ::test_pmr::StructOptional
 
 } // namespace test_pmr
 
-#if defined(FMT_VERSION)
-template <> struct fmt::formatter<test_pmr::StructNested> : formatter<string_view> {};
-#endif
-
 template<>
 struct std::hash<test_pmr::StructNested>
 {
@@ -475,10 +439,6 @@ struct StructBytes
 };
 
 } // namespace test_pmr
-
-#if defined(FMT_VERSION)
-template <> struct fmt::formatter<test_pmr::StructBytes> : formatter<string_view> {};
-#endif
 
 template<>
 struct std::hash<test_pmr::StructBytes>
@@ -539,10 +499,6 @@ struct StructArray
 
 } // namespace test_pmr
 
-#if defined(FMT_VERSION)
-template <> struct fmt::formatter<test_pmr::StructArray> : formatter<string_view> {};
-#endif
-
 template<>
 struct std::hash<test_pmr::StructArray>
 {
@@ -601,10 +557,6 @@ struct StructVector
 };
 
 } // namespace test_pmr
-
-#if defined(FMT_VERSION)
-template <> struct fmt::formatter<test_pmr::StructVector> : formatter<string_view> {};
-#endif
 
 template<>
 struct std::hash<test_pmr::StructVector>
@@ -665,10 +617,6 @@ struct StructList
 
 } // namespace test_pmr
 
-#if defined(FMT_VERSION)
-template <> struct fmt::formatter<test_pmr::StructList> : formatter<string_view> {};
-#endif
-
 template<>
 struct std::hash<test_pmr::StructList>
 {
@@ -721,10 +669,6 @@ struct StructSet
 };
 
 } // namespace test_pmr
-
-#if defined(FMT_VERSION)
-template <> struct fmt::formatter<test_pmr::StructSet> : formatter<string_view> {};
-#endif
 
 template<>
 struct std::hash<test_pmr::StructSet>
@@ -785,10 +729,6 @@ struct StructMap
 
 } // namespace test_pmr
 
-#if defined(FMT_VERSION)
-template <> struct fmt::formatter<test_pmr::StructMap> : formatter<string_view> {};
-#endif
-
 template<>
 struct std::hash<test_pmr::StructMap>
 {
@@ -848,10 +788,6 @@ struct StructHash
 
 } // namespace test_pmr
 
-#if defined(FMT_VERSION)
-template <> struct fmt::formatter<test_pmr::StructHash> : formatter<string_view> {};
-#endif
-
 template<>
 struct std::hash<test_pmr::StructHash>
 {
@@ -903,10 +839,6 @@ struct StructHashEx
 
 } // namespace test_pmr
 
-#if defined(FMT_VERSION)
-template <> struct fmt::formatter<test_pmr::StructHashEx> : formatter<string_view> {};
-#endif
-
 template<>
 struct std::hash<test_pmr::StructHashEx>
 {
@@ -953,10 +885,6 @@ struct StructEmpty
 };
 
 } // namespace test_pmr
-
-#if defined(FMT_VERSION)
-template <> struct fmt::formatter<test_pmr::StructEmpty> : formatter<string_view> {};
-#endif
 
 template<>
 struct std::hash<test_pmr::StructEmpty>

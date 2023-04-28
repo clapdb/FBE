@@ -45,10 +45,6 @@ enum class EnumByte : uint8_t
 
 std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] EnumByte value);
 
-#if defined(FMT_VERSION)
-} template <> struct fmt::formatter<enums_pmr::EnumByte> : formatter<string_view> {}; namespace enums_pmr {
-#endif
-
 #if defined(LOGGING_PROTOCOL)
 CppLogging::Record& operator<<(CppLogging::Record& record, EnumByte value);
 #endif
@@ -64,10 +60,6 @@ enum class EnumChar : uint8_t
 };
 
 std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] EnumChar value);
-
-#if defined(FMT_VERSION)
-} template <> struct fmt::formatter<enums_pmr::EnumChar> : formatter<string_view> {}; namespace enums_pmr {
-#endif
 
 #if defined(LOGGING_PROTOCOL)
 CppLogging::Record& operator<<(CppLogging::Record& record, EnumChar value);
@@ -85,10 +77,6 @@ enum class EnumWChar : uint32_t
 
 std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] EnumWChar value);
 
-#if defined(FMT_VERSION)
-} template <> struct fmt::formatter<enums_pmr::EnumWChar> : formatter<string_view> {}; namespace enums_pmr {
-#endif
-
 #if defined(LOGGING_PROTOCOL)
 CppLogging::Record& operator<<(CppLogging::Record& record, EnumWChar value);
 #endif
@@ -104,10 +92,6 @@ enum class EnumInt8 : int8_t
 };
 
 std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] EnumInt8 value);
-
-#if defined(FMT_VERSION)
-} template <> struct fmt::formatter<enums_pmr::EnumInt8> : formatter<string_view> {}; namespace enums_pmr {
-#endif
 
 #if defined(LOGGING_PROTOCOL)
 CppLogging::Record& operator<<(CppLogging::Record& record, EnumInt8 value);
@@ -125,10 +109,6 @@ enum class EnumUInt8 : uint8_t
 
 std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] EnumUInt8 value);
 
-#if defined(FMT_VERSION)
-} template <> struct fmt::formatter<enums_pmr::EnumUInt8> : formatter<string_view> {}; namespace enums_pmr {
-#endif
-
 #if defined(LOGGING_PROTOCOL)
 CppLogging::Record& operator<<(CppLogging::Record& record, EnumUInt8 value);
 #endif
@@ -144,10 +124,6 @@ enum class EnumInt16 : int16_t
 };
 
 std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] EnumInt16 value);
-
-#if defined(FMT_VERSION)
-} template <> struct fmt::formatter<enums_pmr::EnumInt16> : formatter<string_view> {}; namespace enums_pmr {
-#endif
 
 #if defined(LOGGING_PROTOCOL)
 CppLogging::Record& operator<<(CppLogging::Record& record, EnumInt16 value);
@@ -165,10 +141,6 @@ enum class EnumUInt16 : uint16_t
 
 std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] EnumUInt16 value);
 
-#if defined(FMT_VERSION)
-} template <> struct fmt::formatter<enums_pmr::EnumUInt16> : formatter<string_view> {}; namespace enums_pmr {
-#endif
-
 #if defined(LOGGING_PROTOCOL)
 CppLogging::Record& operator<<(CppLogging::Record& record, EnumUInt16 value);
 #endif
@@ -184,10 +156,6 @@ enum class EnumInt32 : int32_t
 };
 
 std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] EnumInt32 value);
-
-#if defined(FMT_VERSION)
-} template <> struct fmt::formatter<enums_pmr::EnumInt32> : formatter<string_view> {}; namespace enums_pmr {
-#endif
 
 #if defined(LOGGING_PROTOCOL)
 CppLogging::Record& operator<<(CppLogging::Record& record, EnumInt32 value);
@@ -205,10 +173,6 @@ enum class EnumUInt32 : uint32_t
 
 std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] EnumUInt32 value);
 
-#if defined(FMT_VERSION)
-} template <> struct fmt::formatter<enums_pmr::EnumUInt32> : formatter<string_view> {}; namespace enums_pmr {
-#endif
-
 #if defined(LOGGING_PROTOCOL)
 CppLogging::Record& operator<<(CppLogging::Record& record, EnumUInt32 value);
 #endif
@@ -225,10 +189,6 @@ enum class EnumInt64 : int64_t
 
 std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] EnumInt64 value);
 
-#if defined(FMT_VERSION)
-} template <> struct fmt::formatter<enums_pmr::EnumInt64> : formatter<string_view> {}; namespace enums_pmr {
-#endif
-
 #if defined(LOGGING_PROTOCOL)
 CppLogging::Record& operator<<(CppLogging::Record& record, EnumInt64 value);
 #endif
@@ -244,10 +204,6 @@ enum class EnumUInt64 : uint64_t
 };
 
 std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] EnumUInt64 value);
-
-#if defined(FMT_VERSION)
-} template <> struct fmt::formatter<enums_pmr::EnumUInt64> : formatter<string_view> {}; namespace enums_pmr {
-#endif
 
 #if defined(LOGGING_PROTOCOL)
 CppLogging::Record& operator<<(CppLogging::Record& record, EnumUInt64 value);
@@ -352,10 +308,6 @@ struct Enums
 };
 
 } // namespace enums_pmr
-
-#if defined(FMT_VERSION)
-template <> struct fmt::formatter<enums_pmr::Enums> : formatter<string_view> {};
-#endif
 
 template<>
 struct std::hash<enums_pmr::Enums>

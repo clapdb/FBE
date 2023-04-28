@@ -44,10 +44,6 @@ enum class Optr : uint8_t
 
 std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] Optr value);
 
-#if defined(FMT_VERSION)
-} template <> struct fmt::formatter<arena_common_pmr::Optr> : formatter<string_view> {}; namespace arena_common_pmr {
-#endif
-
 #if defined(LOGGING_PROTOCOL)
 CppLogging::Record& operator<<(CppLogging::Record& record, Optr value);
 #endif
@@ -94,10 +90,6 @@ struct Alias
 };
 
 } // namespace arena_common_pmr
-
-#if defined(FMT_VERSION)
-template <> struct fmt::formatter<arena_common_pmr::Alias> : formatter<string_view> {};
-#endif
 
 template<>
 struct std::hash<arena_common_pmr::Alias>
@@ -150,10 +142,6 @@ struct Expression
 };
 
 } // namespace arena_common_pmr
-
-#if defined(FMT_VERSION)
-template <> struct fmt::formatter<arena_common_pmr::Expression> : formatter<string_view> {};
-#endif
 
 template<>
 struct std::hash<arena_common_pmr::Expression>
