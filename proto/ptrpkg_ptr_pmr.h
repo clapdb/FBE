@@ -49,7 +49,7 @@ struct Line : FBE::Base
 
     Line();
     explicit Line(allocator_type alloc);
-    Line(::variants_ptr_pmr::Value&& arg_value, std::unique_ptr<::variants_ptr_pmr::Value> arg_value_ptr);
+    Line(::variants_ptr_pmr::Value arg_value, std::unique_ptr<::variants_ptr_pmr::Value> arg_value_ptr);
     Line(const Line& other) = default;
     Line(Line&& other) noexcept;
     ~Line() override;

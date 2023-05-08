@@ -171,7 +171,7 @@ Extra::Extra([[maybe_unused]] allocator_type alloc)
     , infopl(alloc)
 {}
 
-Extra::Extra(int64_t arg_num, const stdb::memory::arena_string& arg_data, std::unique_ptr<::extra_pmr::Info> arg_info, std::unique_ptr<::extra_pmr::Info> arg_info2, ::extra_pmr::Info&& arg_info3, pmr::vector<::extra_pmr::Info> arg_infov, pmr::vector<std::unique_ptr<::extra_pmr::Info>> arg_infopv, pmr::list<::extra_pmr::Info> arg_infol, pmr::list<std::unique_ptr<::extra_pmr::Info>> arg_infopl)
+Extra::Extra(int64_t arg_num, const stdb::memory::arena_string& arg_data, std::unique_ptr<::extra_pmr::Info> arg_info, std::unique_ptr<::extra_pmr::Info> arg_info2, ::extra_pmr::Info arg_info3, pmr::vector<::extra_pmr::Info> arg_infov, pmr::vector<std::unique_ptr<::extra_pmr::Info>> arg_infopv, pmr::list<::extra_pmr::Info> arg_infol, pmr::list<std::unique_ptr<::extra_pmr::Info>> arg_infopl)
     : num(arg_num)
     , data(arg_data)
     , info(arg_info.release())

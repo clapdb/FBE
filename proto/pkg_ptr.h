@@ -46,7 +46,7 @@ struct Info : FBE::Base
     size_t fbe_type() const noexcept { return 1; }
 
     Info();
-    Info(const stdb::memory::string& arg_info, ::osa::Sex&& arg_sex, ::osa::MyFLags&& arg_flag, ::osa::Extra&& arg_extra);
+    Info(const stdb::memory::string& arg_info, ::osa::Sex arg_sex, ::osa::MyFLags arg_flag, ::osa::Extra arg_extra);
     Info(const Info& other) = default;
     Info(Info&& other) noexcept;
     ~Info() override;

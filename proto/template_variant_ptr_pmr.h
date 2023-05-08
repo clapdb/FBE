@@ -53,7 +53,7 @@ struct Line : FBE::Base
 
     Line();
     explicit Line(allocator_type alloc);
-    Line(::variants_pmr::V&& arg_v, pmr::vector<::variants_pmr::V> arg_vv, pmr::unordered_map<stdb::memory::arena_string, ::variants_pmr::V> arg_vm, std::optional<::variants_pmr::V> arg_vo);
+    Line(::variants_pmr::V arg_v, pmr::vector<::variants_pmr::V> arg_vv, pmr::unordered_map<stdb::memory::arena_string, ::variants_pmr::V> arg_vm, std::optional<::variants_pmr::V> arg_vo);
     Line(const Line& other) = default;
     Line(Line&& other) noexcept;
     ~Line() override;
@@ -153,7 +153,7 @@ struct Line3 : FBE::Base
 
     Line3();
     explicit Line3(allocator_type alloc);
-    explicit Line3(::variants_pmr::Value&& arg_value);
+    explicit Line3(::variants_pmr::Value arg_value);
     Line3(const Line3& other) = default;
     Line3(Line3&& other) noexcept;
     ~Line3() override;

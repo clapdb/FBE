@@ -48,7 +48,7 @@ struct Line : FBE::Base
 
     Line();
     explicit Line(allocator_type alloc);
-    explicit Line(::arena_common_pmr::Expression&& arg_expression);
+    explicit Line(::arena_common_pmr::Expression arg_expression);
     Line(const Line& other) = default;
     Line(Line&& other) noexcept;
     ~Line() override;

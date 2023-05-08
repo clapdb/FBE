@@ -367,7 +367,7 @@ Value::Value()
     , vo2()
 {}
 
-Value::Value(::variants_ptr::V&& arg_v, std::optional<::variants_ptr::V> arg_vo, std::optional<::variants_ptr::V> arg_vo2)
+Value::Value(::variants_ptr::V arg_v, std::optional<::variants_ptr::V> arg_vo, std::optional<::variants_ptr::V> arg_vo2)
     : v(std::move(arg_v))
     , vo()
     , vo2()

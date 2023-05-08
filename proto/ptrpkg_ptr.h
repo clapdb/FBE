@@ -44,7 +44,7 @@ struct Line : FBE::Base
     size_t fbe_type() const noexcept { return 1; }
 
     Line();
-    Line(::variants_ptr::Value&& arg_value, std::unique_ptr<::variants_ptr::Value> arg_value_ptr);
+    Line(::variants_ptr::Value arg_value, std::unique_ptr<::variants_ptr::Value> arg_value_ptr);
     Line(const Line& other) = default;
     Line(Line&& other) noexcept;
     ~Line() override;

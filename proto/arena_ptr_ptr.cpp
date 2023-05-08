@@ -13,7 +13,7 @@ Line::Line()
     : expression()
 {}
 
-Line::Line(::arena_common::Expression&& arg_expression)
+Line::Line(::arena_common::Expression arg_expression)
     : expression(std::move(arg_expression))
 {}
 

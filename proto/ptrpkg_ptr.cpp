@@ -14,7 +14,7 @@ Line::Line()
     , value_ptr(nullptr)
 {}
 
-Line::Line(::variants_ptr::Value&& arg_value, std::unique_ptr<::variants_ptr::Value> arg_value_ptr)
+Line::Line(::variants_ptr::Value arg_value, std::unique_ptr<::variants_ptr::Value> arg_value_ptr)
     : value(std::move(arg_value))
     , value_ptr(arg_value_ptr.release())
 {}

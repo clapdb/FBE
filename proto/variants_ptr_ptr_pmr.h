@@ -109,7 +109,7 @@ struct Value : FBE::Base
 
     Value();
     explicit Value(allocator_type alloc);
-    Value(::variants_ptr_pmr::V&& arg_v, std::optional<::variants_ptr_pmr::V> arg_vo, std::optional<::variants_ptr_pmr::V> arg_vo2);
+    Value(::variants_ptr_pmr::V arg_v, std::optional<::variants_ptr_pmr::V> arg_vo, std::optional<::variants_ptr_pmr::V> arg_vo2);
     Value(const Value& other) = default;
     Value(Value&& other) noexcept;
     ~Value() override;

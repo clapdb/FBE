@@ -23,7 +23,7 @@ Line::Line([[maybe_unused]] allocator_type alloc)
     , vo(std::nullopt)
 {}
 
-Line::Line(::variants_pmr::V&& arg_v, pmr::vector<::variants_pmr::V> arg_vv, pmr::unordered_map<stdb::memory::arena_string, ::variants_pmr::V> arg_vm, std::optional<::variants_pmr::V> arg_vo)
+Line::Line(::variants_pmr::V arg_v, pmr::vector<::variants_pmr::V> arg_vv, pmr::unordered_map<stdb::memory::arena_string, ::variants_pmr::V> arg_vm, std::optional<::variants_pmr::V> arg_vo)
     : v(std::move(arg_v))
     , vv(std::move(arg_vv))
     , vm(std::move(arg_vm))
@@ -211,7 +211,7 @@ Line3::Line3([[maybe_unused]] allocator_type alloc)
     : value(assign_member<::variants_pmr::Value>(alloc))
 {}
 
-Line3::Line3(::variants_pmr::Value&& arg_value)
+Line3::Line3(::variants_pmr::Value arg_value)
     : value(std::move(arg_value))
 {}
 

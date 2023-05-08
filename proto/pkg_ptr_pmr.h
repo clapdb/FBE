@@ -51,7 +51,7 @@ struct Info : FBE::Base
 
     Info();
     explicit Info(allocator_type alloc);
-    Info(const stdb::memory::arena_string& arg_info, ::osa_pmr::Sex&& arg_sex, ::osa_pmr::MyFLags&& arg_flag, ::osa_pmr::Extra&& arg_extra);
+    Info(const stdb::memory::arena_string& arg_info, ::osa_pmr::Sex arg_sex, ::osa_pmr::MyFLags arg_flag, ::osa_pmr::Extra arg_extra);
     Info(const Info& other) = default;
     Info(Info&& other) noexcept;
     ~Info() override;
