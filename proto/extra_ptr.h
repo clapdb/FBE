@@ -102,7 +102,7 @@ struct Extra : FBE::Base
     size_t fbe_type() const noexcept { return 2; }
 
     Extra();
-    Extra(int64_t arg_num, const stdb::memory::string& arg_data, std::unique_ptr<::extra::Info> arg_info, std::unique_ptr<::extra::Info> arg_info2, ::extra::Info&& arg_info3, FastVec<::extra::Info> arg_infov, FastVec<std::unique_ptr<::extra::Info>> arg_infopv, std::list<::extra::Info> arg_infol, std::list<std::unique_ptr<::extra::Info>> arg_infopl);
+    Extra(int64_t arg_num, const stdb::memory::string& arg_data, std::unique_ptr<::extra::Info> arg_info, std::unique_ptr<::extra::Info> arg_info2, ::extra::Info arg_info3, FastVec<::extra::Info> arg_infov, FastVec<std::unique_ptr<::extra::Info>> arg_infopv, std::list<::extra::Info> arg_infol, std::list<std::unique_ptr<::extra::Info>> arg_infopl);
     Extra(const Extra& other) = default;
     Extra(Extra&& other) noexcept;
     ~Extra() override;

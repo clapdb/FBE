@@ -23,7 +23,7 @@ Info::Info([[maybe_unused]] allocator_type alloc)
     , extra(assign_member<::osa_pmr::Extra>(alloc))
 {}
 
-Info::Info(const stdb::memory::arena_string& arg_info, ::osa_pmr::Sex&& arg_sex, ::osa_pmr::MyFLags&& arg_flag, ::osa_pmr::Extra&& arg_extra)
+Info::Info(const stdb::memory::arena_string& arg_info, ::osa_pmr::Sex arg_sex, ::osa_pmr::MyFLags arg_flag, ::osa_pmr::Extra arg_extra)
     : info(arg_info)
     , sex(std::move(arg_sex))
     , flag(std::move(arg_flag))

@@ -17,7 +17,7 @@ Line::Line([[maybe_unused]] allocator_type alloc)
     : expression(assign_member<::arena_common_pmr::Expression>(alloc))
 {}
 
-Line::Line(::arena_common_pmr::Expression&& arg_expression)
+Line::Line(::arena_common_pmr::Expression arg_expression)
     : expression(std::move(arg_expression))
 {}
 

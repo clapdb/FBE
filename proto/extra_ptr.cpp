@@ -152,7 +152,7 @@ Extra::Extra()
     , infopl()
 {}
 
-Extra::Extra(int64_t arg_num, const stdb::memory::string& arg_data, std::unique_ptr<::extra::Info> arg_info, std::unique_ptr<::extra::Info> arg_info2, ::extra::Info&& arg_info3, FastVec<::extra::Info> arg_infov, FastVec<std::unique_ptr<::extra::Info>> arg_infopv, std::list<::extra::Info> arg_infol, std::list<std::unique_ptr<::extra::Info>> arg_infopl)
+Extra::Extra(int64_t arg_num, const stdb::memory::string& arg_data, std::unique_ptr<::extra::Info> arg_info, std::unique_ptr<::extra::Info> arg_info2, ::extra::Info arg_info3, FastVec<::extra::Info> arg_infov, FastVec<std::unique_ptr<::extra::Info>> arg_infopv, std::list<::extra::Info> arg_infol, std::list<std::unique_ptr<::extra::Info>> arg_infopl)
     : num(arg_num)
     , data(arg_data)
     , info(arg_info.release())

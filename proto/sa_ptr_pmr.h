@@ -73,7 +73,7 @@ struct Extra : FBE::Base
 
     Extra();
     explicit Extra(allocator_type alloc);
-    Extra(const stdb::memory::arena_string& arg_name, const stdb::memory::arena_string& arg_detail, ::sa_pmr::Sex&& arg_sex, ::sa_pmr::MyFLags&& arg_flag);
+    Extra(const stdb::memory::arena_string& arg_name, const stdb::memory::arena_string& arg_detail, ::sa_pmr::Sex arg_sex, ::sa_pmr::MyFLags arg_flag);
     Extra(const Extra& other) = default;
     Extra(Extra&& other) noexcept;
     ~Extra() override;
@@ -126,7 +126,7 @@ struct Simple : FBE::Base
 
     Simple();
     explicit Simple(allocator_type alloc);
-    Simple(const stdb::memory::arena_string& arg_name, int32_t arg_depth, std::array<::sa_pmr::Extra, 1> arg_sa, ::sa_pmr::Sex&& arg_sex);
+    Simple(const stdb::memory::arena_string& arg_name, int32_t arg_depth, std::array<::sa_pmr::Extra, 1> arg_sa, ::sa_pmr::Sex arg_sex);
     Simple(const Simple& other) = default;
     Simple(Simple&& other) noexcept;
     ~Simple() override;

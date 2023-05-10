@@ -101,7 +101,7 @@ struct Value : FBE::Base
     size_t fbe_type() const noexcept { return 2; }
 
     Value();
-    Value(::variants_ptr::V&& arg_v, std::optional<::variants_ptr::V> arg_vo, std::optional<::variants_ptr::V> arg_vo2);
+    Value(::variants_ptr::V arg_v, std::optional<::variants_ptr::V> arg_vo, std::optional<::variants_ptr::V> arg_vo2);
     Value(const Value& other) = default;
     Value(Value&& other) noexcept;
     ~Value() override;

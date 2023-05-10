@@ -43,7 +43,7 @@ struct Line : FBE::Base
     size_t fbe_type() const noexcept { return 1; }
 
     Line();
-    explicit Line(::arena_common::Expression&& arg_expression);
+    explicit Line(::arena_common::Expression arg_expression);
     Line(const Line& other) = default;
     Line(Line&& other) noexcept;
     ~Line() override;

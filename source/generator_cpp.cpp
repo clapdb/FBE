@@ -8063,8 +8063,6 @@ GeneratorCpp::ConvertPtrTypeName(const std::string &package, const StructField &
     else if (field.hash)
         return prefix + "::unordered_map<" + ConvertPtrTypeName(package, *field.key, false, false, as_argument) + ", " + ConvertPtrTypeName(package, *field.type, field.optional, typeptr, as_argument) +">";
     auto s = ConvertPtrTypeName(package, *field.type, field.optional, typeptr, as_argument);
-    if (Ptr() && !IsKnownType(*field.type) && !field.ptr && as_argument)
-        s += "&&";
     return s;
 }
 

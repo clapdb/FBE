@@ -68,7 +68,7 @@ struct Extra : FBE::Base
     size_t fbe_type() const noexcept { return 1; }
 
     Extra();
-    Extra(const stdb::memory::string& arg_name, const stdb::memory::string& arg_detail, ::sa::Sex&& arg_sex, ::sa::MyFLags&& arg_flag);
+    Extra(const stdb::memory::string& arg_name, const stdb::memory::string& arg_detail, ::sa::Sex arg_sex, ::sa::MyFLags arg_flag);
     Extra(const Extra& other) = default;
     Extra(Extra&& other) noexcept;
     ~Extra() override;
@@ -118,7 +118,7 @@ struct Simple : FBE::Base
     size_t fbe_type() const noexcept { return 2; }
 
     Simple();
-    Simple(const stdb::memory::string& arg_name, int32_t arg_depth, std::array<::sa::Extra, 1> arg_sa, ::sa::Sex&& arg_sex);
+    Simple(const stdb::memory::string& arg_name, int32_t arg_depth, std::array<::sa::Extra, 1> arg_sa, ::sa::Sex arg_sex);
     Simple(const Simple& other) = default;
     Simple(Simple&& other) noexcept;
     ~Simple() override;

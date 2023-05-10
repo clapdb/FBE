@@ -377,7 +377,7 @@ Value::Value([[maybe_unused]] allocator_type alloc)
     , vo2(std::nullopt)
 {}
 
-Value::Value(::variants_ptr_pmr::V&& arg_v, std::optional<::variants_ptr_pmr::V> arg_vo, std::optional<::variants_ptr_pmr::V> arg_vo2)
+Value::Value(::variants_ptr_pmr::V arg_v, std::optional<::variants_ptr_pmr::V> arg_vo, std::optional<::variants_ptr_pmr::V> arg_vo2)
     : v(std::move(arg_v))
     , vo()
     , vo2()
