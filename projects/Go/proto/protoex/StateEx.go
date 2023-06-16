@@ -9,8 +9,8 @@ package protoex
 
 import "strings"
 import "errors"
-import "../fbe"
-import "../proto"
+import "fbeproj/proto/fbe"
+import "fbeproj/proto/proto"
 
 // Workaround for Go unused imports issue
 var _ = errors.New

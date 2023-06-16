@@ -8112,7 +8112,25 @@ std::string GeneratorGo::ConvertBaseName(const std::string& type)
 std::string GeneratorGo::ConvertKeyName(const std::string& type)
 {
     if (IsGoType(type))
+    {
+        if (type == "char" || type == "wchar")
+        {
+            return "rune";
+        } else if (type == "float") {
+            return "float32";
+        } else if (type == "double") {
+            return "float64";
+        } else if (type == "bytes") {
+            return "[]byte";
+        } else if (type == "decimal") {
+            return "Decimal";
+        } else if (type == "timestamp") {
+            return "Timestamp";
+        } else if (type == "uuid") {
+            return "UUID";
+        }
         return type;
+    }
 
     std::string ns = "";
     std::string t = type;

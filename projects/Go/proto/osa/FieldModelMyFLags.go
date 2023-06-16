@@ -8,7 +8,7 @@
 package osa
 
 import "errors"
-import "../fbe"
+import "fbeproj/proto/fbe"
 
 // Fast Binary Encoding MyFLags field model
 type FieldModelMyFLags struct {

@@ -1,9 +1,9 @@
-package main
+package examples
 
 import "fmt"
-import "../proto/test"
+import "fbeproj/proto/test"
 
-func main() {
+func ExamplePrint() {
 	fmt.Println(test.NewStructSimple())
 	fmt.Println()
 

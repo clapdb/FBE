@@ -2,9 +2,9 @@ package tests
 
 import "testing"
 import "github.com/stretchr/testify/assert"
-import "../proto/fbe"
-import "../proto/proto"
-import "../proto/test"
+import "fbeproj/proto/fbe"
+import "fbeproj/proto/proto"
+import "fbeproj/proto/test"
 
 func TestSerializationDomain(t *testing.T) {
 	// Create a new account with some orders

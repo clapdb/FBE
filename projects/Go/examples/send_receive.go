@@ -1,7 +1,7 @@
-package main
+package examples
 
 import "fmt"
-import "../proto/proto"
+import "fbeproj/proto/proto"
 
 type MySender struct {
 	*proto.Sender
@@ -40,7 +40,7 @@ func (r *MyReceiver) OnReceiveLog(message string) {
 	fmt.Printf("onReceive: %s\n", message)
 }
 
-func main() {
+func ExampleSendReceive() {
 	sender := NewMySender()
 
 	// Enable logging

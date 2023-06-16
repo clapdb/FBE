@@ -8,7 +8,7 @@
 package variants
 
 import "errors"
-import "../fbe"
+import "fbeproj/proto/fbe"
 
 // Workaround for Go unused imports issue
 var _ = errors.New

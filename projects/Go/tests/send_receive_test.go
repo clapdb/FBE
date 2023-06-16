@@ -4,7 +4,7 @@ import (
 	"testing"
 )
 import "github.com/stretchr/testify/assert"
-import "../proto/proto"
+import "fbeproj/proto/proto"
 
 type MySender struct {
 	*proto.Sender

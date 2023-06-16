@@ -1,9 +1,9 @@
-package main
+package examples
 
 import "fmt"
-import "../proto/test"
+import "fbeproj/proto/test"
 
-func main() {
+func ExamplePrintJSON() {
 	json, _ := test.NewStructSimple().JSON()
 	fmt.Println(string(json))
 	fmt.Println()

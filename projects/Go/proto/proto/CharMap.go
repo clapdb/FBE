@@ -11,7 +11,7 @@ import "fmt"
 import "strconv"
 import "strings"
 import "errors"
-import "../fbe"
+import "fbeproj/proto/fbe"
 
 // Workaround for Go unused imports issue
 var _ = errors.New
@@ -35,18 +35,18 @@ func (k *CharMapKey) String() string {
 
 // CharMap struct
 type CharMap struct {
-    Abbr map[char]string `json:"abbr"`
+    Abbr map[rune]string `json:"abbr"`
 }
 
 // Create a new CharMap struct
 func NewCharMap() *CharMap {
     return &CharMap{
-        Abbr: make(map[char]string),
+        Abbr: make(map[rune]string),
     }
 }
 
 // Create a new CharMap struct from the given field values
-func NewCharMapFromFieldValues(Abbr map[char]string) *CharMap {
+func NewCharMapFromFieldValues(Abbr map[rune]string) *CharMap {
     return &CharMap{Abbr}
 }
 
