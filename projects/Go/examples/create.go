@@ -4,7 +4,7 @@ import "fmt"
 import "fbeproj/proto/fbe"
 import "fbeproj/proto/proto"
 
-func ExampleCreate() {
+func Create() {
 	// Create a new account using FBE model
 	var account = proto.NewAccountModel(fbe.NewEmptyBuffer())
 	modelBegin := account.CreateBegin()

@@ -32,7 +32,7 @@ func NewMyReceiver() *MyReceiver {
 	return receiver
 }
 
-func (r *MyReceiver) OnReceiveOrderMessage(value *proto.OrderMessage) {}
+func (r *MyReceiver) OnReceiveOrderMessage(value *proto.OrderMessage)     {}
 func (r *MyReceiver) OnReceiveBalanceMessage(value *proto.BalanceMessage) {}
 func (r *MyReceiver) OnReceiveAccountMessage(value *proto.AccountMessage) {}
 
@@ -40,7 +40,7 @@ func (r *MyReceiver) OnReceiveLog(message string) {
 	fmt.Printf("onReceive: %s\n", message)
 }
 
-func ExampleSendReceive() {
+func SendReceive() {
 	sender := NewMySender()
 
 	// Enable logging

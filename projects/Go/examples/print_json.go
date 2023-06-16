@@ -3,7 +3,7 @@ package examples
 import "fmt"
 import "fbeproj/proto/test"
 
-func ExamplePrintJSON() {
+func PrintJSON() {
 	json, _ := test.NewStructSimple().JSON()
 	fmt.Println(string(json))
 	fmt.Println()
