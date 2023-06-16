@@ -200,6 +200,7 @@ int main(int argc, char** argv)
     parser.add_option("--cpp-logging").type(Type::Bool).dest("cpp-logging").action(Action::StoreTrue).default_value(0).help("Generate C++ logging code");
     parser.add_option("--csharp").type(Type::Bool).dest("csharp").action(Action::StoreTrue).default_value(0).help("Generate C# code");
     parser.add_option("--go").type(Type::Bool).dest("go").action(Action::StoreTrue).default_value(0).help("Generate Go code");
+    parser.add_option("--go-module-path").type(Type::String).dest("go-module-path").action(Action::Store).nargs(1).help("Set go module path. Default: ..");
     parser.add_option("--java7").type(Type::Bool).dest("java7").action(Action::StoreTrue).default_value(0).help("Generate Java code (old Java 7 for Android)");
     parser.add_option("--java").type(Type::Bool).dest("java").action(Action::StoreTrue).default_value(0).help("Generate Java code");
     parser.add_option("--javascript").type(Type::Bool).dest("javascript").action(Action::StoreTrue).default_value(0).help("Generate JavaScript code");
@@ -254,10 +255,12 @@ int main(int argc, char** argv)
     bool proto = options.get<bool>("proto").value_or(false);
     bool ptr = options.get<bool>("ptr").value_or(false);
     bool import_ptr = options.get<bool>("import-ptr").value_or(false);
+    auto go_module_path_opt = options.get<string>("go-module-path");
     char space = tabs ? '\t' : ' ';
 
     std::string input{input_opt.value_or("")};
     std::string output{output_opt.value_or("")};
+    std::string go_module_path{go_module_path_opt.value_or("..")};
     int indent = indent_opt.value_or(0);
 
     // Check for the input path
@@ -348,7 +351,7 @@ int main(int argc, char** argv)
     if (go)
     {
         if (!quiet) std::cout << "Generating Go code...";
-        FBE::GeneratorGo(input, output, indent ? indent : 4 , space).Final(final).JSON(json).Proto(proto).Generate(FBE::Package::root);
+        FBE::GeneratorGo(input, output, indent ? indent : 4 , space).Final(final).JSON(json).Proto(proto).ModulePath(go_module_path).Generate(FBE::Package::root);
         if (!quiet) std::cout << "Done!" << std::endl;
     }
     if (java || java7)
