@@ -3,9 +3,9 @@ examples:
 	./fbeproj
 
 test:
-	go test -v -count=1 -cover ./...| grep -v "^?"
+	go test -v -count=1 ./tests
 
 bench:
-	go test -v -bench=. -run=^# ./...| grep -v "^?"
+	go test -v -bench=. ./benchmarks
 
 .PHONY: test examples bench
