@@ -8,7 +8,7 @@
 package test
 
 import "errors"
-import "../fbe"
+import "fbeproj/proto/fbe"
 
 // Fast Binary Encoding EnumEmpty field model
 type FieldModelEnumEmpty struct {

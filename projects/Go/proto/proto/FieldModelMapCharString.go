@@ -8,7 +8,7 @@
 package proto
 
 import "errors"
-import "../fbe"
+import "fbeproj/proto/fbe"
 
 // Workaround for Go unused imports issue
 var _ = errors.New
@@ -173,8 +173,8 @@ func (fm *FieldModelMapCharString) Verify() bool {
 }
 
 // Get the map
-func (fm *FieldModelMapCharString) Get() (map[char]string, error) {
-    values := make(map[char]string)
+func (fm *FieldModelMapCharString) Get() (map[rune]string, error) {
+    values := make(map[rune]string)
 
     fbeMapSize := fm.Size()
     if fbeMapSize == 0 {
@@ -204,7 +204,7 @@ func (fm *FieldModelMapCharString) Get() (map[char]string, error) {
 }
 
 // Set the map
-func (fm *FieldModelMapCharString) Set(values map[char]string) error {
+func (fm *FieldModelMapCharString) Set(values map[rune]string) error {
     if (fm.buffer.Offset() + fm.FBEOffset() + fm.FBESize()) > fm.buffer.Size() {
         return errors.New("model is broken")
     }

@@ -313,6 +313,8 @@ import "time"
 import "github.com/google/uuid"
 import "github.com/shopspring/decimal"
 
+// https://github.com/shopspring/decimal/issues/176
+// TL;DR; It is a known issue, and that's why you should always use Cmp or Equals method to compare two decimals
 // Decimal struct
 type Decimal struct {
     decimal.Decimal
@@ -2711,7 +2713,7 @@ void GeneratorGo::GenerateFBEFieldModelEnumFlags(const std::string& package, con
     // Generate imports
     WriteLine();
     WriteLineIndent("import \"errors\"");
-    WriteLineIndent("import \"../fbe\"");
+    WriteLineIndent(std::string("import \"") + ModulePath() + "/fbe\"");
 
     std::string code = R"CODE(
 // Fast Binary Encoding _NAME_ field model
@@ -4222,7 +4224,7 @@ void GeneratorGo::GenerateFBEFinalModelEnumFlags(const std::string& package, con
     // Generate imports
     WriteLine();
     WriteLineIndent("import \"errors\"");
-    WriteLineIndent("import \"../fbe\"");
+    WriteLineIndent(std::string("import \"") + ModulePath() + "/fbe\"");
 
     std::string code = R"CODE(
 // Fast Binary Encoding _NAME_ final model
@@ -4789,12 +4791,12 @@ void GeneratorGo::GenerateImports(const std::shared_ptr<Package>& p)
 {
     // Generate fbe import
     WriteLineIndent("import \"errors\"");
-    WriteLineIndent("import \"../fbe\"");
+    WriteLineIndent(std::string("import \"") + ModulePath() + "/fbe\"");
 
     // Generate packages import
     if (p->import)
         for (const auto& import : p->import->imports)
-            WriteLineIndent("import \"../" + *import + "\"");
+            WriteLineIndent(std::string("import \"") + ModulePath() + "/" + *import + "\"");
 
     // Generate workaround for Go unused imports issue
     WriteLine();
@@ -8112,7 +8114,25 @@ std::string GeneratorGo::ConvertBaseName(const std::string& type)
 std::string GeneratorGo::ConvertKeyName(const std::string& type)
 {
     if (IsGoType(type))
+    {
+        if (type == "char" || type == "wchar")
+        {
+            return "rune";
+        } else if (type == "float") {
+            return "float32";
+        } else if (type == "double") {
+            return "float64";
+        } else if (type == "bytes") {
+            return "[]byte";
+        } else if (type == "decimal") {
+            return "Decimal";
+        } else if (type == "timestamp") {
+            return "Timestamp";
+        } else if (type == "uuid") {
+            return "UUID";
+        }
         return type;
+    }
 
     std::string ns = "";
     std::string t = type;

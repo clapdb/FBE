@@ -1,10 +1,10 @@
-package main
+package examples
 
 import "fmt"
-import "../proto/fbe"
-import "../proto/proto"
+import "fbeproj/proto/fbe"
+import "fbeproj/proto/proto"
 
-func main() {
+func Create() {
 	// Create a new account using FBE model
 	var account = proto.NewAccountModel(fbe.NewEmptyBuffer())
 	modelBegin := account.CreateBegin()

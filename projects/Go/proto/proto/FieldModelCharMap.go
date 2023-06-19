@@ -8,7 +8,7 @@
 package proto
 
 import "errors"
-import "../fbe"
+import "fbeproj/proto/fbe"
 
 // Workaround for Go unused imports issue
 var _ = errors.New
@@ -173,7 +173,7 @@ func (fm *FieldModelCharMap) GetFields(fbeValue *CharMap, fbeStructSize int) {
     if (fbeCurrentSize + fm.Abbr.FBESize()) <= fbeStructSize {
         fbeValue.Abbr, _ = fm.Abbr.Get()
     } else {
-        fbeValue.Abbr = make(map[char]string)
+        fbeValue.Abbr = make(map[rune]string)
     }
     fbeCurrentSize += fm.Abbr.FBESize()
 }

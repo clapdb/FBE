@@ -8,7 +8,7 @@
 package proto
 
 import "errors"
-import "../fbe"
+import "fbeproj/proto/fbe"
 
 // Workaround for Go unused imports issue
 var _ = errors.New
@@ -36,7 +36,7 @@ func NewFinalModelMapCharString(buffer *fbe.Buffer, offset int) *FinalModelMapCh
 }
 
 // Get the allocation size
-func (fm *FinalModelMapCharString) FBEAllocationSize(values map[char]string) int {
+func (fm *FinalModelMapCharString) FBEAllocationSize(values map[rune]string) int {
     size := 4
     for key, value := range values {
         size += fm.modelKey.FBEAllocationSize(key)
@@ -86,8 +86,8 @@ func (fm *FinalModelMapCharString) Verify() int {
 }
 
 // Get the map
-func (fm *FinalModelMapCharString) Get() (map[char]string, int, error) {
-    values := make(map[char]string)
+func (fm *FinalModelMapCharString) Get() (map[rune]string, int, error) {
+    values := make(map[rune]string)
 
     if (fm.buffer.Offset() + fm.FBEOffset() + 4) > fm.buffer.Size() {
         return values, 0, errors.New("model is broken")
@@ -122,7 +122,7 @@ func (fm *FinalModelMapCharString) Get() (map[char]string, int, error) {
 }
 
 // Set the map
-func (fm *FinalModelMapCharString) Set(values map[char]string) (int, error) {
+func (fm *FinalModelMapCharString) Set(values map[rune]string) (int, error) {
     if (fm.buffer.Offset() + fm.FBEOffset() + 4) > fm.buffer.Size() {
         return 0, errors.New("model is broken")
     }

@@ -36,12 +36,19 @@ public:
     bool Proto() const noexcept { return _proto; }
     GeneratorGo& Proto(bool proto) noexcept { _proto = proto; return *this; }
 
+    std::string ModulePath() const noexcept { return _module_path; }
+    GeneratorGo& ModulePath(const std::string& module_path) noexcept {
+        _module_path = module_path;
+         return *this;
+    }
+
     void Generate(const std::shared_ptr<Package>& package) override;
 
 private:
     bool _final{false};
     bool _json{false};
     bool _proto{false};
+    std::string _module_path{".."};
 
     void GenerateHeader(const std::string& source);
     void GenerateFooter();

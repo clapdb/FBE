@@ -11,6 +11,8 @@ import "time"
 import "github.com/google/uuid"
 import "github.com/shopspring/decimal"
 
+// https://github.com/shopspring/decimal/issues/176
+// TL;DR; It is a known issue, and that's why you should always use Cmp or Equals method to compare two decimals
 // Decimal struct
 type Decimal struct {
     decimal.Decimal
