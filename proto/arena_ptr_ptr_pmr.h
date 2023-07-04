@@ -27,7 +27,6 @@
 namespace arena_ptr_pmr {
 using namespace FBE;
 using allocator_type = pmr::polymorphic_allocator<char>;
-using namespace ::arena_common_pmr;
 } // namespace arena_ptr_pmr
 
 namespace FBE {

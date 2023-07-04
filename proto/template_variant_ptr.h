@@ -26,8 +26,6 @@
 
 namespace template_variant {
 using namespace FBE;
-using namespace ::enums;
-using namespace ::variants;
 } // namespace template_variant
 
 namespace FBE {

@@ -25,7 +25,6 @@
 
 namespace ptrpkg {
 using namespace FBE;
-using namespace ::variants_ptr;
 } // namespace ptrpkg
 
 namespace FBE {

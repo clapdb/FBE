@@ -25,7 +25,6 @@
 
 namespace pkg {
 using namespace FBE;
-using namespace ::osa;
 } // namespace pkg
 
 namespace FBE {

@@ -28,8 +28,6 @@
 namespace template_variant_pmr {
 using namespace FBE;
 using allocator_type = pmr::polymorphic_allocator<char>;
-using namespace ::enums_pmr;
-using namespace ::variants_pmr;
 } // namespace template_variant_pmr
 
 namespace FBE {
