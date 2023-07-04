@@ -230,11 +230,6 @@ void GeneratorCpp::GenerateImports(const std::shared_ptr<Package>& p)
     if (Arena()) {
         WriteLineIndent("using allocator_type = pmr::polymorphic_allocator<char>;");
     }
-    if (p->import)
-    {
-        for (const auto& import : p->import->imports)
-            WriteLineIndent("using namespace ::" + ConvertNamespace(*import) + ";");
-    }
     WriteLineIndent("} // namespace " + ConvertNamespace(*p->name));
 
     // Generate FBE namespace using
