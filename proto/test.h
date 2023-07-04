@@ -25,7 +25,6 @@
 
 namespace test {
 using namespace FBE;
-using namespace ::proto;
 } // namespace test
 
 namespace FBE {

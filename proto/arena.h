@@ -25,7 +25,6 @@
 
 namespace arena {
 using namespace FBE;
-using namespace ::arena_common;
 } // namespace arena
 
 namespace FBE {

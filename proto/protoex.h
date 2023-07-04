@@ -25,7 +25,6 @@
 
 namespace protoex {
 using namespace FBE;
-using namespace ::proto;
 } // namespace protoex
 
 namespace FBE {

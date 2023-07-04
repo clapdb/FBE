@@ -27,7 +27,6 @@
 namespace pkg_pmr {
 using namespace FBE;
 using allocator_type = pmr::polymorphic_allocator<char>;
-using namespace ::osa_pmr;
 } // namespace pkg_pmr
 
 namespace FBE {

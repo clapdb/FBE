@@ -27,7 +27,6 @@
 namespace protoex_pmr {
 using namespace FBE;
 using allocator_type = pmr::polymorphic_allocator<char>;
-using namespace ::proto_pmr;
 } // namespace protoex_pmr
 
 namespace FBE {
