@@ -30,7 +30,6 @@ type FieldModelVectorBytes struct {
 // Create a new Bytes vector field model
 func NewFieldModelVectorBytes(buffer *fbe.Buffer, offset int) *FieldModelVectorBytes {
     fbeResult := FieldModelVectorBytes{buffer: buffer, offset: offset}
-    fbeResult.model = fbe.NewFieldModelBytes(buffer, offset)
     return &fbeResult
 }
 
@@ -50,7 +49,14 @@ func (fm *FieldModelVectorBytes) FBEExtra() int {
 
     fbeVectorSize := int(fbe.ReadUInt32(fm.buffer.Data(), fm.buffer.Offset() + fbeVectorOffset))
 
+    if fbeVectorSize == 0 {
+        return 0
+    }
+
     fbeResult := 0
+    if fm.model == nil {
+        fm.model = fbe.NewFieldModelBytes(fm.buffer, fm.offset)
+    }
     fm.model.SetFBEOffset(fbeVectorOffset + 4)
     for i := fbeVectorSize; i > 0; i-- {
         fbeResult += fm.model.FBESize() + fm.model.FBEExtra()
@@ -110,6 +116,10 @@ func (fm *FieldModelVectorBytes) GetItem(index int) (*fbe.FieldModelBytes, error
         return nil, errors.New("index is out of bounds")
     }
 
+    if fm.model == nil {
+        fm.model = fbe.NewFieldModelBytes(fm.buffer, fm.offset)
+    }
+
     fm.model.SetFBEOffset(fbeVectorOffset + 4)
     fm.model.FBEShift(index * fm.model.FBESize())
     return fm.model, nil
@@ -117,6 +127,9 @@ func (fm *FieldModelVectorBytes) GetItem(index int) (*fbe.FieldModelBytes, error
 
 // Resize the vector and get its first model
 func (fm *FieldModelVectorBytes) Resize(size int) (*fbe.FieldModelBytes, error) {
+    if fm.model == nil {
+        fm.model = fbe.NewFieldModelBytes(fm.buffer, fm.offset)
+    }
     fbeVectorSize := size * fm.model.FBESize()
     fbeVectorOffset := fm.buffer.Allocate(4 + fbeVectorSize) - fm.buffer.Offset()
     if (fbeVectorOffset == 0) || ((fm.buffer.Offset() + fbeVectorOffset + 4) > fm.buffer.Size()) {
@@ -147,7 +160,13 @@ func (fm *FieldModelVectorBytes) Verify() bool {
     }
 
     fbeVectorSize := int(fbe.ReadUInt32(fm.buffer.Data(), fm.buffer.Offset() + fbeVectorOffset))
+    if fbeVectorSize == 0 {
+        return true
+    }
 
+    if fm.model == nil {
+        fm.model = fbe.NewFieldModelBytes(fm.buffer, fm.offset)
+    }
     fm.model.SetFBEOffset(fbeVectorOffset + 4)
     for i := fbeVectorSize; i > 0; i-- {
         if !fm.model.Verify() {

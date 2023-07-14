@@ -176,8 +176,8 @@ func NewEnums() *Enums {
 }
 
 // Create a new Enums struct from the given field values
-func NewEnumsFromFieldValues(Byte0 EnumByte, Byte1 EnumByte, Byte2 EnumByte, Byte3 EnumByte, Byte4 EnumByte, Byte5 EnumByte, Char0 EnumChar, Char1 EnumChar, Char2 EnumChar, Char3 EnumChar, Char4 EnumChar, Char5 EnumChar, Wchar0 EnumWChar, Wchar1 EnumWChar, Wchar2 EnumWChar, Wchar3 EnumWChar, Wchar4 EnumWChar, Wchar5 EnumWChar, Int8b0 EnumInt8, Int8b1 EnumInt8, Int8b2 EnumInt8, Int8b3 EnumInt8, Int8b4 EnumInt8, Int8b5 EnumInt8, Uint8b0 EnumUInt8, Uint8b1 EnumUInt8, Uint8b2 EnumUInt8, Uint8b3 EnumUInt8, Uint8b4 EnumUInt8, Uint8b5 EnumUInt8, Int16b0 EnumInt16, Int16b1 EnumInt16, Int16b2 EnumInt16, Int16b3 EnumInt16, Int16b4 EnumInt16, Int16b5 EnumInt16, Uint16b0 EnumUInt16, Uint16b1 EnumUInt16, Uint16b2 EnumUInt16, Uint16b3 EnumUInt16, Uint16b4 EnumUInt16, Uint16b5 EnumUInt16, Int32b0 EnumInt32, Int32b1 EnumInt32, Int32b2 EnumInt32, Int32b3 EnumInt32, Int32b4 EnumInt32, Int32b5 EnumInt32, Uint32b0 EnumUInt32, Uint32b1 EnumUInt32, Uint32b2 EnumUInt32, Uint32b3 EnumUInt32, Uint32b4 EnumUInt32, Uint32b5 EnumUInt32, Int64b0 EnumInt64, Int64b1 EnumInt64, Int64b2 EnumInt64, Int64b3 EnumInt64, Int64b4 EnumInt64, Int64b5 EnumInt64, Uint64b0 EnumUInt64, Uint64b1 EnumUInt64, Uint64b2 EnumUInt64, Uint64b3 EnumUInt64, Uint64b4 EnumUInt64, Uint64b5 EnumUInt64) *Enums {
-    return &Enums{Byte0, Byte1, Byte2, Byte3, Byte4, Byte5, Char0, Char1, Char2, Char3, Char4, Char5, Wchar0, Wchar1, Wchar2, Wchar3, Wchar4, Wchar5, Int8b0, Int8b1, Int8b2, Int8b3, Int8b4, Int8b5, Uint8b0, Uint8b1, Uint8b2, Uint8b3, Uint8b4, Uint8b5, Int16b0, Int16b1, Int16b2, Int16b3, Int16b4, Int16b5, Uint16b0, Uint16b1, Uint16b2, Uint16b3, Uint16b4, Uint16b5, Int32b0, Int32b1, Int32b2, Int32b3, Int32b4, Int32b5, Uint32b0, Uint32b1, Uint32b2, Uint32b3, Uint32b4, Uint32b5, Int64b0, Int64b1, Int64b2, Int64b3, Int64b4, Int64b5, Uint64b0, Uint64b1, Uint64b2, Uint64b3, Uint64b4, Uint64b5}
+func NewEnumsFromFieldValues(byte0V EnumByte, byte1V EnumByte, byte2V EnumByte, byte3V EnumByte, byte4V EnumByte, byte5V EnumByte, char0V EnumChar, char1V EnumChar, char2V EnumChar, char3V EnumChar, char4V EnumChar, char5V EnumChar, wchar0V EnumWChar, wchar1V EnumWChar, wchar2V EnumWChar, wchar3V EnumWChar, wchar4V EnumWChar, wchar5V EnumWChar, int8b0V EnumInt8, int8b1V EnumInt8, int8b2V EnumInt8, int8b3V EnumInt8, int8b4V EnumInt8, int8b5V EnumInt8, uint8b0V EnumUInt8, uint8b1V EnumUInt8, uint8b2V EnumUInt8, uint8b3V EnumUInt8, uint8b4V EnumUInt8, uint8b5V EnumUInt8, int16b0V EnumInt16, int16b1V EnumInt16, int16b2V EnumInt16, int16b3V EnumInt16, int16b4V EnumInt16, int16b5V EnumInt16, uint16b0V EnumUInt16, uint16b1V EnumUInt16, uint16b2V EnumUInt16, uint16b3V EnumUInt16, uint16b4V EnumUInt16, uint16b5V EnumUInt16, int32b0V EnumInt32, int32b1V EnumInt32, int32b2V EnumInt32, int32b3V EnumInt32, int32b4V EnumInt32, int32b5V EnumInt32, uint32b0V EnumUInt32, uint32b1V EnumUInt32, uint32b2V EnumUInt32, uint32b3V EnumUInt32, uint32b4V EnumUInt32, uint32b5V EnumUInt32, int64b0V EnumInt64, int64b1V EnumInt64, int64b2V EnumInt64, int64b3V EnumInt64, int64b4V EnumInt64, int64b5V EnumInt64, uint64b0V EnumUInt64, uint64b1V EnumUInt64, uint64b2V EnumUInt64, uint64b3V EnumUInt64, uint64b4V EnumUInt64, uint64b5V EnumUInt64) *Enums {
+    return &Enums{byte0V, byte1V, byte2V, byte3V, byte4V, byte5V, char0V, char1V, char2V, char3V, char4V, char5V, wchar0V, wchar1V, wchar2V, wchar3V, wchar4V, wchar5V, int8b0V, int8b1V, int8b2V, int8b3V, int8b4V, int8b5V, uint8b0V, uint8b1V, uint8b2V, uint8b3V, uint8b4V, uint8b5V, int16b0V, int16b1V, int16b2V, int16b3V, int16b4V, int16b5V, uint16b0V, uint16b1V, uint16b2V, uint16b3V, uint16b4V, uint16b5V, int32b0V, int32b1V, int32b2V, int32b3V, int32b4V, int32b5V, uint32b0V, uint32b1V, uint32b2V, uint32b3V, uint32b4V, uint32b5V, int64b0V, int64b1V, int64b2V, int64b3V, int64b4V, int64b5V, uint64b0V, uint64b1V, uint64b2V, uint64b3V, uint64b4V, uint64b5V}
 }
 
 // Create a new Enums struct from JSON
@@ -216,6 +216,11 @@ func (s *Enums) Key() EnumsKey {
 
 // Convert struct to optional
 func (s *Enums) Optional() *Enums {
+    return s
+}
+
+// Convert struct to optional
+func (s *Enums) Ptr() *Enums {
     return s
 }
 

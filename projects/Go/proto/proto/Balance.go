@@ -51,8 +51,8 @@ func NewBalance() *Balance {
 }
 
 // Create a new Balance struct from the given field values
-func NewBalanceFromFieldValues(Currency string, Amount float64) *Balance {
-    return &Balance{Currency, Amount}
+func NewBalanceFromFieldValues(currencyV string, amountV float64) *Balance {
+    return &Balance{currencyV, amountV}
 }
 
 // Create a new Balance struct from JSON
@@ -92,6 +92,11 @@ func (s *Balance) Key() BalanceKey {
 
 // Convert struct to optional
 func (s *Balance) Optional() *Balance {
+    return s
+}
+
+// Convert struct to optional
+func (s *Balance) Ptr() *Balance {
     return s
 }
 

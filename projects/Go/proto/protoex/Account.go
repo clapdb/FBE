@@ -61,8 +61,8 @@ func NewAccount() *Account {
 }
 
 // Create a new Account struct from the given field values
-func NewAccountFromFieldValues(Id int32, Name string, State StateEx, Wallet Balance, Asset *Balance, Orders []Order) *Account {
-    return &Account{Id, Name, State, Wallet, Asset, Orders}
+func NewAccountFromFieldValues(idV int32, nameV string, stateV StateEx, walletV Balance, assetV *Balance, ordersV []Order) *Account {
+    return &Account{idV, nameV, stateV, walletV, assetV, ordersV}
 }
 
 // Create a new Account struct from JSON
@@ -102,6 +102,11 @@ func (s *Account) Key() AccountKey {
 
 // Convert struct to optional
 func (s *Account) Optional() *Account {
+    return s
+}
+
+// Convert struct to optional
+func (s *Account) Ptr() *Account {
     return s
 }
 

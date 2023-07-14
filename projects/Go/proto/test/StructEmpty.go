@@ -89,6 +89,11 @@ func (s *StructEmpty) Optional() *StructEmpty {
     return s
 }
 
+// Convert struct to optional
+func (s *StructEmpty) Ptr() *StructEmpty {
+    return s
+}
+
 // Get the FBE type
 func (s *StructEmpty) FBEType() int { return 143 }
 

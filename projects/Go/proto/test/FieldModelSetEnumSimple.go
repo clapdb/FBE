@@ -30,7 +30,6 @@ type FieldModelSetEnumSimple struct {
 // Create a new EnumSimple set field model
 func NewFieldModelSetEnumSimple(buffer *fbe.Buffer, offset int) *FieldModelSetEnumSimple {
     fbeResult := FieldModelSetEnumSimple{buffer: buffer, offset: offset}
-    fbeResult.model = NewFieldModelEnumSimple(buffer, offset)
     return &fbeResult
 }
 
@@ -49,8 +48,14 @@ func (fm *FieldModelSetEnumSimple) FBEExtra() int {
     }
 
     fbeSetSize := int(fbe.ReadUInt32(fm.buffer.Data(), fm.buffer.Offset() + fbeSetOffset))
+    if fbeSetSize == 0 {
+        return 0
+    }
 
     fbeResult := 0
+    if fm.model == nil {
+        fm.model = NewFieldModelEnumSimple(fm.buffer, fm.offset)
+    }
     fm.model.SetFBEOffset(fbeSetOffset + 4)
     for i := fbeSetSize; i > 0; i-- {
         fbeResult += fm.model.FBESize() + fm.model.FBEExtra()
@@ -110,6 +115,9 @@ func (fm *FieldModelSetEnumSimple) GetItem(index int) (*FieldModelEnumSimple, er
         return nil, errors.New("index is out of bounds")
     }
 
+    if fm.model == nil {
+        fm.model = NewFieldModelEnumSimple(fm.buffer, fm.offset)
+    }
     fm.model.SetFBEOffset(fbeSetOffset + 4)
     fm.model.FBEShift(index * fm.model.FBESize())
     return fm.model, nil
@@ -117,6 +125,9 @@ func (fm *FieldModelSetEnumSimple) GetItem(index int) (*FieldModelEnumSimple, er
 
 // Resize the set and get its first model
 func (fm *FieldModelSetEnumSimple) Resize(size int) (*FieldModelEnumSimple, error) {
+    if fm.model == nil {
+        fm.model = NewFieldModelEnumSimple(fm.buffer, fm.offset)
+    }
     fbeSetSize := size * fm.model.FBESize()
     fbeSetOffset := fm.buffer.Allocate(4 + fbeSetSize) - fm.buffer.Offset()
     if (fbeSetOffset == 0) || ((fm.buffer.Offset() + fbeSetOffset + 4) > fm.buffer.Size()) {
@@ -147,7 +158,13 @@ func (fm *FieldModelSetEnumSimple) Verify() bool {
     }
 
     fbeSetSize := int(fbe.ReadUInt32(fm.buffer.Data(), fm.buffer.Offset() + fbeSetOffset))
+    if fbeSetSize == 0 {
+        return true
+    }
 
+    if fm.model == nil {
+        fm.model = NewFieldModelEnumSimple(fm.buffer, fm.offset)
+    }
     fm.model.SetFBEOffset(fbeSetOffset + 4)
     for i := fbeSetSize; i > 0; i-- {
         if !fm.model.Verify() {

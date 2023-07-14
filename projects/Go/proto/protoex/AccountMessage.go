@@ -48,8 +48,8 @@ func NewAccountMessage() *AccountMessage {
 }
 
 // Create a new AccountMessage struct from the given field values
-func NewAccountMessageFromFieldValues(Body Account) *AccountMessage {
-    return &AccountMessage{Body}
+func NewAccountMessageFromFieldValues(bodyV Account) *AccountMessage {
+    return &AccountMessage{bodyV}
 }
 
 // Create a new AccountMessage struct from JSON
@@ -88,6 +88,11 @@ func (s *AccountMessage) Key() AccountMessageKey {
 
 // Convert struct to optional
 func (s *AccountMessage) Optional() *AccountMessage {
+    return s
+}
+
+// Convert struct to optional
+func (s *AccountMessage) Ptr() *AccountMessage {
     return s
 }
 

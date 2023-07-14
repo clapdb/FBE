@@ -28,7 +28,6 @@ type FieldModelVectorOrder struct {
 // Create a new Order vector field model
 func NewFieldModelVectorOrder(buffer *fbe.Buffer, offset int) *FieldModelVectorOrder {
     fbeResult := FieldModelVectorOrder{buffer: buffer, offset: offset}
-    fbeResult.model = NewFieldModelOrder(buffer, offset)
     return &fbeResult
 }
 
@@ -48,7 +47,14 @@ func (fm *FieldModelVectorOrder) FBEExtra() int {
 
     fbeVectorSize := int(fbe.ReadUInt32(fm.buffer.Data(), fm.buffer.Offset() + fbeVectorOffset))
 
+    if fbeVectorSize == 0 {
+        return 0
+    }
+
     fbeResult := 0
+    if fm.model == nil {
+        fm.model = NewFieldModelOrder(fm.buffer, fm.offset)
+    }
     fm.model.SetFBEOffset(fbeVectorOffset + 4)
     for i := fbeVectorSize; i > 0; i-- {
         fbeResult += fm.model.FBESize() + fm.model.FBEExtra()
@@ -108,6 +114,10 @@ func (fm *FieldModelVectorOrder) GetItem(index int) (*FieldModelOrder, error) {
         return nil, errors.New("index is out of bounds")
     }
 
+    if fm.model == nil {
+        fm.model = NewFieldModelOrder(fm.buffer, fm.offset)
+    }
+
     fm.model.SetFBEOffset(fbeVectorOffset + 4)
     fm.model.FBEShift(index * fm.model.FBESize())
     return fm.model, nil
@@ -115,6 +125,9 @@ func (fm *FieldModelVectorOrder) GetItem(index int) (*FieldModelOrder, error) {
 
 // Resize the vector and get its first model
 func (fm *FieldModelVectorOrder) Resize(size int) (*FieldModelOrder, error) {
+    if fm.model == nil {
+        fm.model = NewFieldModelOrder(fm.buffer, fm.offset)
+    }
     fbeVectorSize := size * fm.model.FBESize()
     fbeVectorOffset := fm.buffer.Allocate(4 + fbeVectorSize) - fm.buffer.Offset()
     if (fbeVectorOffset == 0) || ((fm.buffer.Offset() + fbeVectorOffset + 4) > fm.buffer.Size()) {
@@ -145,7 +158,13 @@ func (fm *FieldModelVectorOrder) Verify() bool {
     }
 
     fbeVectorSize := int(fbe.ReadUInt32(fm.buffer.Data(), fm.buffer.Offset() + fbeVectorOffset))
+    if fbeVectorSize == 0 {
+        return true
+    }
 
+    if fm.model == nil {
+        fm.model = NewFieldModelOrder(fm.buffer, fm.offset)
+    }
     fm.model.SetFBEOffset(fbeVectorOffset + 4)
     for i := fbeVectorSize; i > 0; i-- {
         if !fm.model.Verify() {

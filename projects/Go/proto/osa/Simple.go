@@ -52,8 +52,8 @@ func NewSimple() *Simple {
 }
 
 // Create a new Simple struct from the given field values
-func NewSimpleFromFieldValues(Name string, Depth int32, Sa [1]Extra, Sex Sex) *Simple {
-    return &Simple{Name, Depth, Sa, Sex}
+func NewSimpleFromFieldValues(nameV string, depthV int32, saV [1]Extra, sexV Sex) *Simple {
+    return &Simple{nameV, depthV, saV, sexV}
 }
 
 // Create a new Simple struct from JSON
@@ -92,6 +92,11 @@ func (s *Simple) Key() SimpleKey {
 
 // Convert struct to optional
 func (s *Simple) Optional() *Simple {
+    return s
+}
+
+// Convert struct to optional
+func (s *Simple) Ptr() *Simple {
     return s
 }
 

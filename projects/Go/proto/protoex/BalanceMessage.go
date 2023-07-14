@@ -48,8 +48,8 @@ func NewBalanceMessage() *BalanceMessage {
 }
 
 // Create a new BalanceMessage struct from the given field values
-func NewBalanceMessageFromFieldValues(Body Balance) *BalanceMessage {
-    return &BalanceMessage{Body}
+func NewBalanceMessageFromFieldValues(bodyV Balance) *BalanceMessage {
+    return &BalanceMessage{bodyV}
 }
 
 // Create a new BalanceMessage struct from JSON
@@ -88,6 +88,11 @@ func (s *BalanceMessage) Key() BalanceMessageKey {
 
 // Convert struct to optional
 func (s *BalanceMessage) Optional() *BalanceMessage {
+    return s
+}
+
+// Convert struct to optional
+func (s *BalanceMessage) Ptr() *BalanceMessage {
     return s
 }
 

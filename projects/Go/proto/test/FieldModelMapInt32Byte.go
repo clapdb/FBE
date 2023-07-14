@@ -32,8 +32,6 @@ type FieldModelMapInt32Byte struct {
 // Create a new Int32->Byte map field model
 func NewFieldModelMapInt32Byte(buffer *fbe.Buffer, offset int) *FieldModelMapInt32Byte {
     fbeResult := FieldModelMapInt32Byte{buffer: buffer, offset: offset}
-    fbeResult.modelKey = fbe.NewFieldModelInt32(buffer, offset)
-    fbeResult.modelValue = fbe.NewFieldModelByte(buffer, offset)
     return &fbeResult
 }
 
@@ -52,8 +50,15 @@ func (fm *FieldModelMapInt32Byte) FBEExtra() int {
     }
 
     fbeMapSize := int(fbe.ReadUInt32(fm.buffer.Data(), fm.buffer.Offset() + fbeMapOffset))
+    if fbeMapSize == 0 {
+        return 0
+    }
 
     fbeResult := 0
+    if fm.modelKey == nil {
+        fm.modelKey = fbe.NewFieldModelInt32(fm.buffer, fm.offset)
+        fm.modelValue = fbe.NewFieldModelByte(fm.buffer, fm.offset)
+    }
     fm.modelKey.SetFBEOffset(fbeMapOffset + 4)
     fm.modelValue.SetFBEOffset(fbeMapOffset + 4 + fm.modelKey.FBESize())
     for i := fbeMapSize; i > 0; i-- {
@@ -117,6 +122,11 @@ func (fm *FieldModelMapInt32Byte) GetItem(index int) (*fbe.FieldModelInt32, *fbe
         return nil, nil, errors.New("index is out of bounds")
     }
 
+    if fm.modelKey == nil {
+        fm.modelKey = fbe.NewFieldModelInt32(fm.buffer, fm.offset)
+        fm.modelValue = fbe.NewFieldModelByte(fm.buffer, fm.offset)
+    }
+
     fm.modelKey.SetFBEOffset(fbeMapOffset + 4)
     fm.modelValue.SetFBEOffset(fbeMapOffset + 4 + fm.modelKey.FBESize())
     fm.modelKey.FBEShift(index * (fm.modelKey.FBESize() + fm.modelValue.FBESize()))
@@ -126,6 +136,10 @@ func (fm *FieldModelMapInt32Byte) GetItem(index int) (*fbe.FieldModelInt32, *fbe
 
 // Resize the map and get its first model
 func (fm *FieldModelMapInt32Byte) Resize(size int) (*fbe.FieldModelInt32, *fbe.FieldModelByte, error) {
+    if fm.modelKey == nil {
+        fm.modelKey = fbe.NewFieldModelInt32(fm.buffer, fm.offset)
+        fm.modelValue = fbe.NewFieldModelByte(fm.buffer, fm.offset)
+    }
     fbeMapSize := size * (fm.modelKey.FBESize() + fm.modelValue.FBESize())
     fbeMapOffset := fm.buffer.Allocate(4 + fbeMapSize) - fm.buffer.Offset()
     if (fbeMapOffset == 0) || ((fm.buffer.Offset() + fbeMapOffset + 4) > fm.buffer.Size()) {
@@ -157,7 +171,14 @@ func (fm *FieldModelMapInt32Byte) Verify() bool {
     }
 
     fbeMapSize := int(fbe.ReadUInt32(fm.buffer.Data(), fm.buffer.Offset() + fbeMapOffset))
+    if fbeMapSize == 0 {
+        return true
+    }
 
+    if fm.modelKey == nil {
+        fm.modelKey = fbe.NewFieldModelInt32(fm.buffer, fm.offset)
+        fm.modelValue = fbe.NewFieldModelByte(fm.buffer, fm.offset)
+    }
     fm.modelKey.SetFBEOffset(fbeMapOffset + 4)
     fm.modelValue.SetFBEOffset(fbeMapOffset + 4 + fm.modelKey.FBESize())
     for i := fbeMapSize; i > 0; i-- {

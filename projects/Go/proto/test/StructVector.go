@@ -66,8 +66,8 @@ func NewStructVector() *StructVector {
 }
 
 // Create a new StructVector struct from the given field values
-func NewStructVectorFromFieldValues(F1 []byte, F2 []*byte, F3 [][]byte, F4 []*[]byte, F5 []EnumSimple, F6 []*EnumSimple, F7 []FlagsSimple, F8 []*FlagsSimple, F9 []StructSimple, F10 []*StructSimple) *StructVector {
-    return &StructVector{F1, F2, F3, F4, F5, F6, F7, F8, F9, F10}
+func NewStructVectorFromFieldValues(f1V []byte, f2V []*byte, f3V [][]byte, f4V []*[]byte, f5V []EnumSimple, f6V []*EnumSimple, f7V []FlagsSimple, f8V []*FlagsSimple, f9V []StructSimple, f10V []*StructSimple) *StructVector {
+    return &StructVector{f1V, f2V, f3V, f4V, f5V, f6V, f7V, f8V, f9V, f10V}
 }
 
 // Create a new StructVector struct from JSON
@@ -106,6 +106,11 @@ func (s *StructVector) Key() StructVectorKey {
 
 // Convert struct to optional
 func (s *StructVector) Optional() *StructVector {
+    return s
+}
+
+// Convert struct to optional
+func (s *StructVector) Ptr() *StructVector {
     return s
 }
 
