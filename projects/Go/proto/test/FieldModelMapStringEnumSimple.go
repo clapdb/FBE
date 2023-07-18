@@ -32,8 +32,6 @@ type FieldModelMapStringEnumSimple struct {
 // Create a new String->EnumSimple map field model
 func NewFieldModelMapStringEnumSimple(buffer *fbe.Buffer, offset int) *FieldModelMapStringEnumSimple {
     fbeResult := FieldModelMapStringEnumSimple{buffer: buffer, offset: offset}
-    fbeResult.modelKey = fbe.NewFieldModelString(buffer, offset)
-    fbeResult.modelValue = NewFieldModelEnumSimple(buffer, offset)
     return &fbeResult
 }
 
@@ -52,8 +50,15 @@ func (fm *FieldModelMapStringEnumSimple) FBEExtra() int {
     }
 
     fbeMapSize := int(fbe.ReadUInt32(fm.buffer.Data(), fm.buffer.Offset() + fbeMapOffset))
+    if fbeMapSize == 0 {
+        return 0
+    }
 
     fbeResult := 0
+    if fm.modelKey == nil {
+        fm.modelKey = fbe.NewFieldModelString(fm.buffer, fm.offset)
+        fm.modelValue = NewFieldModelEnumSimple(fm.buffer, fm.offset)
+    }
     fm.modelKey.SetFBEOffset(fbeMapOffset + 4)
     fm.modelValue.SetFBEOffset(fbeMapOffset + 4 + fm.modelKey.FBESize())
     for i := fbeMapSize; i > 0; i-- {
@@ -117,6 +122,11 @@ func (fm *FieldModelMapStringEnumSimple) GetItem(index int) (*fbe.FieldModelStri
         return nil, nil, errors.New("index is out of bounds")
     }
 
+    if fm.modelKey == nil {
+        fm.modelKey = fbe.NewFieldModelString(fm.buffer, fm.offset)
+        fm.modelValue = NewFieldModelEnumSimple(fm.buffer, fm.offset)
+    }
+
     fm.modelKey.SetFBEOffset(fbeMapOffset + 4)
     fm.modelValue.SetFBEOffset(fbeMapOffset + 4 + fm.modelKey.FBESize())
     fm.modelKey.FBEShift(index * (fm.modelKey.FBESize() + fm.modelValue.FBESize()))
@@ -126,6 +136,10 @@ func (fm *FieldModelMapStringEnumSimple) GetItem(index int) (*fbe.FieldModelStri
 
 // Resize the map and get its first model
 func (fm *FieldModelMapStringEnumSimple) Resize(size int) (*fbe.FieldModelString, *FieldModelEnumSimple, error) {
+    if fm.modelKey == nil {
+        fm.modelKey = fbe.NewFieldModelString(fm.buffer, fm.offset)
+        fm.modelValue = NewFieldModelEnumSimple(fm.buffer, fm.offset)
+    }
     fbeMapSize := size * (fm.modelKey.FBESize() + fm.modelValue.FBESize())
     fbeMapOffset := fm.buffer.Allocate(4 + fbeMapSize) - fm.buffer.Offset()
     if (fbeMapOffset == 0) || ((fm.buffer.Offset() + fbeMapOffset + 4) > fm.buffer.Size()) {
@@ -157,7 +171,14 @@ func (fm *FieldModelMapStringEnumSimple) Verify() bool {
     }
 
     fbeMapSize := int(fbe.ReadUInt32(fm.buffer.Data(), fm.buffer.Offset() + fbeMapOffset))
+    if fbeMapSize == 0 {
+        return true
+    }
 
+    if fm.modelKey == nil {
+        fm.modelKey = fbe.NewFieldModelString(fm.buffer, fm.offset)
+        fm.modelValue = NewFieldModelEnumSimple(fm.buffer, fm.offset)
+    }
     fm.modelKey.SetFBEOffset(fbeMapOffset + 4)
     fm.modelValue.SetFBEOffset(fbeMapOffset + 4 + fm.modelKey.FBESize())
     for i := fbeMapSize; i > 0; i-- {

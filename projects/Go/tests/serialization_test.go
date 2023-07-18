@@ -1,10 +1,16 @@
 package tests
 
-import "testing"
-import "github.com/stretchr/testify/assert"
-import "fbeproj/proto/fbe"
-import "fbeproj/proto/proto"
-import "fbeproj/proto/test"
+import (
+	"fbeproj/proto/fbe"
+	"fbeproj/proto/osa"
+	"fbeproj/proto/pkg"
+	"fbeproj/proto/proto"
+	"fbeproj/proto/simple"
+	"fbeproj/proto/test"
+	"testing"
+
+	"github.com/stretchr/testify/assert"
+)
 
 func TestSerializationDomain(t *testing.T) {
 	// Create a new account with some orders
@@ -21,7 +27,7 @@ func TestSerializationDomain(t *testing.T) {
 	assert.EqualValues(t, serialized, writer.Buffer().Size())
 	assert.True(t, writer.Verify())
 	writer.Next(serialized)
-	assert.EqualValues(t, writer.Model().FBEOffset(), 4 + writer.Buffer().Size())
+	assert.EqualValues(t, writer.Model().FBEOffset(), 4+writer.Buffer().Size())
 
 	// Check the serialized FBE size
 	assert.EqualValues(t, writer.Buffer().Size(), 252)
@@ -34,7 +40,7 @@ func TestSerializationDomain(t *testing.T) {
 	assert.Nil(t, err)
 	assert.EqualValues(t, deserialized, reader.Buffer().Size())
 	reader.Next(deserialized)
-	assert.EqualValues(t, reader.Model().FBEOffset(), 4 + reader.Buffer().Size())
+	assert.EqualValues(t, reader.Model().FBEOffset(), 4+reader.Buffer().Size())
 
 	assert.EqualValues(t, account2.Id, 1)
 	assert.EqualValues(t, account2.Name, "Test")
@@ -78,7 +84,7 @@ func TestSerializationStructSimple(t *testing.T) {
 	assert.EqualValues(t, serialized, writer.Buffer().Size())
 	assert.True(t, writer.Verify())
 	writer.Next(serialized)
-	assert.EqualValues(t, writer.Model().FBEOffset(), 4 + writer.Buffer().Size())
+	assert.EqualValues(t, writer.Model().FBEOffset(), 4+writer.Buffer().Size())
 
 	// Check the serialized FBE size
 	assert.EqualValues(t, writer.Buffer().Size(), 392)
@@ -92,7 +98,7 @@ func TestSerializationStructSimple(t *testing.T) {
 	assert.Nil(t, err)
 	assert.EqualValues(t, deserialized, reader.Buffer().Size())
 	reader.Next(deserialized)
-	assert.EqualValues(t, reader.Model().FBEOffset(), 4 + reader.Buffer().Size())
+	assert.EqualValues(t, reader.Model().FBEOffset(), 4+reader.Buffer().Size())
 
 	assert.EqualValues(t, struct2.F1, false)
 	assert.EqualValues(t, struct2.F2, true)
@@ -188,7 +194,7 @@ func TestSerializationStructOptional(t *testing.T) {
 	assert.EqualValues(t, serialized, writer.Buffer().Size())
 	assert.True(t, writer.Verify())
 	writer.Next(serialized)
-	assert.EqualValues(t, writer.Model().FBEOffset(), 4 + writer.Buffer().Size())
+	assert.EqualValues(t, writer.Model().FBEOffset(), 4+writer.Buffer().Size())
 
 	// Check the serialized FBE size
 	assert.EqualValues(t, writer.Buffer().Size(), 834)
@@ -202,7 +208,7 @@ func TestSerializationStructOptional(t *testing.T) {
 	assert.Nil(t, err)
 	assert.EqualValues(t, deserialized, reader.Buffer().Size())
 	reader.Next(deserialized)
-	assert.EqualValues(t, reader.Model().FBEOffset(), 4 + reader.Buffer().Size())
+	assert.EqualValues(t, reader.Model().FBEOffset(), 4+reader.Buffer().Size())
 
 	assert.EqualValues(t, struct2.F1, false)
 	assert.EqualValues(t, struct2.F2, true)
@@ -442,7 +448,7 @@ func TestSerializationStructNested(t *testing.T) {
 	assert.EqualValues(t, serialized, writer.Buffer().Size())
 	assert.True(t, writer.Verify())
 	writer.Next(serialized)
-	assert.EqualValues(t, writer.Model().FBEOffset(), 4 + writer.Buffer().Size())
+	assert.EqualValues(t, writer.Model().FBEOffset(), 4+writer.Buffer().Size())
 
 	// Check the serialized FBE size
 	assert.EqualValues(t, writer.Buffer().Size(), 2099)
@@ -456,7 +462,7 @@ func TestSerializationStructNested(t *testing.T) {
 	assert.Nil(t, err)
 	assert.EqualValues(t, deserialized, reader.Buffer().Size())
 	reader.Next(deserialized)
-	assert.EqualValues(t, reader.Model().FBEOffset(), 4 + reader.Buffer().Size())
+	assert.EqualValues(t, reader.Model().FBEOffset(), 4+reader.Buffer().Size())
 
 	assert.EqualValues(t, struct2.F1, false)
 	assert.EqualValues(t, struct2.F2, true)
@@ -588,7 +594,7 @@ func TestSerializationStructNested(t *testing.T) {
 	assert.Nil(t, struct2.F1003)
 	assert.EqualValues(t, struct2.F1004, test.FlagsSimple_FLAG_VALUE_0)
 	assert.Nil(t, struct2.F1005)
-	assert.EqualValues(t, struct2.F1006, test.FlagsTyped_FLAG_VALUE_2 | test.FlagsTyped_FLAG_VALUE_4 | test.FlagsTyped_FLAG_VALUE_6)
+	assert.EqualValues(t, struct2.F1006, test.FlagsTyped_FLAG_VALUE_2|test.FlagsTyped_FLAG_VALUE_4|test.FlagsTyped_FLAG_VALUE_6)
 	assert.Nil(t, struct2.F1007)
 	assert.Nil(t, struct2.F1009)
 	assert.Nil(t, struct2.F1011)
@@ -720,7 +726,7 @@ func TestSerializationStructBytes(t *testing.T) {
 	assert.EqualValues(t, serialized, writer.Buffer().Size())
 	assert.True(t, writer.Verify())
 	writer.Next(serialized)
-	assert.EqualValues(t, writer.Model().FBEOffset(), 4 + writer.Buffer().Size())
+	assert.EqualValues(t, writer.Model().FBEOffset(), 4+writer.Buffer().Size())
 
 	// Check the serialized FBE size
 	assert.EqualValues(t, writer.Buffer().Size(), 49)
@@ -734,7 +740,7 @@ func TestSerializationStructBytes(t *testing.T) {
 	assert.Nil(t, err)
 	assert.EqualValues(t, deserialized, reader.Buffer().Size())
 	reader.Next(deserialized)
-	assert.EqualValues(t, reader.Model().FBEOffset(), 4 + reader.Buffer().Size())
+	assert.EqualValues(t, reader.Model().FBEOffset(), 4+reader.Buffer().Size())
 
 	assert.EqualValues(t, len(struct2.F1), 3)
 	assert.EqualValues(t, struct2.F1[0], 65)
@@ -786,7 +792,7 @@ func TestSerializationStructArray(t *testing.T) {
 	assert.EqualValues(t, serialized, writer.Buffer().Size())
 	assert.True(t, writer.Verify())
 	writer.Next(serialized)
-	assert.EqualValues(t, writer.Model().FBEOffset(), 4 + writer.Buffer().Size())
+	assert.EqualValues(t, writer.Model().FBEOffset(), 4+writer.Buffer().Size())
 
 	// Check the serialized FBE size
 	assert.EqualValues(t, writer.Buffer().Size(), 1290)
@@ -800,7 +806,7 @@ func TestSerializationStructArray(t *testing.T) {
 	assert.Nil(t, err)
 	assert.EqualValues(t, deserialized, reader.Buffer().Size())
 	reader.Next(deserialized)
-	assert.EqualValues(t, reader.Model().FBEOffset(), 4 + reader.Buffer().Size())
+	assert.EqualValues(t, reader.Model().FBEOffset(), 4+reader.Buffer().Size())
 
 	assert.EqualValues(t, len(struct2.F1), 2)
 	assert.EqualValues(t, struct2.F1[0], 48)
@@ -831,10 +837,10 @@ func TestSerializationStructArray(t *testing.T) {
 	assert.EqualValues(t, *struct2.F6[0], test.EnumSimple_ENUM_VALUE_1)
 	assert.Nil(t, struct2.F6[1])
 	assert.EqualValues(t, len(struct2.F7), 2)
-	assert.EqualValues(t, struct2.F7[0], test.FlagsSimple_FLAG_VALUE_1 | test.FlagsSimple_FLAG_VALUE_2)
-	assert.EqualValues(t, struct2.F7[1], test.FlagsSimple_FLAG_VALUE_1 | test.FlagsSimple_FLAG_VALUE_2 | test.FlagsSimple_FLAG_VALUE_3)
+	assert.EqualValues(t, struct2.F7[0], test.FlagsSimple_FLAG_VALUE_1|test.FlagsSimple_FLAG_VALUE_2)
+	assert.EqualValues(t, struct2.F7[1], test.FlagsSimple_FLAG_VALUE_1|test.FlagsSimple_FLAG_VALUE_2|test.FlagsSimple_FLAG_VALUE_3)
 	assert.EqualValues(t, len(struct2.F8), 2)
-	assert.EqualValues(t, *struct2.F8[0], test.FlagsSimple_FLAG_VALUE_1 | test.FlagsSimple_FLAG_VALUE_2)
+	assert.EqualValues(t, *struct2.F8[0], test.FlagsSimple_FLAG_VALUE_1|test.FlagsSimple_FLAG_VALUE_2)
 	assert.Nil(t, struct2.F8[1])
 	assert.EqualValues(t, len(struct2.F9), 2)
 	assert.EqualValues(t, struct2.F9[0].F2, true)
@@ -869,8 +875,8 @@ func TestSerializationStructVector(t *testing.T) {
 	vectorF6 := test.EnumSimple_ENUM_VALUE_1
 	struct1.F6 = append(struct1.F6, &vectorF6)
 	struct1.F6 = append(struct1.F6, nil)
-	struct1.F7 = append(struct1.F7, test.FlagsSimple_FLAG_VALUE_1 | test.FlagsSimple_FLAG_VALUE_2)
-	struct1.F7 = append(struct1.F7, test.FlagsSimple_FLAG_VALUE_1 | test.FlagsSimple_FLAG_VALUE_2 | test.FlagsSimple_FLAG_VALUE_3)
+	struct1.F7 = append(struct1.F7, test.FlagsSimple_FLAG_VALUE_1|test.FlagsSimple_FLAG_VALUE_2)
+	struct1.F7 = append(struct1.F7, test.FlagsSimple_FLAG_VALUE_1|test.FlagsSimple_FLAG_VALUE_2|test.FlagsSimple_FLAG_VALUE_3)
 	vectorF8 := test.FlagsSimple_FLAG_VALUE_1 | test.FlagsSimple_FLAG_VALUE_2
 	struct1.F8 = append(struct1.F8, &vectorF8)
 	struct1.F8 = append(struct1.F8, nil)
@@ -888,7 +894,7 @@ func TestSerializationStructVector(t *testing.T) {
 	assert.EqualValues(t, serialized, writer.Buffer().Size())
 	assert.True(t, writer.Verify())
 	writer.Next(serialized)
-	assert.EqualValues(t, writer.Model().FBEOffset(), 4 + writer.Buffer().Size())
+	assert.EqualValues(t, writer.Model().FBEOffset(), 4+writer.Buffer().Size())
 
 	// Check the serialized FBE size
 	assert.EqualValues(t, writer.Buffer().Size(), 1370)
@@ -902,7 +908,7 @@ func TestSerializationStructVector(t *testing.T) {
 	assert.Nil(t, err)
 	assert.EqualValues(t, deserialized, reader.Buffer().Size())
 	reader.Next(deserialized)
-	assert.EqualValues(t, reader.Model().FBEOffset(), 4 + reader.Buffer().Size())
+	assert.EqualValues(t, reader.Model().FBEOffset(), 4+reader.Buffer().Size())
 
 	assert.EqualValues(t, len(struct2.F1), 2)
 	assert.EqualValues(t, struct2.F1[0], 48)
@@ -933,10 +939,10 @@ func TestSerializationStructVector(t *testing.T) {
 	assert.EqualValues(t, *struct2.F6[0], test.EnumSimple_ENUM_VALUE_1)
 	assert.Nil(t, struct2.F6[1])
 	assert.EqualValues(t, len(struct2.F7), 2)
-	assert.EqualValues(t, struct2.F7[0], test.FlagsSimple_FLAG_VALUE_1 | test.FlagsSimple_FLAG_VALUE_2)
-	assert.EqualValues(t, struct2.F7[1], test.FlagsSimple_FLAG_VALUE_1 | test.FlagsSimple_FLAG_VALUE_2 | test.FlagsSimple_FLAG_VALUE_3)
+	assert.EqualValues(t, struct2.F7[0], test.FlagsSimple_FLAG_VALUE_1|test.FlagsSimple_FLAG_VALUE_2)
+	assert.EqualValues(t, struct2.F7[1], test.FlagsSimple_FLAG_VALUE_1|test.FlagsSimple_FLAG_VALUE_2|test.FlagsSimple_FLAG_VALUE_3)
 	assert.EqualValues(t, len(struct2.F8), 2)
-	assert.EqualValues(t, *struct2.F8[0], test.FlagsSimple_FLAG_VALUE_1 | test.FlagsSimple_FLAG_VALUE_2)
+	assert.EqualValues(t, *struct2.F8[0], test.FlagsSimple_FLAG_VALUE_1|test.FlagsSimple_FLAG_VALUE_2)
 	assert.Nil(t, struct2.F8[1])
 	assert.EqualValues(t, len(struct2.F9), 2)
 	assert.EqualValues(t, struct2.F9[0].F2, true)
@@ -971,8 +977,8 @@ func TestSerializationStructList(t *testing.T) {
 	vectorF6 := test.EnumSimple_ENUM_VALUE_1
 	struct1.F6 = append(struct1.F6, &vectorF6)
 	struct1.F6 = append(struct1.F6, nil)
-	struct1.F7 = append(struct1.F7, test.FlagsSimple_FLAG_VALUE_1 | test.FlagsSimple_FLAG_VALUE_2)
-	struct1.F7 = append(struct1.F7, test.FlagsSimple_FLAG_VALUE_1 | test.FlagsSimple_FLAG_VALUE_2 | test.FlagsSimple_FLAG_VALUE_3)
+	struct1.F7 = append(struct1.F7, test.FlagsSimple_FLAG_VALUE_1|test.FlagsSimple_FLAG_VALUE_2)
+	struct1.F7 = append(struct1.F7, test.FlagsSimple_FLAG_VALUE_1|test.FlagsSimple_FLAG_VALUE_2|test.FlagsSimple_FLAG_VALUE_3)
 	vectorF8 := test.FlagsSimple_FLAG_VALUE_1 | test.FlagsSimple_FLAG_VALUE_2
 	struct1.F8 = append(struct1.F8, &vectorF8)
 	struct1.F8 = append(struct1.F8, nil)
@@ -990,7 +996,7 @@ func TestSerializationStructList(t *testing.T) {
 	assert.EqualValues(t, serialized, writer.Buffer().Size())
 	assert.True(t, writer.Verify())
 	writer.Next(serialized)
-	assert.EqualValues(t, writer.Model().FBEOffset(), 4 + writer.Buffer().Size())
+	assert.EqualValues(t, writer.Model().FBEOffset(), 4+writer.Buffer().Size())
 
 	// Check the serialized FBE size
 	assert.EqualValues(t, writer.Buffer().Size(), 1370)
@@ -1004,7 +1010,7 @@ func TestSerializationStructList(t *testing.T) {
 	assert.Nil(t, err)
 	assert.EqualValues(t, deserialized, reader.Buffer().Size())
 	reader.Next(deserialized)
-	assert.EqualValues(t, reader.Model().FBEOffset(), 4 + reader.Buffer().Size())
+	assert.EqualValues(t, reader.Model().FBEOffset(), 4+reader.Buffer().Size())
 
 	assert.EqualValues(t, len(struct2.F1), 2)
 	assert.EqualValues(t, struct2.F1[0], 48)
@@ -1035,10 +1041,10 @@ func TestSerializationStructList(t *testing.T) {
 	assert.EqualValues(t, *struct2.F6[0], test.EnumSimple_ENUM_VALUE_1)
 	assert.Nil(t, struct2.F6[1])
 	assert.EqualValues(t, len(struct2.F7), 2)
-	assert.EqualValues(t, struct2.F7[0], test.FlagsSimple_FLAG_VALUE_1 | test.FlagsSimple_FLAG_VALUE_2)
-	assert.EqualValues(t, struct2.F7[1], test.FlagsSimple_FLAG_VALUE_1 | test.FlagsSimple_FLAG_VALUE_2 | test.FlagsSimple_FLAG_VALUE_3)
+	assert.EqualValues(t, struct2.F7[0], test.FlagsSimple_FLAG_VALUE_1|test.FlagsSimple_FLAG_VALUE_2)
+	assert.EqualValues(t, struct2.F7[1], test.FlagsSimple_FLAG_VALUE_1|test.FlagsSimple_FLAG_VALUE_2|test.FlagsSimple_FLAG_VALUE_3)
 	assert.EqualValues(t, len(struct2.F8), 2)
-	assert.EqualValues(t, *struct2.F8[0], test.FlagsSimple_FLAG_VALUE_1 | test.FlagsSimple_FLAG_VALUE_2)
+	assert.EqualValues(t, *struct2.F8[0], test.FlagsSimple_FLAG_VALUE_1|test.FlagsSimple_FLAG_VALUE_2)
 	assert.Nil(t, struct2.F8[1])
 	assert.EqualValues(t, len(struct2.F9), 2)
 	assert.EqualValues(t, struct2.F9[0].F2, true)
@@ -1081,7 +1087,7 @@ func TestSerializationStructSet(t *testing.T) {
 	assert.EqualValues(t, serialized, writer.Buffer().Size())
 	assert.True(t, writer.Verify())
 	writer.Next(serialized)
-	assert.EqualValues(t, writer.Model().FBEOffset(), 4 + writer.Buffer().Size())
+	assert.EqualValues(t, writer.Model().FBEOffset(), 4+writer.Buffer().Size())
 
 	// Check the serialized FBE size
 	assert.EqualValues(t, writer.Buffer().Size(), 843)
@@ -1095,7 +1101,7 @@ func TestSerializationStructSet(t *testing.T) {
 	assert.Nil(t, err)
 	assert.EqualValues(t, deserialized, reader.Buffer().Size())
 	reader.Next(deserialized)
-	assert.EqualValues(t, reader.Model().FBEOffset(), 4 + reader.Buffer().Size())
+	assert.EqualValues(t, reader.Model().FBEOffset(), 4+reader.Buffer().Size())
 
 	assert.EqualValues(t, len(struct2.F1), 3)
 	assert.True(t, struct2.F1.Contains(48))
@@ -1105,8 +1111,8 @@ func TestSerializationStructSet(t *testing.T) {
 	assert.True(t, struct2.F2.Contains(test.EnumSimple_ENUM_VALUE_1))
 	assert.True(t, struct2.F2.Contains(test.EnumSimple_ENUM_VALUE_2))
 	assert.EqualValues(t, len(struct2.F3), 2)
-	assert.True(t, struct2.F3.Contains(test.FlagsSimple_FLAG_VALUE_1 | test.FlagsSimple_FLAG_VALUE_2))
-	assert.True(t, struct2.F3.Contains(test.FlagsSimple_FLAG_VALUE_1 | test.FlagsSimple_FLAG_VALUE_2 | test.FlagsSimple_FLAG_VALUE_3))
+	assert.True(t, struct2.F3.Contains(test.FlagsSimple_FLAG_VALUE_1|test.FlagsSimple_FLAG_VALUE_2))
+	assert.True(t, struct2.F3.Contains(test.FlagsSimple_FLAG_VALUE_1|test.FlagsSimple_FLAG_VALUE_2|test.FlagsSimple_FLAG_VALUE_3))
 	assert.EqualValues(t, len(struct2.F4), 2)
 	s1.Id = 48
 	assert.True(t, struct2.F4.Contains(*s1))
@@ -1155,7 +1161,7 @@ func TestSerializationStructMap(t *testing.T) {
 	assert.EqualValues(t, serialized, writer.Buffer().Size())
 	assert.True(t, writer.Verify())
 	writer.Next(serialized)
-	assert.EqualValues(t, writer.Model().FBEOffset(), 4 + writer.Buffer().Size())
+	assert.EqualValues(t, writer.Model().FBEOffset(), 4+writer.Buffer().Size())
 
 	// Check the serialized FBE size
 	assert.EqualValues(t, writer.Buffer().Size(), 1450)
@@ -1169,7 +1175,7 @@ func TestSerializationStructMap(t *testing.T) {
 	assert.Nil(t, err)
 	assert.EqualValues(t, deserialized, reader.Buffer().Size())
 	reader.Next(deserialized)
-	assert.EqualValues(t, reader.Model().FBEOffset(), 4 + reader.Buffer().Size())
+	assert.EqualValues(t, reader.Model().FBEOffset(), 4+reader.Buffer().Size())
 
 	assert.EqualValues(t, len(struct2.F1), 2)
 	assert.EqualValues(t, struct2.F1[10], 48)
@@ -1190,10 +1196,10 @@ func TestSerializationStructMap(t *testing.T) {
 	assert.EqualValues(t, *struct2.F6[10], test.EnumSimple_ENUM_VALUE_1)
 	assert.Nil(t, struct2.F6[20])
 	assert.EqualValues(t, len(struct2.F7), 2)
-	assert.EqualValues(t, struct2.F7[10], test.FlagsSimple_FLAG_VALUE_1 | test.FlagsSimple_FLAG_VALUE_2)
-	assert.EqualValues(t, struct2.F7[20], test.FlagsSimple_FLAG_VALUE_1 | test.FlagsSimple_FLAG_VALUE_2 | test.FlagsSimple_FLAG_VALUE_3)
+	assert.EqualValues(t, struct2.F7[10], test.FlagsSimple_FLAG_VALUE_1|test.FlagsSimple_FLAG_VALUE_2)
+	assert.EqualValues(t, struct2.F7[20], test.FlagsSimple_FLAG_VALUE_1|test.FlagsSimple_FLAG_VALUE_2|test.FlagsSimple_FLAG_VALUE_3)
 	assert.EqualValues(t, len(struct2.F8), 2)
-	assert.EqualValues(t, *struct2.F8[10], test.FlagsSimple_FLAG_VALUE_1 | test.FlagsSimple_FLAG_VALUE_2)
+	assert.EqualValues(t, *struct2.F8[10], test.FlagsSimple_FLAG_VALUE_1|test.FlagsSimple_FLAG_VALUE_2)
 	assert.Nil(t, struct2.F8[20])
 	assert.EqualValues(t, len(struct2.F9), 2)
 	assert.EqualValues(t, struct2.F9[10].Id, 48)
@@ -1244,7 +1250,7 @@ func TestSerializationStructHash(t *testing.T) {
 	assert.EqualValues(t, serialized, writer.Buffer().Size())
 	assert.True(t, writer.Verify())
 	writer.Next(serialized)
-	assert.EqualValues(t, writer.Model().FBEOffset(), 4 + writer.Buffer().Size())
+	assert.EqualValues(t, writer.Model().FBEOffset(), 4+writer.Buffer().Size())
 
 	// Check the serialized FBE size
 	assert.EqualValues(t, writer.Buffer().Size(), 1570)
@@ -1258,7 +1264,7 @@ func TestSerializationStructHash(t *testing.T) {
 	assert.Nil(t, err)
 	assert.EqualValues(t, deserialized, reader.Buffer().Size())
 	reader.Next(deserialized)
-	assert.EqualValues(t, reader.Model().FBEOffset(), 4 + reader.Buffer().Size())
+	assert.EqualValues(t, reader.Model().FBEOffset(), 4+reader.Buffer().Size())
 
 	assert.EqualValues(t, len(struct2.F1), 2)
 	assert.EqualValues(t, struct2.F1["10"], 48)
@@ -1279,10 +1285,10 @@ func TestSerializationStructHash(t *testing.T) {
 	assert.EqualValues(t, *struct2.F6["10"], test.EnumSimple_ENUM_VALUE_1)
 	assert.Nil(t, struct2.F6["20"])
 	assert.EqualValues(t, len(struct2.F7), 2)
-	assert.EqualValues(t, struct2.F7["10"], test.FlagsSimple_FLAG_VALUE_1 | test.FlagsSimple_FLAG_VALUE_2)
-	assert.EqualValues(t, struct2.F7["20"], test.FlagsSimple_FLAG_VALUE_1 | test.FlagsSimple_FLAG_VALUE_2 | test.FlagsSimple_FLAG_VALUE_3)
+	assert.EqualValues(t, struct2.F7["10"], test.FlagsSimple_FLAG_VALUE_1|test.FlagsSimple_FLAG_VALUE_2)
+	assert.EqualValues(t, struct2.F7["20"], test.FlagsSimple_FLAG_VALUE_1|test.FlagsSimple_FLAG_VALUE_2|test.FlagsSimple_FLAG_VALUE_3)
 	assert.EqualValues(t, len(struct2.F8), 2)
-	assert.EqualValues(t, *struct2.F8["10"], test.FlagsSimple_FLAG_VALUE_1 | test.FlagsSimple_FLAG_VALUE_2)
+	assert.EqualValues(t, *struct2.F8["10"], test.FlagsSimple_FLAG_VALUE_1|test.FlagsSimple_FLAG_VALUE_2)
 	assert.Nil(t, struct2.F8["20"])
 	assert.EqualValues(t, len(struct2.F9), 2)
 	assert.EqualValues(t, struct2.F9["10"].Id, 48)
@@ -1297,12 +1303,24 @@ func TestSerializationStructHashEx(t *testing.T) {
 	struct1 := test.NewStructHashEx()
 	s1 := test.NewStructSimple()
 	s1.Id = 48
-	struct1.F1[s1.Key()] = struct{Key test.StructSimple; Value test.StructNested}{*s1, *test.NewStructNested()}
+	struct1.F1[s1.Key()] = struct {
+		Key   test.StructSimple
+		Value test.StructNested
+	}{*s1, *test.NewStructNested()}
 	s2 := test.NewStructSimple()
 	s2.Id = 65
-	struct1.F1[s2.Key()] = struct{Key test.StructSimple; Value test.StructNested}{*s2, *test.NewStructNested()}
-	struct1.F2[s1.Key()] = struct{Key test.StructSimple; Value *test.StructNested}{*s1, test.NewStructNested()}
-	struct1.F2[s2.Key()] = struct{Key test.StructSimple; Value *test.StructNested}{*s2, nil}
+	struct1.F1[s2.Key()] = struct {
+		Key   test.StructSimple
+		Value test.StructNested
+	}{*s2, *test.NewStructNested()}
+	struct1.F2[s1.Key()] = struct {
+		Key   test.StructSimple
+		Value *test.StructNested
+	}{*s1, test.NewStructNested()}
+	struct1.F2[s2.Key()] = struct {
+		Key   test.StructSimple
+		Value *test.StructNested
+	}{*s2, nil}
 
 	// Serialize the struct to the FBE stream
 	writer := test.NewStructHashExModel(fbe.NewEmptyBuffer())
@@ -1313,7 +1331,7 @@ func TestSerializationStructHashEx(t *testing.T) {
 	assert.EqualValues(t, serialized, writer.Buffer().Size())
 	assert.True(t, writer.Verify())
 	writer.Next(serialized)
-	assert.EqualValues(t, writer.Model().FBEOffset(), 4 + writer.Buffer().Size())
+	assert.EqualValues(t, writer.Model().FBEOffset(), 4+writer.Buffer().Size())
 
 	// Check the serialized FBE size
 	assert.EqualValues(t, writer.Buffer().Size(), 7879)
@@ -1327,7 +1345,7 @@ func TestSerializationStructHashEx(t *testing.T) {
 	assert.Nil(t, err)
 	assert.EqualValues(t, deserialized, reader.Buffer().Size())
 	reader.Next(deserialized)
-	assert.EqualValues(t, reader.Model().FBEOffset(), 4 + reader.Buffer().Size())
+	assert.EqualValues(t, reader.Model().FBEOffset(), 4+reader.Buffer().Size())
 
 	assert.EqualValues(t, len(struct2.F1), 2)
 	assert.EqualValues(t, struct2.F1[s1.Key()].Value.F1002, test.EnumTyped_ENUM_VALUE_2)
@@ -1335,4 +1353,116 @@ func TestSerializationStructHashEx(t *testing.T) {
 	assert.EqualValues(t, len(struct2.F2), 2)
 	assert.EqualValues(t, struct2.F2[s1.Key()].Value.F1002, test.EnumTyped_ENUM_VALUE_2)
 	assert.Nil(t, struct2.F2[s2.Key()].Value)
+}
+
+func TestSerializationPtrSelfReference(t *testing.T) {
+	// Create a new struct
+	struct1 := simple.NewSimple()
+	struct1.Info = "simple1"
+	struct1.Simple = simple.NewSimpleFromFieldValues("simple2", nil, 2, []*simple.Simple{}, []simple.Simple{}, map[int32]*simple.Simple{}, map[int32]simple.Simple{})
+	struct1.Depth = 1
+	struct3 := simple.NewSimple()
+	struct3.Info = "simple3"
+	struct3.Depth = 3
+	struct1.Spv = append(struct1.Spv, struct3)
+
+	struct4 := simple.NewSimple()
+	struct4.Info = "simple4"
+	struct4.Depth = 4
+
+	struct1.Sv = append(struct1.Sv, *struct4)
+
+	struct5 := simple.NewSimple()
+	struct5.Info = "simple5"
+	struct5.Depth = 5
+	struct6 := simple.NewSimple()
+	struct6.Info = "simple6"
+	struct6.Depth = 6
+	struct6.Simple = simple.NewSimpleFromFieldValues("simple7", nil, 7, []*simple.Simple{}, []simple.Simple{}, map[int32]*simple.Simple{}, map[int32]simple.Simple{})
+	struct8 := simple.NewSimple()
+	struct8.Info = "simple8"
+	struct8.Depth = 8
+	struct6.Spv = append(struct6.Spv, struct8)
+
+	struct1.Spm[5] = struct5
+	struct1.Sm[6] = *struct6
+
+	assert.EqualValues(t, `Simple(info="simple1",simple=Simple(info="simple2",simple=null,depth=2,spv=[0][],sv=[0][],spm=[0]<{}>,sm=[0]<{}>),depth=1,spv=[1][Simple(info="simple3",simple=null,depth=3,spv=[0][],sv=[0][],spm=[0]<{}>,sm=[0]<{}>)],sv=[1][Simple(info="simple4",simple=null,depth=4,spv=[0][],sv=[0][],spm=[0]<{}>,sm=[0]<{}>)],spm=[1]<{5->Simple(info="simple5",simple=null,depth=5,spv=[0][],sv=[0][],spm=[0]<{}>,sm=[0]<{}>)}>,sm=[1]<{6->Simple(info="simple6",simple=Simple(info="simple7",simple=null,depth=7,spv=[0][],sv=[0][],spm=[0]<{}>,sm=[0]<{}>),depth=6,spv=[1][Simple(info="simple8",simple=null,depth=8,spv=[0][],sv=[0][],spm=[0]<{}>,sm=[0]<{}>)],sv=[0][],spm=[0]<{}>,sm=[0]<{}>)}>)`, struct1.String())
+
+	// Serialize the struct to the FBE stream
+	writer := simple.NewSimpleModel(fbe.NewEmptyBuffer())
+	assert.EqualValues(t, writer.Model().FBEType(), 1)
+	assert.EqualValues(t, writer.Model().FBEOffset(), 4)
+	serialized, err := writer.Serialize(struct1)
+	assert.Nil(t, err)
+	assert.EqualValues(t, serialized, writer.Buffer().Size())
+	assert.True(t, writer.Verify())
+	writer.Next(serialized)
+	assert.EqualValues(t, writer.Model().FBEOffset(), 4+writer.Buffer().Size())
+
+	// Deserialize the struct from the FBE stream
+	reader := simple.NewSimpleModel(writer.Buffer())
+	assert.EqualValues(t, reader.Model().FBEType(), 1)
+	assert.EqualValues(t, reader.Model().FBEOffset(), 4)
+	assert.True(t, reader.Verify())
+	struct1Copy, deserialized, err := reader.Deserialize()
+	assert.Nil(t, err)
+	assert.EqualValues(t, deserialized, reader.Buffer().Size())
+	reader.Next(deserialized)
+	assert.EqualValues(t, reader.Model().FBEOffset(), 4+reader.Buffer().Size())
+
+	assert.EqualValues(t, struct1Copy.Info, "simple1")
+	assert.EqualValues(t, struct1Copy.Depth, 1)
+	assert.EqualValues(t, struct1Copy.Simple.Info, "simple2")
+	assert.EqualValues(t, struct1Copy.Simple.Simple, (*simple.Simple)(nil))
+	assert.EqualValues(t, struct1Copy.Simple.Depth, 2)
+	assert.EqualValues(t, len(struct1Copy.Spv), 1)
+	assert.EqualValues(t, struct1Copy.Spv[0].Info, "simple3")
+	assert.EqualValues(t, struct1Copy.Spv[0].Depth, 3)
+	assert.EqualValues(t, len(struct1Copy.Sv), 1)
+	assert.EqualValues(t, struct1Copy.Sv[0].Info, "simple4")
+	assert.EqualValues(t, struct1Copy.Sv[0].Depth, 4)
+	assert.EqualValues(t, len(struct1Copy.Spm), 1)
+	assert.EqualValues(t, struct1Copy.Spm[5].Info, "simple5")
+	assert.EqualValues(t, struct1Copy.Spm[5].Depth, 5)
+	assert.EqualValues(t, len(struct1Copy.Sm), 1)
+	assert.EqualValues(t, struct1Copy.Sm[6].Info, "simple6")
+	assert.EqualValues(t, struct1Copy.Sm[6].Depth, 6)
+	assert.EqualValues(t, struct1Copy.Sm[6].Simple.Info, "simple7")
+	assert.EqualValues(t, struct1Copy.Sm[6].Simple.Simple, (*simple.Simple)(nil))
+	assert.EqualValues(t, struct1Copy.Sm[6].Simple.Depth, 7)
+	assert.EqualValues(t, len(struct1Copy.Sm[6].Spv), 1)
+	assert.EqualValues(t, struct1Copy.Sm[6].Spv[0].Info, "simple8")
+	assert.EqualValues(t, struct1Copy.Sm[6].Spv[0].Depth, 8)
+}
+
+func TestSerializationImport(t *testing.T) {
+	extra := osa.NewExtraFromFieldValues("extra", "detail", osa.Sex_male, osa.MyFLags_flag1);
+
+	pkgInfo := pkg.NewInfoFromFieldValues("pkgInfo", osa.Sex_male, osa.MyFLags_flag1, *extra)
+
+	// Serialize the struct to the FBE stream
+	writer := pkg.NewInfoModel(fbe.NewEmptyBuffer())
+	assert.EqualValues(t, writer.Model().FBEType(), 1)
+	assert.EqualValues(t, writer.Model().FBEOffset(), 4)
+	serialized, err := writer.Serialize(pkgInfo)
+	assert.Nil(t, err)
+	assert.EqualValues(t, serialized, writer.Buffer().Size())
+	assert.True(t, writer.Verify())
+	writer.Next(serialized)
+	assert.EqualValues(t, writer.Model().FBEOffset(), 4+writer.Buffer().Size())
+
+	// Deserialize the struct from the FBE stream
+	reader := pkg.NewInfoModel(writer.Buffer())
+	assert.EqualValues(t, reader.Model().FBEType(), 1)
+	assert.EqualValues(t, reader.Model().FBEOffset(), 4)
+	assert.True(t, reader.Verify())
+	pkgInfoCopy, deserialized, err := reader.Deserialize()
+	assert.Nil(t, err)
+	assert.EqualValues(t, deserialized, reader.Buffer().Size())
+	reader.Next(deserialized)
+	assert.EqualValues(t, reader.Model().FBEOffset(), 4+reader.Buffer().Size())
+
+	assert.EqualValues(t, pkgInfo, pkgInfoCopy)
+	assert.EqualValues(t,"extra", pkgInfoCopy.Extra.Name)
 }

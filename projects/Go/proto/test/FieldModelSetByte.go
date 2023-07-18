@@ -30,7 +30,6 @@ type FieldModelSetByte struct {
 // Create a new Byte set field model
 func NewFieldModelSetByte(buffer *fbe.Buffer, offset int) *FieldModelSetByte {
     fbeResult := FieldModelSetByte{buffer: buffer, offset: offset}
-    fbeResult.model = fbe.NewFieldModelByte(buffer, offset)
     return &fbeResult
 }
 
@@ -49,8 +48,14 @@ func (fm *FieldModelSetByte) FBEExtra() int {
     }
 
     fbeSetSize := int(fbe.ReadUInt32(fm.buffer.Data(), fm.buffer.Offset() + fbeSetOffset))
+    if fbeSetSize == 0 {
+        return 0
+    }
 
     fbeResult := 0
+    if fm.model == nil {
+        fm.model = fbe.NewFieldModelByte(fm.buffer, fm.offset)
+    }
     fm.model.SetFBEOffset(fbeSetOffset + 4)
     for i := fbeSetSize; i > 0; i-- {
         fbeResult += fm.model.FBESize() + fm.model.FBEExtra()
@@ -110,6 +115,9 @@ func (fm *FieldModelSetByte) GetItem(index int) (*fbe.FieldModelByte, error) {
         return nil, errors.New("index is out of bounds")
     }
 
+    if fm.model == nil {
+        fm.model = fbe.NewFieldModelByte(fm.buffer, fm.offset)
+    }
     fm.model.SetFBEOffset(fbeSetOffset + 4)
     fm.model.FBEShift(index * fm.model.FBESize())
     return fm.model, nil
@@ -117,6 +125,9 @@ func (fm *FieldModelSetByte) GetItem(index int) (*fbe.FieldModelByte, error) {
 
 // Resize the set and get its first model
 func (fm *FieldModelSetByte) Resize(size int) (*fbe.FieldModelByte, error) {
+    if fm.model == nil {
+        fm.model = fbe.NewFieldModelByte(fm.buffer, fm.offset)
+    }
     fbeSetSize := size * fm.model.FBESize()
     fbeSetOffset := fm.buffer.Allocate(4 + fbeSetSize) - fm.buffer.Offset()
     if (fbeSetOffset == 0) || ((fm.buffer.Offset() + fbeSetOffset + 4) > fm.buffer.Size()) {
@@ -147,7 +158,13 @@ func (fm *FieldModelSetByte) Verify() bool {
     }
 
     fbeSetSize := int(fbe.ReadUInt32(fm.buffer.Data(), fm.buffer.Offset() + fbeSetOffset))
+    if fbeSetSize == 0 {
+        return true
+    }
 
+    if fm.model == nil {
+        fm.model = fbe.NewFieldModelByte(fm.buffer, fm.offset)
+    }
     fm.model.SetFBEOffset(fbeSetOffset + 4)
     for i := fbeSetSize; i > 0; i-- {
         if !fm.model.Verify() {

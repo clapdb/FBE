@@ -56,6 +56,7 @@ private:
     void GenerateFBEConstants(const std::string& package);
     void GenerateFBEJson(const std::string& package);
     void GenerateFBEOptional(const std::string& package);
+    void GenerateFBEPtr(const std::string& package);
     void GenerateFBETypes(const std::string& package);
     void GenerateFBEVersion(const std::string& package, const std::string& source);
     void GenerateFBEBuffer(const std::string& package);
@@ -66,6 +67,7 @@ private:
     void GenerateFBEFieldModelBytes(const std::string& package);
     void GenerateFBEFieldModelString(const std::string& package);
     void GenerateFBEFieldModelOptional(const std::shared_ptr<Package>& p, const std::string& name, const std::string& model, const StructField& field, const fs::path& path);
+    void GenerateFBEFieldModelPtr(const std::shared_ptr<Package>& p, const std::string& name, const std::string& model, const StructField& field, const fs::path& path);
     void GenerateFBEFieldModelArray(const std::shared_ptr<Package>& p, const std::string& name, const std::string& model, const StructField& field, const fs::path& path);
     void GenerateFBEFieldModelVector(const std::shared_ptr<Package>& p, const std::string& name, const std::string& model, const StructField& field, const fs::path& path);
     void GenerateFBEFieldModelSet(const std::shared_ptr<Package>& p, const std::string& name, const std::string& model, const StructField& field, const fs::path& path);
@@ -116,21 +118,23 @@ private:
     std::string ConvertModelName(const std::string& type, const std::string& model);
     std::string ConvertNewName(const std::string& type);
     std::string ConvertOptional(const std::string& type);
+    std::string ConvertPtr(const std::string& type);
     std::string ConvertOptional(const std::string& type, const std::string& value);
-    std::string ConvertTypeName(const std::string& type, bool optional);
+    std::string ConvertPtr(const std::string& type, const std::string& value);
+    std::string ConvertTypeName(const std::string& type, bool optional, bool ptr);
     std::string ConvertTypeName(const StructField& field);
     std::string ConvertTypeFieldName(const std::string& type);
-    std::string ConvertTypeFieldType(const std::string& type, bool optional);
-    std::string ConvertTypeFieldDeclaration(const std::string& type, bool optional, bool final);
+    std::string ConvertTypeFieldType(const std::string& type, bool optional, bool ptr);
+    std::string ConvertTypeFieldDeclaration(const std::string& type, bool optional, bool ptr, bool final);
     std::string ConvertTypeFieldDeclaration(const StructField& field, bool final);
     std::string ConvertTypeFieldInitialization(const std::string& type, bool optional, const std::string& offset, bool final);
     std::string ConvertTypeFieldInitialization(const StructField& field, const std::string& offset, bool final);
-    std::string ConvertConstant(const std::string& type, const std::string& value, bool optional);
-    std::string ConvertDefault(const std::string& type, bool optional);
+    std::string ConvertConstant(const std::string& type, const std::string& value, bool optional, bool ptr);
+    std::string ConvertDefault(const std::string& type, bool optional, bool ptr);
     std::string ConvertDefault(const StructField& field);
 
-    void WriteOutputStreamType(const std::string& type, const std::string& name, bool optional);
-    void WriteOutputStreamValue(const std::string& type, const std::string& name, bool optional, bool separate);
+    void WriteOutputStreamType(const std::string& type, const std::string& name, bool optional, bool ptr);
+    void WriteOutputStreamValue(const std::string& type, const std::string& name, bool optional, bool ptr, bool separate);
 };
 
 } // namespace FBE

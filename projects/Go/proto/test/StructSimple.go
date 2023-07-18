@@ -139,8 +139,8 @@ func NewStructSimple() *StructSimple {
 }
 
 // Create a new StructSimple struct from the given field values
-func NewStructSimpleFromFieldValues(Id int32, F1 bool, F2 bool, F3 byte, F4 byte, F5 rune, F6 rune, F7 rune, F8 rune, F9 int8, F10 int8, F11 uint8, F12 uint8, F13 int16, F14 int16, F15 uint16, F16 uint16, F17 int32, F18 int32, F19 uint32, F20 uint32, F21 int64, F22 int64, F23 uint64, F24 uint64, F25 float32, F26 float32, F27 float64, F28 float64, F29 fbe.Decimal, F30 fbe.Decimal, F31 string, F32 string, F33 fbe.Timestamp, F34 fbe.Timestamp, F35 fbe.Timestamp, F36 fbe.UUID, F37 fbe.UUID, F38 fbe.UUID, F39 proto.OrderSide, F40 proto.OrderType, F41 proto.Order, F42 proto.Balance, F43 proto.State, F44 proto.Account) *StructSimple {
-    return &StructSimple{Id, F1, F2, F3, F4, F5, F6, F7, F8, F9, F10, F11, F12, F13, F14, F15, F16, F17, F18, F19, F20, F21, F22, F23, F24, F25, F26, F27, F28, F29, F30, F31, F32, F33, F34, F35, F36, F37, F38, F39, F40, F41, F42, F43, F44}
+func NewStructSimpleFromFieldValues(idV int32, f1V bool, f2V bool, f3V byte, f4V byte, f5V rune, f6V rune, f7V rune, f8V rune, f9V int8, f10V int8, f11V uint8, f12V uint8, f13V int16, f14V int16, f15V uint16, f16V uint16, f17V int32, f18V int32, f19V uint32, f20V uint32, f21V int64, f22V int64, f23V uint64, f24V uint64, f25V float32, f26V float32, f27V float64, f28V float64, f29V fbe.Decimal, f30V fbe.Decimal, f31V string, f32V string, f33V fbe.Timestamp, f34V fbe.Timestamp, f35V fbe.Timestamp, f36V fbe.UUID, f37V fbe.UUID, f38V fbe.UUID, f39V proto.OrderSide, f40V proto.OrderType, f41V proto.Order, f42V proto.Balance, f43V proto.State, f44V proto.Account) *StructSimple {
+    return &StructSimple{idV, f1V, f2V, f3V, f4V, f5V, f6V, f7V, f8V, f9V, f10V, f11V, f12V, f13V, f14V, f15V, f16V, f17V, f18V, f19V, f20V, f21V, f22V, f23V, f24V, f25V, f26V, f27V, f28V, f29V, f30V, f31V, f32V, f33V, f34V, f35V, f36V, f37V, f38V, f39V, f40V, f41V, f42V, f43V, f44V}
 }
 
 // Create a new StructSimple struct from JSON
@@ -180,6 +180,11 @@ func (s *StructSimple) Key() StructSimpleKey {
 
 // Convert struct to optional
 func (s *StructSimple) Optional() *StructSimple {
+    return s
+}
+
+// Convert struct to optional
+func (s *StructSimple) Ptr() *StructSimple {
     return s
 }
 

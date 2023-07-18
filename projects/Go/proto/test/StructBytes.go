@@ -52,8 +52,8 @@ func NewStructBytes() *StructBytes {
 }
 
 // Create a new StructBytes struct from the given field values
-func NewStructBytesFromFieldValues(F1 []byte, F2 *[]byte, F3 *[]byte) *StructBytes {
-    return &StructBytes{F1, F2, F3}
+func NewStructBytesFromFieldValues(f1V []byte, f2V *[]byte, f3V *[]byte) *StructBytes {
+    return &StructBytes{f1V, f2V, f3V}
 }
 
 // Create a new StructBytes struct from JSON
@@ -92,6 +92,11 @@ func (s *StructBytes) Key() StructBytesKey {
 
 // Convert struct to optional
 func (s *StructBytes) Optional() *StructBytes {
+    return s
+}
+
+// Convert struct to optional
+func (s *StructBytes) Ptr() *StructBytes {
     return s
 }
 

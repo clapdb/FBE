@@ -32,8 +32,6 @@ type FieldModelMapStructSimpleOptionalStructNested struct {
 // Create a new StructSimple->OptionalStructNested map field model
 func NewFieldModelMapStructSimpleOptionalStructNested(buffer *fbe.Buffer, offset int) *FieldModelMapStructSimpleOptionalStructNested {
     fbeResult := FieldModelMapStructSimpleOptionalStructNested{buffer: buffer, offset: offset}
-    fbeResult.modelKey = NewFieldModelStructSimple(buffer, offset)
-    fbeResult.modelValue = NewFieldModelOptionalStructNested(buffer, offset)
     return &fbeResult
 }
 
@@ -52,8 +50,15 @@ func (fm *FieldModelMapStructSimpleOptionalStructNested) FBEExtra() int {
     }
 
     fbeMapSize := int(fbe.ReadUInt32(fm.buffer.Data(), fm.buffer.Offset() + fbeMapOffset))
+    if fbeMapSize == 0 {
+        return 0
+    }
 
     fbeResult := 0
+    if fm.modelKey == nil {
+        fm.modelKey = NewFieldModelStructSimple(fm.buffer, fm.offset)
+        fm.modelValue = NewFieldModelOptionalStructNested(fm.buffer, fm.offset)
+    }
     fm.modelKey.SetFBEOffset(fbeMapOffset + 4)
     fm.modelValue.SetFBEOffset(fbeMapOffset + 4 + fm.modelKey.FBESize())
     for i := fbeMapSize; i > 0; i-- {
@@ -117,6 +122,11 @@ func (fm *FieldModelMapStructSimpleOptionalStructNested) GetItem(index int) (*Fi
         return nil, nil, errors.New("index is out of bounds")
     }
 
+    if fm.modelKey == nil {
+        fm.modelKey = NewFieldModelStructSimple(fm.buffer, fm.offset)
+        fm.modelValue = NewFieldModelOptionalStructNested(fm.buffer, fm.offset)
+    }
+
     fm.modelKey.SetFBEOffset(fbeMapOffset + 4)
     fm.modelValue.SetFBEOffset(fbeMapOffset + 4 + fm.modelKey.FBESize())
     fm.modelKey.FBEShift(index * (fm.modelKey.FBESize() + fm.modelValue.FBESize()))
@@ -126,6 +136,10 @@ func (fm *FieldModelMapStructSimpleOptionalStructNested) GetItem(index int) (*Fi
 
 // Resize the map and get its first model
 func (fm *FieldModelMapStructSimpleOptionalStructNested) Resize(size int) (*FieldModelStructSimple, *FieldModelOptionalStructNested, error) {
+    if fm.modelKey == nil {
+        fm.modelKey = NewFieldModelStructSimple(fm.buffer, fm.offset)
+        fm.modelValue = NewFieldModelOptionalStructNested(fm.buffer, fm.offset)
+    }
     fbeMapSize := size * (fm.modelKey.FBESize() + fm.modelValue.FBESize())
     fbeMapOffset := fm.buffer.Allocate(4 + fbeMapSize) - fm.buffer.Offset()
     if (fbeMapOffset == 0) || ((fm.buffer.Offset() + fbeMapOffset + 4) > fm.buffer.Size()) {
@@ -157,7 +171,14 @@ func (fm *FieldModelMapStructSimpleOptionalStructNested) Verify() bool {
     }
 
     fbeMapSize := int(fbe.ReadUInt32(fm.buffer.Data(), fm.buffer.Offset() + fbeMapOffset))
+    if fbeMapSize == 0 {
+        return true
+    }
 
+    if fm.modelKey == nil {
+        fm.modelKey = NewFieldModelStructSimple(fm.buffer, fm.offset)
+        fm.modelValue = NewFieldModelOptionalStructNested(fm.buffer, fm.offset)
+    }
     fm.modelKey.SetFBEOffset(fbeMapOffset + 4)
     fm.modelValue.SetFBEOffset(fbeMapOffset + 4 + fm.modelKey.FBESize())
     for i := fbeMapSize; i > 0; i-- {

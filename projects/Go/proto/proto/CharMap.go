@@ -46,8 +46,8 @@ func NewCharMap() *CharMap {
 }
 
 // Create a new CharMap struct from the given field values
-func NewCharMapFromFieldValues(Abbr map[rune]string) *CharMap {
-    return &CharMap{Abbr}
+func NewCharMapFromFieldValues(abbrV map[rune]string) *CharMap {
+    return &CharMap{abbrV}
 }
 
 // Create a new CharMap struct from JSON
@@ -86,6 +86,11 @@ func (s *CharMap) Key() CharMapKey {
 
 // Convert struct to optional
 func (s *CharMap) Optional() *CharMap {
+    return s
+}
+
+// Convert struct to optional
+func (s *CharMap) Ptr() *CharMap {
     return s
 }
 

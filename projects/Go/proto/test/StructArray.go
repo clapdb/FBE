@@ -66,8 +66,8 @@ func NewStructArray() *StructArray {
 }
 
 // Create a new StructArray struct from the given field values
-func NewStructArrayFromFieldValues(F1 [2]byte, F2 [2]*byte, F3 [2][]byte, F4 [2]*[]byte, F5 [2]EnumSimple, F6 [2]*EnumSimple, F7 [2]FlagsSimple, F8 [2]*FlagsSimple, F9 [2]StructSimple, F10 [2]*StructSimple) *StructArray {
-    return &StructArray{F1, F2, F3, F4, F5, F6, F7, F8, F9, F10}
+func NewStructArrayFromFieldValues(f1V [2]byte, f2V [2]*byte, f3V [2][]byte, f4V [2]*[]byte, f5V [2]EnumSimple, f6V [2]*EnumSimple, f7V [2]FlagsSimple, f8V [2]*FlagsSimple, f9V [2]StructSimple, f10V [2]*StructSimple) *StructArray {
+    return &StructArray{f1V, f2V, f3V, f4V, f5V, f6V, f7V, f8V, f9V, f10V}
 }
 
 // Create a new StructArray struct from JSON
@@ -106,6 +106,11 @@ func (s *StructArray) Key() StructArrayKey {
 
 // Convert struct to optional
 func (s *StructArray) Optional() *StructArray {
+    return s
+}
+
+// Convert struct to optional
+func (s *StructArray) Ptr() *StructArray {
     return s
 }
 

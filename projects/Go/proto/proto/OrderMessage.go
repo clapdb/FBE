@@ -46,8 +46,8 @@ func NewOrderMessage() *OrderMessage {
 }
 
 // Create a new OrderMessage struct from the given field values
-func NewOrderMessageFromFieldValues(Body Order) *OrderMessage {
-    return &OrderMessage{Body}
+func NewOrderMessageFromFieldValues(bodyV Order) *OrderMessage {
+    return &OrderMessage{bodyV}
 }
 
 // Create a new OrderMessage struct from JSON
@@ -86,6 +86,11 @@ func (s *OrderMessage) Key() OrderMessageKey {
 
 // Convert struct to optional
 func (s *OrderMessage) Optional() *OrderMessage {
+    return s
+}
+
+// Convert struct to optional
+func (s *OrderMessage) Ptr() *OrderMessage {
     return s
 }
 

@@ -54,8 +54,8 @@ func NewStructSet() *StructSet {
 }
 
 // Create a new StructSet struct from the given field values
-func NewStructSetFromFieldValues(F1 setF1, F2 setF2, F3 setF3, F4 setF4) *StructSet {
-    return &StructSet{F1, F2, F3, F4}
+func NewStructSetFromFieldValues(f1V setF1, f2V setF2, f3V setF3, f4V setF4) *StructSet {
+    return &StructSet{f1V, f2V, f3V, f4V}
 }
 
 // Create a new StructSet struct from JSON
@@ -94,6 +94,11 @@ func (s *StructSet) Key() StructSetKey {
 
 // Convert struct to optional
 func (s *StructSet) Optional() *StructSet {
+    return s
+}
+
+// Convert struct to optional
+func (s *StructSet) Ptr() *StructSet {
     return s
 }
 

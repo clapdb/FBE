@@ -74,8 +74,8 @@ func NewStructNested() *StructNested {
 }
 
 // Create a new StructNested struct from the given field values
-func NewStructNestedFromFieldValues(Parent *StructOptional, F1000 EnumSimple, F1001 *EnumSimple, F1002 EnumTyped, F1003 *EnumTyped, F1004 FlagsSimple, F1005 *FlagsSimple, F1006 FlagsTyped, F1007 *FlagsTyped, F1008 StructSimple, F1009 *StructSimple, F1010 StructOptional, F1011 *StructOptional) *StructNested {
-    return &StructNested{Parent, F1000, F1001, F1002, F1003, F1004, F1005, F1006, F1007, F1008, F1009, F1010, F1011}
+func NewStructNestedFromFieldValues(Parent *StructOptional, f1000V EnumSimple, f1001V *EnumSimple, f1002V EnumTyped, f1003V *EnumTyped, f1004V FlagsSimple, f1005V *FlagsSimple, f1006V FlagsTyped, f1007V *FlagsTyped, f1008V StructSimple, f1009V *StructSimple, f1010V StructOptional, f1011V *StructOptional) *StructNested {
+    return &StructNested{Parent, f1000V, f1001V, f1002V, f1003V, f1004V, f1005V, f1006V, f1007V, f1008V, f1009V, f1010V, f1011V}
 }
 
 // Create a new StructNested struct from JSON
@@ -115,6 +115,11 @@ func (s *StructNested) Key() StructNestedKey {
 
 // Convert struct to optional
 func (s *StructNested) Optional() *StructNested {
+    return s
+}
+
+// Convert struct to optional
+func (s *StructNested) Ptr() *StructNested {
     return s
 }
 

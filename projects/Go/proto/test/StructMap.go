@@ -66,8 +66,8 @@ func NewStructMap() *StructMap {
 }
 
 // Create a new StructMap struct from the given field values
-func NewStructMapFromFieldValues(F1 map[int32]byte, F2 map[int32]*byte, F3 map[int32][]byte, F4 map[int32]*[]byte, F5 map[int32]EnumSimple, F6 map[int32]*EnumSimple, F7 map[int32]FlagsSimple, F8 map[int32]*FlagsSimple, F9 map[int32]StructSimple, F10 map[int32]*StructSimple) *StructMap {
-    return &StructMap{F1, F2, F3, F4, F5, F6, F7, F8, F9, F10}
+func NewStructMapFromFieldValues(f1V map[int32]byte, f2V map[int32]*byte, f3V map[int32][]byte, f4V map[int32]*[]byte, f5V map[int32]EnumSimple, f6V map[int32]*EnumSimple, f7V map[int32]FlagsSimple, f8V map[int32]*FlagsSimple, f9V map[int32]StructSimple, f10V map[int32]*StructSimple) *StructMap {
+    return &StructMap{f1V, f2V, f3V, f4V, f5V, f6V, f7V, f8V, f9V, f10V}
 }
 
 // Create a new StructMap struct from JSON
@@ -106,6 +106,11 @@ func (s *StructMap) Key() StructMapKey {
 
 // Convert struct to optional
 func (s *StructMap) Optional() *StructMap {
+    return s
+}
+
+// Convert struct to optional
+func (s *StructMap) Ptr() *StructMap {
     return s
 }
 

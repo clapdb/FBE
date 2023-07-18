@@ -22,6 +22,7 @@ void GeneratorGo::Generate(const std::shared_ptr<Package>& package)
     GenerateFBEConstants("fbe");
     GenerateFBEJson("fbe");
     GenerateFBEOptional("fbe");
+    GenerateFBEPtr("fbe");
     GenerateFBETypes("fbe");
     GenerateFBEVersion("fbe", "fbe");
     GenerateFBEBuffer("fbe");
@@ -278,6 +279,124 @@ func OptionalString(value string) *string {
 
 // Create an optional UUID
 func OptionalUUID(value UUID) *UUID {
+    return &value
+}
+)CODE";
+
+    // Prepare code template
+    code = std::regex_replace(code, std::regex("\n"), EndLine());
+
+    Write(code);
+
+    // Generate footer
+    GenerateFooter();
+
+    // Store the file
+    WriteEnd();
+    Store(file);
+}
+
+void GeneratorGo::GenerateFBEPtr(const std::string& package)
+{
+    fs::path path = fs::path(_output) / package;
+
+    // Generate the file
+    fs::path file = path / "Ptr.go";
+    WriteBegin();
+
+    // Generate headers
+    GenerateHeader("FBE");
+
+    std::string code = R"CODE(
+package fbe
+
+// Create a ptr bool
+func PtrBool(value bool) *bool {
+    return &value
+}
+
+// Create a ptr byte
+func PtrByte(value byte) *byte {
+    return &value
+}
+
+// Create a ptr bytes
+func PtrBytes(value []byte) *[]byte {
+    return &value
+}
+
+// Create a ptr rune
+func PtrRune(value rune) *rune {
+    return &value
+}
+
+// Create a ptr int8
+func PtrInt8(value int8) *int8 {
+    return &value
+}
+
+// Create a ptr uint8
+func PtrUInt8(value uint8) *uint8 {
+    return &value
+}
+
+// Create a ptr int16
+func PtrInt16(value int16) *int16 {
+    return &value
+}
+
+// Create a ptr uint16
+func PtrUInt16(value uint16) *uint16 {
+    return &value
+}
+
+// Create a ptr int32
+func PtrInt32(value int32) *int32 {
+    return &value
+}
+
+// Create a ptr uint32
+func PtrUInt32(value uint32) *uint32 {
+    return &value
+}
+
+// Create a ptr int64
+func PtrInt64(value int64) *int64 {
+    return &value
+}
+
+// Create a ptr uint64
+func PtrUInt64(value uint64) *uint64 {
+    return &value
+}
+
+// Create a ptr float32
+func PtrFloat32(value float32) *float32 {
+    return &value
+}
+
+// Create a ptr float64
+func PtrFloat64(value float64) *float64 {
+    return &value
+}
+
+// Create a ptr decimal
+func PtrDecimal(value Decimal) *Decimal {
+    return &value
+}
+
+// Create a ptr timestamp
+func PtrTimestamp(value Timestamp) *Timestamp {
+    return &value
+}
+
+// Create a ptr string
+func PtrString(value string) *string {
+    return &value
+}
+
+// Create a ptr UUID
+func PtrUUID(value UUID) *UUID {
     return &value
 }
 )CODE";
@@ -1796,9 +1915,223 @@ func (fm *FieldModelOptional_NAME_) Set(fbeValue _TYPE_ARG_) error {
 
     // Prepare code template
     code = std::regex_replace(code, std::regex("_NAME_"), name);
-    code = std::regex_replace(code, std::regex("_TYPE_ARG_"), ConvertTypeName(*field.type, field.optional));
+    code = std::regex_replace(code, std::regex("_TYPE_ARG_"), ConvertTypeName(*field.type, field.optional, field.ptr));
     code = std::regex_replace(code, std::regex("_TYPE_NEW_"), IsGoType(*field.type) ? ConvertOptional(*field.type) : (ConvertNewName(*field.type) + "()"));
-    code = std::regex_replace(code, std::regex("_TYPE_"), ConvertTypeFieldType(*field.type, field.optional));
+    code = std::regex_replace(code, std::regex("_TYPE_"), ConvertTypeFieldType(*field.type, field.optional, field.ptr));
+    code = std::regex_replace(code, std::regex("_MODEL_NEW_"), ConvertNewName(model));
+    code = std::regex_replace(code, std::regex("_MODEL_"), model);
+    code = std::regex_replace(code, std::regex("_GET_VALUE_"), IsGoType(*field.type) ? "*fbeValue, err = fm.value.Get()" : "err = fm.value.GetValue(fbeValue)");
+    code = std::regex_replace(code, std::regex("_SET_VALUE_"), IsGoType(*field.type) ? "err = fm.value.Set(*fbeValue)" : "err = fm.value.Set(fbeValue)");
+    code = std::regex_replace(code, std::regex("\n"), EndLine());
+
+    Write(code);
+
+    // Generate footer
+    GenerateFooter();
+
+    // Store the output file
+    WriteEnd();
+    Store(output);
+}
+
+void GeneratorGo::GenerateFBEFieldModelPtr(const std::shared_ptr<Package>& p, const std::string& name, const std::string& model, const StructField& field, const fs::path& path)
+{
+    // Generate the output file
+    fs::path output = path / ("FieldModelPtr" + name + ".go");
+    WriteBegin();
+
+    // Generate headers
+    GenerateHeader("FBE");
+
+    // Generate package
+    WriteLine();
+    WriteLineIndent("package " + *p->name);
+
+    // Generate imports
+    WriteLine();
+    GenerateImports(p);
+
+    std::string code = R"CODE(
+// Fast Binary Encoding optional _NAME_ field model
+type FieldModelPtr_NAME_ struct {
+    // Field model buffer
+    buffer *fbe.Buffer
+    // Field model buffer offset
+    offset int
+
+    // Base field model value
+    value *_MODEL_
+}
+
+// Create a new optional _NAME_ field model
+func NewFieldModelPtr_NAME_(buffer *fbe.Buffer, offset int) *FieldModelPtr_NAME_ {
+    fbeResult := FieldModelPtr_NAME_{buffer: buffer, offset: offset}
+    return &fbeResult
+}
+
+// Get the optional field model value
+func (fm *FieldModelPtr_NAME_) Value() *_MODEL_ { return fm.value }
+
+// Get the field size
+func (fm *FieldModelPtr_NAME_) FBESize() int { return 1 + 4 }
+
+// Get the field extra size
+func (fm *FieldModelPtr_NAME_) FBEExtra() int {
+    if !fm.HasValue() {
+        return 0
+    }
+
+    fbePtrOffset := int(fbe.ReadUInt32(fm.buffer.Data(), fm.buffer.Offset() + fm.FBEOffset() + 1))
+    if (fbePtrOffset == 0) || ((fm.buffer.Offset() + fbePtrOffset + 4) > fm.buffer.Size()) {
+        return 0
+    }
+
+    fm.buffer.Shift(fbePtrOffset)
+    if fm.value == nil {
+		fm.value = _MODEL_NEW_(fm.buffer, 0)
+	}
+    fbeResult := fm.value.FBESize() + fm.value.FBEExtra()
+    fm.buffer.Unshift(fbePtrOffset)
+    return fbeResult
+}
+
+// Get the field offset
+func (fm *FieldModelPtr_NAME_) FBEOffset() int { return fm.offset }
+// Set the field offset
+func (fm *FieldModelPtr_NAME_) SetFBEOffset(value int) { fm.offset = value }
+
+// Shift the current field offset
+func (fm *FieldModelPtr_NAME_) FBEShift(size int) { fm.offset += size }
+// Unshift the current field offset
+func (fm *FieldModelPtr_NAME_) FBEUnshift(size int) { fm.offset -= size }
+
+// Check if the object contains a value
+func (fm *FieldModelPtr_NAME_) HasValue() bool {
+    if (fm.buffer.Offset() + fm.FBEOffset() + fm.FBESize()) > fm.buffer.Size() {
+        return false
+    }
+
+    fbeHasValue := fbe.ReadUInt8(fm.buffer.Data(), fm.buffer.Offset() + fm.FBEOffset())
+    return fbeHasValue != 0
+}
+
+// Check if the optional value is valid
+func (fm *FieldModelPtr_NAME_) Verify() bool {
+    if (fm.buffer.Offset() + fm.FBEOffset() + fm.FBESize()) > fm.buffer.Size() {
+        return true
+    }
+
+    fbeHasValue := fbe.ReadUInt8(fm.buffer.Data(), fm.buffer.Offset() + fm.FBEOffset())
+    if fbeHasValue == 0 {
+        return true
+    }
+
+    fbePtrOffset := int(fbe.ReadUInt32(fm.buffer.Data(), fm.buffer.Offset() + fm.FBEOffset() + 1))
+    if fbePtrOffset == 0 {
+        return false
+    }
+
+    fm.buffer.Shift(fbePtrOffset)
+    if fm.value == nil {
+		fm.value = _MODEL_NEW_(fm.buffer, 0)
+	}
+    fbeResult := fm.value.Verify()
+    fm.buffer.Unshift(fbePtrOffset)
+    return fbeResult
+}
+
+// Get the optional value (being phase)
+func (fm *FieldModelPtr_NAME_) GetBegin() (int, error) {
+    if !fm.HasValue() {
+        return 0, nil
+    }
+
+    fbePtrOffset := int(fbe.ReadUInt32(fm.buffer.Data(), fm.buffer.Offset() + fm.FBEOffset() + 1))
+    if fbePtrOffset <= 0 {
+        return 0, errors.New("model is broken")
+    }
+
+    fm.buffer.Shift(fbePtrOffset)
+    return fbePtrOffset, nil
+}
+
+// Get the optional value (end phase)
+func (fm *FieldModelPtr_NAME_) GetEnd(fbeBegin int) {
+    fm.buffer.Unshift(fbeBegin)
+}
+
+// Get the optional value
+func (fm *FieldModelPtr_NAME_) Get() (_TYPE_ARG_, error) {
+    var fbeValue _TYPE_ARG_ = nil
+
+    fbeBegin, err := fm.GetBegin()
+    if fbeBegin == 0 {
+        return fbeValue, err
+    }
+
+    if fm.value == nil {
+		fm.value = _MODEL_NEW_(fm.buffer, 0)
+	}
+    fbeValue = _TYPE_NEW_
+
+    _GET_VALUE_
+    fm.GetEnd(fbeBegin)
+    return fbeValue, err
+}
+
+// Set the optional value (begin phase)
+func (fm *FieldModelPtr_NAME_) SetBegin(hasValue bool) (int, error) {
+    if (fm.buffer.Offset() + fm.FBEOffset() + fm.FBESize()) > fm.buffer.Size() {
+        return 0, nil
+    }
+
+    fbeHasValue := uint8(0)
+    if hasValue {
+        fbeHasValue = uint8(1)
+    }
+    fbe.WriteUInt8(fm.buffer.Data(), fm.buffer.Offset() + fm.FBEOffset(), fbeHasValue)
+    if fbeHasValue == 0 {
+        return 0, nil
+    }
+
+    if fm.value == nil {
+		fm.value = _MODEL_NEW_(fm.buffer, 0)
+	}
+    fbePtrSize := fm.value.FBESize()
+    fbePtrOffset := fm.buffer.Allocate(fbePtrSize) - fm.buffer.Offset()
+    if (fbePtrOffset <= 0) || ((fm.buffer.Offset() + fbePtrOffset + fbePtrSize) > fm.buffer.Size()) {
+        return 0, errors.New("model is broken")
+    }
+
+    fbe.WriteUInt32(fm.buffer.Data(), fm.buffer.Offset() + fm.FBEOffset() + 1, uint32(fbePtrOffset))
+
+    fm.buffer.Shift(fbePtrOffset)
+    return fbePtrOffset, nil
+}
+
+// Set the optional value (end phase)
+func (fm *FieldModelPtr_NAME_) SetEnd(fbeBegin int) {
+    fm.buffer.Unshift(fbeBegin)
+}
+
+// Set the optional value
+func (fm *FieldModelPtr_NAME_) Set(fbeValue _TYPE_ARG_) error {
+    fbeBegin, err := fm.SetBegin(fbeValue != nil)
+    if fbeBegin == 0 {
+        return err
+    }
+
+    _SET_VALUE_
+    fm.SetEnd(fbeBegin)
+    return err
+}
+)CODE";
+
+    // Prepare code template
+    code = std::regex_replace(code, std::regex("_NAME_"), name);
+    code = std::regex_replace(code, std::regex("_TYPE_ARG_"), ConvertTypeName(*field.type, field.optional, field.ptr));
+    code = std::regex_replace(code, std::regex("_TYPE_NEW_"), IsGoType(*field.type) ? ConvertPtr(*field.type) : (ConvertNewName(*field.type) + "()"));
+    code = std::regex_replace(code, std::regex("_TYPE_"), ConvertTypeFieldType(*field.type, field.optional, field.ptr));
     code = std::regex_replace(code, std::regex("_MODEL_NEW_"), ConvertNewName(model));
     code = std::regex_replace(code, std::regex("_MODEL_"), model);
     code = std::regex_replace(code, std::regex("_GET_VALUE_"), IsGoType(*field.type) ? "*fbeValue, err = fm.value.Get()" : "err = fm.value.GetValue(fbeValue)");
@@ -1957,11 +2290,11 @@ func (fm *FieldModelArray_NAME_) Set(values []_TYPE_) error {
 
     // Prepare code template
     code = std::regex_replace(code, std::regex("_NAME_"), name);
-    code = std::regex_replace(code, std::regex("_TYPE_"), ConvertTypeFieldType(*field.type, field.optional));
+    code = std::regex_replace(code, std::regex("_TYPE_"), ConvertTypeFieldType(*field.type, field.optional, field.ptr));
     code = std::regex_replace(code, std::regex("_MODEL_NEW_"), ConvertNewName(model));
     code = std::regex_replace(code, std::regex("_MODEL_"), model);
-    code = std::regex_replace(code, std::regex("_GET_VALUE_"), (IsGoType(*field.type) || field.optional) ? "value" : "*value");
-    code = std::regex_replace(code, std::regex("_SET_VALUE_"), (IsGoType(*field.type) || field.optional) ? "values[i]" : "&values[i]");
+    code = std::regex_replace(code, std::regex("_GET_VALUE_"), (IsGoType(*field.type) || field.optional || field.ptr) ? "value" : "*value");
+    code = std::regex_replace(code, std::regex("_SET_VALUE_"), (IsGoType(*field.type) || field.optional || field.ptr) ? "values[i]" : "&values[i]");
     code = std::regex_replace(code, std::regex("\n"), EndLine());
 
     Write(code);
@@ -2006,7 +2339,6 @@ type FieldModelVector_NAME_ struct {
 // Create a new _NAME_ vector field model
 func NewFieldModelVector_NAME_(buffer *fbe.Buffer, offset int) *FieldModelVector_NAME_ {
     fbeResult := FieldModelVector_NAME_{buffer: buffer, offset: offset}
-    fbeResult.model = _MODEL_NEW_(buffer, offset)
     return &fbeResult
 }
 
@@ -2026,7 +2358,14 @@ func (fm *FieldModelVector_NAME_) FBEExtra() int {
 
     fbeVectorSize := int(fbe.ReadUInt32(fm.buffer.Data(), fm.buffer.Offset() + fbeVectorOffset))
 
+    if fbeVectorSize == 0 {
+        return 0
+    }
+
     fbeResult := 0
+    if fm.model == nil {
+        fm.model = _MODEL_NEW_(fm.buffer, fm.offset)
+    }
     fm.model.SetFBEOffset(fbeVectorOffset + 4)
     for i := fbeVectorSize; i > 0; i-- {
         fbeResult += fm.model.FBESize() + fm.model.FBEExtra()
@@ -2086,6 +2425,10 @@ func (fm *FieldModelVector_NAME_) GetItem(index int) (*_MODEL_, error) {
         return nil, errors.New("index is out of bounds")
     }
 
+    if fm.model == nil {
+        fm.model = _MODEL_NEW_(fm.buffer, fm.offset)
+    }
+
     fm.model.SetFBEOffset(fbeVectorOffset + 4)
     fm.model.FBEShift(index * fm.model.FBESize())
     return fm.model, nil
@@ -2093,6 +2436,9 @@ func (fm *FieldModelVector_NAME_) GetItem(index int) (*_MODEL_, error) {
 
 // Resize the vector and get its first model
 func (fm *FieldModelVector_NAME_) Resize(size int) (*_MODEL_, error) {
+    if fm.model == nil {
+        fm.model = _MODEL_NEW_(fm.buffer, fm.offset)
+    }
     fbeVectorSize := size * fm.model.FBESize()
     fbeVectorOffset := fm.buffer.Allocate(4 + fbeVectorSize) - fm.buffer.Offset()
     if (fbeVectorOffset == 0) || ((fm.buffer.Offset() + fbeVectorOffset + 4) > fm.buffer.Size()) {
@@ -2123,7 +2469,13 @@ func (fm *FieldModelVector_NAME_) Verify() bool {
     }
 
     fbeVectorSize := int(fbe.ReadUInt32(fm.buffer.Data(), fm.buffer.Offset() + fbeVectorOffset))
+    if fbeVectorSize == 0 {
+        return true
+    }
 
+    if fm.model == nil {
+        fm.model = _MODEL_NEW_(fm.buffer, fm.offset)
+    }
     fm.model.SetFBEOffset(fbeVectorOffset + 4)
     for i := fbeVectorSize; i > 0; i-- {
         if !fm.model.Verify() {
@@ -2188,11 +2540,11 @@ func (fm *FieldModelVector_NAME_) Set(values []_TYPE_) error {
 
     // Prepare code template
     code = std::regex_replace(code, std::regex("_NAME_"), name);
-    code = std::regex_replace(code, std::regex("_TYPE_"), ConvertTypeFieldType(*field.type, field.optional));
+    code = std::regex_replace(code, std::regex("_TYPE_"), ConvertTypeFieldType(*field.type, field.optional, field.ptr));
     code = std::regex_replace(code, std::regex("_MODEL_NEW_"), ConvertNewName(model));
     code = std::regex_replace(code, std::regex("_MODEL_"), model);
-    code = std::regex_replace(code, std::regex("_GET_VALUE_"), (IsGoType(*field.type) || field.optional) ? "value" : "*value");
-    code = std::regex_replace(code, std::regex("_SET_VALUE_"), (IsGoType(*field.type) || field.optional) ? "value" : "&value");
+    code = std::regex_replace(code, std::regex("_GET_VALUE_"), (IsGoType(*field.type) || field.optional || field.ptr) ? "value" : "*value");
+    code = std::regex_replace(code, std::regex("_SET_VALUE_"), (IsGoType(*field.type) || field.optional || field.ptr) ? "value" : "&value");
     code = std::regex_replace(code, std::regex("\n"), EndLine());
 
     Write(code);
@@ -2237,7 +2589,6 @@ type FieldModelSet_NAME_ struct {
 // Create a new _NAME_ set field model
 func NewFieldModelSet_NAME_(buffer *fbe.Buffer, offset int) *FieldModelSet_NAME_ {
     fbeResult := FieldModelSet_NAME_{buffer: buffer, offset: offset}
-    fbeResult.model = _MODEL_NEW_(buffer, offset)
     return &fbeResult
 }
 
@@ -2256,8 +2607,14 @@ func (fm *FieldModelSet_NAME_) FBEExtra() int {
     }
 
     fbeSetSize := int(fbe.ReadUInt32(fm.buffer.Data(), fm.buffer.Offset() + fbeSetOffset))
+    if fbeSetSize == 0 {
+        return 0
+    }
 
     fbeResult := 0
+    if fm.model == nil {
+        fm.model = _MODEL_NEW_(fm.buffer, fm.offset)
+    }
     fm.model.SetFBEOffset(fbeSetOffset + 4)
     for i := fbeSetSize; i > 0; i-- {
         fbeResult += fm.model.FBESize() + fm.model.FBEExtra()
@@ -2317,6 +2674,9 @@ func (fm *FieldModelSet_NAME_) GetItem(index int) (*_MODEL_, error) {
         return nil, errors.New("index is out of bounds")
     }
 
+    if fm.model == nil {
+        fm.model = _MODEL_NEW_(fm.buffer, fm.offset)
+    }
     fm.model.SetFBEOffset(fbeSetOffset + 4)
     fm.model.FBEShift(index * fm.model.FBESize())
     return fm.model, nil
@@ -2324,6 +2684,9 @@ func (fm *FieldModelSet_NAME_) GetItem(index int) (*_MODEL_, error) {
 
 // Resize the set and get its first model
 func (fm *FieldModelSet_NAME_) Resize(size int) (*_MODEL_, error) {
+    if fm.model == nil {
+        fm.model = _MODEL_NEW_(fm.buffer, fm.offset)
+    }
     fbeSetSize := size * fm.model.FBESize()
     fbeSetOffset := fm.buffer.Allocate(4 + fbeSetSize) - fm.buffer.Offset()
     if (fbeSetOffset == 0) || ((fm.buffer.Offset() + fbeSetOffset + 4) > fm.buffer.Size()) {
@@ -2354,7 +2717,13 @@ func (fm *FieldModelSet_NAME_) Verify() bool {
     }
 
     fbeSetSize := int(fbe.ReadUInt32(fm.buffer.Data(), fm.buffer.Offset() + fbeSetOffset))
+    if fbeSetSize == 0 {
+        return true
+    }
 
+    if fm.model == nil {
+        fm.model = _MODEL_NEW_(fm.buffer, fm.offset)
+    }
     fm.model.SetFBEOffset(fbeSetOffset + 4)
     for i := fbeSetSize; i > 0; i-- {
         if !fm.model.Verify() {
@@ -2417,12 +2786,12 @@ func (fm *FieldModelSet_NAME_) Set(values _TYPE_) error {
 
     // Prepare code template
     code = std::regex_replace(code, std::regex("_NAME_"), name);
-    code = std::regex_replace(code, std::regex("_TYPE_"), "map[" + ConvertKeyName(*field.key) + "]" + ConvertTypeName(*field.type, field.optional));
+    code = std::regex_replace(code, std::regex("_TYPE_"), "map[" + ConvertKeyName(*field.key) + "]" + ConvertTypeName(*field.type, field.optional, field.ptr));
     code = std::regex_replace(code, std::regex("_MODEL_NEW_"), ConvertNewName(model));
     code = std::regex_replace(code, std::regex("_MODEL_"), model);
     code = std::regex_replace(code, std::regex("_GET_KEY_"), IsGoType(*field.type) ? "value" : "value.Key()");
-    code = std::regex_replace(code, std::regex("_GET_VALUE_"), (IsGoType(*field.type) || field.optional) ? "value" : "*value");
-    code = std::regex_replace(code, std::regex("_SET_VALUE_"), (IsGoType(*field.type) || field.optional) ? "value" : "&value");
+    code = std::regex_replace(code, std::regex("_GET_VALUE_"), (IsGoType(*field.type) || field.optional || field.ptr) ? "value" : "*value");
+    code = std::regex_replace(code, std::regex("_SET_VALUE_"), (IsGoType(*field.type) || field.optional || field.ptr) ? "value" : "&value");
     code = std::regex_replace(code, std::regex("\n"), EndLine());
 
     Write(code);
@@ -2469,8 +2838,6 @@ type FieldModelMap_KEY_NAME__VALUE_NAME_ struct {
 // Create a new _KEY_NAME_->_VALUE_NAME_ map field model
 func NewFieldModelMap_KEY_NAME__VALUE_NAME_(buffer *fbe.Buffer, offset int) *FieldModelMap_KEY_NAME__VALUE_NAME_ {
     fbeResult := FieldModelMap_KEY_NAME__VALUE_NAME_{buffer: buffer, offset: offset}
-    fbeResult.modelKey = _MODEL_KEY_NEW_(buffer, offset)
-    fbeResult.modelValue = _MODEL_VALUE_NEW_(buffer, offset)
     return &fbeResult
 }
 
@@ -2489,8 +2856,15 @@ func (fm *FieldModelMap_KEY_NAME__VALUE_NAME_) FBEExtra() int {
     }
 
     fbeMapSize := int(fbe.ReadUInt32(fm.buffer.Data(), fm.buffer.Offset() + fbeMapOffset))
+    if fbeMapSize == 0 {
+        return 0
+    }
 
     fbeResult := 0
+    if fm.modelKey == nil {
+        fm.modelKey = _MODEL_KEY_NEW_(fm.buffer, fm.offset)
+        fm.modelValue = _MODEL_VALUE_NEW_(fm.buffer, fm.offset)
+    }
     fm.modelKey.SetFBEOffset(fbeMapOffset + 4)
     fm.modelValue.SetFBEOffset(fbeMapOffset + 4 + fm.modelKey.FBESize())
     for i := fbeMapSize; i > 0; i-- {
@@ -2554,6 +2928,11 @@ func (fm *FieldModelMap_KEY_NAME__VALUE_NAME_) GetItem(index int) (*_MODEL_KEY_,
         return nil, nil, errors.New("index is out of bounds")
     }
 
+    if fm.modelKey == nil {
+        fm.modelKey = _MODEL_KEY_NEW_(fm.buffer, fm.offset)
+        fm.modelValue = _MODEL_VALUE_NEW_(fm.buffer, fm.offset)
+    }
+
     fm.modelKey.SetFBEOffset(fbeMapOffset + 4)
     fm.modelValue.SetFBEOffset(fbeMapOffset + 4 + fm.modelKey.FBESize())
     fm.modelKey.FBEShift(index * (fm.modelKey.FBESize() + fm.modelValue.FBESize()))
@@ -2563,6 +2942,10 @@ func (fm *FieldModelMap_KEY_NAME__VALUE_NAME_) GetItem(index int) (*_MODEL_KEY_,
 
 // Resize the map and get its first model
 func (fm *FieldModelMap_KEY_NAME__VALUE_NAME_) Resize(size int) (*_MODEL_KEY_, *_MODEL_VALUE_, error) {
+    if fm.modelKey == nil {
+        fm.modelKey = _MODEL_KEY_NEW_(fm.buffer, fm.offset)
+        fm.modelValue = _MODEL_VALUE_NEW_(fm.buffer, fm.offset)
+    }
     fbeMapSize := size * (fm.modelKey.FBESize() + fm.modelValue.FBESize())
     fbeMapOffset := fm.buffer.Allocate(4 + fbeMapSize) - fm.buffer.Offset()
     if (fbeMapOffset == 0) || ((fm.buffer.Offset() + fbeMapOffset + 4) > fm.buffer.Size()) {
@@ -2594,7 +2977,14 @@ func (fm *FieldModelMap_KEY_NAME__VALUE_NAME_) Verify() bool {
     }
 
     fbeMapSize := int(fbe.ReadUInt32(fm.buffer.Data(), fm.buffer.Offset() + fbeMapOffset))
+    if fbeMapSize == 0 {
+        return true
+    }
 
+    if fm.modelKey == nil {
+        fm.modelKey = _MODEL_KEY_NEW_(fm.buffer, fm.offset)
+        fm.modelValue = _MODEL_VALUE_NEW_(fm.buffer, fm.offset)
+    }
     fm.modelKey.SetFBEOffset(fbeMapOffset + 4)
     fm.modelValue.SetFBEOffset(fbeMapOffset + 4 + fm.modelKey.FBESize())
     for i := fbeMapSize; i > 0; i-- {
@@ -2679,9 +3069,9 @@ func (fm *FieldModelMap_KEY_NAME__VALUE_NAME_) Set(values _TYPE_) error {
     code = std::regex_replace(code, std::regex("_MODEL_KEY_"), key_model);
     code = std::regex_replace(code, std::regex("_MODEL_VALUE_"), value_model);
     code = std::regex_replace(code, std::regex("_GET_KEY_"), IsGoType(*field.key) ? "key" : "key.Key()");
-    code = std::regex_replace(code, std::regex("_GET_VALUE_"), IsGoType(*field.key) ? ((IsGoType(*field.type) || field.optional) ? "value" : "*value") : ("struct{Key " + ConvertTypeName(*field.key, false) + "; Value " + ConvertTypeName(*field.type, field.optional) + "}{*key, " + ((IsGoType(*field.type) || field.optional) ? "value" : "*value") + "}"));
+    code = std::regex_replace(code, std::regex("_GET_VALUE_"), IsGoType(*field.key) ? ((IsGoType(*field.type) || field.optional || field.ptr || field.ptr) ? "value" : "*value") : ("struct{Key " + ConvertTypeName(*field.key, false, false) + "; Value " + ConvertTypeName(*field.type, field.optional, field.ptr) + "}{*key, " + ((IsGoType(*field.type) || field.optional || field.ptr || field.ptr) ? "value" : "*value") + "}"));
     code = std::regex_replace(code, std::regex("_SET_KEY_"), IsGoType(*field.key) ? "key" : "&value.Key");
-    code = std::regex_replace(code, std::regex("_SET_VALUE_"), IsGoType(*field.key) ? ((IsGoType(*field.type) || field.optional) ? "value" : "&value") : ((IsGoType(*field.type) || field.optional) ? "value.Value" : "&value.Value"));
+    code = std::regex_replace(code, std::regex("_SET_VALUE_"), IsGoType(*field.key) ? ((IsGoType(*field.type) || field.optional || field.ptr || field.ptr) ? "value" : "&value") : ((IsGoType(*field.type) || field.optional || field.ptr || field.ptr) ? "value.Value" : "&value.Value"));
     code = std::regex_replace(code, std::regex("_KEY_"), IsGoType(*field.key) ? "key" : "_");
     code = std::regex_replace(code, std::regex("\n"), EndLine());
 
@@ -3560,9 +3950,9 @@ func (fm *FinalModelOptional_NAME_) Set(fbeValue _TYPE_ARG_) (int, error) {
 
     // Prepare code template
     code = std::regex_replace(code, std::regex("_NAME_"), name);
-    code = std::regex_replace(code, std::regex("_TYPE_ARG_"), ConvertTypeName(*field.type, field.optional));
+    code = std::regex_replace(code, std::regex("_TYPE_ARG_"), ConvertTypeName(*field.type, field.optional, field.ptr));
     code = std::regex_replace(code, std::regex("_TYPE_NEW_"), IsGoType(*field.type) ? ConvertOptional(*field.type) : (ConvertNewName(*field.type) + "()"));
-    code = std::regex_replace(code, std::regex("_TYPE_"), ConvertTypeFieldType(*field.type, field.optional));
+    code = std::regex_replace(code, std::regex("_TYPE_"), ConvertTypeFieldType(*field.type, field.optional, field.ptr));
     code = std::regex_replace(code, std::regex("_MODEL_NEW_"), ConvertNewName(model));
     code = std::regex_replace(code, std::regex("_MODEL_"), model);
     code = std::regex_replace(code, std::regex("_GET_VALUE_"), IsGoType(*field.type) ? "*fbeValue, fbeResult, err = fm.value.Get()" : "fbeResult, err = fm.value.GetValue(fbeValue)");
@@ -3718,11 +4108,11 @@ func (fm *FinalModelArray_NAME_) Set(values []_TYPE_) (int, error) {
 
     // Prepare code template
     code = std::regex_replace(code, std::regex("_NAME_"), name);
-    code = std::regex_replace(code, std::regex("_TYPE_"), ConvertTypeFieldType(*field.type, field.optional));
+    code = std::regex_replace(code, std::regex("_TYPE_"), ConvertTypeFieldType(*field.type, field.optional, field.ptr));
     code = std::regex_replace(code, std::regex("_MODEL_NEW_"), ConvertNewName(model));
     code = std::regex_replace(code, std::regex("_MODEL_"), model);
-    code = std::regex_replace(code, std::regex("_GET_VALUE_"), (IsGoType(*field.type) || field.optional) ? "value" : "*value");
-    code = std::regex_replace(code, std::regex("_SET_VALUE_"), (IsGoType(*field.type) || field.optional) ? "values[i]" : "&values[i]");
+    code = std::regex_replace(code, std::regex("_GET_VALUE_"), (IsGoType(*field.type) || field.optional || field.ptr) ? "value" : "*value");
+    code = std::regex_replace(code, std::regex("_SET_VALUE_"), (IsGoType(*field.type) || field.optional || field.ptr) ? "values[i]" : "&values[i]");
     code = std::regex_replace(code, std::regex("\n"), EndLine());
 
     Write(code);
@@ -3864,11 +4254,11 @@ func (fm *FinalModelVector_NAME_) Set(values []_TYPE_) (int, error) {
 
     // Prepare code template
     code = std::regex_replace(code, std::regex("_NAME_"), name);
-    code = std::regex_replace(code, std::regex("_TYPE_"), ConvertTypeFieldType(*field.type, field.optional));
+    code = std::regex_replace(code, std::regex("_TYPE_"), ConvertTypeFieldType(*field.type, field.optional, field.ptr));
     code = std::regex_replace(code, std::regex("_MODEL_NEW_"), ConvertNewName(model));
     code = std::regex_replace(code, std::regex("_MODEL_"), model);
-    code = std::regex_replace(code, std::regex("_GET_VALUE_"), (IsGoType(*field.type) || field.optional) ? "value" : "*value");
-    code = std::regex_replace(code, std::regex("_SET_VALUE_"), (IsGoType(*field.type) || field.optional) ? "value" : "&value");
+    code = std::regex_replace(code, std::regex("_GET_VALUE_"), (IsGoType(*field.type) || field.optional || field.ptr) ? "value" : "*value");
+    code = std::regex_replace(code, std::regex("_SET_VALUE_"), (IsGoType(*field.type) || field.optional || field.ptr) ? "value" : "&value");
     code = std::regex_replace(code, std::regex("\n"), EndLine());
 
     Write(code);
@@ -4008,12 +4398,12 @@ func (fm *FinalModelSet_NAME_) Set(values _TYPE_) (int, error) {
 
     // Prepare code template
     code = std::regex_replace(code, std::regex("_NAME_"), name);
-    code = std::regex_replace(code, std::regex("_TYPE_"), "map[" + ConvertKeyName(*field.key) + "]" + ConvertTypeName(*field.type, field.optional));
+    code = std::regex_replace(code, std::regex("_TYPE_"), "map[" + ConvertKeyName(*field.key) + "]" + ConvertTypeName(*field.type, field.optional, field.ptr));
     code = std::regex_replace(code, std::regex("_MODEL_NEW_"), ConvertNewName(model));
     code = std::regex_replace(code, std::regex("_MODEL_"), model);
     code = std::regex_replace(code, std::regex("_GET_KEY_"), IsGoType(*field.type) ? "value" : "value.Key()");
-    code = std::regex_replace(code, std::regex("_GET_VALUE_"), (IsGoType(*field.type) || field.optional) ? "value" : "*value");
-    code = std::regex_replace(code, std::regex("_SET_VALUE_"), (IsGoType(*field.type) || field.optional) ? "value" : "&value");
+    code = std::regex_replace(code, std::regex("_GET_VALUE_"), (IsGoType(*field.type) || field.optional || field.ptr) ? "value" : "*value");
+    code = std::regex_replace(code, std::regex("_SET_VALUE_"), (IsGoType(*field.type) || field.optional || field.ptr) ? "value" : "&value");
     code = std::regex_replace(code, std::regex("\n"), EndLine());
 
     Write(code);
@@ -4190,9 +4580,9 @@ func (fm *FinalModelMap_KEY_NAME__VALUE_NAME_) Set(values _TYPE_) (int, error) {
     code = std::regex_replace(code, std::regex("_MODEL_KEY_"), key_model);
     code = std::regex_replace(code, std::regex("_MODEL_VALUE_"), value_model);
     code = std::regex_replace(code, std::regex("_GET_KEY_"), IsGoType(*field.key) ? "key" : "key.Key()");
-    code = std::regex_replace(code, std::regex("_GET_VALUE_"), IsGoType(*field.key) ? ((IsGoType(*field.type) || field.optional) ? "value" : "*value") : ("struct{Key " + ConvertTypeName(*field.key, false) + "; Value " + ConvertTypeName(*field.type, field.optional) + "}{*key, " + ((IsGoType(*field.type) || field.optional) ? "value" : "*value") + "}"));
+    code = std::regex_replace(code, std::regex("_GET_VALUE_"), IsGoType(*field.key) ? ((IsGoType(*field.type) || field.optional || field.ptr) ? "value" : "*value") : ("struct{Key " + ConvertTypeName(*field.key, false, false) + "; Value " + ConvertTypeName(*field.type, field.optional, field.ptr) + "}{*key, " + ((IsGoType(*field.type) || field.optional || field.ptr) ? "value" : "*value") + "}"));
     code = std::regex_replace(code, std::regex("_SET_KEY_"), IsGoType(*field.key) ? "key" : "&value.Key");
-    code = std::regex_replace(code, std::regex("_SET_VALUE_"), IsGoType(*field.key) ? ((IsGoType(*field.type) || field.optional) ? "value" : "&value") : ((IsGoType(*field.type) || field.optional) ? "value.Value" : "&value.Value"));
+    code = std::regex_replace(code, std::regex("_SET_VALUE_"), IsGoType(*field.key) ? ((IsGoType(*field.type) || field.optional || field.ptr) ? "value" : "&value") : ((IsGoType(*field.type) || field.optional || field.ptr) ? "value.Value" : "&value.Value"));
     code = std::regex_replace(code, std::regex("_KEY_"), IsGoType(*field.key) ? "key" : "_");
     code = std::regex_replace(code, std::regex("\n"), EndLine());
 
@@ -4823,37 +5213,42 @@ void GeneratorGo::GenerateContainers(const std::shared_ptr<Package>& p, const fs
                     if (field->array)
                     {
                         if (final)
-                            GenerateFBEFinalModelArray(p, (field->optional ? "Optional" : "") + ConvertTypeFieldName(*field->type), ConvertTypeFieldDeclaration(*field->type, field->optional, final), *field, path);
+                            GenerateFBEFinalModelArray(p, (field->optional ? "Optional" : (field->ptr ? "Ptr" : "")) + ConvertTypeFieldName(*field->type), ConvertTypeFieldDeclaration(*field->type, field->optional, field->ptr, final), *field, path);
                         else
-                            GenerateFBEFieldModelArray(p, (field->optional ? "Optional" : "") + ConvertTypeFieldName(*field->type), ConvertTypeFieldDeclaration(*field->type, field->optional, final), *field, path);
+                            GenerateFBEFieldModelArray(p, (field->optional ? "Optional" : (field->ptr ? "Ptr" : "")) + ConvertTypeFieldName(*field->type), ConvertTypeFieldDeclaration(*field->type, field->optional, field->ptr, final), *field, path);
                     }
                     if (field->vector || field->list)
                     {
                         if (final)
-                            GenerateFBEFinalModelVector(p, (field->optional ? "Optional" : "") + ConvertTypeFieldName(*field->type), ConvertTypeFieldDeclaration(*field->type, field->optional, final), *field, path);
+                            GenerateFBEFinalModelVector(p, (field->optional ? "Optional" : (field->ptr ? "Ptr" : "")) + ConvertTypeFieldName(*field->type), ConvertTypeFieldDeclaration(*field->type, field->optional, field->ptr, final), *field, path);
                         else
-                            GenerateFBEFieldModelVector(p, (field->optional ? "Optional" : "") + ConvertTypeFieldName(*field->type), ConvertTypeFieldDeclaration(*field->type, field->optional, final), *field, path);
+                            GenerateFBEFieldModelVector(p, (field->optional ? "Optional" : (field->ptr ? "Ptr" : "")) + ConvertTypeFieldName(*field->type), ConvertTypeFieldDeclaration(*field->type, field->optional, field->ptr, final), *field, path);
                     }
                     if (field->set)
                     {
                         if (final)
-                            GenerateFBEFinalModelSet(p, (field->optional ? "Optional" : "") + ConvertTypeFieldName(*field->type), ConvertTypeFieldDeclaration(*field->type, field->optional, final), *field, path);
+                            GenerateFBEFinalModelSet(p, (field->optional ? "Optional" : (field->ptr ? "Ptr" : "")) + ConvertTypeFieldName(*field->type), ConvertTypeFieldDeclaration(*field->type, field->optional, field->ptr, final), *field, path);
                         else
-                            GenerateFBEFieldModelSet(p, (field->optional ? "Optional" : "") + ConvertTypeFieldName(*field->type), ConvertTypeFieldDeclaration(*field->type, field->optional, final), *field, path);
+                            GenerateFBEFieldModelSet(p, (field->optional ? "Optional" : (field->ptr ? "Ptr" : "")) + ConvertTypeFieldName(*field->type), ConvertTypeFieldDeclaration(*field->type, field->optional, field->ptr, final), *field, path);
                     }
                     if (field->map || field->hash)
                     {
                         if (final)
-                            GenerateFBEFinalModelMap(p, ConvertTypeFieldName(*field->key), ConvertTypeFieldDeclaration(*field->key, false, final), (field->optional ? "Optional" : "") + ConvertTypeFieldName(*field->type), ConvertTypeFieldDeclaration(*field->type, field->optional, final), *field, path);
+                            GenerateFBEFinalModelMap(p, ConvertTypeFieldName(*field->key), ConvertTypeFieldDeclaration(*field->key, false, false, final), (field->optional ? "Optional" : (field->ptr ? "Ptr" : "")) + ConvertTypeFieldName(*field->type), ConvertTypeFieldDeclaration(*field->type, field->optional, field->ptr, final), *field, path);
                         else
-                            GenerateFBEFieldModelMap(p, ConvertTypeFieldName(*field->key), ConvertTypeFieldDeclaration(*field->key, false, final), (field->optional ? "Optional" : "") + ConvertTypeFieldName(*field->type), ConvertTypeFieldDeclaration(*field->type, field->optional, final), *field, path);
+                            GenerateFBEFieldModelMap(p, ConvertTypeFieldName(*field->key), ConvertTypeFieldDeclaration(*field->key, false, false, final), (field->optional ? "Optional" : (field->ptr ? "Ptr" : "")) + ConvertTypeFieldName(*field->type), ConvertTypeFieldDeclaration(*field->type, field->optional, field->ptr, final), *field, path);
                     }
                     if (field->optional)
                     {
                         if (final)
-                            GenerateFBEFinalModelOptional(p, ConvertTypeFieldName(*field->type), ConvertTypeFieldDeclaration(*field->type, false, final), *field, path);
+                            GenerateFBEFinalModelOptional(p, ConvertTypeFieldName(*field->type), ConvertTypeFieldDeclaration(*field->type, false, false, final), *field, path);
                         else
-                            GenerateFBEFieldModelOptional(p, ConvertTypeFieldName(*field->type), ConvertTypeFieldDeclaration(*field->type, false, final), *field, path);
+                            GenerateFBEFieldModelOptional(p, ConvertTypeFieldName(*field->type), ConvertTypeFieldDeclaration(*field->type, false, false, final), *field, path);
+                    }
+                    if (field->ptr)
+                    {
+                        if (not final)
+                            GenerateFBEFieldModelPtr(p, ConvertTypeFieldName(*field->type), ConvertTypeFieldDeclaration(*field->type, false, false, final), *field, path);
                     }
                 }
             }
@@ -5333,7 +5728,7 @@ void GeneratorGo::GenerateStruct(const std::shared_ptr<Package>& p, const std::s
     WriteLineIndent("var _ = fmt.Print");
     WriteLineIndent("var _ = strconv.FormatInt");
 
-    std::string base_type = (s->base && !s->base->empty()) ? ConvertTypeName(*s->base, false) : "";
+    std::string base_type = (s->base && !s->base->empty()) ? ConvertTypeName(*s->base, false, false) : "";
 
     // Generate struct key
     WriteLine();
@@ -5379,7 +5774,7 @@ void GeneratorGo::GenerateStruct(const std::shared_ptr<Package>& p, const std::s
                     WriteLineIndent("sb.WriteString(\"[\" + strconv.FormatInt(int64(len(k." + ConvertToUpper(*field->name) + ")), 10) + \"][\")");
                     WriteLineIndent("for _, v := range k." + ConvertToUpper(*field->name) + " {");
                     Indent(1);
-                    WriteOutputStreamValue(*field->type, "v", field->optional, true);
+                    WriteOutputStreamValue(*field->type, "v", field->optional, field->ptr, true);
                     WriteLineIndent("first = false");
                     Indent(-1);
                     WriteLineIndent("}");
@@ -5399,7 +5794,7 @@ void GeneratorGo::GenerateStruct(const std::shared_ptr<Package>& p, const std::s
                     WriteLineIndent("sb.WriteString(\"[\" + strconv.FormatInt(int64(len(k." + ConvertToUpper(*field->name) + ")), 10) + \"][\")");
                     WriteLineIndent("for _, v := range k." + ConvertToUpper(*field->name) + " {");
                     Indent(1);
-                    WriteOutputStreamValue(*field->type, "v", field->optional, true);
+                    WriteOutputStreamValue(*field->type, "v", field->optional, field->ptr, true);
                     WriteLineIndent("first = false");
                     Indent(-1);
                     WriteLineIndent("}");
@@ -5419,7 +5814,7 @@ void GeneratorGo::GenerateStruct(const std::shared_ptr<Package>& p, const std::s
                     WriteLineIndent("sb.WriteString(\"[\" + strconv.FormatInt(int64(len(k." + ConvertToUpper(*field->name) + ")), 10) + \"]<\")");
                     WriteLineIndent("for _, v := range k." + ConvertToUpper(*field->name) + " {");
                     Indent(1);
-                    WriteOutputStreamValue(*field->type, "v", field->optional, true);
+                    WriteOutputStreamValue(*field->type, "v", field->optional, field->ptr, true);
                     WriteLineIndent("first = false");
                     Indent(-1);
                     WriteLineIndent("}");
@@ -5439,7 +5834,7 @@ void GeneratorGo::GenerateStruct(const std::shared_ptr<Package>& p, const std::s
                     WriteLineIndent("sb.WriteString(\"[\" + strconv.FormatInt(int64(k." + ConvertToUpper(*field->name) + ".Size()), 10) + \"]{\")");
                     WriteLineIndent("for _, v := range k." + ConvertToUpper(*field->name) + " {");
                     Indent(1);
-                    WriteOutputStreamValue(*field->type, "v", field->optional, true);
+                    WriteOutputStreamValue(*field->type, "v", field->optional, field->ptr, true);
                     WriteLineIndent("first = false");
                     Indent(-1);
                     WriteLineIndent("}");
@@ -5459,9 +5854,9 @@ void GeneratorGo::GenerateStruct(const std::shared_ptr<Package>& p, const std::s
                     WriteLineIndent("sb.WriteString(\"[\" + strconv.FormatInt(int64(len(k." + ConvertToUpper(*field->name) + ")), 10) + \"]<{\")");
                     WriteLineIndent("for " + std::string(IsGoType(*field->key) ? "k" : "_") + ", v := range k." + ConvertToUpper(*field->name) + " {");
                     Indent(1);
-                    WriteOutputStreamValue(*field->key, (IsGoType(*field->key) ? "k" : "v.Key"), false, true);
+                    WriteOutputStreamValue(*field->key, (IsGoType(*field->key) ? "k" : "v.Key"), false, false, true);
                     WriteLineIndent("sb.WriteString(\"->\")");
-                    WriteOutputStreamValue(*field->type, (IsGoType(*field->key) ? "v" : "v.Value"), field->optional, false);
+                    WriteOutputStreamValue(*field->type, (IsGoType(*field->key) ? "v" : "v.Value"), field->optional, field->ptr, false);
                     WriteLineIndent("first = false");
                     Indent(-1);
                     WriteLineIndent("}");
@@ -5481,9 +5876,9 @@ void GeneratorGo::GenerateStruct(const std::shared_ptr<Package>& p, const std::s
                     WriteLineIndent("sb.WriteString(\"[\" + strconv.FormatInt(int64(len(k." + ConvertToUpper(*field->name) + ")), 10) + \"][{\")");
                     WriteLineIndent("for " + std::string(IsGoType(*field->key) ? "k" : "_") + ", v := range k." + ConvertToUpper(*field->name) + " {");
                     Indent(1);
-                    WriteOutputStreamValue(*field->key, (IsGoType(*field->key) ? "k" : "v.Key"), false, true);
+                    WriteOutputStreamValue(*field->key, (IsGoType(*field->key) ? "k" : "v.Key"), false, false, true);
                     WriteLineIndent("sb.WriteString(\"->\")");
-                    WriteOutputStreamValue(*field->type, (IsGoType(*field->key) ? "v" : "v.Value"), field->optional, false);
+                    WriteOutputStreamValue(*field->type, (IsGoType(*field->key) ? "v" : "v.Value"), field->optional, field->ptr, false);
                     WriteLineIndent("first = false");
                     Indent(-1);
                     WriteLineIndent("}");
@@ -5496,7 +5891,7 @@ void GeneratorGo::GenerateStruct(const std::shared_ptr<Package>& p, const std::s
                     WriteLineIndent("}");
                 }
                 else
-                    WriteOutputStreamValue(*field->type, "k." + ConvertToUpper(*field->name), field->optional, false);
+                    WriteOutputStreamValue(*field->type, "k." + ConvertToUpper(*field->name), field->optional, field->ptr, false);
                 first = false;
             }
         }
@@ -5534,7 +5929,7 @@ void GeneratorGo::GenerateStruct(const std::shared_ptr<Package>& p, const std::s
         {
             WriteIndent(ConvertToUpper(*field->name) + ": ");
             if (field->value)
-                Write(ConvertConstant(*field->type, *field->value, field->optional));
+                Write(ConvertConstant(*field->type, *field->value, field->optional, field->ptr));
             else
                 Write(ConvertDefault(*field));
             WriteLine(",");
@@ -5559,7 +5954,7 @@ void GeneratorGo::GenerateStruct(const std::shared_ptr<Package>& p, const std::s
     {
         for (const auto& field : s->body->fields)
         {
-            Write(std::string(first ? "" : ", ") + ConvertToUpper(*field->name) + " " + ConvertTypeName(*field));
+            Write(std::string(first ? "" : ", ") + *field->name + "V " + ConvertTypeName(*field));
             first = false;
         }
     }
@@ -5576,7 +5971,7 @@ void GeneratorGo::GenerateStruct(const std::shared_ptr<Package>& p, const std::s
     {
         for (const auto& field : s->body->fields)
         {
-            Write(std::string(first ? "" : ", ") + ConvertToUpper(*field->name));
+            Write(std::string(first ? "" : ", ") + *field->name + "V");
             first = false;
         }
     }
@@ -5656,6 +6051,15 @@ void GeneratorGo::GenerateStruct(const std::shared_ptr<Package>& p, const std::s
     Indent(-1);
     WriteLineIndent("}");
 
+    // Generate struct Ptr() method
+    WriteLine();
+    WriteLineIndent("// Convert struct to optional");
+    WriteLineIndent("func (s *" + struct_name + ") Ptr() *" + struct_name + " {");
+    Indent(1);
+    WriteLineIndent("return s");
+    Indent(-1);
+    WriteLineIndent("}");
+
     // Generate struct FBE type property
     WriteLine();
     WriteLineIndent("// Get the FBE type");
@@ -5692,7 +6096,7 @@ void GeneratorGo::GenerateStruct(const std::shared_ptr<Package>& p, const std::s
                 WriteLineIndent("sb.WriteString(\"[\" + strconv.FormatInt(int64(len(s." + ConvertToUpper(*field->name) + ")), 10) + \"][\")");
                 WriteLineIndent("for _, v := range s." + ConvertToUpper(*field->name) + " {");
                 Indent(1);
-                WriteOutputStreamValue(*field->type, "v", field->optional, true);
+                WriteOutputStreamValue(*field->type, "v", field->optional, field->ptr, true);
                 WriteLineIndent("first = false");
                 Indent(-1);
                 WriteLineIndent("}");
@@ -5712,7 +6116,7 @@ void GeneratorGo::GenerateStruct(const std::shared_ptr<Package>& p, const std::s
                 WriteLineIndent("sb.WriteString(\"[\" + strconv.FormatInt(int64(len(s." + ConvertToUpper(*field->name) + ")), 10) + \"][\")");
                 WriteLineIndent("for _, v := range s." + ConvertToUpper(*field->name) + " {");
                 Indent(1);
-                WriteOutputStreamValue(*field->type, "v", field->optional, true);
+                WriteOutputStreamValue(*field->type, "v", field->optional, field->ptr, true);
                 WriteLineIndent("first = false");
                 Indent(-1);
                 WriteLineIndent("}");
@@ -5732,7 +6136,7 @@ void GeneratorGo::GenerateStruct(const std::shared_ptr<Package>& p, const std::s
                 WriteLineIndent("sb.WriteString(\"[\" + strconv.FormatInt(int64(len(s." + ConvertToUpper(*field->name) + ")), 10) + \"]<\")");
                 WriteLineIndent("for _, v := range s." + ConvertToUpper(*field->name) + " {");
                 Indent(1);
-                WriteOutputStreamValue(*field->type, "v", field->optional, true);
+                WriteOutputStreamValue(*field->type, "v", field->optional, field->ptr, true);
                 WriteLineIndent("first = false");
                 Indent(-1);
                 WriteLineIndent("}");
@@ -5752,7 +6156,7 @@ void GeneratorGo::GenerateStruct(const std::shared_ptr<Package>& p, const std::s
                 WriteLineIndent("sb.WriteString(\"[\" + strconv.FormatInt(int64(s." + ConvertToUpper(*field->name) + ".Size()), 10) + \"]{\")");
                 WriteLineIndent("for _, v := range s." + ConvertToUpper(*field->name) + " {");
                 Indent(1);
-                WriteOutputStreamValue(*field->type, "v", field->optional, true);
+                WriteOutputStreamValue(*field->type, "v", field->optional, field->ptr, true);
                 WriteLineIndent("first = false");
                 Indent(-1);
                 WriteLineIndent("}");
@@ -5772,9 +6176,9 @@ void GeneratorGo::GenerateStruct(const std::shared_ptr<Package>& p, const std::s
                 WriteLineIndent("sb.WriteString(\"[\" + strconv.FormatInt(int64(len(s." + ConvertToUpper(*field->name) + ")), 10) + \"]<{\")");
                 WriteLineIndent("for " + std::string(IsGoType(*field->key) ? "k" : "_") + ", v := range s." + ConvertToUpper(*field->name) + " {");
                 Indent(1);
-                WriteOutputStreamValue(*field->key, (IsGoType(*field->key) ? "k" : "v.Key"), false, true);
+                WriteOutputStreamValue(*field->key, (IsGoType(*field->key) ? "k" : "v.Key"), false, false, true);
                 WriteLineIndent("sb.WriteString(\"->\")");
-                WriteOutputStreamValue(*field->type, (IsGoType(*field->key) ? "v" : "v.Value"), field->optional, false);
+                WriteOutputStreamValue(*field->type, (IsGoType(*field->key) ? "v" : "v.Value"), field->optional, field->ptr, false);
                 WriteLineIndent("first = false");
                 Indent(-1);
                 WriteLineIndent("}");
@@ -5794,9 +6198,9 @@ void GeneratorGo::GenerateStruct(const std::shared_ptr<Package>& p, const std::s
                 WriteLineIndent("sb.WriteString(\"[\" + strconv.FormatInt(int64(len(s." + ConvertToUpper(*field->name) + ")), 10) + \"][{\")");
                 WriteLineIndent("for " + std::string(IsGoType(*field->key) ? "k" : "_") + ", v := range s." + ConvertToUpper(*field->name) + " {");
                 Indent(1);
-                WriteOutputStreamValue(*field->key, (IsGoType(*field->key) ? "k" : "v.Key"), false, true);
+                WriteOutputStreamValue(*field->key, (IsGoType(*field->key) ? "k" : "v.Key"), false, false, true);
                 WriteLineIndent("sb.WriteString(\"->\")");
-                WriteOutputStreamValue(*field->type, (IsGoType(*field->key) ? "v" : "v.Value"), field->optional, false);
+                WriteOutputStreamValue(*field->type, (IsGoType(*field->key) ? "v" : "v.Value"), field->optional, field->ptr, false);
                 WriteLineIndent("first = false");
                 Indent(-1);
                 WriteLineIndent("}");
@@ -5809,7 +6213,7 @@ void GeneratorGo::GenerateStruct(const std::shared_ptr<Package>& p, const std::s
                 WriteLineIndent("}");
             }
             else
-                WriteOutputStreamValue(*field->type, "s." + ConvertToUpper(*field->name), field->optional, false);
+                WriteOutputStreamValue(*field->type, "s." + ConvertToUpper(*field->name), field->optional, field->ptr, false);
             first = false;
         }
     }
@@ -5839,7 +6243,7 @@ void GeneratorGo::GenerateStruct(const std::shared_ptr<Package>& p, const std::s
             {
                 WriteLine();
                 WriteLineIndent("// Set wrapper for the field " + ConvertToUpper(*field->name));
-                WriteLineIndent("type set" + ConvertToUpper(*field->name) + " map[" + ConvertKeyName(*field->key) + "]" + ConvertTypeName(*field->type, field->optional));
+                WriteLineIndent("type set" + ConvertToUpper(*field->name) + " map[" + ConvertKeyName(*field->key) + "]" + ConvertTypeName(*field->type, field->optional, field->ptr));
 
                 if (JSON())
                 {
@@ -5864,7 +6268,7 @@ void GeneratorGo::GenerateStruct(const std::shared_ptr<Package>& p, const std::s
                     // Generate set wrapper Add() method
                     WriteLine();
                     WriteLineIndent("// Add the given item to the set");
-                    WriteLineIndent("func (s set" + ConvertToUpper(*field->name) + ") Add(item " + ConvertTypeName(*field->type, field->optional) + ") {");
+                    WriteLineIndent("func (s set" + ConvertToUpper(*field->name) + ") Add(item " + ConvertTypeName(*field->type, field->optional, field->ptr) + ") {");
                     Indent(1);
                     if (IsGoType(*field->key))
                         WriteLineIndent("s[item] = item");
@@ -5876,7 +6280,7 @@ void GeneratorGo::GenerateStruct(const std::shared_ptr<Package>& p, const std::s
                     // Generate set wrapper Contains() method
                     WriteLine();
                     WriteLineIndent("// Contains the given item in the set?");
-                    WriteLineIndent("func (s set" + ConvertToUpper(*field->name) + ") Contains(item " + ConvertTypeName(*field->type, field->optional) + ") bool {");
+                    WriteLineIndent("func (s set" + ConvertToUpper(*field->name) + ") Contains(item " + ConvertTypeName(*field->type, field->optional, field->ptr) + ") bool {");
                     Indent(1);
                     if (IsGoType(*field->key))
                         WriteLineIndent("_, exists := s[item]");
@@ -5889,7 +6293,7 @@ void GeneratorGo::GenerateStruct(const std::shared_ptr<Package>& p, const std::s
                     // Generate set wrapper Remove() method
                     WriteLine();
                     WriteLineIndent("// Remove the given item from the set");
-                    WriteLineIndent("func (s set" + ConvertToUpper(*field->name) + ") Remove(item " + ConvertTypeName(*field->type, field->optional) + ") {");
+                    WriteLineIndent("func (s set" + ConvertToUpper(*field->name) + ") Remove(item " + ConvertTypeName(*field->type, field->optional, field->ptr) + ") {");
                     Indent(1);
                     if (IsGoType(*field->key))
                         WriteLineIndent("delete(s, item)");
@@ -5914,9 +6318,9 @@ void GeneratorGo::GenerateStruct(const std::shared_ptr<Package>& p, const std::s
                     // Generate set wrapper Enumerate() method
                     WriteLine();
                     WriteLineIndent("// Enumerate the set");
-                    WriteLineIndent("func (s set" + ConvertToUpper(*field->name) + ") Enumerate() []" + ConvertTypeName(*field->type, field->optional) + " {");
+                    WriteLineIndent("func (s set" + ConvertToUpper(*field->name) + ") Enumerate() []" + ConvertTypeName(*field->type, field->optional, field->ptr) + " {");
                     Indent(1);
-                    WriteLineIndent("array := make([]" + ConvertTypeName(*field->type, field->optional) + ", 0)");
+                    WriteLineIndent("array := make([]" + ConvertTypeName(*field->type, field->optional, field->ptr) + ", 0)");
                     WriteLineIndent("for _, v := range s {");
                     Indent(1);
                     WriteLineIndent("array = append(array, v)");
@@ -6018,7 +6422,7 @@ void GeneratorGo::GenerateStruct(const std::shared_ptr<Package>& p, const std::s
                     WriteLineIndent("// Convert set to JSON");
                     WriteLineIndent("func (s set" + ConvertToUpper(*field->name) + ") MarshalJSON() ([]byte, error) {");
                     Indent(1);
-                    WriteLineIndent("array := make([]" + ConvertTypeName(*field->type, field->optional) + ", 0)");
+                    WriteLineIndent("array := make([]" + ConvertTypeName(*field->type, field->optional, field->ptr) + ", 0)");
                     WriteLineIndent("for _, v := range s {");
                     Indent(1);
                     WriteLineIndent("array = append(array, v)");
@@ -6033,7 +6437,7 @@ void GeneratorGo::GenerateStruct(const std::shared_ptr<Package>& p, const std::s
                     WriteLineIndent("// Convert JSON to set");
                     WriteLineIndent("func (s *set" + ConvertToUpper(*field->name) + ") UnmarshalJSON(body []byte) error {");
                     Indent(1);
-                    WriteLineIndent("var array []" + ConvertTypeName(*field->type, field->optional));
+                    WriteLineIndent("var array []" + ConvertTypeName(*field->type, field->optional, field->ptr));
                     WriteLineIndent("err := fbe.Json.Unmarshal(body, &array)");
                     WriteLineIndent("if err != nil {");
                     Indent(1);
@@ -6100,7 +6504,7 @@ void GeneratorGo::GenerateStructFieldModel(const std::shared_ptr<Package>& p, co
     WriteLine();
     GenerateImports(p);
 
-    std::string base_type = (s->base && !s->base->empty()) ? ConvertTypeName(*s->base, false) : "";
+    std::string base_type = (s->base && !s->base->empty()) ? ConvertTypeName(*s->base, false, false) : "";
     std::string base_field_model = (s->base && !s->base->empty()) ? ConvertModelName(*s->base, "FieldModel") : "";
     std::string base_field_name = "FieldModel" + ConvertBaseName(base_type);
 
@@ -6120,7 +6524,7 @@ void GeneratorGo::GenerateStructFieldModel(const std::shared_ptr<Package>& p, co
             WriteLineIndent("*" + base_field_model);
         if (s->body)
             for (const auto& field : s->body->fields)
-                WriteLineIndent(ConvertToUpper(*field->name) + " *" + ConvertTypeFieldDeclaration(*field, false));
+            WriteLineIndent(ConvertToUpper(*field->name) + " *" + ConvertTypeFieldDeclaration(*field, false));
     }
     Indent(-1);
     WriteLineIndent("}");
@@ -6410,19 +6814,19 @@ void GeneratorGo::GenerateStructFieldModel(const std::shared_ptr<Package>& p, co
                     WriteLineIndent("slice, _ := fm." + ConvertToUpper(*field->name) + ".Get()");
                     WriteLineIndent("copy(fbeValue." + ConvertToUpper(*field->name) + "[:], slice)");
                 }
-                else if (field->vector || field->list || field->set || field->map || field->hash || field->optional)
+                else if (field->vector || field->list || field->set || field->map || field->hash || field->optional || field->ptr)
                     WriteLineIndent("fbeValue." + ConvertToUpper(*field->name) + ", _ = fm." + ConvertToUpper(*field->name) + ".Get()");
                 else if (!IsGoType(*field->type))
                 {
                     if (field->value)
-                        WriteLineIndent("_ = fm." + ConvertToUpper(*field->name) + ".GetValueDefault(&fbeValue." + ConvertToUpper(*field->name) + ", " + ConvertConstant(*field->type, *field->value, field->optional) + ")");
+                        WriteLineIndent("_ = fm." + ConvertToUpper(*field->name) + ".GetValueDefault(&fbeValue." + ConvertToUpper(*field->name) + ", " + ConvertConstant(*field->type, *field->value, field->optional, field->ptr) + ")");
                     else
                         WriteLineIndent("_ = fm." + ConvertToUpper(*field->name) + ".GetValue(&fbeValue." + ConvertToUpper(*field->name) + ")");
                 }
                 else
                 {
                     if (field->value)
-                        WriteLineIndent("fbeValue." + ConvertToUpper(*field->name) + ", _ = fm." + ConvertToUpper(*field->name) + ".GetDefault(" + ConvertConstant(*field->type, *field->value, field->optional) + ")");
+                        WriteLineIndent("fbeValue." + ConvertToUpper(*field->name) + ", _ = fm." + ConvertToUpper(*field->name) + ".GetDefault(" + ConvertConstant(*field->type, *field->value, field->optional, field->ptr) + ")");
                     else
                         WriteLineIndent("fbeValue." + ConvertToUpper(*field->name) + ", _ = fm." + ConvertToUpper(*field->name) + ".Get()");
                 }
@@ -6512,7 +6916,7 @@ void GeneratorGo::GenerateStructFieldModel(const std::shared_ptr<Package>& p, co
                 if (field->array)
                     WriteLineIndent("if err = fm." + ConvertToUpper(*field->name) + ".Set(fbeValue." + ConvertToUpper(*field->name) + "[:]); err != nil {");
                 else
-                    WriteLineIndent("if err = fm." + ConvertToUpper(*field->name) + ".Set(" + ((IsGoType(*field->type) || field->vector || field->list || field->set || field->map || field->hash || field->optional) ? "" : "&") + "fbeValue." + ConvertToUpper(*field->name) + "); err != nil {");
+                    WriteLineIndent("if err = fm." + ConvertToUpper(*field->name) + ".Set(" + ((IsGoType(*field->type) || field->vector || field->list || field->set || field->map || field->hash || field->optional || field->ptr) ? "" : "&") + "fbeValue." + ConvertToUpper(*field->name) + "); err != nil {");
                 Indent(1);
                 WriteLineIndent("return err");
                 Indent(-1);
@@ -6720,7 +7124,7 @@ void GeneratorGo::GenerateStructFinalModel(const std::shared_ptr<Package>& p, co
     WriteLine();
     GenerateImports(p);
 
-    std::string base_type = (s->base && !s->base->empty()) ? ConvertTypeName(*s->base, false) : "";
+    std::string base_type = (s->base && !s->base->empty()) ? ConvertTypeName(*s->base, false, false) : "";
     std::string base_final_model = (s->base && !s->base->empty()) ? ConvertModelName(*s->base, "FinalModel") : "";
     std::string base_final_name = "FinalModel" + ConvertBaseName(base_type);
 
@@ -6773,7 +7177,7 @@ void GeneratorGo::GenerateStructFinalModel(const std::shared_ptr<Package>& p, co
         {
             if (field->array)
                 WriteLineIndent("fm." + ConvertToUpper(*field->name) + ".FBEAllocationSize(fbeValue." + ConvertToUpper(*field->name) + "[:]) +");
-            else if (field->vector || field->list || field->set || field->map || field->hash || field->optional)
+            else if (field->vector || field->list || field->set || field->map || field->hash || field->optional || field->ptr)
                 WriteLineIndent("fm." + ConvertToUpper(*field->name) + ".FBEAllocationSize(fbeValue." + ConvertToUpper(*field->name) + ") +");
             else if (!IsGoType(*field->type))
                 WriteLineIndent("fm." + ConvertToUpper(*field->name) + ".FBEAllocationSize(&fbeValue." + ConvertToUpper(*field->name) + ") +");
@@ -6922,7 +7326,7 @@ void GeneratorGo::GenerateStructFinalModel(const std::shared_ptr<Package>& p, co
                 WriteLineIndent("fm." + ConvertToUpper(*field->name) + ".SetFBEOffset(fbeCurrentOffset)");
                 if (field->array)
                     WriteLineIndent("if slice, size, err := fm." + ConvertToUpper(*field->name) + ".Get(); err != nil {");
-                else if (field->vector || field->list || field->set || field->map || field->hash || field->optional)
+                else if (field->vector || field->list || field->set || field->map || field->hash || field->optional || field->ptr)
                     WriteLineIndent("if fbeValue." + ConvertToUpper(*field->name) + ", fbeFieldSize, err = fm." + ConvertToUpper(*field->name) + ".Get(); err != nil {");
                 else if (!IsGoType(*field->type))
                     WriteLineIndent("if fbeFieldSize, err = fm." + ConvertToUpper(*field->name) + ".GetValue(&fbeValue." + ConvertToUpper(*field->name) + "); err != nil {");
@@ -6994,7 +7398,7 @@ void GeneratorGo::GenerateStructFinalModel(const std::shared_ptr<Package>& p, co
                 if (field->array)
                     WriteLineIndent("if fbeFieldSize, err = fm." + ConvertToUpper(*field->name) + ".Set(fbeValue." + ConvertToUpper(*field->name) + "[:]); err != nil {");
                 else
-                    WriteLineIndent("if fbeFieldSize, err = fm." + ConvertToUpper(*field->name) + ".Set(" + ((IsGoType(*field->type) || field->vector || field->list || field->set || field->map || field->hash || field->optional) ? "" : "&") + "fbeValue." + ConvertToUpper(*field->name) + "); err != nil {");
+                    WriteLineIndent("if fbeFieldSize, err = fm." + ConvertToUpper(*field->name) + ".Set(" + ((IsGoType(*field->type) || field->vector || field->list || field->set || field->map || field->hash || field->optional || field->ptr) ? "" : "&") + "fbeValue." + ConvertToUpper(*field->name) + "); err != nil {");
                 Indent(1);
                 WriteLineIndent("return fbeCurrentSize, err");
                 Indent(-1);
@@ -8225,48 +8629,136 @@ std::string GeneratorGo::ConvertOptional(const std::string& type, const std::str
         return "nil";
 
     if (type == "bool")
-        return "fbe.OptionalBool(" + ConvertConstant(type, value, false) + ")";
+        return "fbe.OptionalBool(" + ConvertConstant(type, value, false, false) + ")";
     else if (type == "byte")
-        return "fbe.OptionalByte(" + ConvertConstant(type, value, false) + ")";
+        return "fbe.OptionalByte(" + ConvertConstant(type, value, false, false) + ")";
     else if (type == "bytes")
-        return "fbe.OptionalBytes(" + ConvertConstant(type, value, false) + ")";
+        return "fbe.OptionalBytes(" + ConvertConstant(type, value, false, false) + ")";
     else if ((type == "char") || (type == "wchar"))
-        return "fbe.OptionalRune(" + ConvertConstant(type, value, false) + ")";
+        return "fbe.OptionalRune(" + ConvertConstant(type, value, false, false) + ")";
     else if (type == "int8")
-        return "fbe.OptionalInt8(" + ConvertConstant(type, value, false) + ")";
+        return "fbe.OptionalInt8(" + ConvertConstant(type, value, false, false) + ")";
     else if (type == "uint8")
-        return "fbe.OptionalUInt8(" + ConvertConstant(type, value, false) + ")";
+        return "fbe.OptionalUInt8(" + ConvertConstant(type, value, false, false) + ")";
     else if (type == "int16")
-        return "fbe.OptionalInt16(" + ConvertConstant(type, value, false) + ")";
+        return "fbe.OptionalInt16(" + ConvertConstant(type, value, false, false) + ")";
     else if (type == "uint16")
-        return "fbe.OptionalUInt16(" + ConvertConstant(type, value, false) + ")";
+        return "fbe.OptionalUInt16(" + ConvertConstant(type, value, false, false) + ")";
     else if (type == "int32")
-        return "fbe.OptionalInt32(" + ConvertConstant(type, value, false) + ")";
+        return "fbe.OptionalInt32(" + ConvertConstant(type, value, false, false) + ")";
     else if (type == "uint32")
-        return "fbe.OptionalUInt32(" + ConvertConstant(type, value, false) + ")";
+        return "fbe.OptionalUInt32(" + ConvertConstant(type, value, false, false) + ")";
     else if (type == "int64")
-        return "fbe.OptionalInt64(" + ConvertConstant(type, value, false) + ")";
+        return "fbe.OptionalInt64(" + ConvertConstant(type, value, false, false) + ")";
     else if (type == "uint64")
-        return "fbe.OptionalUInt64(" + ConvertConstant(type, value, false) + ")";
+        return "fbe.OptionalUInt64(" + ConvertConstant(type, value, false, false) + ")";
     else if (type == "float")
-        return "fbe.OptionalFloat32(" + ConvertConstant(type, value, false) + ")";
+        return "fbe.OptionalFloat32(" + ConvertConstant(type, value, false, false) + ")";
     else if (type == "double")
-        return "fbe.OptionalFloat64(" + ConvertConstant(type, value, false) + ")";
+        return "fbe.OptionalFloat64(" + ConvertConstant(type, value, false, false) + ")";
     else if (type == "decimal")
-        return "fbe.OptionalDecimal(" + ConvertConstant(type, value, false) + ")";
+        return "fbe.OptionalDecimal(" + ConvertConstant(type, value, false, false) + ")";
     else if (type == "timestamp")
-        return "fbe.OptionalTimestamp(" + ConvertConstant(type, value, false) + ")";
+        return "fbe.OptionalTimestamp(" + ConvertConstant(type, value, false, false) + ")";
     else if (type == "string")
-        return "fbe.OptionalString(" + ConvertConstant(type, value, false) + ")";
+        return "fbe.OptionalString(" + ConvertConstant(type, value, false, false) + ")";
     else if (type == "uuid")
-        return "fbe.OptionalUUID(" + ConvertConstant(type, value, false) + ")";
+        return "fbe.OptionalUUID(" + ConvertConstant(type, value, false, false) + ")";
 
-    return ConvertConstant(type, value, false) + ".Optional()";
+    return ConvertConstant(type, value, false, false) + ".Optional()";
 }
 
-std::string GeneratorGo::ConvertTypeName(const std::string& type, bool optional)
+std::string GeneratorGo::ConvertPtr(const std::string& type)
 {
-    std::string opt = optional ? "*" : "";
+    if (type == "bool")
+        return "fbe.PtrBool(false)";
+    else if (type == "byte")
+        return "fbe.PtrByte(0)";
+    else if (type == "bytes")
+        return "fbe.PtrBytes(make([]byte, 0))";
+    else if ((type == "char") || (type == "wchar"))
+        return "fbe.PtrRune('\\000')";
+    else if (type == "int8")
+        return "fbe.PtrInt8(0)";
+    else if (type == "uint8")
+        return "fbe.PtrUInt8(0)";
+    else if (type == "int16")
+        return "fbe.PtrInt16(0)";
+    else if (type == "uint16")
+        return "fbe.PtrUInt16(0)";
+    else if (type == "int32")
+        return "fbe.PtrInt32(0)";
+    else if (type == "uint32")
+        return "fbe.PtrUInt32(0)";
+    else if (type == "int64")
+        return "fbe.PtrInt64(0)";
+    else if (type == "uint64")
+        return "fbe.PtrUInt64(0)";
+    else if (type == "float")
+        return "fbe.PtrFloat32(0.0)";
+    else if (type == "double")
+        return "fbe.PtrFloat64(0.0)";
+    else if (type == "decimal")
+        return "fbe.PtrDecimal(fbe.DecimalZero())";
+    else if (type == "timestamp")
+        return "fbe.PtrTimestamp(fbe.TimestampEpoch())";
+    else if (type == "string")
+        return "fbe.PtrString(\"\")";
+    else if (type == "uuid")
+        return "fbe.PtrUUID(fbe.UUIDNil())";
+
+    return ConvertNewName(type) + "()" + ".Ptr()";
+}
+
+std::string GeneratorGo::ConvertPtr(const std::string& type, const std::string& value)
+{
+    if (value == "null")
+        return "nil";
+
+    if (type == "bool")
+        return "fbe.PtrBool(" + ConvertConstant(type, value, false, false) + ")";
+    else if (type == "byte")
+        return "fbe.PtrByte(" + ConvertConstant(type, value, false, false) + ")";
+    else if (type == "bytes")
+        return "fbe.PtrBytes(" + ConvertConstant(type, value, false, false) + ")";
+    else if ((type == "char") || (type == "wchar"))
+        return "fbe.PtrRune(" + ConvertConstant(type, value, false, false) + ")";
+    else if (type == "int8")
+        return "fbe.PtrInt8(" + ConvertConstant(type, value, false, false) + ")";
+    else if (type == "uint8")
+        return "fbe.PtrUInt8(" + ConvertConstant(type, value, false, false) + ")";
+    else if (type == "int16")
+        return "fbe.PtrInt16(" + ConvertConstant(type, value, false, false) + ")";
+    else if (type == "uint16")
+        return "fbe.PtrUInt16(" + ConvertConstant(type, value, false, false) + ")";
+    else if (type == "int32")
+        return "fbe.PtrInt32(" + ConvertConstant(type, value, false, false) + ")";
+    else if (type == "uint32")
+        return "fbe.PtrUInt32(" + ConvertConstant(type, value, false, false) + ")";
+    else if (type == "int64")
+        return "fbe.PtrInt64(" + ConvertConstant(type, value, false, false) + ")";
+    else if (type == "uint64")
+        return "fbe.PtrUInt64(" + ConvertConstant(type, value, false, false) + ")";
+    else if (type == "float")
+        return "fbe.PtrFloat32(" + ConvertConstant(type, value, false, false) + ")";
+    else if (type == "double")
+        return "fbe.PtrFloat64(" + ConvertConstant(type, value, false, false) + ")";
+    else if (type == "decimal")
+        return "fbe.PtrDecimal(" + ConvertConstant(type, value, false, false) + ")";
+    else if (type == "timestamp")
+        return "fbe.PtrTimestamp(" + ConvertConstant(type, value, false, false) + ")";
+    else if (type == "string")
+        return "fbe.PtrString(" + ConvertConstant(type, value, false, false) + ")";
+    else if (type == "uuid")
+        return "fbe.PtrUUID(" + ConvertConstant(type, value, false, false) + ")";
+
+    return ConvertConstant(type, value, false, false) + ".Ptr()";
+}
+
+
+std::string GeneratorGo::ConvertTypeName(const std::string& type, bool optional, bool ptr)
+{
+    std::string opt = (optional || ptr) ? "*" : "";
 
     if ((type == "bool") || (type == "byte") || (type == "int8") || (type == "uint8") || (type == "int16") || (type == "uint16") || (type == "int32") || (type == "uint32") || (type == "int64") || (type == "uint64") || (type == "string"))
         return opt + type;
@@ -8301,20 +8793,20 @@ std::string GeneratorGo::ConvertTypeName(const std::string& type, bool optional)
 std::string GeneratorGo::ConvertTypeName(const StructField& field)
 {
     if (field.array)
-        return "[" + std::to_string(field.N) + "]" + ConvertTypeName(*field.type, field.optional);
+        return "[" + std::to_string(field.N) + "]" + ConvertTypeName(*field.type, field.optional, field.ptr);
     else if ((field.vector) || (field.list))
-        return "[]" + ConvertTypeName(*field.type, field.optional);
+        return "[]" + ConvertTypeName(*field.type, field.optional, field.ptr);
     else if (field.set)
         return "set" + ConvertToUpper(*field.name);
     else if ((field.set) || (field.map) || (field.hash))
     {
         if (IsGoType(*field.key))
-            return "map[" + ConvertKeyName(*field.key) + "]" + ConvertTypeName(*field.type, field.optional);
+            return "map[" + ConvertKeyName(*field.key) + "]" + ConvertTypeName(*field.type, field.optional, field.ptr);
         else
-            return "map[" + ConvertKeyName(*field.key) + "]struct{Key " + ConvertTypeName(*field.key, false) + "; Value " + ConvertTypeName(*field.type, field.optional) + "}";
+            return "map[" + ConvertKeyName(*field.key) + "]struct{Key " + ConvertTypeName(*field.key, false, false) + "; Value " + ConvertTypeName(*field.type, field.optional, field.ptr) + "}";
     }
 
-    return ConvertTypeName(*field.type, field.optional);
+    return ConvertTypeName(*field.type, field.optional, field.ptr);
 }
 
 std::string GeneratorGo::ConvertTypeFieldName(const std::string& type)
@@ -8372,13 +8864,13 @@ std::string GeneratorGo::ConvertTypeFieldName(const std::string& type)
     return ns + ConvertToUpper(t);
 }
 
-std::string GeneratorGo::ConvertTypeFieldType(const std::string& type, bool optional)
+std::string GeneratorGo::ConvertTypeFieldType(const std::string& type, bool optional, bool ptr)
 {
     if (IsGoType(type))
-        return ConvertTypeName(type, optional);
+        return ConvertTypeName(type, optional, ptr);
 
     std::string ns = "";
-    std::string opt = optional ? "*" : "";
+    std::string opt = (optional || ptr) ? "*" : "";
     std::string t = type;
 
     size_t pos = type.find_last_of('.');
@@ -8391,7 +8883,7 @@ std::string GeneratorGo::ConvertTypeFieldType(const std::string& type, bool opti
     return ns + opt + ConvertToUpper(t);
 }
 
-std::string GeneratorGo::ConvertTypeFieldDeclaration(const std::string& type, bool optional, bool final)
+std::string GeneratorGo::ConvertTypeFieldDeclaration(const std::string& type, bool optional, bool ptr, bool final)
 {
     std::string modelType = final ? "Final" : "Field";
 
@@ -8399,7 +8891,7 @@ std::string GeneratorGo::ConvertTypeFieldDeclaration(const std::string& type, bo
         return "fbe." + modelType + "Model" + ConvertTypeFieldName(type);
 
     std::string ns = "";
-    std::string opt = optional ? "Optional" : "";
+    std::string optOrPtr = optional ? "Optional" : (ptr ? "Ptr" : "");
     std::string t = type;
 
     size_t pos = type.find_last_of('.');
@@ -8409,7 +8901,7 @@ std::string GeneratorGo::ConvertTypeFieldDeclaration(const std::string& type, bo
         t.assign(type, pos + 1, type.size() - pos);
     }
 
-    return ns + modelType + "Model" + opt + ConvertTypeFieldName(t);
+    return ns + modelType + "Model" + optOrPtr + ConvertTypeFieldName(t);
 }
 
 std::string GeneratorGo::ConvertTypeFieldDeclaration(const StructField& field, bool final)
@@ -8417,17 +8909,19 @@ std::string GeneratorGo::ConvertTypeFieldDeclaration(const StructField& field, b
     std::string modelType = final ? "Final" : "Field";
 
     if (field.array)
-        return modelType + "ModelArray" + std::string(field.optional ? "Optional" : "") + ConvertTypeFieldName(*field.type);
+        return modelType + "ModelArray" + std::string(field.optional ? "Optional" : (field.ptr ? "Ptr" : "")) + ConvertTypeFieldName(*field.type);
     else if (field.vector || field.list)
-        return modelType + "ModelVector" + std::string(field.optional ? "Optional" : "") + ConvertTypeFieldName(*field.type);
+        return modelType + "ModelVector" + std::string(field.optional ? "Optional" : (field.ptr ? "Ptr" : "")) + ConvertTypeFieldName(*field.type);
     else if (field.set)
-        return modelType + "ModelSet" + std::string(field.optional ? "Optional" : "") + ConvertTypeFieldName(*field.type);
+        return modelType + "ModelSet" + std::string(field.optional ? "Optional" : (field.ptr ? "Ptr" : "")) + ConvertTypeFieldName(*field.type);
     else if (field.map || field.hash)
-        return modelType + "ModelMap" + ConvertTypeFieldName(*field.key) + std::string(field.optional ? "Optional" : "") + ConvertTypeFieldName(*field.type);
+        return modelType + "ModelMap" + ConvertTypeFieldName(*field.key) + std::string(field.optional ? "Optional" : (field.ptr ? "Ptr" : "")) + ConvertTypeFieldName(*field.type);
     else if (field.optional)
         return modelType + "ModelOptional" + ConvertTypeFieldName(*field.type);
+    else if (field.ptr)
+        return modelType + "ModelPtr" + ConvertTypeFieldName(*field.type);
 
-    return ConvertTypeFieldDeclaration(*field.type, field.optional, final);
+    return ConvertTypeFieldDeclaration(*field.type, field.optional, field.ptr, final);
 }
 
 std::string GeneratorGo::ConvertTypeFieldInitialization(const std::string& type, bool optional, const std::string& offset, bool final)
@@ -8455,23 +8949,28 @@ std::string GeneratorGo::ConvertTypeFieldInitialization(const StructField& field
     std::string modelType = final ? "Final" : "Field";
 
     if (field.array)
-        return "New" + modelType + "ModelArray" + std::string(field.optional ? "Optional" : "") + ConvertTypeFieldName(*field.type) + "(buffer, " + offset + ", " + std::to_string(field.N) + ")";
+        return "New" + modelType + "ModelArray" + std::string(field.optional ? "Optional" : (field.ptr ? "Ptr" : "")) + ConvertTypeFieldName(*field.type) + "(buffer, " + offset + ", " + std::to_string(field.N) + ")";
     else if (field.vector || field.list)
-        return "New" + modelType + "ModelVector" + std::string(field.optional ? "Optional" : "") + ConvertTypeFieldName(*field.type) + "(buffer, " + offset + ")";
+        return "New" + modelType + "ModelVector" + std::string(field.optional ? "Optional" : (field.ptr ? "Ptr" : "")) + ConvertTypeFieldName(*field.type) + "(buffer, " + offset + ")";
     else if (field.set)
-        return "New" + modelType + "ModelSet" + std::string(field.optional ? "Optional" : "") + ConvertTypeFieldName(*field.type) + "(buffer, " + offset + ")";
+        return "New" + modelType + "ModelSet" + std::string(field.optional ? "Optional" : (field.ptr ? "Ptr" : "")) + ConvertTypeFieldName(*field.type) + "(buffer, " + offset + ")";
     else if (field.map || field.hash)
-        return "New" + modelType + "ModelMap" + ConvertTypeFieldName(*field.key) + std::string(field.optional ? "Optional" : "") + ConvertTypeFieldName(*field.type) + "(buffer, " + offset + ")";
+        return "New" + modelType + "ModelMap" + ConvertTypeFieldName(*field.key) + std::string(field.optional ? "Optional" : (field.ptr ? "Ptr" : "")) + ConvertTypeFieldName(*field.type) + "(buffer, " + offset + ")";
     else if (field.optional)
         return "New" + modelType + "ModelOptional" + ConvertTypeFieldName(*field.type) + "(buffer, " + offset + ")";
+    else if (field.ptr)
+        return "New" + modelType + "ModelPtr" + ConvertTypeFieldName(*field.type) + "(buffer, " + offset + ")";
 
     return ConvertTypeFieldInitialization(*field.type, field.optional, offset, final);
 }
 
-std::string GeneratorGo::ConvertConstant(const std::string& type, const std::string& value, bool optional)
+std::string GeneratorGo::ConvertConstant(const std::string& type, const std::string& value, bool optional, bool ptr)
 {
     if (optional)
         return ConvertOptional(type, value);
+
+    if (ptr)
+        return ConvertPtr(type, value);
 
     if (value == "true")
         return "true";
@@ -8569,9 +9068,9 @@ std::string GeneratorGo::ConvertConstant(const std::string& type, const std::str
     return result;
 }
 
-std::string GeneratorGo::ConvertDefault(const std::string& type, bool optional)
+std::string GeneratorGo::ConvertDefault(const std::string& type, bool optional, bool ptr)
 {
-    if (optional)
+    if (optional || ptr)
         return "nil";
 
     if (type == "bool")
@@ -8601,7 +9100,7 @@ std::string GeneratorGo::ConvertDefault(const std::string& type, bool optional)
 std::string GeneratorGo::ConvertDefault(const StructField& field)
 {
     if (field.value)
-        return ConvertConstant(*field.type, *field.value, field.optional);
+        return ConvertConstant(*field.type, *field.value, field.optional, field.ptr);
 
     if (field.array)
         return ConvertTypeName(field) + "{}";
@@ -8612,49 +9111,49 @@ std::string GeneratorGo::ConvertDefault(const StructField& field)
     else if (field.map || field.hash)
         return "make(" + ConvertTypeName(field) + ")";
 
-    return ConvertDefault(*field.type, field.optional);
+    return ConvertDefault(*field.type, field.optional, field.ptr);
 }
 
-void GeneratorGo::WriteOutputStreamType(const std::string& type, const std::string& name, bool optional)
+void GeneratorGo::WriteOutputStreamType(const std::string& type, const std::string& name, bool optional, bool ptr)
 {
     if (type == "bool")
-        Write("sb.WriteString(strconv.FormatBool(" + std::string(optional ? "*" : "") + name + "))");
+        Write("sb.WriteString(strconv.FormatBool(" + std::string((optional || ptr) ? "*" : "") + name + "))");
     else if (type == "byte")
-        Write("sb.WriteString(strconv.FormatUint(uint64(" + std::string(optional ? "*" : "") + name + "), 10))");
+        Write("sb.WriteString(strconv.FormatUint(uint64(" + std::string((optional || ptr) ? "*" : "") + name + "), 10))");
     else if ((type == "int8") || (type == "int16") || (type == "int32") || (type == "int64"))
-        Write("sb.WriteString(strconv.FormatInt(int64(" + std::string(optional ? "*" : "") + name + "), 10))");
+        Write("sb.WriteString(strconv.FormatInt(int64(" + std::string((optional || ptr) ? "*" : "") + name + "), 10))");
     else if ((type == "uint8") || (type == "uint16") || (type == "uint32") || (type == "uint64"))
-        Write("sb.WriteString(strconv.FormatUint(uint64(" + std::string(optional ? "*" : "") + name + "), 10))");
+        Write("sb.WriteString(strconv.FormatUint(uint64(" + std::string((optional || ptr) ? "*" : "") + name + "), 10))");
     else if ((type == "char") || (type == "wchar"))
-        Write("sb.WriteString(\"'\" + string(" + std::string(optional ? "*" : "") + name + ") + \"'\")");
+        Write("sb.WriteString(\"'\" + string(" + std::string((optional || ptr) ? "*" : "") + name + ") + \"'\")");
     else if (type == "float")
-        Write("sb.WriteString(strconv.FormatFloat(float64(" + std::string(optional ? "*" : "") + name + "), 'g', -1, 32))");
+        Write("sb.WriteString(strconv.FormatFloat(float64(" + std::string((optional || ptr) ? "*" : "") + name + "), 'g', -1, 32))");
     else if (type == "double")
-        Write("sb.WriteString(strconv.FormatFloat(float64(" + std::string(optional ? "*" : "") + name + "), 'g', -1, 64))");
+        Write("sb.WriteString(strconv.FormatFloat(float64(" + std::string((optional || ptr) ? "*" : "") + name + "), 'g', -1, 64))");
     else if (type == "bytes")
-        Write("sb.WriteString(\"bytes[\" + strconv.FormatInt(int64(len(" + std::string(optional ? "*" : "") + name + ")), 10) + \"]\")");
+        Write("sb.WriteString(\"bytes[\" + strconv.FormatInt(int64(len(" + std::string((optional || ptr) ? "*" : "") + name + ")), 10) + \"]\")");
     else if (type == "string")
-        Write("sb.WriteString(\"\\\"\" + " + std::string(optional ? "*" : "") + name + " + \"\\\"\")");
+        Write("sb.WriteString(\"\\\"\" + " + std::string((optional || ptr) ? "*" : "") + name + " + \"\\\"\")");
     else if (type == "decimal")
-        Write("sb.WriteString(" + std::string(optional ? "(*" : "") + name + std::string(optional ? ")" : "") + ".String())");
+        Write("sb.WriteString(" + std::string((optional || ptr) ? "(*" : "") + name + std::string((optional || ptr) ? ")" : "") + ".String())");
     else if (type == "timestamp")
-        Write("sb.WriteString(strconv.FormatInt(" + std::string(optional ? "(*" : "") + name + std::string(optional ? ")" : "") +  + ".UnixNano(), 10))");
+        Write("sb.WriteString(strconv.FormatInt(" + std::string((optional || ptr) ? "(*" : "") + name + std::string((optional || ptr) ? ")" : "") +  + ".UnixNano(), 10))");
     else if (type == "uuid")
-        Write("sb.WriteString(\"\\\"\" + " + std::string(optional ? "(*" : "") + name + std::string(optional ? ")" : "") + ".String() + \"\\\"\")");
+        Write("sb.WriteString(\"\\\"\" + " + std::string((optional || ptr) ? "(*" : "") + name + std::string((optional || ptr) ? ")" : "") + ".String() + \"\\\"\")");
     else
         Write("sb.WriteString(" + name + ".String())");
 }
 
-void GeneratorGo::WriteOutputStreamValue(const std::string& type, const std::string& name, bool optional, bool separate)
+void GeneratorGo::WriteOutputStreamValue(const std::string& type, const std::string& name, bool optional, bool ptr, bool separate)
 {
-    if (optional || (type == "bytes"))
+    if (optional || ptr || (type == "bytes"))
     {
         WriteLineIndent("if " + name + " != nil { ");
         Indent(1);
         if (separate)
             WriteLineIndent("if first { sb.WriteString(\"\") } else { sb.WriteString(\",\") }");
         WriteIndent();
-        WriteOutputStreamType(type, name, optional);
+        WriteOutputStreamType(type, name, optional, ptr);
         WriteLine();
         Indent(-1);
         WriteLineIndent("} else {");
@@ -8670,7 +9169,7 @@ void GeneratorGo::WriteOutputStreamValue(const std::string& type, const std::str
         if (separate)
             WriteLineIndent("if first { sb.WriteString(\"\") } else { sb.WriteString(\",\") }");
         WriteIndent();
-        WriteOutputStreamType(type, name, optional);
+        WriteOutputStreamType(type, name, optional, ptr);
         WriteLine();
     }
 }

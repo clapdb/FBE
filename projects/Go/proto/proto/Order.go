@@ -59,8 +59,8 @@ func NewOrder() *Order {
 }
 
 // Create a new Order struct from the given field values
-func NewOrderFromFieldValues(Id int32, Symbol string, Side OrderSide, Type OrderType, Price float64, Volume float64) *Order {
-    return &Order{Id, Symbol, Side, Type, Price, Volume}
+func NewOrderFromFieldValues(idV int32, symbolV string, sideV OrderSide, typeV OrderType, priceV float64, volumeV float64) *Order {
+    return &Order{idV, symbolV, sideV, typeV, priceV, volumeV}
 }
 
 // Create a new Order struct from JSON
@@ -100,6 +100,11 @@ func (s *Order) Key() OrderKey {
 
 // Convert struct to optional
 func (s *Order) Optional() *Order {
+    return s
+}
+
+// Convert struct to optional
+func (s *Order) Ptr() *Order {
     return s
 }
 

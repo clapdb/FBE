@@ -52,8 +52,8 @@ func NewExtra() *Extra {
 }
 
 // Create a new Extra struct from the given field values
-func NewExtraFromFieldValues(Name string, Detail string, Sex Sex, Flag MyFLags) *Extra {
-    return &Extra{Name, Detail, Sex, Flag}
+func NewExtraFromFieldValues(nameV string, detailV string, sexV Sex, flagV MyFLags) *Extra {
+    return &Extra{nameV, detailV, sexV, flagV}
 }
 
 // Create a new Extra struct from JSON
@@ -92,6 +92,11 @@ func (s *Extra) Key() ExtraKey {
 
 // Convert struct to optional
 func (s *Extra) Optional() *Extra {
+    return s
+}
+
+// Convert struct to optional
+func (s *Extra) Ptr() *Extra {
     return s
 }
 

@@ -30,7 +30,6 @@ type FieldModelVectorOptionalEnumSimple struct {
 // Create a new OptionalEnumSimple vector field model
 func NewFieldModelVectorOptionalEnumSimple(buffer *fbe.Buffer, offset int) *FieldModelVectorOptionalEnumSimple {
     fbeResult := FieldModelVectorOptionalEnumSimple{buffer: buffer, offset: offset}
-    fbeResult.model = NewFieldModelOptionalEnumSimple(buffer, offset)
     return &fbeResult
 }
 
@@ -50,7 +49,14 @@ func (fm *FieldModelVectorOptionalEnumSimple) FBEExtra() int {
 
     fbeVectorSize := int(fbe.ReadUInt32(fm.buffer.Data(), fm.buffer.Offset() + fbeVectorOffset))
 
+    if fbeVectorSize == 0 {
+        return 0
+    }
+
     fbeResult := 0
+    if fm.model == nil {
+        fm.model = NewFieldModelOptionalEnumSimple(fm.buffer, fm.offset)
+    }
     fm.model.SetFBEOffset(fbeVectorOffset + 4)
     for i := fbeVectorSize; i > 0; i-- {
         fbeResult += fm.model.FBESize() + fm.model.FBEExtra()
@@ -110,6 +116,10 @@ func (fm *FieldModelVectorOptionalEnumSimple) GetItem(index int) (*FieldModelOpt
         return nil, errors.New("index is out of bounds")
     }
 
+    if fm.model == nil {
+        fm.model = NewFieldModelOptionalEnumSimple(fm.buffer, fm.offset)
+    }
+
     fm.model.SetFBEOffset(fbeVectorOffset + 4)
     fm.model.FBEShift(index * fm.model.FBESize())
     return fm.model, nil
@@ -117,6 +127,9 @@ func (fm *FieldModelVectorOptionalEnumSimple) GetItem(index int) (*FieldModelOpt
 
 // Resize the vector and get its first model
 func (fm *FieldModelVectorOptionalEnumSimple) Resize(size int) (*FieldModelOptionalEnumSimple, error) {
+    if fm.model == nil {
+        fm.model = NewFieldModelOptionalEnumSimple(fm.buffer, fm.offset)
+    }
     fbeVectorSize := size * fm.model.FBESize()
     fbeVectorOffset := fm.buffer.Allocate(4 + fbeVectorSize) - fm.buffer.Offset()
     if (fbeVectorOffset == 0) || ((fm.buffer.Offset() + fbeVectorOffset + 4) > fm.buffer.Size()) {
@@ -147,7 +160,13 @@ func (fm *FieldModelVectorOptionalEnumSimple) Verify() bool {
     }
 
     fbeVectorSize := int(fbe.ReadUInt32(fm.buffer.Data(), fm.buffer.Offset() + fbeVectorOffset))
+    if fbeVectorSize == 0 {
+        return true
+    }
 
+    if fm.model == nil {
+        fm.model = NewFieldModelOptionalEnumSimple(fm.buffer, fm.offset)
+    }
     fm.model.SetFBEOffset(fbeVectorOffset + 4)
     for i := fbeVectorSize; i > 0; i-- {
         if !fm.model.Verify() {

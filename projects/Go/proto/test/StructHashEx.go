@@ -50,8 +50,8 @@ func NewStructHashEx() *StructHashEx {
 }
 
 // Create a new StructHashEx struct from the given field values
-func NewStructHashExFromFieldValues(F1 map[StructSimpleKey]struct{Key StructSimple; Value StructNested}, F2 map[StructSimpleKey]struct{Key StructSimple; Value *StructNested}) *StructHashEx {
-    return &StructHashEx{F1, F2}
+func NewStructHashExFromFieldValues(f1V map[StructSimpleKey]struct{Key StructSimple; Value StructNested}, f2V map[StructSimpleKey]struct{Key StructSimple; Value *StructNested}) *StructHashEx {
+    return &StructHashEx{f1V, f2V}
 }
 
 // Create a new StructHashEx struct from JSON
@@ -90,6 +90,11 @@ func (s *StructHashEx) Key() StructHashExKey {
 
 // Convert struct to optional
 func (s *StructHashEx) Optional() *StructHashEx {
+    return s
+}
+
+// Convert struct to optional
+func (s *StructHashEx) Ptr() *StructHashEx {
     return s
 }
 

@@ -182,8 +182,8 @@ func NewStructOptional() *StructOptional {
 }
 
 // Create a new StructOptional struct from the given field values
-func NewStructOptionalFromFieldValues(Parent *StructSimple, F100 *bool, F101 *bool, F102 *bool, F103 *byte, F104 *byte, F105 *byte, F106 *rune, F107 *rune, F108 *rune, F109 *rune, F110 *rune, F111 *rune, F112 *int8, F113 *int8, F114 *int8, F115 *uint8, F116 *uint8, F117 *uint8, F118 *int16, F119 *int16, F120 *int16, F121 *uint16, F122 *uint16, F123 *uint16, F124 *int32, F125 *int32, F126 *int32, F127 *uint32, F128 *uint32, F129 *uint32, F130 *int64, F131 *int64, F132 *int64, F133 *uint64, F134 *uint64, F135 *uint64, F136 *float32, F137 *float32, F138 *float32, F139 *float64, F140 *float64, F141 *float64, F142 *fbe.Decimal, F143 *fbe.Decimal, F144 *fbe.Decimal, F145 *string, F146 *string, F147 *string, F148 *fbe.Timestamp, F149 *fbe.Timestamp, F150 *fbe.Timestamp, F151 *fbe.UUID, F152 *fbe.UUID, F153 *fbe.UUID, F154 *proto.OrderSide, F155 *proto.OrderSide, F156 *proto.OrderType, F157 *proto.OrderType, F158 *proto.Order, F159 *proto.Order, F160 *proto.Balance, F161 *proto.Balance, F162 *proto.State, F163 *proto.State, F164 *proto.Account, F165 *proto.Account) *StructOptional {
-    return &StructOptional{Parent, F100, F101, F102, F103, F104, F105, F106, F107, F108, F109, F110, F111, F112, F113, F114, F115, F116, F117, F118, F119, F120, F121, F122, F123, F124, F125, F126, F127, F128, F129, F130, F131, F132, F133, F134, F135, F136, F137, F138, F139, F140, F141, F142, F143, F144, F145, F146, F147, F148, F149, F150, F151, F152, F153, F154, F155, F156, F157, F158, F159, F160, F161, F162, F163, F164, F165}
+func NewStructOptionalFromFieldValues(Parent *StructSimple, f100V *bool, f101V *bool, f102V *bool, f103V *byte, f104V *byte, f105V *byte, f106V *rune, f107V *rune, f108V *rune, f109V *rune, f110V *rune, f111V *rune, f112V *int8, f113V *int8, f114V *int8, f115V *uint8, f116V *uint8, f117V *uint8, f118V *int16, f119V *int16, f120V *int16, f121V *uint16, f122V *uint16, f123V *uint16, f124V *int32, f125V *int32, f126V *int32, f127V *uint32, f128V *uint32, f129V *uint32, f130V *int64, f131V *int64, f132V *int64, f133V *uint64, f134V *uint64, f135V *uint64, f136V *float32, f137V *float32, f138V *float32, f139V *float64, f140V *float64, f141V *float64, f142V *fbe.Decimal, f143V *fbe.Decimal, f144V *fbe.Decimal, f145V *string, f146V *string, f147V *string, f148V *fbe.Timestamp, f149V *fbe.Timestamp, f150V *fbe.Timestamp, f151V *fbe.UUID, f152V *fbe.UUID, f153V *fbe.UUID, f154V *proto.OrderSide, f155V *proto.OrderSide, f156V *proto.OrderType, f157V *proto.OrderType, f158V *proto.Order, f159V *proto.Order, f160V *proto.Balance, f161V *proto.Balance, f162V *proto.State, f163V *proto.State, f164V *proto.Account, f165V *proto.Account) *StructOptional {
+    return &StructOptional{Parent, f100V, f101V, f102V, f103V, f104V, f105V, f106V, f107V, f108V, f109V, f110V, f111V, f112V, f113V, f114V, f115V, f116V, f117V, f118V, f119V, f120V, f121V, f122V, f123V, f124V, f125V, f126V, f127V, f128V, f129V, f130V, f131V, f132V, f133V, f134V, f135V, f136V, f137V, f138V, f139V, f140V, f141V, f142V, f143V, f144V, f145V, f146V, f147V, f148V, f149V, f150V, f151V, f152V, f153V, f154V, f155V, f156V, f157V, f158V, f159V, f160V, f161V, f162V, f163V, f164V, f165V}
 }
 
 // Create a new StructOptional struct from JSON
@@ -223,6 +223,11 @@ func (s *StructOptional) Key() StructOptionalKey {
 
 // Convert struct to optional
 func (s *StructOptional) Optional() *StructOptional {
+    return s
+}
+
+// Convert struct to optional
+func (s *StructOptional) Ptr() *StructOptional {
     return s
 }
 

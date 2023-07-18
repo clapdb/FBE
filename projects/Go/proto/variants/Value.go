@@ -46,8 +46,8 @@ func NewValue() *Value {
 }
 
 // Create a new Value struct from the given field values
-func NewValueFromFieldValues(V V) *Value {
-    return &Value{V}
+func NewValueFromFieldValues(vV V) *Value {
+    return &Value{vV}
 }
 
 // Create a new Value struct from JSON
@@ -86,6 +86,11 @@ func (s *Value) Key() ValueKey {
 
 // Convert struct to optional
 func (s *Value) Optional() *Value {
+    return s
+}
+
+// Convert struct to optional
+func (s *Value) Ptr() *Value {
     return s
 }
 
