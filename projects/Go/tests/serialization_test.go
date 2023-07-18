@@ -2,6 +2,8 @@ package tests
 
 import (
 	"fbeproj/proto/fbe"
+	"fbeproj/proto/osa"
+	"fbeproj/proto/pkg"
 	"fbeproj/proto/proto"
 	"fbeproj/proto/simple"
 	"fbeproj/proto/test"
@@ -1432,4 +1434,35 @@ func TestSerializationPtrSelfReference(t *testing.T) {
 	assert.EqualValues(t, len(struct1Copy.Sm[6].Spv), 1)
 	assert.EqualValues(t, struct1Copy.Sm[6].Spv[0].Info, "simple8")
 	assert.EqualValues(t, struct1Copy.Sm[6].Spv[0].Depth, 8)
+}
+
+func TestSerializationImport(t *testing.T) {
+	extra := osa.NewExtraFromFieldValues("extra", "detail", osa.Sex_male, osa.MyFLags_flag1);
+
+	pkgInfo := pkg.NewInfoFromFieldValues("pkgInfo", osa.Sex_male, osa.MyFLags_flag1, *extra)
+
+	// Serialize the struct to the FBE stream
+	writer := pkg.NewInfoModel(fbe.NewEmptyBuffer())
+	assert.EqualValues(t, writer.Model().FBEType(), 1)
+	assert.EqualValues(t, writer.Model().FBEOffset(), 4)
+	serialized, err := writer.Serialize(pkgInfo)
+	assert.Nil(t, err)
+	assert.EqualValues(t, serialized, writer.Buffer().Size())
+	assert.True(t, writer.Verify())
+	writer.Next(serialized)
+	assert.EqualValues(t, writer.Model().FBEOffset(), 4+writer.Buffer().Size())
+
+	// Deserialize the struct from the FBE stream
+	reader := pkg.NewInfoModel(writer.Buffer())
+	assert.EqualValues(t, reader.Model().FBEType(), 1)
+	assert.EqualValues(t, reader.Model().FBEOffset(), 4)
+	assert.True(t, reader.Verify())
+	pkgInfoCopy, deserialized, err := reader.Deserialize()
+	assert.Nil(t, err)
+	assert.EqualValues(t, deserialized, reader.Buffer().Size())
+	reader.Next(deserialized)
+	assert.EqualValues(t, reader.Model().FBEOffset(), 4+reader.Buffer().Size())
+
+	assert.EqualValues(t, pkgInfo, pkgInfoCopy)
+	assert.EqualValues(t,"extra", pkgInfoCopy.Extra.Name)
 }
