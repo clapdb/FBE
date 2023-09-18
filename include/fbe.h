@@ -312,7 +312,7 @@ struct StructField
     bool map{false};
     bool hash{false};
     bool ptr{false};
-    bool variant{false};
+    bool variant{false}; // TODO(liuqi): unused?
     int N{0};
 
     void SetArraySize(int size);

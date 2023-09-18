@@ -7989,13 +7989,6 @@ std::string GeneratorCpp::ConvertLoggingStreamValue(const std::string& type, con
         return "record." + comma + ConvertLoggingStreamType(type, name, false) + ";";
 }
 
-bool GeneratorCpp::IsVariantType(const std::shared_ptr<Package>& p, const std::string& type) {
-    auto& variants = p->body->variants;
-    return std::find_if(variants.begin(), variants.end(), [&type](const auto& v) -> bool {
-        return *v->name == type;
-    }) != variants.end();
-}
-
 bool GeneratorCpp::IsContainerType(const StructField &field) {
     return (field.array || field.vector || field.list || field.set || field.map || field.hash);
 }

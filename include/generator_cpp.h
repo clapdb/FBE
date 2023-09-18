@@ -242,7 +242,6 @@ private:
     bool IsContainerType(const StructField& field);
     bool IsContainerType(const VariantValue& variant);
     bool IsStructType(const std::shared_ptr<Package>& p, const std::string& field_type);
-    bool IsVariantType(const std::shared_ptr<Package>& p, const std::string& type);
     bool IsCurrentPackageType(const std::string& field_type, const std::string& delimiter = ".");
 
     std::string ConvertVariantTypeName(const std::string& package, const VariantValue& variant);

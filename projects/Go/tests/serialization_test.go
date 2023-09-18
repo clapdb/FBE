@@ -7,6 +7,7 @@ import (
 	"fbeproj/proto/proto"
 	"fbeproj/proto/simple"
 	"fbeproj/proto/test"
+	"fbeproj/proto/variants_ptr"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -1437,7 +1438,7 @@ func TestSerializationPtrSelfReference(t *testing.T) {
 }
 
 func TestSerializationImport(t *testing.T) {
-	extra := osa.NewExtraFromFieldValues("extra", "detail", osa.Sex_male, osa.MyFLags_flag1);
+	extra := osa.NewExtraFromFieldValues("extra", "detail", osa.Sex_male, osa.MyFLags_flag1)
 
 	pkgInfo := pkg.NewInfoFromFieldValues("pkgInfo", osa.Sex_male, osa.MyFLags_flag1, *extra)
 
@@ -1464,5 +1465,96 @@ func TestSerializationImport(t *testing.T) {
 	assert.EqualValues(t, reader.Model().FBEOffset(), 4+reader.Buffer().Size())
 
 	assert.EqualValues(t, pkgInfo, pkgInfoCopy)
-	assert.EqualValues(t,"extra", pkgInfoCopy.Extra.Name)
+	assert.EqualValues(t, "extra", pkgInfoCopy.Extra.Name)
+}
+
+// Test Expr
+func TestSerializationVariantString(t *testing.T) {
+	value := variants_ptr.NewExprContainerFromFieldValues("test variant string")
+
+	// Serialize the struct to the FBE stream
+	writer := variants_ptr.NewExprContainerModel(fbe.NewEmptyBuffer())
+	assert.EqualValues(t, writer.Model().FBEType(), 2)
+	assert.EqualValues(t, writer.Model().FBEOffset(), 4)
+	serialized, err := writer.Serialize(value)
+	assert.Nil(t, err)
+	assert.EqualValues(t, serialized, writer.Buffer().Size())
+	assert.True(t, writer.Verify())
+	writer.Next(serialized)
+	assert.EqualValues(t, writer.Model().FBEOffset(), 4+writer.Buffer().Size())
+
+	// Deserialize the struct from the FBE stream
+	reader := variants_ptr.NewExprContainerModel(writer.Buffer())
+	assert.EqualValues(t, reader.Model().FBEType(), 2)
+	assert.EqualValues(t, reader.Model().FBEOffset(), 4)
+	assert.True(t, reader.Verify())
+	valueCopy, deserialized, err := reader.Deserialize()
+	assert.Nil(t, err)
+	assert.EqualValues(t, deserialized, reader.Buffer().Size())
+	reader.Next(deserialized)
+	assert.EqualValues(t, reader.Model().FBEOffset(), 4+reader.Buffer().Size())
+
+	v, ok := (valueCopy.E).(string)
+	assert.True(t, ok)
+	assert.Equal(t, "test variant string", v)
+}
+
+func TestSerializationVariantBool(t *testing.T) {
+	value := variants_ptr.NewExprContainerFromFieldValues(true)
+
+	// Serialize the struct to the FBE stream
+	writer := variants_ptr.NewExprContainerModel(fbe.NewEmptyBuffer())
+	assert.EqualValues(t, writer.Model().FBEType(), 2)
+	assert.EqualValues(t, writer.Model().FBEOffset(), 4)
+	serialized, err := writer.Serialize(value)
+	assert.Nil(t, err)
+	assert.EqualValues(t, serialized, writer.Buffer().Size())
+	assert.True(t, writer.Verify())
+	writer.Next(serialized)
+	assert.EqualValues(t, writer.Model().FBEOffset(), 4+writer.Buffer().Size())
+
+	// Deserialize the struct from the FBE stream
+	reader := variants_ptr.NewExprContainerModel(writer.Buffer())
+	assert.EqualValues(t, reader.Model().FBEType(), 2)
+	assert.EqualValues(t, reader.Model().FBEOffset(), 4)
+	assert.True(t, reader.Verify())
+	valueCopy, deserialized, err := reader.Deserialize()
+	assert.Nil(t, err)
+	assert.EqualValues(t, deserialized, reader.Buffer().Size())
+	reader.Next(deserialized)
+	assert.EqualValues(t, reader.Model().FBEOffset(), 4+reader.Buffer().Size())
+
+	v, ok := (valueCopy.E).(bool)
+	assert.True(t, ok)
+	assert.Equal(t, true, v)
+}
+
+func TestSerializationVariantInt32(t *testing.T) {
+	value := variants_ptr.NewExprContainerFromFieldValues(42)
+
+	// Serialize the struct to the FBE stream
+	writer := variants_ptr.NewExprContainerModel(fbe.NewEmptyBuffer())
+	assert.EqualValues(t, writer.Model().FBEType(), 2)
+	assert.EqualValues(t, writer.Model().FBEOffset(), 4)
+	serialized, err := writer.Serialize(value)
+	assert.Nil(t, err)
+	assert.EqualValues(t, serialized, writer.Buffer().Size())
+	assert.True(t, writer.Verify())
+	writer.Next(serialized)
+	assert.EqualValues(t, writer.Model().FBEOffset(), 4+writer.Buffer().Size())
+
+	// Deserialize the struct from the FBE stream
+	reader := variants_ptr.NewExprContainerModel(writer.Buffer())
+	assert.EqualValues(t, reader.Model().FBEType(), 2)
+	assert.EqualValues(t, reader.Model().FBEOffset(), 4)
+	assert.True(t, reader.Verify())
+	valueCopy, deserialized, err := reader.Deserialize()
+	assert.Nil(t, err)
+	assert.EqualValues(t, deserialized, reader.Buffer().Size())
+	reader.Next(deserialized)
+	assert.EqualValues(t, reader.Model().FBEOffset(), 4+reader.Buffer().Size())
+
+	v, ok := (valueCopy.E).(int32)
+	assert.True(t, ok)
+	assert.Equal(t, 42, v)
 }

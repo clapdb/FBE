@@ -76,4 +76,11 @@ void Generator::Store(const fs::path& filename)
 #endif
 }
 
+bool Generator::IsVariantType(const std::shared_ptr<Package>& p, const std::string& type) {
+    auto& variants = p->body->variants;
+    return std::find_if(variants.begin(), variants.end(), [&type](const auto& v) -> bool {
+        return *v->name == type;
+    }) != variants.end();
+}
+
 } // namespace FBE
