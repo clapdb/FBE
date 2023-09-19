@@ -67,6 +67,7 @@ private:
     void GenerateFBEFieldModelBytes(const std::string& package);
     void GenerateFBEFieldModelString(const std::string& package);
     void GenerateFBEFieldModelOptional(const std::shared_ptr<Package>& p, const std::string& name, const std::string& model, const StructField& field, const fs::path& path);
+    void GenerateFBEFieldModelOptional(const std::shared_ptr<Package>& p, const std::string& name, const std::string& model, const VariantType& variant, const fs::path& path);
     void GenerateFBEFieldModelPtr(const std::shared_ptr<Package>& p, const std::string& name, const std::string& model, const StructField& field, const fs::path& path);
     void GenerateFBEFieldModelArray(const std::shared_ptr<Package>& p, const std::string& name, const std::string& model, const StructField& field, const fs::path& path);
     void GenerateFBEFieldModelVector(const std::shared_ptr<Package>& p, const std::string& name, const std::string& model, const StructField& field, const fs::path& path);
@@ -136,6 +137,7 @@ private:
     std::string ConvertConstant(const std::string& type, const std::string& value, bool optional, bool ptr);
     std::string ConvertDefault(const std::string& type, bool optional, bool ptr);
     std::string ConvertDefault(const StructField& field);
+    std::string ConvertDefault(const VariantValue& field);
 
     void WriteOutputStreamType(const std::string& type, const std::string& name, bool optional, bool ptr);
     void WriteOutputStreamValue(const std::string& type, const std::string& name, bool optional, bool ptr, bool separate);

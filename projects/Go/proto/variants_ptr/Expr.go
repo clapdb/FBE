@@ -29,8 +29,13 @@ type Expr interface{}
 // int32
 
 // Create a new Expr variant
-func NewExpr() *Expr {
+func NewExpr() Expr {
     return nil
+}
+
+// Create a new Expr variant from the given value
+func NewExprFromValue(value Expr) Expr {
+    return value
 }
 
 // Get the variant index

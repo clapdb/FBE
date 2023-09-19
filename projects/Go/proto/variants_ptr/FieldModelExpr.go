@@ -80,7 +80,7 @@ func (fm *FieldModelExpr) Verify() bool {
 // Get the struct value
 func (fm *FieldModelExpr) Get() (*Expr, error) {
     fbeResult := NewExpr()
-    return fbeResult, fm.GetValue(fbeResult)
+    return &fbeResult, fm.GetValue(&fbeResult)
 }
 
 // Get the struct value by the given pointer

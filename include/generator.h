@@ -49,6 +49,7 @@ protected:
 
     // helper functions
     bool IsVariantType(const std::shared_ptr<Package>& p, const std::string& type);
+    std::shared_ptr<VariantType> GetVariantType(const std::shared_ptr<Package>& p, const std::string& type);
 
     static std::string EndLine();
 };

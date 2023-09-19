@@ -1470,7 +1470,8 @@ func TestSerializationImport(t *testing.T) {
 
 // Test Expr
 func TestSerializationVariantString(t *testing.T) {
-	value := variants_ptr.NewExprContainerFromFieldValues("test variant string")
+	nestedStringVariant := variants_ptr.NewExprFromValue("nested variant string");
+	value := variants_ptr.NewExprContainerFromFieldValues("test variant string", &nestedStringVariant, nil)
 
 	// Serialize the struct to the FBE stream
 	writer := variants_ptr.NewExprContainerModel(fbe.NewEmptyBuffer())
@@ -1497,10 +1498,16 @@ func TestSerializationVariantString(t *testing.T) {
 	v, ok := (valueCopy.E).(string)
 	assert.True(t, ok)
 	assert.Equal(t, "test variant string", v)
+	
+	assert.NotNil(t, valueCopy.Eo)
+	nv, ok := (*valueCopy.Eo).(string)
+	assert.True(t, ok)
+	assert.Equal(t, "nested variant string", nv)
 }
 
 func TestSerializationVariantBool(t *testing.T) {
-	value := variants_ptr.NewExprContainerFromFieldValues(true)
+	nestedBoolVariant := variants_ptr.NewExprFromValue(true);
+	value := variants_ptr.NewExprContainerFromFieldValues(true, &nestedBoolVariant, nil)
 
 	// Serialize the struct to the FBE stream
 	writer := variants_ptr.NewExprContainerModel(fbe.NewEmptyBuffer())
@@ -1527,10 +1534,16 @@ func TestSerializationVariantBool(t *testing.T) {
 	v, ok := (valueCopy.E).(bool)
 	assert.True(t, ok)
 	assert.Equal(t, true, v)
+
+	assert.NotNil(t, valueCopy.Eo)
+	nv, ok := (*valueCopy.Eo).(bool)
+	assert.True(t, ok)
+	assert.Equal(t, true, nv)
 }
 
 func TestSerializationVariantInt32(t *testing.T) {
-	value := variants_ptr.NewExprContainerFromFieldValues(42)
+	nestedInt32Variant := variants_ptr.NewExprFromValue(24);
+	value := variants_ptr.NewExprContainerFromFieldValues(42, &nestedInt32Variant, nil)
 
 	// Serialize the struct to the FBE stream
 	writer := variants_ptr.NewExprContainerModel(fbe.NewEmptyBuffer())
@@ -1557,4 +1570,9 @@ func TestSerializationVariantInt32(t *testing.T) {
 	v, ok := (valueCopy.E).(int32)
 	assert.True(t, ok)
 	assert.Equal(t, 42, v)
+
+	assert.NotNil(t, valueCopy.Eo)
+	nv, ok := (*valueCopy.Eo).(int32)
+	assert.True(t, ok)
+	assert.Equal(t, 24, nv)
 }

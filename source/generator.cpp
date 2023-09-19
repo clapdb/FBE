@@ -83,4 +83,14 @@ bool Generator::IsVariantType(const std::shared_ptr<Package>& p, const std::stri
     }) != variants.end();
 }
 
+std::shared_ptr<VariantType> Generator::GetVariantType(const std::shared_ptr<Package>& p, const std::string& type) {
+    auto& variants = p->body->variants;
+    if (auto iter =  std::find_if(variants.begin(), variants.end(), [&type](const auto& v) -> bool {
+        return *v->name == type;
+    });iter != variants.end()) {
+        return *iter;
+    }
+    return nullptr;
+}
+
 } // namespace FBE
