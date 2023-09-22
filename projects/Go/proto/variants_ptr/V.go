@@ -21,24 +21,26 @@ var _ = fbe.Version
 var _ = fmt.Print
 var _ = strconv.FormatInt
 
-// type Expr interface{}
-type Expr interface{}
-// List of Expr types
-// bool
-// string
+// type V interface{}
+type V interface{}
+// List of V types
 // int32
+// string
+// float64
+// Simple
+// *Simple
 
-// Create a new Expr variant
-func NewExpr() Expr {
+// Create a new V variant
+func NewV() V {
     return true
 }
 
-// Create a new Expr variant from the given value
-func NewExprFromValue(value Expr) Expr {
+// Create a new V variant from the given value
+func NewVFromValue(value V) V {
     return value
 }
 
 // Get the variant index
-func GetExprIndex() int {
+func GetVIndex() int {
     return 0
 }

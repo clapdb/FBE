@@ -37,6 +37,7 @@ func (k *ExprContainerKey) String() string {
 type ExprContainer struct {
     E Expr `json:"e"`
     Eo *Expr `json:"eo"`
+    So *Simple `json:"so"`
 }
 
 // Create a new ExprContainer struct
@@ -44,12 +45,13 @@ func NewExprContainer() *ExprContainer {
     return &ExprContainer{
         E: NewExpr(),
         Eo: nil,
+        So: nil,
     }
 }
 
 // Create a new ExprContainer struct from the given field values
-func NewExprContainerFromFieldValues(eV Expr, eoV *Expr) *ExprContainer {
-    return &ExprContainer{eV, eoV}
+func NewExprContainerFromFieldValues(eV Expr, eoV *Expr, soV *Simple) *ExprContainer {
+    return &ExprContainer{eV, eoV, soV}
 }
 
 // Create a new ExprContainer struct from JSON
@@ -107,6 +109,12 @@ func (s *ExprContainer) String() string {
     sb.WriteString("*variant Expr*")
     sb.WriteString("eo=")
     sb.WriteString("*variant Expr*")
+    sb.WriteString("so=")
+    if s.So != nil { 
+        sb.WriteString(s.So.String())
+    } else {
+        sb.WriteString("null")
+    }
     sb.WriteString(")")
     return sb.String()
 }

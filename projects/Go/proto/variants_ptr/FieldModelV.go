@@ -14,31 +14,31 @@ import "fbeproj/proto/fbe"
 var _ = errors.New
 var _ = fbe.Version
 
-// FieldModelExpr variant field model
-type FieldModelExpr struct {
+// FieldModelV variant field model
+type FieldModelV struct {
     // Field model buffer
     buffer *fbe.Buffer
     // Field model buffer offset
     offset int
 }
 
-// Create a new FieldModelExpr variant field model
-func NewFieldModelExpr(buffer *fbe.Buffer, offset int) *FieldModelExpr {
-    return &FieldModelExpr{buffer: buffer, offset: offset}
+// Create a new FieldModelV variant field model
+func NewFieldModelV(buffer *fbe.Buffer, offset int) *FieldModelV {
+    return &FieldModelV{buffer: buffer, offset: offset}
 }
 
 // Get the field size
-func (fm *FieldModelExpr) FBESize() int { return 4 }
+func (fm *FieldModelV) FBESize() int { return 4 }
 
 // Get the field body size
-func (fm *FieldModelExpr) FBEBody() int {
+func (fm *FieldModelV) FBEBody() int {
     // variant type's fbe_size not included
     // only variant_index included
     return 4
 }
 
 // Get the field extra size
-func (fm *FieldModelExpr) FBEExtra() int {
+func (fm *FieldModelV) FBEExtra() int {
     if (fm.buffer.Offset() + fm.FBEOffset() + fm.FBESize()) > fm.buffer.Size() {
         return 0
     }
@@ -58,17 +58,17 @@ func (fm *FieldModelExpr) FBEExtra() int {
 }
 
 // Get the field offset
-func (fm *FieldModelExpr) FBEOffset() int { return fm.offset }
+func (fm *FieldModelV) FBEOffset() int { return fm.offset }
 // Set the field offset
-func (fm *FieldModelExpr) SetFBEOffset(value int) { fm.offset = value }
+func (fm *FieldModelV) SetFBEOffset(value int) { fm.offset = value }
 
 // Shift the current field offset
-func (fm *FieldModelExpr) FBEShift(size int) { fm.offset += size }
+func (fm *FieldModelV) FBEShift(size int) { fm.offset += size }
 // Unshift the current field offset
-func (fm *FieldModelExpr) FBEUnshift(size int) { fm.offset -= size }
+func (fm *FieldModelV) FBEUnshift(size int) { fm.offset -= size }
 
 // Check if the value is valid
-func (fm *FieldModelExpr) Verify() bool {
+func (fm *FieldModelV) Verify() bool {
     if (fm.buffer.Offset() + fm.FBEOffset() + fm.FBESize()) > fm.buffer.Size() {
         return false
     }
@@ -78,13 +78,13 @@ func (fm *FieldModelExpr) Verify() bool {
 }
 
 // Get the struct value
-func (fm *FieldModelExpr) Get() (*Expr, error) {
-    fbeResult := NewExpr()
+func (fm *FieldModelV) Get() (*V, error) {
+    fbeResult := NewV()
     return &fbeResult, fm.GetValue(&fbeResult)
 }
 
 // Get the struct value by the given pointer
-func (fm *FieldModelExpr) GetValue(fbeValue *Expr) error {
+func (fm *FieldModelV) GetValue(fbeValue *V) error {
     if (fm.buffer.Offset() + fm.FBEOffset() + fm.FBESize()) > fm.buffer.Size() {
         return nil
     }
@@ -95,7 +95,7 @@ func (fm *FieldModelExpr) GetValue(fbeValue *Expr) error {
     }
 
     fbeVariantIndex := int(fbe.ReadUInt32(fm.buffer.Data(), fm.buffer.Offset() + fbeStructOffset))
-    if (fbeVariantIndex < 0 || fbeVariantIndex >= 3) {
+    if (fbeVariantIndex < 0 || fbeVariantIndex >= 5) {
         return errors.New("model is broken")
     }
 
@@ -103,13 +103,20 @@ func (fm *FieldModelExpr) GetValue(fbeValue *Expr) error {
 
     switch fbeVariantIndex {
     case 0:
-        model := fbe.NewFieldModelBool(fm.buffer, 4)
+        model := fbe.NewFieldModelInt32(fm.buffer, 4)
         *fbeValue, _ = model.Get()
     case 1:
         model := fbe.NewFieldModelString(fm.buffer, 4)
         *fbeValue, _ = model.Get()
     case 2:
-        model := fbe.NewFieldModelInt32(fm.buffer, 4)
+        model := fbe.NewFieldModelDouble(fm.buffer, 4)
+        *fbeValue, _ = model.Get()
+    case 3:
+        model := NewFieldModelSimple(fm.buffer, 4)
+        ptr, _ := model.Get()
+        *fbeValue = *ptr
+    case 4:
+        model := NewFieldModelSimple(fm.buffer, 4)
         *fbeValue, _ = model.Get()
     }
     fm.buffer.Unshift(fbeStructOffset)
@@ -118,7 +125,7 @@ func (fm *FieldModelExpr) GetValue(fbeValue *Expr) error {
 
 
 // Set the struct value (begin phase)
-func (fm *FieldModelExpr) SetBegin(variantTypeFBESize int, variantTypeIndex int) (int, error) {
+func (fm *FieldModelV) SetBegin(variantTypeFBESize int, variantTypeIndex int) (int, error) {
     if (fm.buffer.Offset() + fm.FBEOffset() + fm.FBESize()) > fm.buffer.Size() {
         return 0, errors.New("model is broken")
     }
@@ -137,19 +144,19 @@ func (fm *FieldModelExpr) SetBegin(variantTypeFBESize int, variantTypeIndex int)
 }
 
 // Set the struct value (end phase)
-func (fm *FieldModelExpr) SetEnd(fbeBegin int) {
+func (fm *FieldModelV) SetEnd(fbeBegin int) {
     fm.buffer.Unshift(fbeBegin)
 }
 
 // Set the struct value
-func (fm *FieldModelExpr) Set(fbeValue *Expr) error {
+func (fm *FieldModelV) Set(fbeValue *V) error {
     if (fm.buffer.Offset() + fm.FBEOffset() + fm.FBESize()) > fm.buffer.Size() {
         return errors.New("model is broken")
     }
 
     switch t := (*fbeValue).(type) {
-    case bool:
-        model := fbe.NewFieldModelBool(fm.buffer, 4)
+    case int32:
+        model := fbe.NewFieldModelInt32(fm.buffer, 4)
         fbeBegin, err := fm.SetBegin(model.FBESize(), 0)
         if err != nil {
             return err
@@ -174,9 +181,35 @@ func (fm *FieldModelExpr) Set(fbeValue *Expr) error {
             return err
         }
         fm.SetEnd(fbeBegin)
-    case int32:
-        model := fbe.NewFieldModelInt32(fm.buffer, 4)
+    case float64:
+        model := fbe.NewFieldModelDouble(fm.buffer, 4)
         fbeBegin, err := fm.SetBegin(model.FBESize(), 2)
+        if err != nil {
+            return err
+        }
+        if fbeBegin == 0 {
+            return nil
+        }
+        if err = model.Set(t); err != nil {
+            return err
+        }
+        fm.SetEnd(fbeBegin)
+    case Simple:
+        model := NewFieldModelSimple(fm.buffer, 4)
+        fbeBegin, err := fm.SetBegin(model.FBESize(), 3)
+        if err != nil {
+            return err
+        }
+        if fbeBegin == 0 {
+            return nil
+        }
+        if err = model.Set(&t); err != nil {
+            return err
+        }
+        fm.SetEnd(fbeBegin)
+    case *Simple:
+        model := NewFieldModelSimple(fm.buffer, 4)
+        fbeBegin, err := fm.SetBegin(model.FBESize(), 4)
         if err != nil {
             return err
         }

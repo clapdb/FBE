@@ -23,6 +23,7 @@ type FieldModelExprContainer struct {
 
     E *FieldModelExpr
     Eo *FieldModelOptionalExpr
+    So *FieldModelOptionalSimple
 }
 
 // Create a new ExprContainer field model
@@ -30,6 +31,7 @@ func NewFieldModelExprContainer(buffer *fbe.Buffer, offset int) *FieldModelExprC
     fbeResult := FieldModelExprContainer{buffer: buffer, offset: offset}
     fbeResult.E = NewFieldModelExpr(buffer, 4 + 4)
     fbeResult.Eo = NewFieldModelOptionalExpr(buffer, fbeResult.E.FBEOffset() + fbeResult.E.FBESize())
+    fbeResult.So = NewFieldModelOptionalSimple(buffer, fbeResult.Eo.FBEOffset() + fbeResult.Eo.FBESize())
     return &fbeResult
 }
 
@@ -41,6 +43,7 @@ func (fm *FieldModelExprContainer) FBEBody() int {
     fbeResult := 4 + 4 +
         fm.E.FBESize() +
         fm.Eo.FBESize() +
+        fm.So.FBESize() +
         0
     return fbeResult
 }
@@ -61,6 +64,7 @@ func (fm *FieldModelExprContainer) FBEExtra() int {
     fbeResult := fm.FBEBody() +
         fm.E.FBEExtra() +
         fm.Eo.FBEExtra() +
+        fm.So.FBEExtra() +
         0
 
     fm.buffer.Unshift(fbeStructOffset)
@@ -131,6 +135,14 @@ func (fm *FieldModelExprContainer) VerifyFields(fbeStructSize int) bool {
     }
     fbeCurrentSize += fm.Eo.FBESize()
 
+    if (fbeCurrentSize + fm.So.FBESize()) > fbeStructSize {
+        return true
+    }
+    if !fm.So.Verify() {
+        return false
+    }
+    fbeCurrentSize += fm.So.FBESize()
+
     return true
 }
 
@@ -195,6 +207,13 @@ func (fm *FieldModelExprContainer) GetFields(fbeValue *ExprContainer, fbeStructS
         fbeValue.Eo = nil
     }
     fbeCurrentSize += fm.Eo.FBESize()
+
+    if (fbeCurrentSize + fm.So.FBESize()) <= fbeStructSize {
+        fbeValue.So, _ = fm.So.Get()
+    } else {
+        fbeValue.So = nil
+    }
+    fbeCurrentSize += fm.So.FBESize()
 }
 
 // Set the struct value (begin phase)
@@ -242,6 +261,9 @@ func (fm *FieldModelExprContainer) SetFields(fbeValue *ExprContainer) error {
         return err
     }
     if err = fm.Eo.Set(fbeValue.Eo); err != nil {
+        return err
+    }
+    if err = fm.So.Set(fbeValue.So); err != nil {
         return err
     }
     return err

@@ -43,7 +43,7 @@ type Value struct {
 // Create a new Value struct
 func NewValue() *Value {
     return &Value{
-        V: *NewV(),
+        V: NewV(),
         Vo: nil,
         Vo2: nil,
     }
@@ -99,26 +99,18 @@ func (s *Value) Ptr() *Value {
 }
 
 // Get the FBE type
-func (s *Value) FBEType() int { return 2 }
+func (s *Value) FBEType() int { return 3 }
 
 // Convert struct to string
 func (s *Value) String() string {
     var sb strings.Builder
     sb.WriteString("Value(")
     sb.WriteString("v=")
-    sb.WriteString(s.V.String())
-    sb.WriteString(",vo=")
-    if s.Vo != nil { 
-        sb.WriteString(s.Vo.String())
-    } else {
-        sb.WriteString("null")
-    }
-    sb.WriteString(",vo2=")
-    if s.Vo2 != nil { 
-        sb.WriteString(s.Vo2.String())
-    } else {
-        sb.WriteString("null")
-    }
+    sb.WriteString("*variant V*")
+    sb.WriteString("vo=")
+    sb.WriteString("*variant V*")
+    sb.WriteString("vo2=")
+    sb.WriteString("*variant V*")
     sb.WriteString(")")
     return sb.String()
 }

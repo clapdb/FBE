@@ -5947,9 +5947,9 @@ void GeneratorGo::GenerateVariant(const std::shared_ptr<Package>& p, const std::
     WriteLine("// List of " + variant_name + " types");
     if (v->body)
     {
-        for (const auto& field : v->body->values)
+        for (const auto& variant : v->body->values)
         {
-            WriteLineIndent("// " + ConvertTypeName(*field->type, false, false));
+            WriteLineIndent("// " + ConvertTypeName(*variant->type, false, variant->ptr));
         }
     }
 
@@ -5959,7 +5959,7 @@ void GeneratorGo::GenerateVariant(const std::shared_ptr<Package>& p, const std::
     WriteLineIndent("func New" + variant_name + "() " + variant_name + " {");
     Indent(1);
     // TODO(liuqi): Should return the first given type, nil is also acceptable
-    WriteLineIndent("return nil");
+    WriteLineIndent("return " + ConvertDefault(v));
     Indent(-1);
     WriteLineIndent("}");
 
@@ -6162,7 +6162,13 @@ void GeneratorGo::GenerateVariantFieldModel(const std::shared_ptr<Package>& p, c
         auto& value = v->body->values[index];
         // TODO(liuqi): variant version support, convert variant to struct ???
         WriteLineIndent("model := " + ConvertVariantTypeFieldInitialization(*value));
-        WriteLineIndent("*fbeValue, _ = model.Get()");
+        // TODO(liuqi): 这里需要区分是不是指针类型。
+        if (IsGoType(*value->type) || value->ptr)
+            WriteLineIndent("*fbeValue, _ = model.Get()");
+        else {
+            WriteLineIndent("ptr, _ := model.Get()");
+            WriteLineIndent("*fbeValue = *ptr");
+        }
         Indent(-1);
     }
     WriteLineIndent("}");
@@ -6221,10 +6227,10 @@ void GeneratorGo::GenerateVariantFieldModel(const std::shared_ptr<Package>& p, c
     for(auto index = 0; index < v->body->values.size(); index ++) {
         auto& value = v->body->values[index];
         // TODO(liuqi): Convert Type
-        WriteLineIndent("case " + *value->type + ":");
+        WriteLineIndent("case " + ConvertTypeName(*value->type, false, value->ptr) + ":");
         Indent(1);
         WriteLineIndent("model := " + ConvertVariantTypeFieldInitialization(*value));
-        WriteLineIndent("fbeBegin, err := fm.SetBegin(fm.FBESize(), " + std::to_string(index) + ")");
+        WriteLineIndent("fbeBegin, err := fm.SetBegin(model.FBESize(), " + std::to_string(index) + ")");
         WriteLineIndent("if err != nil {");
         Indent(1);
         WriteLineIndent("return err");
@@ -6235,7 +6241,7 @@ void GeneratorGo::GenerateVariantFieldModel(const std::shared_ptr<Package>& p, c
         WriteLineIndent("return nil");
         Indent(-1);
         WriteLineIndent("}");
-        WriteLineIndent("if err = model.Set(t); err != nil {");
+        WriteLineIndent(std::string("if err = model.Set(") + ((IsGoType(*value->type) || value->ptr) ? "" : "&") + "t); err != nil {");
         Indent(1);
         WriteLineIndent("return err");
         Indent(-1);
@@ -9700,9 +9706,9 @@ std::string GeneratorGo::ConvertDefault(const std::string& type, bool optional, 
     return "*" + ConvertNewName(type) + "()";
 }
 
-std::string GeneratorGo::ConvertDefault(const VariantValue& variant) {
-    //
-    return "";
+std::string GeneratorGo::ConvertDefault(const std::shared_ptr<VariantType>& variant) {
+    // TODO(liuqi): generate default value for variant
+    return "true";
 }
 
 std::string GeneratorGo::ConvertDefault(const StructField& field)

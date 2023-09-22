@@ -137,7 +137,7 @@ private:
     std::string ConvertConstant(const std::string& type, const std::string& value, bool optional, bool ptr);
     std::string ConvertDefault(const std::string& type, bool optional, bool ptr);
     std::string ConvertDefault(const StructField& field);
-    std::string ConvertDefault(const VariantValue& field);
+    std::string ConvertDefault(const std::shared_ptr<VariantType>& variant);
 
     void WriteOutputStreamType(const std::string& type, const std::string& name, bool optional, bool ptr);
     void WriteOutputStreamValue(const std::string& type, const std::string& name, bool optional, bool ptr, bool separate);

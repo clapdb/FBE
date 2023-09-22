@@ -14,32 +14,32 @@ import "fbeproj/proto/fbe"
 var _ = errors.New
 var _ = fbe.Version
 
-// Fast Binary Encoding optional Expr field model
-type FieldModelOptionalExpr struct {
+// Fast Binary Encoding optional Simple field model
+type FieldModelOptionalSimple struct {
     // Field model buffer
     buffer *fbe.Buffer
     // Field model buffer offset
     offset int
 
     // Base field model value
-    value *FieldModelExpr
+    value *FieldModelSimple
 }
 
-// Create a new optional Expr field model
-func NewFieldModelOptionalExpr(buffer *fbe.Buffer, offset int) *FieldModelOptionalExpr {
-    fbeResult := FieldModelOptionalExpr{buffer: buffer, offset: offset}
-    fbeResult.value = NewFieldModelExpr(buffer, 0)
+// Create a new optional Simple field model
+func NewFieldModelOptionalSimple(buffer *fbe.Buffer, offset int) *FieldModelOptionalSimple {
+    fbeResult := FieldModelOptionalSimple{buffer: buffer, offset: offset}
+    fbeResult.value = NewFieldModelSimple(buffer, 0)
     return &fbeResult
 }
 
 // Get the optional field model value
-func (fm *FieldModelOptionalExpr) Value() *FieldModelExpr { return fm.value }
+func (fm *FieldModelOptionalSimple) Value() *FieldModelSimple { return fm.value }
 
 // Get the field size
-func (fm *FieldModelOptionalExpr) FBESize() int { return 1 + 4 }
+func (fm *FieldModelOptionalSimple) FBESize() int { return 1 + 4 }
 
 // Get the field extra size
-func (fm *FieldModelOptionalExpr) FBEExtra() int {
+func (fm *FieldModelOptionalSimple) FBEExtra() int {
     if !fm.HasValue() {
         return 0
     }
@@ -56,17 +56,17 @@ func (fm *FieldModelOptionalExpr) FBEExtra() int {
 }
 
 // Get the field offset
-func (fm *FieldModelOptionalExpr) FBEOffset() int { return fm.offset }
+func (fm *FieldModelOptionalSimple) FBEOffset() int { return fm.offset }
 // Set the field offset
-func (fm *FieldModelOptionalExpr) SetFBEOffset(value int) { fm.offset = value }
+func (fm *FieldModelOptionalSimple) SetFBEOffset(value int) { fm.offset = value }
 
 // Shift the current field offset
-func (fm *FieldModelOptionalExpr) FBEShift(size int) { fm.offset += size }
+func (fm *FieldModelOptionalSimple) FBEShift(size int) { fm.offset += size }
 // Unshift the current field offset
-func (fm *FieldModelOptionalExpr) FBEUnshift(size int) { fm.offset -= size }
+func (fm *FieldModelOptionalSimple) FBEUnshift(size int) { fm.offset -= size }
 
 // Check if the object contains a value
-func (fm *FieldModelOptionalExpr) HasValue() bool {
+func (fm *FieldModelOptionalSimple) HasValue() bool {
     if (fm.buffer.Offset() + fm.FBEOffset() + fm.FBESize()) > fm.buffer.Size() {
         return false
     }
@@ -76,7 +76,7 @@ func (fm *FieldModelOptionalExpr) HasValue() bool {
 }
 
 // Check if the optional value is valid
-func (fm *FieldModelOptionalExpr) Verify() bool {
+func (fm *FieldModelOptionalSimple) Verify() bool {
     if (fm.buffer.Offset() + fm.FBEOffset() + fm.FBESize()) > fm.buffer.Size() {
         return true
     }
@@ -98,7 +98,7 @@ func (fm *FieldModelOptionalExpr) Verify() bool {
 }
 
 // Get the optional value (being phase)
-func (fm *FieldModelOptionalExpr) GetBegin() (int, error) {
+func (fm *FieldModelOptionalSimple) GetBegin() (int, error) {
     if !fm.HasValue() {
         return 0, nil
     }
@@ -113,26 +113,28 @@ func (fm *FieldModelOptionalExpr) GetBegin() (int, error) {
 }
 
 // Get the optional value (end phase)
-func (fm *FieldModelOptionalExpr) GetEnd(fbeBegin int) {
+func (fm *FieldModelOptionalSimple) GetEnd(fbeBegin int) {
     fm.buffer.Unshift(fbeBegin)
 }
 
 // Get the optional value
-func (fm *FieldModelOptionalExpr) Get() (*Expr, error) {
-    fbeValue := NewExpr()
+func (fm *FieldModelOptionalSimple) Get() (*Simple, error) {
+    var fbeValue *Simple = nil
 
     fbeBegin, err := fm.GetBegin()
     if fbeBegin == 0 {
-        return &fbeValue, err
+        return fbeValue, err
     }
 
-    err = fm.value.GetValue(&fbeValue)
+    fbeValue = NewSimple()
+
+    err = fm.value.GetValue(fbeValue)
     fm.GetEnd(fbeBegin)
-    return &fbeValue, err
+    return fbeValue, err
 }
 
 // Set the optional value (begin phase)
-func (fm *FieldModelOptionalExpr) SetBegin(hasValue bool) (int, error) {
+func (fm *FieldModelOptionalSimple) SetBegin(hasValue bool) (int, error) {
     if (fm.buffer.Offset() + fm.FBEOffset() + fm.FBESize()) > fm.buffer.Size() {
         return 0, nil
     }
@@ -159,12 +161,12 @@ func (fm *FieldModelOptionalExpr) SetBegin(hasValue bool) (int, error) {
 }
 
 // Set the optional value (end phase)
-func (fm *FieldModelOptionalExpr) SetEnd(fbeBegin int) {
+func (fm *FieldModelOptionalSimple) SetEnd(fbeBegin int) {
     fm.buffer.Unshift(fbeBegin)
 }
 
 // Set the optional value
-func (fm *FieldModelOptionalExpr) Set(fbeValue *Expr) error {
+func (fm *FieldModelOptionalSimple) Set(fbeValue *Simple) error {
     fbeBegin, err := fm.SetBegin(fbeValue != nil)
     if fbeBegin == 0 {
         return err
