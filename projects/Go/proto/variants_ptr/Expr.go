@@ -27,6 +27,7 @@ type Expr interface{}
 // bool
 // string
 // int32
+// []byte
 
 // Create a new Expr variant
 func NewExpr() Expr {

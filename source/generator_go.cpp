@@ -5466,6 +5466,9 @@ void GeneratorGo::GenerateContainers(const std::shared_ptr<Package>& p, const fs
             if (v->body) {
                 // CHECK all types in the variant
                 for (const auto& vv: v->body->values) {
+                    if (vv->ptr) {
+                        GenerateFBEFieldModelPtr(p, ConvertTypeFieldName(*vv->type), ConvertTypeFieldDeclaration(*vv->type, false, false, false), vv->toStructField(), path);
+                    }
                     if (vv->vector || vv->list) {
                         // search for structs
                         GenerateFBEFieldModelVector(p, (vv->ptr ? "Ptr" : "") + ConvertTypeFieldName(*vv->type), ConvertTypeFieldDeclaration(*vv->type, false, vv->ptr, final), vv->toStructField(), path);

@@ -32,6 +32,12 @@ type V interface{}
 // []Simple
 // []int32
 // map[int32]Simple
+// [][]byte
+// []string
+// map[int32][]byte
+// map[string][]byte
+// []*Simple
+// Expr
 
 // Create a new V variant
 func NewV() V {

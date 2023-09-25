@@ -15,6 +15,7 @@
 #ifndef GENERATOR_GO_H
 #define GENERATOR_GO_H
 
+#include "fbe.h"
 #include "generator.h"
 
 namespace FBE {
@@ -126,6 +127,7 @@ private:
     std::string ConvertPtr(const std::string& type, const std::string& value);
     std::string ConvertTypeName(const std::string& type, bool optional, bool ptr);
     std::string ConvertTypeName(const StructField& field);
+    std::string ConvertTypeName(const VariantValue& variant);
     std::string ConvertTypeFieldName(const std::string& type);
     std::string ConvertTypeFieldType(const std::string& type, bool optional, bool ptr);
     std::string ConvertTypeFieldDeclaration(const std::string& type, bool optional, bool ptr, bool final);

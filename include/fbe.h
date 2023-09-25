@@ -255,45 +255,6 @@ struct FlagsType
     std::shared_ptr<FlagsBody> body;
 };
 
-struct VariantValue
-{
-    std::shared_ptr<std::string> key;
-    std::shared_ptr<std::string> type;
-    bool ptr{false};
-    bool vector{false};
-    bool list{false};
-    bool map{false};
-    bool hash{false};
-
-    bool operator==(const VariantValue& other) const noexcept
-    {
-        return (
-            ((key && other.key && *key == *other.key) || (key == nullptr && other.key == nullptr)) && 
-            *type == *other.type &&
-            ptr == other.ptr &&
-            vector == other.vector &&
-            list == other.list &&
-            map == other.map &&
-            hash == other.hash
-        );
-    }
-};
-
-struct VariantBody
-{
-    std::vector<std::shared_ptr<VariantValue>> values;
-
-    void AddValue(VariantValue* v);
-};
-
-
-struct VariantType
-{
-    std::shared_ptr<Attributes> attributes;
-    std::shared_ptr<std::string> name;
-    std::shared_ptr<VariantBody> body;
-};
-
 struct StructField
 {
     std::shared_ptr<Attributes> attributes;
@@ -323,6 +284,58 @@ struct StructBody
     std::vector<std::shared_ptr<StructField>> fields;
 
     void AddField(StructField* field);
+};
+
+struct VariantValue
+{
+    std::shared_ptr<std::string> key;
+    std::shared_ptr<std::string> type;
+    bool ptr{false};
+    bool vector{false};
+    bool list{false};
+    bool map{false};
+    bool hash{false};
+
+    bool operator==(const VariantValue& other) const noexcept
+    {
+        return (
+            ((key && other.key && *key == *other.key) || (key == nullptr && other.key == nullptr)) && 
+            *type == *other.type &&
+            ptr == other.ptr &&
+            vector == other.vector &&
+            list == other.list &&
+            map == other.map &&
+            hash == other.hash
+        );
+    }
+
+    StructField toStructField() const noexcept
+    {
+        StructField field;
+        field.key = key;
+        field.type = type;
+        field.ptr = ptr;
+        field.vector = vector;
+        field.list = list;
+        field.map = map;
+        field.hash = hash;
+        return field;
+    }
+};
+
+struct VariantBody
+{
+    std::vector<std::shared_ptr<VariantValue>> values;
+
+    void AddValue(VariantValue* v);
+};
+
+
+struct VariantType
+{
+    std::shared_ptr<Attributes> attributes;
+    std::shared_ptr<std::string> name;
+    std::shared_ptr<VariantBody> body;
 };
 
 struct StructRequest

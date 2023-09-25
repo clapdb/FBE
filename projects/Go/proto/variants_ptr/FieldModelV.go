@@ -95,7 +95,7 @@ func (fm *FieldModelV) GetValue(fbeValue *V) error {
     }
 
     fbeVariantIndex := int(fbe.ReadUInt32(fm.buffer.Data(), fm.buffer.Offset() + fbeStructOffset))
-    if (fbeVariantIndex < 0 || fbeVariantIndex >= 6) {
+    if (fbeVariantIndex < 0 || fbeVariantIndex >= 14) {
         return errors.New("model is broken")
     }
 
@@ -121,6 +121,31 @@ func (fm *FieldModelV) GetValue(fbeValue *V) error {
     case 5:
         model := NewFieldModelVectorSimple(fm.buffer, 4)
         *fbeValue, _ = model.Get()
+    case 6:
+        model := NewFieldModelVectorInt32(fm.buffer, 4)
+        *fbeValue, _ = model.Get()
+    case 7:
+        model := NewFieldModelMapInt32Simple(fm.buffer, 4)
+        *fbeValue, _ = model.Get()
+    case 8:
+        model := NewFieldModelVectorBytes(fm.buffer, 4)
+        *fbeValue, _ = model.Get()
+    case 9:
+        model := NewFieldModelVectorString(fm.buffer, 4)
+        *fbeValue, _ = model.Get()
+    case 10:
+        model := NewFieldModelMapInt32Bytes(fm.buffer, 4)
+        *fbeValue, _ = model.Get()
+    case 11:
+        model := NewFieldModelMapStringBytes(fm.buffer, 4)
+        *fbeValue, _ = model.Get()
+    case 12:
+        model := NewFieldModelVectorPtrSimple(fm.buffer, 4)
+        *fbeValue, _ = model.Get()
+    case 13:
+        model := NewFieldModelExpr(fm.buffer, 4)
+        ptr, _ := model.Get()
+        *fbeValue = *ptr
     }
     fm.buffer.Unshift(fbeStructOffset)
     return nil
@@ -233,6 +258,110 @@ func (fm *FieldModelV) Set(fbeValue *V) error {
             return nil
         }
         if err = model.Set(t); err != nil {
+            return err
+        }
+        fm.SetEnd(fbeBegin)
+    case []int32:
+        model := NewFieldModelVectorInt32(fm.buffer, 4)
+        fbeBegin, err := fm.SetBegin(model.FBESize(), 6)
+        if err != nil {
+            return err
+        }
+        if fbeBegin == 0 {
+            return nil
+        }
+        if err = model.Set(t); err != nil {
+            return err
+        }
+        fm.SetEnd(fbeBegin)
+    case map[int32]Simple:
+        model := NewFieldModelMapInt32Simple(fm.buffer, 4)
+        fbeBegin, err := fm.SetBegin(model.FBESize(), 7)
+        if err != nil {
+            return err
+        }
+        if fbeBegin == 0 {
+            return nil
+        }
+        if err = model.Set(t); err != nil {
+            return err
+        }
+        fm.SetEnd(fbeBegin)
+    case [][]byte:
+        model := NewFieldModelVectorBytes(fm.buffer, 4)
+        fbeBegin, err := fm.SetBegin(model.FBESize(), 8)
+        if err != nil {
+            return err
+        }
+        if fbeBegin == 0 {
+            return nil
+        }
+        if err = model.Set(t); err != nil {
+            return err
+        }
+        fm.SetEnd(fbeBegin)
+    case []string:
+        model := NewFieldModelVectorString(fm.buffer, 4)
+        fbeBegin, err := fm.SetBegin(model.FBESize(), 9)
+        if err != nil {
+            return err
+        }
+        if fbeBegin == 0 {
+            return nil
+        }
+        if err = model.Set(t); err != nil {
+            return err
+        }
+        fm.SetEnd(fbeBegin)
+    case map[int32][]byte:
+        model := NewFieldModelMapInt32Bytes(fm.buffer, 4)
+        fbeBegin, err := fm.SetBegin(model.FBESize(), 10)
+        if err != nil {
+            return err
+        }
+        if fbeBegin == 0 {
+            return nil
+        }
+        if err = model.Set(t); err != nil {
+            return err
+        }
+        fm.SetEnd(fbeBegin)
+    case map[string][]byte:
+        model := NewFieldModelMapStringBytes(fm.buffer, 4)
+        fbeBegin, err := fm.SetBegin(model.FBESize(), 11)
+        if err != nil {
+            return err
+        }
+        if fbeBegin == 0 {
+            return nil
+        }
+        if err = model.Set(t); err != nil {
+            return err
+        }
+        fm.SetEnd(fbeBegin)
+    case []*Simple:
+        model := NewFieldModelVectorPtrSimple(fm.buffer, 4)
+        fbeBegin, err := fm.SetBegin(model.FBESize(), 12)
+        if err != nil {
+            return err
+        }
+        if fbeBegin == 0 {
+            return nil
+        }
+        if err = model.Set(t); err != nil {
+            return err
+        }
+        fm.SetEnd(fbeBegin)
+    case Expr:
+        model := NewFieldModelExpr(fm.buffer, 4)
+        fbeBegin, err := fm.SetBegin(model.FBESize(), 13)
+        if err != nil {
+            return err
+        }
+        if fbeBegin == 0 {
+            return nil
+        }
+        if err = model.Set(&t); err != nil {
             return err
         }
         fm.SetEnd(fbeBegin)
