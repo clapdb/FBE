@@ -13,6 +13,7 @@
 */
 
 #include "generator_go.h"
+#include "fbe.h"
 #include <string>
 
 namespace FBE {
@@ -5459,6 +5460,22 @@ void GeneratorGo::GenerateContainers(const std::shared_ptr<Package>& p, const fs
                 }
             }
         }
+
+        // CHECK all variants in the package
+        for (const auto& v: p->body->variants) {
+            if (v->body) {
+                // CHECK all types in the variant
+                for (const auto& vv: v->body->values) {
+                    if (vv->vector || vv->list) {
+                        // search for structs
+                        GenerateFBEFieldModelVector(p, (vv->ptr ? "Ptr" : "") + ConvertTypeFieldName(*vv->type), ConvertTypeFieldDeclaration(*vv->type, false, vv->ptr, final), vv->toStructField(), path);
+                    } else if (vv->map || vv->hash) {
+                        // 这里并不支持 variant, 需要在上面去考虑
+                        GenerateFBEFieldModelMap(p, ConvertTypeFieldName(*vv->key), ConvertTypeFieldDeclaration(*vv->key, false, false, final), (vv->ptr ? "Ptr" : "") + ConvertTypeFieldName(*vv->type), ConvertTypeFieldDeclaration(*vv->type, false, vv->ptr, final), vv->toStructField(), path);
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -5949,7 +5966,7 @@ void GeneratorGo::GenerateVariant(const std::shared_ptr<Package>& p, const std::
     {
         for (const auto& variant : v->body->values)
         {
-            WriteLineIndent("// " + ConvertTypeName(*variant->type, false, variant->ptr));
+            WriteLineIndent("// " + ConvertTypeName(*variant));
         }
     }
 
@@ -6163,7 +6180,8 @@ void GeneratorGo::GenerateVariantFieldModel(const std::shared_ptr<Package>& p, c
         // TODO(liuqi): variant version support, convert variant to struct ???
         WriteLineIndent("model := " + ConvertVariantTypeFieldInitialization(*value));
         // TODO(liuqi): 这里需要区分是不是指针类型。
-        if (IsGoType(*value->type) || value->ptr)
+        if (IsGoType(*value->type) || value->ptr || value->vector ||
+            value->list || value->map || value->hash)
             WriteLineIndent("*fbeValue, _ = model.Get()");
         else {
             WriteLineIndent("ptr, _ := model.Get()");
@@ -6227,7 +6245,7 @@ void GeneratorGo::GenerateVariantFieldModel(const std::shared_ptr<Package>& p, c
     for(auto index = 0; index < v->body->values.size(); index ++) {
         auto& value = v->body->values[index];
         // TODO(liuqi): Convert Type
-        WriteLineIndent("case " + ConvertTypeName(*value->type, false, value->ptr) + ":");
+        WriteLineIndent("case " + ConvertTypeName(*value) + ":");
         Indent(1);
         WriteLineIndent("model := " + ConvertVariantTypeFieldInitialization(*value));
         WriteLineIndent("fbeBegin, err := fm.SetBegin(model.FBESize(), " + std::to_string(index) + ")");
@@ -6241,7 +6259,13 @@ void GeneratorGo::GenerateVariantFieldModel(const std::shared_ptr<Package>& p, c
         WriteLineIndent("return nil");
         Indent(-1);
         WriteLineIndent("}");
-        WriteLineIndent(std::string("if err = model.Set(") + ((IsGoType(*value->type) || value->ptr) ? "" : "&") + "t); err != nil {");
+        WriteLineIndent(
+            std::string("if err = model.Set(") +
+            ((IsGoType(*value->type) || value->ptr || value->vector ||
+              value->list || value->map || value->hash)
+                 ? ""
+                 : "&") +
+            "t); err != nil {");
         Indent(1);
         WriteLineIndent("return err");
         Indent(-1);
@@ -9378,6 +9402,21 @@ std::string GeneratorGo::ConvertTypeName(const std::string& type, bool optional,
     return opt + ns + ConvertToUpper(t);
 }
 
+std::string GeneratorGo::ConvertTypeName(const VariantValue& variant)
+{
+    if ((variant.vector) || (variant.list))
+        return "[]" + ConvertTypeName(*variant.type, false, variant.ptr);
+    else if ((variant.map) || (variant.hash))
+    {
+        if (IsGoType(*variant.key))
+            return "map[" + ConvertKeyName(*variant.key) + "]" + ConvertTypeName(*variant.type, false, variant.ptr);
+        else
+            return "map[" + ConvertKeyName(*variant.key) + "]struct{Key " + ConvertTypeName(*variant.key, false, false) + "; Value " + ConvertTypeName(*variant.type, false, variant.ptr) + "}";
+    }
+
+    return ConvertTypeName(*variant.type, false, variant.ptr);
+}
+
 std::string GeneratorGo::ConvertTypeName(const StructField& field)
 {
     if (field.array)
@@ -9570,6 +9609,12 @@ std::string GeneratorGo::ConvertVariantTypeFieldInitialization(const std::string
 }
 
 std::string GeneratorGo::ConvertVariantTypeFieldInitialization(const VariantValue& variant){
+    if (variant.vector || variant.list) {
+        // TODO(liuqi) : 需要为 Ptr 准备吗？
+        return "NewFieldModelVector" + std::string(variant.ptr ? "Ptr" : "") + ConvertTypeFieldName(*variant.type) + "(fm.buffer, 4)";
+    } else if (variant.map || variant.hash) {
+        return "NewFieldModelMap" + ConvertTypeFieldName(*variant.key) + std::string(variant.ptr ? "Ptr" : "") + ConvertTypeFieldName(*variant.type) + "(fm.buffer, 4)";
+    }
     return ConvertVariantTypeFieldInitialization(*variant.type);
 }
 

@@ -29,6 +29,9 @@ type V interface{}
 // float64
 // Simple
 // *Simple
+// []Simple
+// []int32
+// map[int32]Simple
 
 // Create a new V variant
 func NewV() V {

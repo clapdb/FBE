@@ -95,7 +95,7 @@ func (fm *FieldModelV) GetValue(fbeValue *V) error {
     }
 
     fbeVariantIndex := int(fbe.ReadUInt32(fm.buffer.Data(), fm.buffer.Offset() + fbeStructOffset))
-    if (fbeVariantIndex < 0 || fbeVariantIndex >= 5) {
+    if (fbeVariantIndex < 0 || fbeVariantIndex >= 6) {
         return errors.New("model is broken")
     }
 
@@ -117,6 +117,9 @@ func (fm *FieldModelV) GetValue(fbeValue *V) error {
         *fbeValue = *ptr
     case 4:
         model := NewFieldModelSimple(fm.buffer, 4)
+        *fbeValue, _ = model.Get()
+    case 5:
+        model := NewFieldModelVectorSimple(fm.buffer, 4)
         *fbeValue, _ = model.Get()
     }
     fm.buffer.Unshift(fbeStructOffset)
@@ -210,6 +213,19 @@ func (fm *FieldModelV) Set(fbeValue *V) error {
     case *Simple:
         model := NewFieldModelSimple(fm.buffer, 4)
         fbeBegin, err := fm.SetBegin(model.FBESize(), 4)
+        if err != nil {
+            return err
+        }
+        if fbeBegin == 0 {
+            return nil
+        }
+        if err = model.Set(t); err != nil {
+            return err
+        }
+        fm.SetEnd(fbeBegin)
+    case []Simple:
+        model := NewFieldModelVectorSimple(fm.buffer, 4)
+        fbeBegin, err := fm.SetBegin(model.FBESize(), 5)
         if err != nil {
             return err
         }
