@@ -69,7 +69,7 @@ func (fm *FieldModelValueContainer) FBEExtra() int {
 }
 
 // Get the field type
-func (fm *FieldModelValueContainer) FBEType() int { return 3 }
+func (fm *FieldModelValueContainer) FBEType() int { return 4 }
 
 // Get the field offset
 func (fm *FieldModelValueContainer) FBEOffset() int { return fm.offset }

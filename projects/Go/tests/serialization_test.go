@@ -1918,3 +1918,72 @@ func TestSerializationVariantVectorBytes(t *testing.T) {
 	assert.Equal(t, "ABCDE", string(tt[0]))
 	assert.Equal(t, "12345", string(tt[1]))
 }
+
+// Variant[] in struct
+func TestSerializationContainerVariant(t *testing.T) {
+	var v0 variants_ptr.V = int32(42)
+	var v1 variants_ptr.V = variants_ptr.NewVFromValue("nested variant string")
+	var v2 variants_ptr.V = variants_ptr.NewSimpleFromFieldValues("this is too simple")
+	
+	valueContainer := variants_ptr.NewValueContainerFromFieldValues([]variants_ptr.V{v0, v1, v2}, map[int32]variants_ptr.V{
+		1: true,
+		2: "this is a long story",
+		3: variants_ptr.NewSimpleFromFieldValues("this is too complex"),
+	})
+
+	// Serialize the struct to the FBE stream
+	writer := variants_ptr.NewValueContainerModel(fbe.NewEmptyBuffer())
+	assert.EqualValues(t, writer.Model().FBEType(), 4)
+	assert.EqualValues(t, writer.Model().FBEOffset(), 4)
+	serialized, err := writer.Serialize(valueContainer)
+	assert.Nil(t, err)
+	assert.EqualValues(t, serialized, writer.Buffer().Size())
+	assert.True(t, writer.Verify())
+	writer.Next(serialized)
+	assert.EqualValues(t, writer.Model().FBEOffset(), 4+writer.Buffer().Size())
+
+	// Deserialize the struct from the FBE stream
+	reader := variants_ptr.NewValueContainerModel(writer.Buffer())
+	assert.EqualValues(t, reader.Model().FBEType(), 4)
+	assert.EqualValues(t, reader.Model().FBEOffset(), 4)
+	assert.True(t, reader.Verify())
+	valueContainerCopy, deserialized, err := reader.Deserialize()
+	assert.Nil(t, err)
+	assert.EqualValues(t, deserialized, reader.Buffer().Size())
+	reader.Next(deserialized)
+	assert.EqualValues(t, reader.Model().FBEOffset(), 4+reader.Buffer().Size())
+
+	assert.Equal(t, 3, len(valueContainerCopy.Vv))
+	
+	assert.Equal(t, "int32",  reflect.TypeOf(valueContainerCopy.Vv[0]).String())
+	t0, ok := (valueContainerCopy.Vv[0]).(int32)
+	assert.True(t, ok)
+	assert.Equal(t, int32(42), t0)
+
+	assert.Equal(t, "string",  reflect.TypeOf(valueContainerCopy.Vv[1]).String())
+	t1, ok := (valueContainerCopy.Vv[1]).(string)
+	assert.True(t, ok)
+	assert.Equal(t, "nested variant string", t1)
+
+	assert.Equal(t, "*variants_ptr.Simple",  reflect.TypeOf(valueContainerCopy.Vv[2]).String())
+	t2, ok := (valueContainerCopy.Vv[2]).(*variants_ptr.Simple)
+	assert.True(t, ok)
+	assert.Equal(t, "this is too simple", t2.Name)
+
+	assert.Equal(t, 3, len(valueContainerCopy.Vv))
+	
+	assert.Equal(t, "bool",  reflect.TypeOf(valueContainerCopy.Vm[1]).String())
+	tt0, ok := (valueContainerCopy.Vm[1]).(bool)
+	assert.True(t, ok)
+	assert.Equal(t, true, tt0)
+
+	assert.Equal(t, "string",  reflect.TypeOf(valueContainerCopy.Vm[2]).String())
+	tt1, ok := (valueContainerCopy.Vm[2]).(string)
+	assert.True(t, ok)
+	assert.Equal(t, "this is a long story", tt1)
+
+	assert.Equal(t, "*variants_ptr.Simple",  reflect.TypeOf(valueContainerCopy.Vm[3]).String())
+	tt2, ok := (valueContainerCopy.Vm[3]).(*variants_ptr.Simple)
+	assert.True(t, ok)
+	assert.Equal(t, "this is too complex", tt2.Name)
+}

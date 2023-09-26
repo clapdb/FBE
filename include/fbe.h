@@ -309,6 +309,7 @@ struct VariantValue
         );
     }
 
+    // mock struct to reuse helper functions
     StructField toStructField() const noexcept
     {
         StructField field;

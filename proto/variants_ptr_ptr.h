@@ -34,10 +34,11 @@ using namespace ::variants_ptr;
 namespace variants_ptr {
 // forward declaration
 struct Simple;
+struct ExprContainer;
 struct Value;
 struct ValueContainer;
 
-using Expr = std::variant<bool, stdb::memory::string, int32_t>;
+using Expr = std::variant<bool, stdb::memory::string, int32_t, FastVec<uint8_t>>;
 std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const Expr& value);
 auto is_equal(const Expr& lhs, const Expr& rhs) -> bool;
 
@@ -92,13 +93,62 @@ struct std::hash<variants_ptr::Simple>
 
 namespace variants_ptr {
 
+struct ExprContainer : FBE::Base
+{
+    ::variants_ptr::Expr e;
+    std::optional<::variants_ptr::Expr> eo;
+    std::optional<::variants_ptr::Simple> so;
+
+    size_t fbe_type() const noexcept { return 2; }
+
+    ExprContainer();
+    ExprContainer(::variants_ptr::Expr arg_e, std::optional<::variants_ptr::Expr> arg_eo, std::optional<::variants_ptr::Simple> arg_so);
+    ExprContainer(const ExprContainer& other) = default;
+    ExprContainer(ExprContainer&& other) noexcept;
+    ~ExprContainer() override;
+
+    ExprContainer& operator=(const ExprContainer& other) = default;
+    ExprContainer& operator=(ExprContainer&& other) noexcept;
+
+    bool operator==(const ExprContainer& other) const noexcept;
+    bool operator!=(const ExprContainer& other) const noexcept { return !operator==(other); }
+    bool operator<(const ExprContainer& other) const noexcept;
+    bool operator<=(const ExprContainer& other) const noexcept { return operator<(other) || operator==(other); }
+    bool operator>(const ExprContainer& other) const noexcept { return !operator<=(other); }
+    bool operator>=(const ExprContainer& other) const noexcept { return !operator<(other); }
+
+    std::string string() const;
+
+    friend std::ostream& operator<<(std::ostream& stream, const ExprContainer& value);
+
+    void swap(ExprContainer& other) noexcept;
+    friend void swap(ExprContainer& value1, ExprContainer& value2) noexcept { value1.swap(value2); }
+};
+
+} // namespace variants_ptr
+
+template<>
+struct std::hash<variants_ptr::ExprContainer>
+{
+    typedef variants_ptr::ExprContainer argument_type;
+    typedef size_t result_type;
+
+    result_type operator() ([[maybe_unused]] const argument_type& value) const
+    {
+        result_type result = 17;
+        return result;
+    }
+};
+
+namespace variants_ptr {
+
 struct Value : FBE::Base
 {
     ::variants_ptr::V v;
     std::optional<::variants_ptr::V> vo;
     std::optional<::variants_ptr::V> vo2;
 
-    size_t fbe_type() const noexcept { return 2; }
+    size_t fbe_type() const noexcept { return 3; }
 
     Value();
     Value(::variants_ptr::V arg_v, std::optional<::variants_ptr::V> arg_vo, std::optional<::variants_ptr::V> arg_vo2);
@@ -146,7 +196,7 @@ struct ValueContainer : FBE::Base
     FastVec<::variants_ptr::V> vv;
     std::unordered_map<int32_t, ::variants_ptr::V> vm;
 
-    size_t fbe_type() const noexcept { return 3; }
+    size_t fbe_type() const noexcept { return 4; }
 
     ValueContainer();
     ValueContainer(FastVec<::variants_ptr::V> arg_vv, std::unordered_map<int32_t, ::variants_ptr::V> arg_vm);

@@ -97,40 +97,16 @@ func (s *ValueContainer) Ptr() *ValueContainer {
 }
 
 // Get the FBE type
-func (s *ValueContainer) FBEType() int { return 3 }
+func (s *ValueContainer) FBEType() int { return 4 }
 
 // Convert struct to string
 func (s *ValueContainer) String() string {
     var sb strings.Builder
     sb.WriteString("ValueContainer(")
     sb.WriteString("vv=")
-    if s.Vv != nil {
-        first := true
-        sb.WriteString("[" + strconv.FormatInt(int64(len(s.Vv)), 10) + "][")
-        for _, v := range s.Vv {
-            if first { sb.WriteString("") } else { sb.WriteString(",") }
-            sb.WriteString(v.String())
-            first = false
-        }
-        sb.WriteString("]")
-    } else {
-        sb.WriteString("vv=[0][]")
-    }
-    sb.WriteString(",vm=")
-    if s.Vm != nil {
-        first := true
-        sb.WriteString("[" + strconv.FormatInt(int64(len(s.Vm)), 10) + "][{")
-        for k, v := range s.Vm {
-            if first { sb.WriteString("") } else { sb.WriteString(",") }
-            sb.WriteString(strconv.FormatInt(int64(k), 10))
-            sb.WriteString("->")
-            sb.WriteString(v.String())
-            first = false
-        }
-        sb.WriteString("}]")
-    } else {
-        sb.WriteString(",vm=[0][{}]")
-    }
+    sb.WriteString("*variant V*")
+    sb.WriteString("vm=")
+    sb.WriteString("*variant V*")
     sb.WriteString(")")
     return sb.String()
 }

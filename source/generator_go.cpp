@@ -13,8 +13,6 @@
 */
 
 #include "generator_go.h"
-#include "fbe.h"
-#include <string>
 
 namespace FBE {
 
@@ -5470,10 +5468,9 @@ void GeneratorGo::GenerateContainers(const std::shared_ptr<Package>& p, const fs
                         GenerateFBEFieldModelPtr(p, ConvertTypeFieldName(*vv->type), ConvertTypeFieldDeclaration(*vv->type, false, false, false), vv->toStructField(), path);
                     }
                     if (vv->vector || vv->list) {
-                        // search for structs
                         GenerateFBEFieldModelVector(p, (vv->ptr ? "Ptr" : "") + ConvertTypeFieldName(*vv->type), ConvertTypeFieldDeclaration(*vv->type, false, vv->ptr, final), vv->toStructField(), path);
-                    } else if (vv->map || vv->hash) {
-                        // 这里并不支持 variant, 需要在上面去考虑
+                    }
+                    if (vv->map || vv->hash) {
                         GenerateFBEFieldModelMap(p, ConvertTypeFieldName(*vv->key), ConvertTypeFieldDeclaration(*vv->key, false, false, final), (vv->ptr ? "Ptr" : "") + ConvertTypeFieldName(*vv->type), ConvertTypeFieldDeclaration(*vv->type, false, vv->ptr, final), vv->toStructField(), path);
                     }
                 }
@@ -6180,9 +6177,7 @@ void GeneratorGo::GenerateVariantFieldModel(const std::shared_ptr<Package>& p, c
         WriteLineIndent("case " + std::to_string(index) + ":");
         Indent(1);
         auto& value = v->body->values[index];
-        // TODO(liuqi): variant version support, convert variant to struct ???
         WriteLineIndent("model := " + ConvertVariantTypeFieldInitialization(*value));
-        // TODO(liuqi): 这里需要区分是不是指针类型。
         if (IsGoType(*value->type) || value->ptr || value->vector ||
             value->list || value->map || value->hash)
             WriteLineIndent("*fbeValue, _ = model.Get()");
@@ -6220,7 +6215,6 @@ void GeneratorGo::GenerateVariantFieldModel(const std::shared_ptr<Package>& p, c
     WriteLine();
     WriteLineIndent("fbe.WriteUInt32(fm.buffer.Data(), fm.buffer.Offset() + fm.FBEOffset(), uint32(fbeVariantOffset))");
     WriteLineIndent("fbe.WriteUInt32(fm.buffer.Data(), fm.buffer.Offset() + fbeVariantOffset, uint32(variantTypeIndex))");
-    // WriteLineIndent("fbe.WriteUInt32(fm.buffer.Data(), fm.buffer.Offset() + fbeVariantOffset + 4, uint32(fm.FBEType()))");
     WriteLine();
     WriteLineIndent("fm.buffer.Shift(fbeVariantOffset)");
     WriteLineIndent("return fbeVariantOffset, nil");
@@ -6247,7 +6241,6 @@ void GeneratorGo::GenerateVariantFieldModel(const std::shared_ptr<Package>& p, c
     WriteLineIndent("switch t := (*fbeValue).(type) {");
     for(auto index = 0; index < v->body->values.size(); index ++) {
         auto& value = v->body->values[index];
-        // TODO(liuqi): Convert Type
         WriteLineIndent("case " + ConvertTypeName(*value) + ":");
         Indent(1);
         WriteLineIndent("model := " + ConvertVariantTypeFieldInitialization(*value));
@@ -6519,14 +6512,15 @@ void GeneratorGo::GenerateStruct(const std::shared_ptr<Package>& p, const std::s
         for (const auto& field : s->body->fields)
         {
             WriteIndent(ConvertToUpper(*field->name) + ": ");
-            // if (IsVariantType(p, *field->type))
             if (field->value)
                 Write(ConvertConstant(*field->type, *field->value, field->optional, field->ptr));
             else if (IsVariantType(p, *field->type)) {
                 if (field->optional)
                     Write("nil");
+                else if (field->map || field->list || field->vector || field->hash)
+                    Write(ConvertDefault(*field));
                 else
-                    Write("New" + ConvertTypeName(*field) + "()"); // TODO(liuqi): implement variant version's ConvertDefault
+                    Write("New" + ConvertTypeName(*field) + "()");
             } else 
                 Write(ConvertDefault(*field));
             WriteLine(",");
@@ -7434,14 +7428,11 @@ void GeneratorGo::GenerateStructFieldModel(const std::shared_ptr<Package>& p, co
                 Indent(-1);
                 WriteLineIndent("} else {");
                 Indent(1);
-                // if (IsVariantType(p, *field->type)) {
-                //     // TODO(liuqi): How to 
-                // WriteLineIndent("fbeValue." + ConvertToUpper(*field->name) + " = " + ConvertDefault(*field));
                 WriteIndent("fbeValue." + ConvertToUpper(*field->name) + " = ");
-                // TODO(liuqi): refactor
                 if (IsVariantType(p, *field->type)) {
-                        // fmt::print("\n{} {} {}\n", *field->type, field->optional, ConvertDefault(*field));
                     if (field->optional) {
+                        WriteLine(ConvertDefault(*field));
+                    } else if (field->hash || field->map || field->vector || field->list) {
                         WriteLine(ConvertDefault(*field));
                     } else {
                         WriteLine("New" + ConvertTypeName(*field) + "()");
@@ -9613,7 +9604,6 @@ std::string GeneratorGo::ConvertVariantTypeFieldInitialization(const std::string
 
 std::string GeneratorGo::ConvertVariantTypeFieldInitialization(const VariantValue& variant){
     if (variant.vector || variant.list) {
-        // TODO(liuqi) : 需要为 Ptr 准备吗？
         return "NewFieldModelVector" + std::string(variant.ptr ? "Ptr" : "") + ConvertTypeFieldName(*variant.type) + "(fm.buffer, 4)";
     } else if (variant.map || variant.hash) {
         return "NewFieldModelMap" + ConvertTypeFieldName(*variant.key) + std::string(variant.ptr ? "Ptr" : "") + ConvertTypeFieldName(*variant.type) + "(fm.buffer, 4)";
