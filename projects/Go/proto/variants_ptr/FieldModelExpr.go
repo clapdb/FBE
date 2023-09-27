@@ -73,7 +73,45 @@ func (fm *FieldModelExpr) Verify() bool {
         return false
     }
 
-    // TODO: verify the given type
+    fbeVariantOffset := int(fbe.ReadUInt32(fm.buffer.Data(), fm.buffer.Offset() + fm.FBEOffset()))
+    if (fbeVariantOffset == 0) || ((fm.buffer.Offset() + fbeVariantOffset + 4) > fm.buffer.Size()) {
+        return false
+    }
+
+    fbeVariantIndex := int(fbe.ReadUInt32(fm.buffer.Data(), fm.buffer.Offset() + fbeVariantOffset))
+    if (fbeVariantIndex < 0 || fbeVariantIndex >= 4) {
+        return false
+    }
+
+    fm.buffer.Shift(fbeVariantOffset)
+
+    switch fbeVariantIndex {
+    case 0:
+        model := fbe.NewFieldModelBool(fm.buffer, 4)
+        if !model.Verify() {
+            return false
+        }
+        break
+    case 1:
+        model := fbe.NewFieldModelString(fm.buffer, 4)
+        if !model.Verify() {
+            return false
+        }
+        break
+    case 2:
+        model := fbe.NewFieldModelInt32(fm.buffer, 4)
+        if !model.Verify() {
+            return false
+        }
+        break
+    case 3:
+        model := NewFieldModelVectorByte(fm.buffer, 4)
+        if !model.Verify() {
+            return false
+        }
+        break
+    }
+    fm.buffer.Unshift(fbeVariantOffset)
     return true
 }
 
@@ -89,17 +127,17 @@ func (fm *FieldModelExpr) GetValue(fbeValue *Expr) error {
         return nil
     }
 
-    fbeStructOffset := int(fbe.ReadUInt32(fm.buffer.Data(), fm.buffer.Offset() + fm.FBEOffset()))
-    if (fbeStructOffset == 0) || ((fm.buffer.Offset() + fbeStructOffset + 4 + 4) > fm.buffer.Size()) {
+    fbeVariantOffset := int(fbe.ReadUInt32(fm.buffer.Data(), fm.buffer.Offset() + fm.FBEOffset()))
+    if (fbeVariantOffset == 0) || ((fm.buffer.Offset() + fbeVariantOffset + 4) > fm.buffer.Size()) {
         return errors.New("model is broken")
     }
 
-    fbeVariantIndex := int(fbe.ReadUInt32(fm.buffer.Data(), fm.buffer.Offset() + fbeStructOffset))
+    fbeVariantIndex := int(fbe.ReadUInt32(fm.buffer.Data(), fm.buffer.Offset() + fbeVariantOffset))
     if (fbeVariantIndex < 0 || fbeVariantIndex >= 4) {
         return errors.New("model is broken")
     }
 
-    fm.buffer.Shift(fbeStructOffset)
+    fm.buffer.Shift(fbeVariantOffset)
 
     switch fbeVariantIndex {
     case 0:
@@ -115,7 +153,7 @@ func (fm *FieldModelExpr) GetValue(fbeValue *Expr) error {
         model := NewFieldModelVectorByte(fm.buffer, 4)
         *fbeValue, _ = model.Get()
     }
-    fm.buffer.Unshift(fbeStructOffset)
+    fm.buffer.Unshift(fbeVariantOffset)
     return nil
 }
 

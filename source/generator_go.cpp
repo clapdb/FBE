@@ -6132,7 +6132,38 @@ void GeneratorGo::GenerateVariantFieldModel(const std::shared_ptr<Package>& p, c
     Indent(-1);
     WriteLineIndent("}");
     WriteLine();
-    WriteLineIndent("// TODO: verify the given type");
+    WriteLineIndent("fbeVariantOffset := int(fbe.ReadUInt32(fm.buffer.Data(), fm.buffer.Offset() + fm.FBEOffset()))");
+    WriteLineIndent("if (fbeVariantOffset == 0) || ((fm.buffer.Offset() + fbeVariantOffset + 4) > fm.buffer.Size()) {");
+    Indent(1);
+    WriteLineIndent("return false");
+    Indent(-1);
+    WriteLineIndent("}");
+    WriteLine();
+    WriteLineIndent("fbeVariantIndex := int(fbe.ReadUInt32(fm.buffer.Data(), fm.buffer.Offset() + fbeVariantOffset))");
+    WriteLineIndent("if (fbeVariantIndex < 0 || fbeVariantIndex >= " + std::to_string(v->body->values.size()) + ") {");
+    Indent(1);
+    WriteLineIndent("return false");
+    Indent(-1);
+    WriteLineIndent("}");
+    WriteLine();
+    WriteLineIndent("fm.buffer.Shift(fbeVariantOffset)");
+    WriteLine();
+    WriteLineIndent("switch fbeVariantIndex {");
+    for(auto index = 0; index < v->body->values.size(); index ++) {
+        WriteLineIndent("case " + std::to_string(index) + ":");
+        Indent(1);
+        auto& value = v->body->values[index];
+        WriteLineIndent("model := " + ConvertVariantTypeFieldInitialization(*value));
+        WriteLineIndent("if !model.Verify() {");
+        Indent(1);
+        WriteLineIndent("return false");
+        Indent(-1);
+        WriteLineIndent("}");
+        WriteLineIndent("break");
+        Indent(-1);
+    }
+    WriteLineIndent("}");
+    WriteLineIndent("fm.buffer.Unshift(fbeVariantOffset)");
     WriteLineIndent("return true");
     Indent(-1);
     WriteLineIndent("}");
@@ -6156,21 +6187,21 @@ void GeneratorGo::GenerateVariantFieldModel(const std::shared_ptr<Package>& p, c
     Indent(-1);
     WriteLineIndent("}");
     WriteLine();
-    WriteLineIndent("fbeStructOffset := int(fbe.ReadUInt32(fm.buffer.Data(), fm.buffer.Offset() + fm.FBEOffset()))");
-    WriteLineIndent("if (fbeStructOffset == 0) || ((fm.buffer.Offset() + fbeStructOffset + 4 + 4) > fm.buffer.Size()) {");
+    WriteLineIndent("fbeVariantOffset := int(fbe.ReadUInt32(fm.buffer.Data(), fm.buffer.Offset() + fm.FBEOffset()))");
+    WriteLineIndent("if (fbeVariantOffset == 0) || ((fm.buffer.Offset() + fbeVariantOffset + 4) > fm.buffer.Size()) {");
     Indent(1);
     WriteLineIndent("return errors.New(\"model is broken\")");
     Indent(-1);
     WriteLineIndent("}");
     WriteLine();
-    WriteLineIndent("fbeVariantIndex := int(fbe.ReadUInt32(fm.buffer.Data(), fm.buffer.Offset() + fbeStructOffset))");
+    WriteLineIndent("fbeVariantIndex := int(fbe.ReadUInt32(fm.buffer.Data(), fm.buffer.Offset() + fbeVariantOffset))");
     WriteLineIndent("if (fbeVariantIndex < 0 || fbeVariantIndex >= " + std::to_string(v->body->values.size()) + ") {");
     Indent(1);
     WriteLineIndent("return errors.New(\"model is broken\")");
     Indent(-1);
     WriteLineIndent("}");
     WriteLine();
-    WriteLineIndent("fm.buffer.Shift(fbeStructOffset)");
+    WriteLineIndent("fm.buffer.Shift(fbeVariantOffset)");
     WriteLine();
     WriteLineIndent("switch fbeVariantIndex {");
     for(auto index = 0; index < v->body->values.size(); index ++) {
@@ -6188,7 +6219,7 @@ void GeneratorGo::GenerateVariantFieldModel(const std::shared_ptr<Package>& p, c
         Indent(-1);
     }
     WriteLineIndent("}");
-    WriteLineIndent("fm.buffer.Unshift(fbeStructOffset)");
+    WriteLineIndent("fm.buffer.Unshift(fbeVariantOffset)");
     WriteLineIndent("return nil");
     Indent(-1);
     WriteLineIndent("}");
