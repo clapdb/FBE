@@ -14,39 +14,42 @@ import "fbeproj/proto/fbe"
 var _ = errors.New
 var _ = fbe.Version
 
-// Fast Binary Encoding ValueContainer field model
-type FieldModelValueContainer struct {
+// Fast Binary Encoding ExprContainer field model
+type FieldModelExprContainer struct {
     // Field model buffer
     buffer *fbe.Buffer
     // Field model buffer offset
     offset int
 
-    Vv *FieldModelVectorV
-    Vm *FieldModelMapInt32V
+    E *FieldModelExpr
+    Eo *FieldModelOptionalExpr
+    So *FieldModelOptionalSimple
 }
 
-// Create a new ValueContainer field model
-func NewFieldModelValueContainer(buffer *fbe.Buffer, offset int) *FieldModelValueContainer {
-    fbeResult := FieldModelValueContainer{buffer: buffer, offset: offset}
-    fbeResult.Vv = NewFieldModelVectorV(buffer, 4 + 4)
-    fbeResult.Vm = NewFieldModelMapInt32V(buffer, fbeResult.Vv.FBEOffset() + fbeResult.Vv.FBESize())
+// Create a new ExprContainer field model
+func NewFieldModelExprContainer(buffer *fbe.Buffer, offset int) *FieldModelExprContainer {
+    fbeResult := FieldModelExprContainer{buffer: buffer, offset: offset}
+    fbeResult.E = NewFieldModelExpr(buffer, 4 + 4)
+    fbeResult.Eo = NewFieldModelOptionalExpr(buffer, fbeResult.E.FBEOffset() + fbeResult.E.FBESize())
+    fbeResult.So = NewFieldModelOptionalSimple(buffer, fbeResult.Eo.FBEOffset() + fbeResult.Eo.FBESize())
     return &fbeResult
 }
 
 // Get the field size
-func (fm *FieldModelValueContainer) FBESize() int { return 4 }
+func (fm *FieldModelExprContainer) FBESize() int { return 4 }
 
 // Get the field body size
-func (fm *FieldModelValueContainer) FBEBody() int {
+func (fm *FieldModelExprContainer) FBEBody() int {
     fbeResult := 4 + 4 +
-        fm.Vv.FBESize() +
-        fm.Vm.FBESize() +
+        fm.E.FBESize() +
+        fm.Eo.FBESize() +
+        fm.So.FBESize() +
         0
     return fbeResult
 }
 
 // Get the field extra size
-func (fm *FieldModelValueContainer) FBEExtra() int {
+func (fm *FieldModelExprContainer) FBEExtra() int {
     if (fm.buffer.Offset() + fm.FBEOffset() + fm.FBESize()) > fm.buffer.Size() {
         return 0
     }
@@ -59,8 +62,9 @@ func (fm *FieldModelValueContainer) FBEExtra() int {
     fm.buffer.Shift(fbeStructOffset)
 
     fbeResult := fm.FBEBody() +
-        fm.Vv.FBEExtra() +
-        fm.Vm.FBEExtra() +
+        fm.E.FBEExtra() +
+        fm.Eo.FBEExtra() +
+        fm.So.FBEExtra() +
         0
 
     fm.buffer.Unshift(fbeStructOffset)
@@ -69,23 +73,23 @@ func (fm *FieldModelValueContainer) FBEExtra() int {
 }
 
 // Get the field type
-func (fm *FieldModelValueContainer) FBEType() int { return 4 }
+func (fm *FieldModelExprContainer) FBEType() int { return 2 }
 
 // Get the field offset
-func (fm *FieldModelValueContainer) FBEOffset() int { return fm.offset }
+func (fm *FieldModelExprContainer) FBEOffset() int { return fm.offset }
 // Set the field offset
-func (fm *FieldModelValueContainer) SetFBEOffset(value int) { fm.offset = value }
+func (fm *FieldModelExprContainer) SetFBEOffset(value int) { fm.offset = value }
 
 // Shift the current field offset
-func (fm *FieldModelValueContainer) FBEShift(size int) { fm.offset += size }
+func (fm *FieldModelExprContainer) FBEShift(size int) { fm.offset += size }
 // Unshift the current field offset
-func (fm *FieldModelValueContainer) FBEUnshift(size int) { fm.offset -= size }
+func (fm *FieldModelExprContainer) FBEUnshift(size int) { fm.offset -= size }
 
 // Check if the struct value is valid
-func (fm *FieldModelValueContainer) Verify() bool { return fm.VerifyType(true) }
+func (fm *FieldModelExprContainer) Verify() bool { return fm.VerifyType(true) }
 
 // Check if the struct value and its type are valid
-func (fm *FieldModelValueContainer) VerifyType(fbeVerifyType bool) bool {
+func (fm *FieldModelExprContainer) VerifyType(fbeVerifyType bool) bool {
     if (fm.buffer.Offset() + fm.FBEOffset() + fm.FBESize()) > fm.buffer.Size() {
         return true
     }
@@ -112,30 +116,38 @@ func (fm *FieldModelValueContainer) VerifyType(fbeVerifyType bool) bool {
 }
 
 // // Check if the struct value fields are valid
-func (fm *FieldModelValueContainer) VerifyFields(fbeStructSize int) bool {
+func (fm *FieldModelExprContainer) VerifyFields(fbeStructSize int) bool {
     fbeCurrentSize := 4 + 4
 
-    if (fbeCurrentSize + fm.Vv.FBESize()) > fbeStructSize {
+    if (fbeCurrentSize + fm.E.FBESize()) > fbeStructSize {
         return true
     }
-    if !fm.Vv.Verify() {
+    if !fm.E.Verify() {
         return false
     }
-    fbeCurrentSize += fm.Vv.FBESize()
+    fbeCurrentSize += fm.E.FBESize()
 
-    if (fbeCurrentSize + fm.Vm.FBESize()) > fbeStructSize {
+    if (fbeCurrentSize + fm.Eo.FBESize()) > fbeStructSize {
         return true
     }
-    if !fm.Vm.Verify() {
+    if !fm.Eo.Verify() {
         return false
     }
-    fbeCurrentSize += fm.Vm.FBESize()
+    fbeCurrentSize += fm.Eo.FBESize()
+
+    if (fbeCurrentSize + fm.So.FBESize()) > fbeStructSize {
+        return true
+    }
+    if !fm.So.Verify() {
+        return false
+    }
+    fbeCurrentSize += fm.So.FBESize()
 
     return true
 }
 
 // Get the struct value (begin phase)
-func (fm *FieldModelValueContainer) GetBegin() (int, error) {
+func (fm *FieldModelExprContainer) GetBegin() (int, error) {
     if (fm.buffer.Offset() + fm.FBEOffset() + fm.FBESize()) > fm.buffer.Size() {
         return 0, nil
     }
@@ -155,18 +167,18 @@ func (fm *FieldModelValueContainer) GetBegin() (int, error) {
 }
 
 // Get the struct value (end phase)
-func (fm *FieldModelValueContainer) GetEnd(fbeBegin int) {
+func (fm *FieldModelExprContainer) GetEnd(fbeBegin int) {
     fm.buffer.Unshift(fbeBegin)
 }
 
 // Get the struct value
-func (fm *FieldModelValueContainer) Get() (*ValueContainer, error) {
-    fbeResult := NewValueContainer()
+func (fm *FieldModelExprContainer) Get() (*ExprContainer, error) {
+    fbeResult := NewExprContainer()
     return fbeResult, fm.GetValue(fbeResult)
 }
 
 // Get the struct value by the given pointer
-func (fm *FieldModelValueContainer) GetValue(fbeValue *ValueContainer) error {
+func (fm *FieldModelExprContainer) GetValue(fbeValue *ExprContainer) error {
     fbeBegin, err := fm.GetBegin()
     if fbeBegin == 0 {
         return err
@@ -179,26 +191,33 @@ func (fm *FieldModelValueContainer) GetValue(fbeValue *ValueContainer) error {
 }
 
 // Get the struct fields values
-func (fm *FieldModelValueContainer) GetFields(fbeValue *ValueContainer, fbeStructSize int) {
+func (fm *FieldModelExprContainer) GetFields(fbeValue *ExprContainer, fbeStructSize int) {
     fbeCurrentSize := 4 + 4
 
-    if (fbeCurrentSize + fm.Vv.FBESize()) <= fbeStructSize {
-        fbeValue.Vv, _ = fm.Vv.Get()
+    if (fbeCurrentSize + fm.E.FBESize()) <= fbeStructSize {
+        _ = fm.E.GetValue(&fbeValue.E)
     } else {
-        fbeValue.Vv = make([]V, 0)
+        fbeValue.E = NewExpr()
     }
-    fbeCurrentSize += fm.Vv.FBESize()
+    fbeCurrentSize += fm.E.FBESize()
 
-    if (fbeCurrentSize + fm.Vm.FBESize()) <= fbeStructSize {
-        fbeValue.Vm, _ = fm.Vm.Get()
+    if (fbeCurrentSize + fm.Eo.FBESize()) <= fbeStructSize {
+        fbeValue.Eo, _ = fm.Eo.Get()
     } else {
-        fbeValue.Vm = make(map[int32]V)
+        fbeValue.Eo = nil
     }
-    fbeCurrentSize += fm.Vm.FBESize()
+    fbeCurrentSize += fm.Eo.FBESize()
+
+    if (fbeCurrentSize + fm.So.FBESize()) <= fbeStructSize {
+        fbeValue.So, _ = fm.So.Get()
+    } else {
+        fbeValue.So = nil
+    }
+    fbeCurrentSize += fm.So.FBESize()
 }
 
 // Set the struct value (begin phase)
-func (fm *FieldModelValueContainer) SetBegin() (int, error) {
+func (fm *FieldModelExprContainer) SetBegin() (int, error) {
     if (fm.buffer.Offset() + fm.FBEOffset() + fm.FBESize()) > fm.buffer.Size() {
         return 0, errors.New("model is broken")
     }
@@ -218,12 +237,12 @@ func (fm *FieldModelValueContainer) SetBegin() (int, error) {
 }
 
 // Set the struct value (end phase)
-func (fm *FieldModelValueContainer) SetEnd(fbeBegin int) {
+func (fm *FieldModelExprContainer) SetEnd(fbeBegin int) {
     fm.buffer.Unshift(fbeBegin)
 }
 
 // Set the struct value
-func (fm *FieldModelValueContainer) Set(fbeValue *ValueContainer) error {
+func (fm *FieldModelExprContainer) Set(fbeValue *ExprContainer) error {
     fbeBegin, err := fm.SetBegin()
     if fbeBegin == 0 {
         return err
@@ -235,13 +254,16 @@ func (fm *FieldModelValueContainer) Set(fbeValue *ValueContainer) error {
 }
 
 // Set the struct fields values
-func (fm *FieldModelValueContainer) SetFields(fbeValue *ValueContainer) error {
+func (fm *FieldModelExprContainer) SetFields(fbeValue *ExprContainer) error {
     var err error = nil
 
-    if err = fm.Vv.Set(fbeValue.Vv); err != nil {
+    if err = fm.E.Set(&fbeValue.E); err != nil {
         return err
     }
-    if err = fm.Vm.Set(fbeValue.Vm); err != nil {
+    if err = fm.Eo.Set(fbeValue.Eo); err != nil {
+        return err
+    }
+    if err = fm.So.Set(fbeValue.So); err != nil {
         return err
     }
     return err

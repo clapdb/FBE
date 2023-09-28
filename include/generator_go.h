@@ -15,6 +15,7 @@
 #ifndef GENERATOR_GO_H
 #define GENERATOR_GO_H
 
+#include "fbe.h"
 #include "generator.h"
 
 namespace FBE {
@@ -67,6 +68,7 @@ private:
     void GenerateFBEFieldModelBytes(const std::string& package);
     void GenerateFBEFieldModelString(const std::string& package);
     void GenerateFBEFieldModelOptional(const std::shared_ptr<Package>& p, const std::string& name, const std::string& model, const StructField& field, const fs::path& path);
+    void GenerateFBEFieldModelOptional(const std::shared_ptr<Package>& p, const std::string& name, const std::string& model, const VariantType& variant, const fs::path& path);
     void GenerateFBEFieldModelPtr(const std::shared_ptr<Package>& p, const std::string& name, const std::string& model, const StructField& field, const fs::path& path);
     void GenerateFBEFieldModelArray(const std::shared_ptr<Package>& p, const std::string& name, const std::string& model, const StructField& field, const fs::path& path);
     void GenerateFBEFieldModelVector(const std::shared_ptr<Package>& p, const std::string& name, const std::string& model, const StructField& field, const fs::path& path);
@@ -93,6 +95,8 @@ private:
     void GeneratePackage(const std::shared_ptr<Package>& p);
     void GenerateEnum(const std::shared_ptr<Package>& p, const std::shared_ptr<EnumType>& e, const fs::path& path);
     void GenerateFlags(const std::shared_ptr<Package>& p, const std::shared_ptr<FlagsType>& f, const fs::path& path);
+    void GenerateVariant(const std::shared_ptr<Package>& p, const std::shared_ptr<VariantType>& v, const fs::path& path);
+    void GenerateVariantFieldModel(const std::shared_ptr<Package>& p, const std::shared_ptr<VariantType>& v, const fs::path& path);
     void GenerateStruct(const std::shared_ptr<Package>& p, const std::shared_ptr<StructType>& s, const fs::path& path);
     void GenerateStructFieldModel(const std::shared_ptr<Package>& p, const std::shared_ptr<StructType>& s, const fs::path& path);
     void GenerateStructModel(const std::shared_ptr<Package>& p, const std::shared_ptr<StructType>& s, const fs::path& path);
@@ -123,15 +127,19 @@ private:
     std::string ConvertPtr(const std::string& type, const std::string& value);
     std::string ConvertTypeName(const std::string& type, bool optional, bool ptr);
     std::string ConvertTypeName(const StructField& field);
+    std::string ConvertTypeName(const VariantValue& variant);
     std::string ConvertTypeFieldName(const std::string& type);
     std::string ConvertTypeFieldType(const std::string& type, bool optional, bool ptr);
     std::string ConvertTypeFieldDeclaration(const std::string& type, bool optional, bool ptr, bool final);
     std::string ConvertTypeFieldDeclaration(const StructField& field, bool final);
     std::string ConvertTypeFieldInitialization(const std::string& type, bool optional, const std::string& offset, bool final);
     std::string ConvertTypeFieldInitialization(const StructField& field, const std::string& offset, bool final);
+    std::string ConvertVariantTypeFieldInitialization(const std::string& type);
+    std::string ConvertVariantTypeFieldInitialization(const VariantValue& field);
     std::string ConvertConstant(const std::string& type, const std::string& value, bool optional, bool ptr);
     std::string ConvertDefault(const std::string& type, bool optional, bool ptr);
     std::string ConvertDefault(const StructField& field);
+    std::string ConvertDefault(const std::shared_ptr<VariantType>& variant);
 
     void WriteOutputStreamType(const std::string& type, const std::string& name, bool optional, bool ptr);
     void WriteOutputStreamValue(const std::string& type, const std::string& name, bool optional, bool ptr, bool separate);

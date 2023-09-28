@@ -255,6 +255,37 @@ struct FlagsType
     std::shared_ptr<FlagsBody> body;
 };
 
+struct StructField
+{
+    std::shared_ptr<Attributes> attributes;
+    std::shared_ptr<std::string> name;
+    std::shared_ptr<std::string> key;
+    std::shared_ptr<std::string> type;
+    std::shared_ptr<std::string> value;
+    bool id{false};
+    bool keys{false};
+    bool optional{false};
+    bool reseter{false};
+    bool array{false};
+    bool vector{false};
+    bool list{false};
+    bool set{false};
+    bool map{false};
+    bool hash{false};
+    bool ptr{false};
+    bool variant{false}; // TODO(liuqi): unused?
+    int N{0};
+
+    void SetArraySize(int size);
+};
+
+struct StructBody
+{
+    std::vector<std::shared_ptr<StructField>> fields;
+
+    void AddField(StructField* field);
+};
+
 struct VariantValue
 {
     std::shared_ptr<std::string> key;
@@ -277,6 +308,20 @@ struct VariantValue
             hash == other.hash
         );
     }
+
+    // mock struct to reuse helper functions
+    StructField toStructField() const noexcept
+    {
+        StructField field;
+        field.key = key;
+        field.type = type;
+        field.ptr = ptr;
+        field.vector = vector;
+        field.list = list;
+        field.map = map;
+        field.hash = hash;
+        return field;
+    }
 };
 
 struct VariantBody
@@ -292,37 +337,6 @@ struct VariantType
     std::shared_ptr<Attributes> attributes;
     std::shared_ptr<std::string> name;
     std::shared_ptr<VariantBody> body;
-};
-
-struct StructField
-{
-    std::shared_ptr<Attributes> attributes;
-    std::shared_ptr<std::string> name;
-    std::shared_ptr<std::string> key;
-    std::shared_ptr<std::string> type;
-    std::shared_ptr<std::string> value;
-    bool id{false};
-    bool keys{false};
-    bool optional{false};
-    bool reseter{false};
-    bool array{false};
-    bool vector{false};
-    bool list{false};
-    bool set{false};
-    bool map{false};
-    bool hash{false};
-    bool ptr{false};
-    bool variant{false};
-    int N{0};
-
-    void SetArraySize(int size);
-};
-
-struct StructBody
-{
-    std::vector<std::shared_ptr<StructField>> fields;
-
-    void AddField(StructField* field);
 };
 
 struct StructRequest

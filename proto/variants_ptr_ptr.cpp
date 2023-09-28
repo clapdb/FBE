@@ -22,6 +22,18 @@ auto is_equal(const Expr& lhs, const Expr& rhs) -> bool {
         case 2: {
             return std::get<2>(lhs) == std::get<2>(rhs);
         }
+        case 3: {
+            auto& lhs_value = std::get<3>(lhs);
+            auto& rhs_value = std::get<3>(rhs);
+            if (lhs_value.size() != rhs_value.size())
+                return false;
+            for (size_t i = 0; i < lhs_value.size(); i++)
+            {
+                if (lhs_value[i] != rhs_value[i])
+                    return false;
+            }
+            return true;
+        }
         default: 
             return true;
     }
@@ -43,6 +55,15 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const Expr& valu
         case 2:
             stream<< "{int32}";
             stream << std::get<2>(value);
+            break;
+        case 3:
+            stream << "{byte}=[" << std::get<3>(value).size() << "][";
+            for (const auto& it : std::get<3>(value))
+            {
+                stream << std::string(first ? "" : ",") << (int)it;
+                first = false;
+            }
+            stream << "]";
             break;
         default:
             static_assert("unreachable branch");
@@ -357,6 +378,104 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const Simple& va
 {
     stream << "Simple(";
     stream << "name="; stream << "\"" << value.name << "\"";
+    stream << ")";
+    return stream;
+}
+
+ExprContainer::ExprContainer()
+    : e()
+    , eo()
+    , so()
+{}
+
+ExprContainer::ExprContainer(::variants_ptr::Expr arg_e, std::optional<::variants_ptr::Expr> arg_eo, std::optional<::variants_ptr::Simple> arg_so)
+    : e(std::move(arg_e))
+    , eo()
+    , so()
+{
+    if (arg_eo.has_value()) {
+        eo.emplace(std::move(arg_eo.value()));
+        arg_eo.reset();
+    }
+    if (arg_so.has_value()) {
+        so.emplace(std::move(arg_so.value()));
+        arg_so.reset();
+    }
+}
+
+ExprContainer::ExprContainer([[maybe_unused]] ExprContainer&& other) noexcept
+    : e(std::move(other.e))
+    , eo()
+    , so()
+{
+    if (other.eo.has_value()) {
+        eo.emplace(std::move(other.eo.value()));
+        other.eo.reset();
+    }
+    if (other.so.has_value()) {
+        so.emplace(std::move(other.so.value()));
+        other.so.reset();
+    }
+}
+
+ExprContainer::~ExprContainer()
+{
+}
+
+bool ExprContainer::operator==([[maybe_unused]] const ExprContainer& other) const noexcept
+{
+    // compare variant e
+    if (!is_equal(e, other.e))
+        return false;
+    // compare variant eo
+    if ((eo.has_value() && !other.eo.has_value()) || (!eo.has_value() && other.eo.has_value()) || (eo.has_value() && other.eo.has_value() && !is_equal(eo.value(), other.eo.value())))
+        return false;
+    if (so != other.so)
+        return false;
+    return true;
+}
+
+bool ExprContainer::operator<([[maybe_unused]] const ExprContainer& other) const noexcept
+{
+    return false;
+}
+
+ExprContainer& ExprContainer::operator=(ExprContainer&& other) noexcept
+{
+    if (this != &other)
+    {
+        e = std::move(other.e);
+        if (other.eo.has_value()) {
+            eo.emplace(std::move(other.eo.value()));
+            other.eo.reset();
+        }
+        if (other.so.has_value()) {
+            so.emplace(std::move(other.so.value()));
+            other.so.reset();
+        }
+    }
+    return *this;
+}
+
+std::string ExprContainer::string() const
+{
+    std::stringstream ss; ss << *this; return ss.str();
+}
+
+void ExprContainer::swap([[maybe_unused]] ExprContainer& other) noexcept
+{
+    using std::swap;
+    swap(e, other.e);
+    swap(eo, other.eo);
+    swap(so, other.so);
+}
+
+std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const ExprContainer& value)
+{
+    stream << "ExprContainer(";
+    stream << "e="; stream << value.e;
+    stream << ",eo="; if (value.eo) stream << *value.eo; else stream << "null";
+    stream << ",so="; if (value.so) stream << *value.so; else stream << "null";
     stream << ")";
     return stream;
 }

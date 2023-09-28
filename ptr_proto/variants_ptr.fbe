@@ -8,6 +8,13 @@ variant Expr {
   bool;
   string;
   int32;
+  byte[];  // not supported yet
+}
+
+struct ExprContainer {
+  Expr e;
+  Expr? eo;
+  Simple? so;
 }
 
 // container type not supported yet

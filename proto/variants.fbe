@@ -26,7 +26,6 @@ variant V {
   Expr;
 }
 
-
 struct Value {
   V v;
 }

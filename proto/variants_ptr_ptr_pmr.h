@@ -36,10 +36,11 @@ using namespace ::variants_ptr_pmr;
 namespace variants_ptr_pmr {
 // forward declaration
 struct Simple;
+struct ExprContainer;
 struct Value;
 struct ValueContainer;
 
-using Expr = std::variant<bool, stdb::memory::arena_string, int32_t>;
+using Expr = std::variant<bool, stdb::memory::arena_string, int32_t, pmr::vector<uint8_t>>;
 std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const Expr& value);
 auto is_equal(const Expr& lhs, const Expr& rhs) -> bool;
 
@@ -97,6 +98,58 @@ struct std::hash<variants_ptr_pmr::Simple>
 
 namespace variants_ptr_pmr {
 
+struct ExprContainer : FBE::Base
+{
+    ArenaManagedCreateOnlyTag;
+
+    ::variants_ptr_pmr::Expr e;
+    std::optional<::variants_ptr_pmr::Expr> eo;
+    std::optional<::variants_ptr_pmr::Simple> so;
+
+    size_t fbe_type() const noexcept { return 2; }
+
+    ExprContainer();
+    explicit ExprContainer(allocator_type alloc);
+    ExprContainer(::variants_ptr_pmr::Expr arg_e, std::optional<::variants_ptr_pmr::Expr> arg_eo, std::optional<::variants_ptr_pmr::Simple> arg_so);
+    ExprContainer(const ExprContainer& other) = default;
+    ExprContainer(ExprContainer&& other) noexcept;
+    ~ExprContainer() override;
+
+    ExprContainer& operator=(const ExprContainer& other) = default;
+    ExprContainer& operator=(ExprContainer&& other) noexcept;
+
+    bool operator==(const ExprContainer& other) const noexcept;
+    bool operator!=(const ExprContainer& other) const noexcept { return !operator==(other); }
+    bool operator<(const ExprContainer& other) const noexcept;
+    bool operator<=(const ExprContainer& other) const noexcept { return operator<(other) || operator==(other); }
+    bool operator>(const ExprContainer& other) const noexcept { return !operator<=(other); }
+    bool operator>=(const ExprContainer& other) const noexcept { return !operator<(other); }
+
+    std::string string() const;
+
+    friend std::ostream& operator<<(std::ostream& stream, const ExprContainer& value);
+
+    void swap(ExprContainer& other) noexcept;
+    friend void swap(ExprContainer& value1, ExprContainer& value2) noexcept { value1.swap(value2); }
+};
+
+} // namespace variants_ptr_pmr
+
+template<>
+struct std::hash<variants_ptr_pmr::ExprContainer>
+{
+    typedef variants_ptr_pmr::ExprContainer argument_type;
+    typedef size_t result_type;
+
+    result_type operator() ([[maybe_unused]] const argument_type& value) const
+    {
+        result_type result = 17;
+        return result;
+    }
+};
+
+namespace variants_ptr_pmr {
+
 struct Value : FBE::Base
 {
     ArenaManagedCreateOnlyTag;
@@ -105,7 +158,7 @@ struct Value : FBE::Base
     std::optional<::variants_ptr_pmr::V> vo;
     std::optional<::variants_ptr_pmr::V> vo2;
 
-    size_t fbe_type() const noexcept { return 2; }
+    size_t fbe_type() const noexcept { return 3; }
 
     Value();
     explicit Value(allocator_type alloc);
@@ -156,7 +209,7 @@ struct ValueContainer : FBE::Base
     pmr::vector<::variants_ptr_pmr::V> vv;
     pmr::unordered_map<int32_t, ::variants_ptr_pmr::V> vm;
 
-    size_t fbe_type() const noexcept { return 3; }
+    size_t fbe_type() const noexcept { return 4; }
 
     ValueContainer();
     explicit ValueContainer(allocator_type alloc);

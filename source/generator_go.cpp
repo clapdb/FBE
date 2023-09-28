@@ -1731,6 +1731,208 @@ func (fm *FieldModelString) Set(value string) error {
     Store(file);
 }
 
+
+void GeneratorGo::GenerateFBEFieldModelOptional(const std::shared_ptr<Package>& p, const std::string& name, const std::string& model, const VariantType& variant, const fs::path& path)
+{
+    // Generate the output file
+    fs::path output = path / ("FieldModelOptional" + name + ".go");
+    WriteBegin();
+
+    // Generate headers
+    GenerateHeader("FBE");
+
+    // Generate package
+    WriteLine();
+    WriteLineIndent("package " + *p->name);
+
+    // Generate imports
+    WriteLine();
+    GenerateImports(p);
+
+    std::string code = R"CODE(
+// Fast Binary Encoding optional _NAME_ field model
+type FieldModelOptional_NAME_ struct {
+    // Field model buffer
+    buffer *fbe.Buffer
+    // Field model buffer offset
+    offset int
+
+    // Base field model value
+    value *_MODEL_
+}
+
+// Create a new optional _NAME_ field model
+func NewFieldModelOptional_NAME_(buffer *fbe.Buffer, offset int) *FieldModelOptional_NAME_ {
+    fbeResult := FieldModelOptional_NAME_{buffer: buffer, offset: offset}
+    fbeResult.value = _MODEL_NEW_(buffer, 0)
+    return &fbeResult
+}
+
+// Get the optional field model value
+func (fm *FieldModelOptional_NAME_) Value() *_MODEL_ { return fm.value }
+
+// Get the field size
+func (fm *FieldModelOptional_NAME_) FBESize() int { return 1 + 4 }
+
+// Get the field extra size
+func (fm *FieldModelOptional_NAME_) FBEExtra() int {
+    if !fm.HasValue() {
+        return 0
+    }
+
+    fbeOptionalOffset := int(fbe.ReadUInt32(fm.buffer.Data(), fm.buffer.Offset() + fm.FBEOffset() + 1))
+    if (fbeOptionalOffset == 0) || ((fm.buffer.Offset() + fbeOptionalOffset + 4) > fm.buffer.Size()) {
+        return 0
+    }
+
+    fm.buffer.Shift(fbeOptionalOffset)
+    fbeResult := fm.value.FBESize() + fm.value.FBEExtra()
+    fm.buffer.Unshift(fbeOptionalOffset)
+    return fbeResult
+}
+
+// Get the field offset
+func (fm *FieldModelOptional_NAME_) FBEOffset() int { return fm.offset }
+// Set the field offset
+func (fm *FieldModelOptional_NAME_) SetFBEOffset(value int) { fm.offset = value }
+
+// Shift the current field offset
+func (fm *FieldModelOptional_NAME_) FBEShift(size int) { fm.offset += size }
+// Unshift the current field offset
+func (fm *FieldModelOptional_NAME_) FBEUnshift(size int) { fm.offset -= size }
+
+// Check if the object contains a value
+func (fm *FieldModelOptional_NAME_) HasValue() bool {
+    if (fm.buffer.Offset() + fm.FBEOffset() + fm.FBESize()) > fm.buffer.Size() {
+        return false
+    }
+
+    fbeHasValue := fbe.ReadUInt8(fm.buffer.Data(), fm.buffer.Offset() + fm.FBEOffset())
+    return fbeHasValue != 0
+}
+
+// Check if the optional value is valid
+func (fm *FieldModelOptional_NAME_) Verify() bool {
+    if (fm.buffer.Offset() + fm.FBEOffset() + fm.FBESize()) > fm.buffer.Size() {
+        return true
+    }
+
+    fbeHasValue := fbe.ReadUInt8(fm.buffer.Data(), fm.buffer.Offset() + fm.FBEOffset())
+    if fbeHasValue == 0 {
+        return true
+    }
+
+    fbeOptionalOffset := int(fbe.ReadUInt32(fm.buffer.Data(), fm.buffer.Offset() + fm.FBEOffset() + 1))
+    if fbeOptionalOffset == 0 {
+        return false
+    }
+
+    fm.buffer.Shift(fbeOptionalOffset)
+    fbeResult := fm.value.Verify()
+    fm.buffer.Unshift(fbeOptionalOffset)
+    return fbeResult
+}
+
+// Get the optional value (being phase)
+func (fm *FieldModelOptional_NAME_) GetBegin() (int, error) {
+    if !fm.HasValue() {
+        return 0, nil
+    }
+
+    fbeOptionalOffset := int(fbe.ReadUInt32(fm.buffer.Data(), fm.buffer.Offset() + fm.FBEOffset() + 1))
+    if fbeOptionalOffset <= 0 {
+        return 0, errors.New("model is broken")
+    }
+
+    fm.buffer.Shift(fbeOptionalOffset)
+    return fbeOptionalOffset, nil
+}
+
+// Get the optional value (end phase)
+func (fm *FieldModelOptional_NAME_) GetEnd(fbeBegin int) {
+    fm.buffer.Unshift(fbeBegin)
+}
+
+// Get the optional value
+func (fm *FieldModelOptional_NAME_) Get() (*_TYPE_ARG_, error) {
+    fbeValue := _TYPE_NEW_
+
+    fbeBegin, err := fm.GetBegin()
+    if fbeBegin == 0 {
+        return &fbeValue, err
+    }
+
+    _GET_VALUE_
+    fm.GetEnd(fbeBegin)
+    return &fbeValue, err
+}
+
+// Set the optional value (begin phase)
+func (fm *FieldModelOptional_NAME_) SetBegin(hasValue bool) (int, error) {
+    if (fm.buffer.Offset() + fm.FBEOffset() + fm.FBESize()) > fm.buffer.Size() {
+        return 0, nil
+    }
+
+    fbeHasValue := uint8(0)
+    if hasValue {
+        fbeHasValue = uint8(1)
+    }
+    fbe.WriteUInt8(fm.buffer.Data(), fm.buffer.Offset() + fm.FBEOffset(), fbeHasValue)
+    if fbeHasValue == 0 {
+        return 0, nil
+    }
+
+    fbeOptionalSize := fm.value.FBESize()
+    fbeOptionalOffset := fm.buffer.Allocate(fbeOptionalSize) - fm.buffer.Offset()
+    if (fbeOptionalOffset <= 0) || ((fm.buffer.Offset() + fbeOptionalOffset + fbeOptionalSize) > fm.buffer.Size()) {
+        return 0, errors.New("model is broken")
+    }
+
+    fbe.WriteUInt32(fm.buffer.Data(), fm.buffer.Offset() + fm.FBEOffset() + 1, uint32(fbeOptionalOffset))
+
+    fm.buffer.Shift(fbeOptionalOffset)
+    return fbeOptionalOffset, nil
+}
+
+// Set the optional value (end phase)
+func (fm *FieldModelOptional_NAME_) SetEnd(fbeBegin int) {
+    fm.buffer.Unshift(fbeBegin)
+}
+
+// Set the optional value
+func (fm *FieldModelOptional_NAME_) Set(fbeValue *_TYPE_ARG_) error {
+    fbeBegin, err := fm.SetBegin(fbeValue != nil)
+    if fbeBegin == 0 {
+        return err
+    }
+
+    _SET_VALUE_
+    fm.SetEnd(fbeBegin)
+    return err
+}
+)CODE";
+
+    // Prepare code template
+    code = std::regex_replace(code, std::regex("_NAME_"), name);
+    code = std::regex_replace(code, std::regex("_TYPE_ARG_"), ConvertTypeName(*variant.name, false, false));
+    code = std::regex_replace(code, std::regex("_TYPE_NEW_"), IsGoType(*variant.name) ? ConvertOptional(*variant.name) : (ConvertNewName(*variant.name) + "()"));
+    code = std::regex_replace(code, std::regex("_TYPE_"), ConvertTypeFieldType(*variant.name, false, false));
+    code = std::regex_replace(code, std::regex("_MODEL_NEW_"), ConvertNewName(model));
+    code = std::regex_replace(code, std::regex("_MODEL_"), model);
+    code = std::regex_replace(code, std::regex("_GET_VALUE_"), IsGoType(*variant.name) ? "*fbeValue, err = fm.value.Get()" : "err = fm.value.GetValue(&fbeValue)");
+    code = std::regex_replace(code, std::regex("_SET_VALUE_"), IsGoType(*variant.name) ? "err = fm.value.Set(*fbeValue)" : "err = fm.value.Set(fbeValue)");
+    code = std::regex_replace(code, std::regex("\n"), EndLine());
+
+    Write(code);
+
+    // Generate footer
+    GenerateFooter();
+
+    // Store the output file
+    WriteEnd();
+    Store(output);
+}
+
 void GeneratorGo::GenerateFBEFieldModelOptional(const std::shared_ptr<Package>& p, const std::string& name, const std::string& model, const StructField& field, const fs::path& path)
 {
     // Generate the output file
@@ -5242,13 +5444,34 @@ void GeneratorGo::GenerateContainers(const std::shared_ptr<Package>& p, const fs
                     {
                         if (final)
                             GenerateFBEFinalModelOptional(p, ConvertTypeFieldName(*field->type), ConvertTypeFieldDeclaration(*field->type, false, false, final), *field, path);
-                        else
+                        else if (auto variant = GetVariantType(p, *field->type); variant != nullptr) {
+                            // is variant type
+                            GenerateFBEFieldModelOptional(p, ConvertTypeFieldName(*field->type), ConvertTypeFieldDeclaration(*field->type, false, false, final), *variant, path);
+                        } else
                             GenerateFBEFieldModelOptional(p, ConvertTypeFieldName(*field->type), ConvertTypeFieldDeclaration(*field->type, false, false, final), *field, path);
                     }
                     if (field->ptr)
                     {
                         if (not final)
                             GenerateFBEFieldModelPtr(p, ConvertTypeFieldName(*field->type), ConvertTypeFieldDeclaration(*field->type, false, false, final), *field, path);
+                    }
+                }
+            }
+        }
+
+        // CHECK all variants in the package
+        for (const auto& v: p->body->variants) {
+            if (v->body) {
+                // CHECK all types in the variant
+                for (const auto& vv: v->body->values) {
+                    if (vv->ptr) {
+                        GenerateFBEFieldModelPtr(p, ConvertTypeFieldName(*vv->type), ConvertTypeFieldDeclaration(*vv->type, false, false, false), vv->toStructField(), path);
+                    }
+                    if (vv->vector || vv->list) {
+                        GenerateFBEFieldModelVector(p, (vv->ptr ? "Ptr" : "") + ConvertTypeFieldName(*vv->type), ConvertTypeFieldDeclaration(*vv->type, false, vv->ptr, final), vv->toStructField(), path);
+                    }
+                    if (vv->map || vv->hash) {
+                        GenerateFBEFieldModelMap(p, ConvertTypeFieldName(*vv->key), ConvertTypeFieldDeclaration(*vv->key, false, false, final), (vv->ptr ? "Ptr" : "") + ConvertTypeFieldName(*vv->type), ConvertTypeFieldDeclaration(*vv->type, false, vv->ptr, final), vv->toStructField(), path);
                     }
                 }
             }
@@ -5276,6 +5499,10 @@ void GeneratorGo::GeneratePackage(const std::shared_ptr<Package>& p)
         // Generate child flags
         for (const auto& child_f : p->body->flags)
             GenerateFlags(p, child_f, path);
+
+        // Generate child variants
+        for (const auto& child_v : p->body->variants)
+            GenerateVariant(p, child_v, path);
 
         // Generate child structs
         for (const auto& child_s : p->body->structs)
@@ -5700,6 +5927,394 @@ void GeneratorGo::GenerateFlags(const std::shared_ptr<Package>& p, const std::sh
         GenerateFBEFinalModelEnumFlags(*p->name, flags_name, flags_type);
 }
 
+// GenerateVariant is like GenerateStruct, but for variants
+void GeneratorGo::GenerateVariant(const std::shared_ptr<Package>& p, const std::shared_ptr<VariantType>& v, const fs::path& path)
+{
+    std::string variant_name = ConvertToUpper(*v->name);
+    // Generate the output file
+    fs::path output = path / (variant_name + ".go");
+    WriteBegin();
+
+    // Generate header
+    GenerateHeader(fs::path(_input).filename().string());
+
+    // Generate package
+    WriteLine();
+    WriteLineIndent("package " + *p->name);
+
+    // Generate imports
+    WriteLine();
+    WriteLineIndent("import \"fmt\"");
+    WriteLineIndent("import \"strconv\"");
+    WriteLineIndent("// import \"strings\"");
+    GenerateImports(p);
+
+    // Generate workaround for Go unused imports issue
+    WriteLine();
+    WriteLineIndent("// Workaround for Go unused imports issue");
+    WriteLineIndent("var _ = fmt.Print");
+    WriteLineIndent("var _ = strconv.FormatInt");
+
+    // Generate Variant interface{}
+    WriteLine();
+    WriteLineIndent("// type " + variant_name + " interface{}");
+    WriteLineIndent("type " + variant_name + " interface{}");
+
+    // list variant given type
+    WriteLine("// List of " + variant_name + " types");
+    if (v->body)
+    {
+        for (const auto& variant : v->body->values)
+        {
+            WriteLineIndent("// " + ConvertTypeName(*variant));
+        }
+    }
+
+    // Generate variant constructor
+    WriteLine();
+    WriteLineIndent("// Create a new " + variant_name + " variant");
+    WriteLineIndent("func New" + variant_name + "() " + variant_name + " {");
+    Indent(1);
+    // TODO(liuqi): Should return the first given type, nil is also acceptable
+    WriteLineIndent("return " + ConvertDefault(v));
+    Indent(-1);
+    WriteLineIndent("}");
+
+    // Generate variant constructor from the given value
+    WriteLine();
+    WriteLineIndent("// Create a new " + variant_name + " variant from the given value");
+    WriteLineIndent("func New" + variant_name + "FromValue(value " + variant_name + ") " + variant_name + " {");
+    Indent(1);
+    WriteLineIndent("return value");
+    Indent(-1);
+    WriteLineIndent("}");
+
+    // 
+    // Generate variant index, mock cpp std::variant::index()
+    WriteLine();
+    WriteLineIndent("// Get the variant index");
+    WriteLineIndent("func Get" + variant_name + "Index() int {"); // variant_name = ConvertToUpper(*v->name);
+    Indent(1);
+    WriteLineIndent("return 0");
+    Indent(-1);
+    WriteLineIndent("}");
+
+    // Generate variant constructor from the given field values
+    // WriteLine();
+    // WriteLineIndent("// Create a new " + variant_name + " variant from the given field values");
+    // WriteLineIndent("func New" + variant_name + "FromValue(value interface{}) *" + variant_name + " {");
+    // Indent(1);
+    // WriteLineIndent("return &value");
+    // Indent(-1);
+    // WriteLineIndent("}");
+
+
+    // Generate footer
+    GenerateFooter();
+
+    // Store the output file
+    WriteEnd();
+    Store(output);
+
+    // Generate struct field model
+    GenerateVariantFieldModel(p, v, path);
+}
+
+void GeneratorGo::GenerateVariantFieldModel(const std::shared_ptr<Package>& p, const std::shared_ptr<VariantType>& v, const fs::path& path)
+{
+    std::string struct_name = ConvertToUpper(*v->name);
+    std::string field_model_name = "FieldModel" + struct_name;
+
+    // Generate the output file
+    fs::path output = path / (field_model_name + ".go");
+    WriteBegin();
+
+    // Generate header
+    GenerateHeader(fs::path(_input).filename().string());
+
+    // Generate package
+    WriteLine();
+    WriteLineIndent("package " + *p->name);
+
+    // Generate imports
+    WriteLine();
+    GenerateImports(p);
+
+    // Generate variant field model type
+    WriteLine();
+    WriteLineIndent("// " + field_model_name + " variant field model");
+    WriteLineIndent("type " + field_model_name + " struct {");
+    Indent(1);
+    WriteLineIndent("// Field model buffer");
+    WriteLineIndent("buffer *fbe.Buffer");
+    WriteLineIndent("// Field model buffer offset");
+    WriteLineIndent("offset int");
+    Indent(-1);
+    WriteLineIndent("}");
+
+    // Generate variant field model constructor
+    WriteLine();
+    WriteLineIndent("// Create a new " + field_model_name + " variant field model");
+    WriteLineIndent("func New" + field_model_name + "(buffer *fbe.Buffer, offset int) *" + field_model_name + " {");
+    Indent(1);
+    WriteLineIndent("return &" + field_model_name + "{buffer: buffer, offset: offset}");
+    Indent(-1);
+    WriteLineIndent("}");
+
+    // Generate variant field model FBESize() method
+    WriteLine();
+    WriteLineIndent("// Get the field size");
+    WriteLineIndent("func (fm *" + field_model_name + ") FBESize() int { return 4 }");
+
+    // Generate variant field model FBEBody() method
+    WriteLine();
+    WriteLineIndent("// Get the field body size");
+    WriteLineIndent("func (fm *" + field_model_name + ") FBEBody() int {");
+    Indent(1);
+    WriteLineIndent("// variant type's fbe_size not included");
+    WriteLineIndent("// only variant_index included");
+    WriteLineIndent("return 4");
+    Indent(-1);
+    WriteLineIndent("}");
+
+    // Generate variant field model FBEExtra() method
+    WriteLine();
+    WriteLineIndent("// Get the field extra size");
+    WriteLineIndent("func (fm *" + field_model_name + ") FBEExtra() int {");
+    Indent(1);
+    WriteLineIndent("if (fm.buffer.Offset() + fm.FBEOffset() + fm.FBESize()) > fm.buffer.Size() {");
+    Indent(1);
+    WriteLineIndent("return 0");
+    Indent(-1);
+    WriteLineIndent("}");
+        WriteLine();
+    WriteLineIndent("fbeStructOffset := int(fbe.ReadUInt32(fm.buffer.Data(), fm.buffer.Offset() + fm.FBEOffset()))");
+    WriteLineIndent("if (fbeStructOffset == 0) || ((fm.buffer.Offset() + fbeStructOffset + 4) > fm.buffer.Size()) {");
+    Indent(1);
+    WriteLineIndent("return 0");
+    Indent(-1);
+    WriteLineIndent("}");
+    WriteLine();
+    WriteLineIndent("fm.buffer.Shift(fbeStructOffset)");
+    WriteLine();
+    WriteLineIndent("fbeResult := fm.FBEBody()");
+    WriteLine();
+    WriteLineIndent("fm.buffer.Unshift(fbeStructOffset)");
+    WriteLine();
+    WriteLineIndent("return fbeResult");
+    Indent(-1);
+    WriteLineIndent("}");
+
+    // Skip generate variant field model FBEType() method
+
+    // Generate variant field model FBEOffset() methods
+    WriteLine();
+    WriteLineIndent("// Get the field offset");
+    WriteLineIndent("func (fm *" + field_model_name + ") FBEOffset() int { return fm.offset }");
+    WriteLineIndent("// Set the field offset");
+    WriteLineIndent("func (fm *" + field_model_name + ") SetFBEOffset(value int) { fm.offset = value }");
+
+    // Generate variant field model FBEShift() methods
+    WriteLine();
+    WriteLineIndent("// Shift the current field offset");
+    WriteLineIndent("func (fm *" + field_model_name + ") FBEShift(size int) { fm.offset += size }");
+    WriteLineIndent("// Unshift the current field offset");
+    WriteLineIndent("func (fm *" + field_model_name + ") FBEUnshift(size int) { fm.offset -= size }");
+
+    // Generate variant field model Verify() methods
+    WriteLine();
+    WriteLineIndent("// Check if the value is valid");
+    WriteLineIndent("func (fm *" + field_model_name + ") Verify() bool {");
+    Indent(1);
+    WriteLineIndent("if (fm.buffer.Offset() + fm.FBEOffset() + fm.FBESize()) > fm.buffer.Size() {");
+    Indent(1);
+    WriteLineIndent("return false");
+    Indent(-1);
+    WriteLineIndent("}");
+    WriteLine();
+    WriteLineIndent("fbeVariantOffset := int(fbe.ReadUInt32(fm.buffer.Data(), fm.buffer.Offset() + fm.FBEOffset()))");
+    WriteLineIndent("if (fbeVariantOffset == 0) || ((fm.buffer.Offset() + fbeVariantOffset + 4) > fm.buffer.Size()) {");
+    Indent(1);
+    WriteLineIndent("return false");
+    Indent(-1);
+    WriteLineIndent("}");
+    WriteLine();
+    WriteLineIndent("fbeVariantIndex := int(fbe.ReadUInt32(fm.buffer.Data(), fm.buffer.Offset() + fbeVariantOffset))");
+    WriteLineIndent("if (fbeVariantIndex < 0 || fbeVariantIndex >= " + std::to_string(v->body->values.size()) + ") {");
+    Indent(1);
+    WriteLineIndent("return false");
+    Indent(-1);
+    WriteLineIndent("}");
+    WriteLine();
+    WriteLineIndent("fm.buffer.Shift(fbeVariantOffset)");
+    WriteLine();
+    WriteLineIndent("switch fbeVariantIndex {");
+    for(auto index = 0; index < v->body->values.size(); index ++) {
+        WriteLineIndent("case " + std::to_string(index) + ":");
+        Indent(1);
+        auto& value = v->body->values[index];
+        WriteLineIndent("model := " + ConvertVariantTypeFieldInitialization(*value));
+        WriteLineIndent("if !model.Verify() {");
+        Indent(1);
+        WriteLineIndent("return false");
+        Indent(-1);
+        WriteLineIndent("}");
+        WriteLineIndent("break");
+        Indent(-1);
+    }
+    WriteLineIndent("}");
+    WriteLineIndent("fm.buffer.Unshift(fbeVariantOffset)");
+    WriteLineIndent("return true");
+    Indent(-1);
+    WriteLineIndent("}");
+
+    // Generate struct field model Get() methods
+    WriteLine();
+    WriteLineIndent("// Get the struct value");
+    WriteLineIndent("func (fm *" + field_model_name + ") Get() (*" + struct_name + ", error) {");
+    Indent(1);
+    WriteLineIndent("fbeResult := New" + struct_name + "()");
+    WriteLineIndent("return &fbeResult, fm.GetValue(&fbeResult)");
+    Indent(-1);
+    WriteLineIndent("}");
+    WriteLine();
+    WriteLineIndent("// Get the struct value by the given pointer");
+    WriteLineIndent("func (fm *" + field_model_name + ") GetValue(fbeValue *" + struct_name + ") error {");
+    Indent(1);
+    WriteLineIndent("if (fm.buffer.Offset() + fm.FBEOffset() + fm.FBESize()) > fm.buffer.Size() {");
+    Indent(1);
+    WriteLineIndent("return nil");
+    Indent(-1);
+    WriteLineIndent("}");
+    WriteLine();
+    WriteLineIndent("fbeVariantOffset := int(fbe.ReadUInt32(fm.buffer.Data(), fm.buffer.Offset() + fm.FBEOffset()))");
+    WriteLineIndent("if (fbeVariantOffset == 0) || ((fm.buffer.Offset() + fbeVariantOffset + 4) > fm.buffer.Size()) {");
+    Indent(1);
+    WriteLineIndent("return errors.New(\"model is broken\")");
+    Indent(-1);
+    WriteLineIndent("}");
+    WriteLine();
+    WriteLineIndent("fbeVariantIndex := int(fbe.ReadUInt32(fm.buffer.Data(), fm.buffer.Offset() + fbeVariantOffset))");
+    WriteLineIndent("if (fbeVariantIndex < 0 || fbeVariantIndex >= " + std::to_string(v->body->values.size()) + ") {");
+    Indent(1);
+    WriteLineIndent("return errors.New(\"model is broken\")");
+    Indent(-1);
+    WriteLineIndent("}");
+    WriteLine();
+    WriteLineIndent("fm.buffer.Shift(fbeVariantOffset)");
+    WriteLine();
+    WriteLineIndent("switch fbeVariantIndex {");
+    for(auto index = 0; index < v->body->values.size(); index ++) {
+        WriteLineIndent("case " + std::to_string(index) + ":");
+        Indent(1);
+        auto& value = v->body->values[index];
+        WriteLineIndent("model := " + ConvertVariantTypeFieldInitialization(*value));
+        if (IsGoType(*value->type) || value->ptr || value->vector ||
+            value->list || value->map || value->hash)
+            WriteLineIndent("*fbeValue, _ = model.Get()");
+        else {
+            WriteLineIndent("ptr, _ := model.Get()");
+            WriteLineIndent("*fbeValue = *ptr");
+        }
+        Indent(-1);
+    }
+    WriteLineIndent("}");
+    WriteLineIndent("fm.buffer.Unshift(fbeVariantOffset)");
+    WriteLineIndent("return nil");
+    Indent(-1);
+    WriteLineIndent("}");
+    WriteLine();
+
+    // Generate struct field model Set() methods
+    WriteLine();
+    WriteLineIndent("// Set the struct value (begin phase)");
+    WriteLineIndent("func (fm *" + field_model_name + ") SetBegin(variantTypeFBESize int, variantTypeIndex int) (int, error) {");
+    Indent(1);
+    WriteLineIndent("if (fm.buffer.Offset() + fm.FBEOffset() + fm.FBESize()) > fm.buffer.Size() {");
+    Indent(1);
+    WriteLineIndent("return 0, errors.New(\"model is broken\")");
+    Indent(-1);
+    WriteLineIndent("}");
+    WriteLine();
+    WriteLineIndent("fbeVariantSize := fm.FBEBody() + variantTypeFBESize");
+    WriteLineIndent("fbeVariantOffset := fm.buffer.Allocate(fbeVariantSize) - fm.buffer.Offset()");
+    WriteLineIndent("if (fbeVariantOffset <= 0) || ((fm.buffer.Offset() + fbeVariantOffset + fbeVariantSize) > fm.buffer.Size()) {");
+    Indent(1);
+    WriteLineIndent("return 0, errors.New(\"model is broken\")");
+    Indent(-1);
+    WriteLineIndent("}");
+    WriteLine();
+    WriteLineIndent("fbe.WriteUInt32(fm.buffer.Data(), fm.buffer.Offset() + fm.FBEOffset(), uint32(fbeVariantOffset))");
+    WriteLineIndent("fbe.WriteUInt32(fm.buffer.Data(), fm.buffer.Offset() + fbeVariantOffset, uint32(variantTypeIndex))");
+    WriteLine();
+    WriteLineIndent("fm.buffer.Shift(fbeVariantOffset)");
+    WriteLineIndent("return fbeVariantOffset, nil");
+    Indent(-1);
+    WriteLineIndent("}");
+    WriteLine();
+    WriteLineIndent("// Set the struct value (end phase)");
+    WriteLineIndent("func (fm *" + field_model_name + ") SetEnd(fbeBegin int) {");
+    Indent(1);
+    WriteLineIndent("fm.buffer.Unshift(fbeBegin)");
+    Indent(-1);
+    WriteLineIndent("}");
+    WriteLine();
+    WriteLineIndent("// Set the struct value");
+    WriteLineIndent("func (fm *" + field_model_name + ") Set(fbeValue *" + struct_name + ") error {");
+    Indent(1);
+    WriteLineIndent("if (fm.buffer.Offset() + fm.FBEOffset() + fm.FBESize()) > fm.buffer.Size() {");
+    Indent(1);
+    WriteLineIndent("return errors.New(\"model is broken\")");
+    Indent(-1);
+    WriteLineIndent("}");
+    WriteLine();
+
+    WriteLineIndent("switch t := (*fbeValue).(type) {");
+    for(auto index = 0; index < v->body->values.size(); index ++) {
+        auto& value = v->body->values[index];
+        WriteLineIndent("case " + ConvertTypeName(*value) + ":");
+        Indent(1);
+        WriteLineIndent("model := " + ConvertVariantTypeFieldInitialization(*value));
+        WriteLineIndent("fbeBegin, err := fm.SetBegin(model.FBESize(), " + std::to_string(index) + ")");
+        WriteLineIndent("if err != nil {");
+        Indent(1);
+        WriteLineIndent("return err");
+        Indent(-1);
+        WriteLineIndent("}");
+        WriteLineIndent("if fbeBegin == 0 {");
+        Indent(1);
+        WriteLineIndent("return nil");
+        Indent(-1);
+        WriteLineIndent("}");
+        WriteLineIndent(
+            std::string("if err = model.Set(") +
+            ((IsGoType(*value->type) || value->ptr || value->vector ||
+              value->list || value->map || value->hash)
+                 ? ""
+                 : "&") +
+            "t); err != nil {");
+        Indent(1);
+        WriteLineIndent("return err");
+        Indent(-1);
+        WriteLineIndent("}");
+        WriteLineIndent("fm.SetEnd(fbeBegin)");
+        Indent(-1);
+    }
+    WriteLineIndent("}");
+    WriteLine();
+    WriteLineIndent("return nil");
+    Indent(-1);
+    WriteLineIndent("}");
+
+    // Generate footer
+    GenerateFooter();
+
+    // Store the output file
+    WriteEnd();
+    Store(output);
+}
+
+
 void GeneratorGo::GenerateStruct(const std::shared_ptr<Package>& p, const std::shared_ptr<StructType>& s, const fs::path& path)
 {
     std::string struct_name = ConvertToUpper(*s->name);
@@ -5930,7 +6545,14 @@ void GeneratorGo::GenerateStruct(const std::shared_ptr<Package>& p, const std::s
             WriteIndent(ConvertToUpper(*field->name) + ": ");
             if (field->value)
                 Write(ConvertConstant(*field->type, *field->value, field->optional, field->ptr));
-            else
+            else if (IsVariantType(p, *field->type)) {
+                if (field->optional)
+                    Write("nil");
+                else if (field->map || field->list || field->vector || field->hash)
+                    Write(ConvertDefault(*field));
+                else
+                    Write("New" + ConvertTypeName(*field) + "()");
+            } else 
                 Write(ConvertDefault(*field));
             WriteLine(",");
         }
@@ -6086,6 +6708,10 @@ void GeneratorGo::GenerateStruct(const std::shared_ptr<Package>& p, const std::s
         for (const auto& field : s->body->fields)
         {
             WriteLineIndent("sb.WriteString(\"" + std::string(first ? "" : ",") + *field->name + "=\")");
+            if (IsVariantType(p, *field->type)) {
+                WriteLineIndent("sb.WriteString(\"*variant " + *field->type + "*\")");
+                continue;
+            }
             if (field->attributes && field->attributes->hidden)
                 WriteLineIndent("sb.WriteString(\"***\")");
             else if (field->array)
@@ -6211,7 +6837,7 @@ void GeneratorGo::GenerateStruct(const std::shared_ptr<Package>& p, const std::s
                 WriteLineIndent("sb.WriteString(\"" + std::string(first ? "" : ",") + *field->name + "=[0][{}]\")");
                 Indent(-1);
                 WriteLineIndent("}");
-            }
+            } 
             else
                 WriteOutputStreamValue(*field->type, "s." + ConvertToUpper(*field->name), field->optional, field->ptr, false);
             first = false;
@@ -6833,7 +7459,18 @@ void GeneratorGo::GenerateStructFieldModel(const std::shared_ptr<Package>& p, co
                 Indent(-1);
                 WriteLineIndent("} else {");
                 Indent(1);
-                WriteLineIndent("fbeValue." + ConvertToUpper(*field->name) + " = " + ConvertDefault(*field));
+                WriteIndent("fbeValue." + ConvertToUpper(*field->name) + " = ");
+                if (IsVariantType(p, *field->type)) {
+                    if (field->optional) {
+                        WriteLine(ConvertDefault(*field));
+                    } else if (field->hash || field->map || field->vector || field->list) {
+                        WriteLine(ConvertDefault(*field));
+                    } else {
+                        WriteLine("New" + ConvertTypeName(*field) + "()");
+                    }
+                } else {
+                    WriteLine(ConvertDefault(*field));
+                }
                 Indent(-1);
                 WriteLineIndent("}");
                 WriteLineIndent("fbeCurrentSize += fm." + ConvertToUpper(*field->name) + ".FBESize()");
@@ -8790,6 +9427,21 @@ std::string GeneratorGo::ConvertTypeName(const std::string& type, bool optional,
     return opt + ns + ConvertToUpper(t);
 }
 
+std::string GeneratorGo::ConvertTypeName(const VariantValue& variant)
+{
+    if ((variant.vector) || (variant.list))
+        return "[]" + ConvertTypeName(*variant.type, false, variant.ptr);
+    else if ((variant.map) || (variant.hash))
+    {
+        if (IsGoType(*variant.key))
+            return "map[" + ConvertKeyName(*variant.key) + "]" + ConvertTypeName(*variant.type, false, variant.ptr);
+        else
+            return "map[" + ConvertKeyName(*variant.key) + "]struct{Key " + ConvertTypeName(*variant.key, false, false) + "; Value " + ConvertTypeName(*variant.type, false, variant.ptr) + "}";
+    }
+
+    return ConvertTypeName(*variant.type, false, variant.ptr);
+}
+
 std::string GeneratorGo::ConvertTypeName(const StructField& field)
 {
     if (field.array)
@@ -8964,6 +9616,32 @@ std::string GeneratorGo::ConvertTypeFieldInitialization(const StructField& field
     return ConvertTypeFieldInitialization(*field.type, field.optional, offset, final);
 }
 
+std::string GeneratorGo::ConvertVariantTypeFieldInitialization(const std::string& type){
+    if (IsGoType(type))
+        return "fbe.NewFieldModel" + ConvertTypeFieldName(type) + "(fm.buffer, 4)";
+
+    std::string ns = "";
+    std::string t = type;
+
+    size_t pos = type.find_last_of('.');
+    if (pos != std::string::npos)
+    {
+        ns.assign(type, 0, pos + 1);
+        t.assign(type, pos + 1, type.size() - pos);
+    }
+
+    return ns + "NewFieldModel" + ConvertTypeFieldName(t) + "(fm.buffer, 4)";
+}
+
+std::string GeneratorGo::ConvertVariantTypeFieldInitialization(const VariantValue& variant){
+    if (variant.vector || variant.list) {
+        return "NewFieldModelVector" + std::string(variant.ptr ? "Ptr" : "") + ConvertTypeFieldName(*variant.type) + "(fm.buffer, 4)";
+    } else if (variant.map || variant.hash) {
+        return "NewFieldModelMap" + ConvertTypeFieldName(*variant.key) + std::string(variant.ptr ? "Ptr" : "") + ConvertTypeFieldName(*variant.type) + "(fm.buffer, 4)";
+    }
+    return ConvertVariantTypeFieldInitialization(*variant.type);
+}
+
 std::string GeneratorGo::ConvertConstant(const std::string& type, const std::string& value, bool optional, bool ptr)
 {
     if (optional)
@@ -9095,6 +9773,11 @@ std::string GeneratorGo::ConvertDefault(const std::string& type, bool optional, 
         return "fbe.UUIDNil()";
 
     return "*" + ConvertNewName(type) + "()";
+}
+
+std::string GeneratorGo::ConvertDefault(const std::shared_ptr<VariantType>& variant) {
+    // TODO(liuqi): generate default value for variant
+    return "true";
 }
 
 std::string GeneratorGo::ConvertDefault(const StructField& field)
