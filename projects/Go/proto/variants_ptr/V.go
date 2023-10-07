@@ -21,6 +21,9 @@ var _ = fbe.Version
 var _ = fmt.Print
 var _ = strconv.FormatInt
 
+// type VKey interface{}, used as map key
+type VKey interface{}
+
 // type V interface{}
 type V interface{}
 // List of V types

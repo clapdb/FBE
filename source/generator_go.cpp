@@ -3270,7 +3270,7 @@ func (fm *FieldModelMap_KEY_NAME__VALUE_NAME_) Set(values _TYPE_) error {
     code = std::regex_replace(code, std::regex("_MODEL_VALUE_NEW_"), ConvertNewName(value_model));
     code = std::regex_replace(code, std::regex("_MODEL_KEY_"), key_model);
     code = std::regex_replace(code, std::regex("_MODEL_VALUE_"), value_model);
-    code = std::regex_replace(code, std::regex("_GET_KEY_"), IsGoType(*field.key) ? "key" : "key.Key()");
+    code = std::regex_replace(code, std::regex("_GET_KEY_"), IsVariantType(p, *field.key) ? ("*key") :(IsGoType(*field.key) ? "key" : "key.Key()"));
     code = std::regex_replace(code, std::regex("_GET_VALUE_"), IsGoType(*field.key) ? ((IsGoType(*field.type) || field.optional || field.ptr || field.ptr) ? "value" : "*value") : ("struct{Key " + ConvertTypeName(*field.key, false, false) + "; Value " + ConvertTypeName(*field.type, field.optional, field.ptr) + "}{*key, " + ((IsGoType(*field.type) || field.optional || field.ptr || field.ptr) ? "value" : "*value") + "}"));
     code = std::regex_replace(code, std::regex("_SET_KEY_"), IsGoType(*field.key) ? "key" : "&value.Key");
     code = std::regex_replace(code, std::regex("_SET_VALUE_"), IsGoType(*field.key) ? ((IsGoType(*field.type) || field.optional || field.ptr || field.ptr) ? "value" : "&value") : ((IsGoType(*field.type) || field.optional || field.ptr || field.ptr) ? "value.Value" : "&value.Value"));
@@ -5954,6 +5954,11 @@ void GeneratorGo::GenerateVariant(const std::shared_ptr<Package>& p, const std::
     WriteLineIndent("// Workaround for Go unused imports issue");
     WriteLineIndent("var _ = fmt.Print");
     WriteLineIndent("var _ = strconv.FormatInt");
+
+    // Generate Variant Key
+    WriteLine();
+    WriteLineIndent("// type " + variant_name + "Key interface{}, used as map key");
+    WriteLineIndent("type " + variant_name + "Key interface{}");
 
     // Generate Variant interface{}
     WriteLine();

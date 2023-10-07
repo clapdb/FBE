@@ -21,28 +21,28 @@ var _ = fbe.Version
 var _ = fmt.Print
 var _ = strconv.FormatInt
 
-// type ExprKey interface{}, used as map key
-type ExprKey interface{}
+// type Scalar1Key interface{}, used as map key
+type Scalar1Key interface{}
 
-// type Expr interface{}
-type Expr interface{}
-// List of Expr types
+// type Scalar1 interface{}
+type Scalar1 interface{}
+// List of Scalar1 types
 // bool
-// string
 // int32
-// []byte
+// int64
+// string
 
-// Create a new Expr variant
-func NewExpr() Expr {
+// Create a new Scalar1 variant
+func NewScalar1() Scalar1 {
     return true
 }
 
-// Create a new Expr variant from the given value
-func NewExprFromValue(value Expr) Expr {
+// Create a new Scalar1 variant from the given value
+func NewScalar1FromValue(value Scalar1) Scalar1 {
     return value
 }
 
 // Get the variant index
-func GetExprIndex() int {
+func GetScalar1Index() int {
     return 0
 }

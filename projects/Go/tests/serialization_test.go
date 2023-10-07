@@ -1987,3 +1987,67 @@ func TestSerializationContainerVariant(t *testing.T) {
 	assert.True(t, ok)
 	assert.Equal(t, "this is too complex", tt2.Name)
 }
+
+
+func TestSerializationVariantMap(t *testing.T) {
+	var k0 variants_ptr.Scalar1 = true
+	var k1 variants_ptr.Scalar1 = int32(42)
+	var k2 variants_ptr.Scalar1 = "this is too simple"
+	var v0 variants_ptr.Expr = false
+	var v1 variants_ptr.Expr = int32(24)
+	var v2 variants_ptr.Expr = "this is too complex"
+
+	container := variants_ptr.NewScalar1Container()
+
+	container.S[k0] = struct{Key variants_ptr.Scalar1; Value variants_ptr.Expr}{k0, v0}
+	container.S[k1] = struct{Key variants_ptr.Scalar1; Value variants_ptr.Expr}{k1, v1}
+	container.S[k2] = struct{Key variants_ptr.Scalar1; Value variants_ptr.Expr}{k2, v2}
+
+	// Serialize the struct to the FBE stream
+	writer := variants_ptr.NewScalar1ContainerModel(fbe.NewEmptyBuffer())
+	assert.EqualValues(t, writer.Model().FBEType(), 5)
+	assert.EqualValues(t, writer.Model().FBEOffset(), 4)
+	serialized, err := writer.Serialize(container)
+	assert.Nil(t, err)
+	assert.EqualValues(t, serialized, writer.Buffer().Size())
+	assert.True(t, writer.Verify())
+	writer.Next(serialized)
+	assert.EqualValues(t, writer.Model().FBEOffset(), 4+writer.Buffer().Size())
+
+	// Deserialize the struct from the FBE stream
+	reader := variants_ptr.NewScalar1ContainerModel(writer.Buffer())
+	assert.EqualValues(t, reader.Model().FBEType(), 5)
+	assert.EqualValues(t, reader.Model().FBEOffset(), 4)
+	assert.True(t, reader.Verify())
+	containerCopy, deserialized, err := reader.Deserialize()
+	assert.Nil(t, err)
+	assert.EqualValues(t, deserialized, reader.Buffer().Size())
+	reader.Next(deserialized)
+	assert.EqualValues(t, reader.Model().FBEOffset(), 4+reader.Buffer().Size())
+
+	assert.Equal(t, 3, len(containerCopy.S))
+
+	assert.Equal(t, "bool",  reflect.TypeOf(containerCopy.S[k0].Key).String())
+	kk0, ok := (containerCopy.S[k0].Key).(bool)
+	assert.True(t, ok)
+	assert.Equal(t, true, kk0)
+	vv0, ok := (containerCopy.S[k0].Value).(bool)
+	assert.True(t, ok)
+	assert.Equal(t, false, vv0)
+
+	assert.Equal(t, "int32",  reflect.TypeOf(containerCopy.S[k1].Key).String())
+	kk1, ok := (containerCopy.S[k1].Key).(int32)
+	assert.True(t, ok)
+	assert.Equal(t, int32(42), kk1)
+	vv1, ok := (containerCopy.S[k1].Value).(int32)
+	assert.True(t, ok)
+	assert.Equal(t, int32(24), vv1)
+
+	assert.Equal(t, "string",  reflect.TypeOf(containerCopy.S[k2].Key).String())
+	kk2, ok := (containerCopy.S[k2].Key).(string)
+	assert.True(t, ok)
+	assert.Equal(t, "this is too simple", kk2)
+	vv2, ok := (containerCopy.S[k2].Value).(string)
+	assert.True(t, ok)
+	assert.Equal(t, "this is too complex", vv2)
+}

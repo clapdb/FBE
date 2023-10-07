@@ -8,7 +8,7 @@ variant Expr {
   bool;
   string;
   int32;
-  byte[];  // not supported yet
+  byte[];
 }
 
 struct ExprContainer {
@@ -44,4 +44,15 @@ struct Value {
 struct ValueContainer {
   V[] vv;
   V{int32} vm;
+}
+
+variant Scalar1 {
+  bool;
+  int32;
+  int64;
+  string;
+}
+
+struct Scalar1Container {
+  Expr{Scalar1} s;
 }
