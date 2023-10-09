@@ -51,7 +51,7 @@ type V struct {
 // Create a new V variant
 func NewV() *V {
     return &V {
-        Value: true,
+        Value: 0,
     }
 }
 

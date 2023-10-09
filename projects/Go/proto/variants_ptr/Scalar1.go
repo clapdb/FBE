@@ -41,7 +41,7 @@ type Scalar1 struct {
 // Create a new Scalar1 variant
 func NewScalar1() *Scalar1 {
     return &Scalar1 {
-        Value: true,
+        Value: false,
     }
 }
 

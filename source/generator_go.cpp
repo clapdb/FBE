@@ -5989,7 +5989,6 @@ void GeneratorGo::GenerateVariant(const std::shared_ptr<Package>& p, const std::
     WriteLineIndent("// Create a new " + variant_name + " variant");
     WriteLineIndent("func New" + variant_name + "() *" + variant_name + " {");
     Indent(1);
-    // TODO(liuqi): Should return the first given type, nil is also acceptable
     WriteLineIndent("return &" + variant_name + " {");
     Indent(1);
     WriteLineIndent("Value: " +  ConvertDefault(v) + ",");
@@ -9814,8 +9813,13 @@ std::string GeneratorGo::ConvertDefault(const std::string& type, bool optional, 
 }
 
 std::string GeneratorGo::ConvertDefault(const std::shared_ptr<VariantType>& variant) {
-    // TODO(liuqi): generate default value for variant
-    return "true";
+    auto firstType = variant->body->values.front();
+    if (firstType->vector || firstType->list) {
+        return "make(" + ConvertTypeName(*firstType) + ", 0)";
+    } else if (firstType->map || firstType->hash) {
+        return "make(" + ConvertTypeName(*firstType) + ")";
+    }
+    return ConvertDefault(*firstType->type, false, firstType->ptr);
 }
 
 std::string GeneratorGo::ConvertDefault(const StructField& field)

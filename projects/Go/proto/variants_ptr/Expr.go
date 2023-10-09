@@ -41,7 +41,7 @@ type Expr struct {
 // Create a new Expr variant
 func NewExpr() *Expr {
     return &Expr {
-        Value: true,
+        Value: false,
     }
 }
 
