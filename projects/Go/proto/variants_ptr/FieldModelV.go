@@ -7,6 +7,8 @@
 
 package variants_ptr
 
+import "fmt"
+import "reflect"
 import "errors"
 import "fbeproj/proto/fbe"
 
@@ -244,6 +246,8 @@ func (fm *FieldModelV) GetValue(fbeValue *V) error {
         model := NewFieldModelExpr(fm.buffer, 4)
         ptr, _ := model.Get()
         fbeValue.Value = *ptr
+    default:
+        return fmt.Errorf("unknown fbeVariantIndex: %d", fbeVariantIndex)
     }
     fm.buffer.Unshift(fbeVariantOffset)
     return nil
@@ -463,6 +467,8 @@ func (fm *FieldModelV) Set(fbeValue *V) error {
             return err
         }
         fm.SetEnd(fbeBegin)
+    default:
+        return fmt.Errorf("unsupported variant type: %s", reflect.TypeOf(t).String())
     }
 
     return nil

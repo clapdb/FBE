@@ -6070,7 +6070,10 @@ void GeneratorGo::GenerateVariantFieldModel(const std::shared_ptr<Package>& p, c
 
     // Generate imports
     WriteLine();
+    WriteLine("import \"fmt\"");
+    WriteLine("import \"reflect\"");
     GenerateImports(p);
+
 
     // Generate variant field model type
     WriteLine();
@@ -6250,6 +6253,10 @@ void GeneratorGo::GenerateVariantFieldModel(const std::shared_ptr<Package>& p, c
         }
         Indent(-1);
     }
+    WriteLineIndent("default:");
+    Indent(1);
+    WriteLineIndent("return fmt.Errorf(\"unknown fbeVariantIndex: %d\", fbeVariantIndex)");
+    Indent(-1);
     WriteLineIndent("}");
     WriteLineIndent("fm.buffer.Unshift(fbeVariantOffset)");
     WriteLineIndent("return nil");
@@ -6332,6 +6339,10 @@ void GeneratorGo::GenerateVariantFieldModel(const std::shared_ptr<Package>& p, c
         WriteLineIndent("fm.SetEnd(fbeBegin)");
         Indent(-1);
     }
+    WriteLineIndent("default:");
+    Indent(1);
+    WriteLineIndent("return fmt.Errorf(\"unsupported variant type: %s\", reflect.TypeOf(t).String())");
+    Indent(-1);
     WriteLineIndent("}");
     WriteLine();
     WriteLineIndent("return nil");
