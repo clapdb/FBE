@@ -326,6 +326,55 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const V& value)
     return stream;
 }
 
+auto is_equal(const Scalar1& lhs, const Scalar1& rhs) -> bool {
+    if (lhs.index() != rhs.index())
+        return false;
+    switch (lhs.index()) {
+        case 0: {
+            return std::get<0>(lhs) == std::get<0>(rhs);
+        }
+        case 1: {
+            return std::get<1>(lhs) == std::get<1>(rhs);
+        }
+        case 2: {
+            return std::get<2>(lhs) == std::get<2>(rhs);
+        }
+        case 3: {
+            return std::get<3>(lhs) == std::get<3>(rhs);
+        }
+        default: 
+            return true;
+    }
+}
+
+std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const Scalar1& value)
+{
+    stream << "Scalar1(variant|";
+    [[maybe_unused]] bool first = true;
+    switch (value.index()) {
+        case 0:
+            stream<< "{bool}";
+            stream << std::get<0>(value);
+            break;
+        case 1:
+            stream<< "{int32}";
+            stream << std::get<1>(value);
+            break;
+        case 2:
+            stream<< "{int64}";
+            stream << std::get<2>(value);
+            break;
+        case 3:
+            stream<< "{string}";
+            stream << std::get<3>(value);
+            break;
+        default:
+            static_assert("unreachable branch");
+    }
+    stream << ")";
+    return stream;
+}
+
 Simple::Simple()
     : name()
 {}
@@ -665,6 +714,81 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const ValueConta
         bool first = true;
         stream << ",vm=[" << value.vm.size()<< "][{";
         for (const auto& it : value.vm)
+        {
+            stream << std::string(first ? "" : ",") << it.first;
+            stream << "->";
+            stream << it.second;
+            first = false;
+        }
+        stream << "}]";
+    }
+    stream << ")";
+    return stream;
+}
+
+Scalar1Container::Scalar1Container()
+    : s()
+{}
+
+Scalar1Container::Scalar1Container(std::unordered_map<::variants_ptr::Scalar1, ::variants_ptr::Expr> arg_s)
+    : s(std::move(arg_s))
+{}
+
+Scalar1Container::Scalar1Container([[maybe_unused]] Scalar1Container&& other) noexcept
+    : s(std::move(other.s))
+{}
+
+Scalar1Container::~Scalar1Container()
+{
+}
+
+bool Scalar1Container::operator==([[maybe_unused]] const Scalar1Container& other) const noexcept
+{
+    // compare container s
+    if (s.size() != other.s.size())
+        return false;
+    for (auto & [k, v]: s)
+    {
+        if (auto pos = other.s.find(k); pos == other.s.end())
+            return false;
+        if (auto other_v = other.s.at(k); !is_equal(other_v, v))
+            return false;
+    }
+    return true;
+}
+
+bool Scalar1Container::operator<([[maybe_unused]] const Scalar1Container& other) const noexcept
+{
+    return false;
+}
+
+Scalar1Container& Scalar1Container::operator=(Scalar1Container&& other) noexcept
+{
+    if (this != &other)
+    {
+        s = std::move(other.s);
+    }
+    return *this;
+}
+
+std::string Scalar1Container::string() const
+{
+    std::stringstream ss; ss << *this; return ss.str();
+}
+
+void Scalar1Container::swap([[maybe_unused]] Scalar1Container& other) noexcept
+{
+    using std::swap;
+    swap(s, other.s);
+}
+
+std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const Scalar1Container& value)
+{
+    stream << "Scalar1Container(";
+    {
+        bool first = true;
+        stream << "s=[" << value.s.size()<< "][{";
+        for (const auto& it : value.s)
         {
             stream << std::string(first ? "" : ",") << it.first;
             stream << "->";

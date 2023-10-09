@@ -197,6 +197,7 @@ if(NOT FBEC_MODULE)
     add_custom_command(
       OUTPUT ${FBE_OUTPUT_FILE}
       COMMAND $<TARGET_FILE:fbec> --cpp --import-ptr --ptr --input ${FBE_INPUT_FILE} --output ${FBE_OUTPUT_DIR}
+      COMMAND $<TARGET_FILE:fbec> --go --json --proto --go-module-path fbeproj/proto --input ${FBE_INPUT_FILE} --output ${CMAKE_CURRENT_SOURCE_DIR}/projects/Go/proto
       DEPENDS ${FBE_INPUT_FILE} COMMENT "Generating FBE proto for ${FBE_INPUT_FILE}..." VERBATIM
     )
     add_custom_target(${FBE_TARGET} DEPENDS ${FBE_OUTPUT_FILE})

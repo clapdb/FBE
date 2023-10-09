@@ -119,16 +119,15 @@ func (fm *FieldModelOptionalExpr) GetEnd(fbeBegin int) {
 
 // Get the optional value
 func (fm *FieldModelOptionalExpr) Get() (*Expr, error) {
-    fbeValue := NewExpr()
-
     fbeBegin, err := fm.GetBegin()
     if fbeBegin == 0 {
-        return &fbeValue, err
+        return nil, err
     }
 
-    err = fm.value.GetValue(&fbeValue)
+    fbeValue := NewExpr()
+    err = fm.value.GetValue(fbeValue)
     fm.GetEnd(fbeBegin)
-    return &fbeValue, err
+    return fbeValue, err
 }
 
 // Set the optional value (begin phase)

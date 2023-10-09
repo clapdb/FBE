@@ -37,6 +37,7 @@ struct Simple;
 struct ExprContainer;
 struct Value;
 struct ValueContainer;
+struct Scalar1Container;
 
 using Expr = std::variant<bool, stdb::memory::string, int32_t, FastVec<uint8_t>>;
 std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const Expr& value);
@@ -45,6 +46,10 @@ auto is_equal(const Expr& lhs, const Expr& rhs) -> bool;
 using V = std::variant<int32_t, stdb::memory::string, double, ::variants_ptr::Simple, ::variants_ptr::Simple*, FastVec<::variants_ptr::Simple>, FastVec<int32_t>, std::unordered_map<int32_t, ::variants_ptr::Simple>, FastVec<FBE::buffer_t>, FastVec<stdb::memory::string>, std::unordered_map<int32_t, FBE::buffer_t>, std::unordered_map<stdb::memory::string, FBE::buffer_t>, FastVec<::variants_ptr::Simple*>, ::variants_ptr::Expr>;
 std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const V& value);
 auto is_equal(const V& lhs, const V& rhs) -> bool;
+
+using Scalar1 = std::variant<bool, int32_t, int64_t, stdb::memory::string>;
+std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const Scalar1& value);
+auto is_equal(const Scalar1& lhs, const Scalar1& rhs) -> bool;
 
 struct Simple : FBE::Base
 {
@@ -228,6 +233,53 @@ template<>
 struct std::hash<variants_ptr::ValueContainer>
 {
     typedef variants_ptr::ValueContainer argument_type;
+    typedef size_t result_type;
+
+    result_type operator() ([[maybe_unused]] const argument_type& value) const
+    {
+        result_type result = 17;
+        return result;
+    }
+};
+
+namespace variants_ptr {
+
+struct Scalar1Container : FBE::Base
+{
+    std::unordered_map<::variants_ptr::Scalar1, ::variants_ptr::Expr> s;
+
+    size_t fbe_type() const noexcept { return 5; }
+
+    Scalar1Container();
+    explicit Scalar1Container(std::unordered_map<::variants_ptr::Scalar1, ::variants_ptr::Expr> arg_s);
+    Scalar1Container(const Scalar1Container& other) = default;
+    Scalar1Container(Scalar1Container&& other) noexcept;
+    ~Scalar1Container() override;
+
+    Scalar1Container& operator=(const Scalar1Container& other) = default;
+    Scalar1Container& operator=(Scalar1Container&& other) noexcept;
+
+    bool operator==(const Scalar1Container& other) const noexcept;
+    bool operator!=(const Scalar1Container& other) const noexcept { return !operator==(other); }
+    bool operator<(const Scalar1Container& other) const noexcept;
+    bool operator<=(const Scalar1Container& other) const noexcept { return operator<(other) || operator==(other); }
+    bool operator>(const Scalar1Container& other) const noexcept { return !operator<=(other); }
+    bool operator>=(const Scalar1Container& other) const noexcept { return !operator<(other); }
+
+    std::string string() const;
+
+    friend std::ostream& operator<<(std::ostream& stream, const Scalar1Container& value);
+
+    void swap(Scalar1Container& other) noexcept;
+    friend void swap(Scalar1Container& value1, Scalar1Container& value2) noexcept { value1.swap(value2); }
+};
+
+} // namespace variants_ptr
+
+template<>
+struct std::hash<variants_ptr::Scalar1Container>
+{
+    typedef variants_ptr::Scalar1Container argument_type;
     typedef size_t result_type;
 
     result_type operator() ([[maybe_unused]] const argument_type& value) const

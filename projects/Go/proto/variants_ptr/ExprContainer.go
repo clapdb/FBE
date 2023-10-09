@@ -43,7 +43,7 @@ type ExprContainer struct {
 // Create a new ExprContainer struct
 func NewExprContainer() *ExprContainer {
     return &ExprContainer{
-        E: NewExpr(),
+        E: *NewExpr(),
         Eo: nil,
         So: nil,
     }
@@ -106,10 +106,14 @@ func (s *ExprContainer) String() string {
     var sb strings.Builder
     sb.WriteString("ExprContainer(")
     sb.WriteString("e=")
-    sb.WriteString("*variant Expr*")
-    sb.WriteString("eo=")
-    sb.WriteString("*variant Expr*")
-    sb.WriteString("so=")
+    sb.WriteString(s.E.String())
+    sb.WriteString(",eo=")
+    if s.Eo != nil { 
+        sb.WriteString(s.Eo.String())
+    } else {
+        sb.WriteString("null")
+    }
+    sb.WriteString(",so=")
     if s.So != nil { 
         sb.WriteString(s.So.String())
     } else {

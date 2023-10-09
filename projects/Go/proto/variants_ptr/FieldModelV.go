@@ -7,6 +7,8 @@
 
 package variants_ptr
 
+import "fmt"
+import "reflect"
 import "errors"
 import "fbeproj/proto/fbe"
 
@@ -178,7 +180,7 @@ func (fm *FieldModelV) Verify() bool {
 // Get the struct value
 func (fm *FieldModelV) Get() (*V, error) {
     fbeResult := NewV()
-    return &fbeResult, fm.GetValue(&fbeResult)
+    return fbeResult, fm.GetValue(fbeResult)
 }
 
 // Get the struct value by the given pointer
@@ -202,48 +204,50 @@ func (fm *FieldModelV) GetValue(fbeValue *V) error {
     switch fbeVariantIndex {
     case 0:
         model := fbe.NewFieldModelInt32(fm.buffer, 4)
-        *fbeValue, _ = model.Get()
+        fbeValue.Value, _ = model.Get()
     case 1:
         model := fbe.NewFieldModelString(fm.buffer, 4)
-        *fbeValue, _ = model.Get()
+        fbeValue.Value, _ = model.Get()
     case 2:
         model := fbe.NewFieldModelDouble(fm.buffer, 4)
-        *fbeValue, _ = model.Get()
+        fbeValue.Value, _ = model.Get()
     case 3:
         model := NewFieldModelSimple(fm.buffer, 4)
         ptr, _ := model.Get()
-        *fbeValue = *ptr
+        fbeValue.Value = *ptr
     case 4:
         model := NewFieldModelSimple(fm.buffer, 4)
-        *fbeValue, _ = model.Get()
+        fbeValue.Value, _ = model.Get()
     case 5:
         model := NewFieldModelVectorSimple(fm.buffer, 4)
-        *fbeValue, _ = model.Get()
+        fbeValue.Value, _ = model.Get()
     case 6:
         model := NewFieldModelVectorInt32(fm.buffer, 4)
-        *fbeValue, _ = model.Get()
+        fbeValue.Value, _ = model.Get()
     case 7:
         model := NewFieldModelMapInt32Simple(fm.buffer, 4)
-        *fbeValue, _ = model.Get()
+        fbeValue.Value, _ = model.Get()
     case 8:
         model := NewFieldModelVectorBytes(fm.buffer, 4)
-        *fbeValue, _ = model.Get()
+        fbeValue.Value, _ = model.Get()
     case 9:
         model := NewFieldModelVectorString(fm.buffer, 4)
-        *fbeValue, _ = model.Get()
+        fbeValue.Value, _ = model.Get()
     case 10:
         model := NewFieldModelMapInt32Bytes(fm.buffer, 4)
-        *fbeValue, _ = model.Get()
+        fbeValue.Value, _ = model.Get()
     case 11:
         model := NewFieldModelMapStringBytes(fm.buffer, 4)
-        *fbeValue, _ = model.Get()
+        fbeValue.Value, _ = model.Get()
     case 12:
         model := NewFieldModelVectorPtrSimple(fm.buffer, 4)
-        *fbeValue, _ = model.Get()
+        fbeValue.Value, _ = model.Get()
     case 13:
         model := NewFieldModelExpr(fm.buffer, 4)
         ptr, _ := model.Get()
-        *fbeValue = *ptr
+        fbeValue.Value = *ptr
+    default:
+        return fmt.Errorf("unknown fbeVariantIndex: %d", fbeVariantIndex)
     }
     fm.buffer.Unshift(fbeVariantOffset)
     return nil
@@ -280,7 +284,7 @@ func (fm *FieldModelV) Set(fbeValue *V) error {
         return errors.New("model is broken")
     }
 
-    switch t := (*fbeValue).(type) {
+    switch t := (fbeValue.Value).(type) {
     case int32:
         model := fbe.NewFieldModelInt32(fm.buffer, 4)
         fbeBegin, err := fm.SetBegin(model.FBESize(), 0)
@@ -463,6 +467,8 @@ func (fm *FieldModelV) Set(fbeValue *V) error {
             return err
         }
         fm.SetEnd(fbeBegin)
+    default:
+        return fmt.Errorf("unsupported variant type: %s", reflect.TypeOf(t).String())
     }
 
     return nil

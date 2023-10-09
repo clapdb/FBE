@@ -22,52 +22,52 @@ var _ = fbe.Version
 var _ = fmt.Print
 var _ = strconv.FormatInt
 
-// type ExprKey struct{}
-type ExprKey struct {
-// same as Expr, but used as map key
+// type Scalar1Key struct{}
+type Scalar1Key struct {
+// same as Scalar1, but used as map key
     Value interface{}
 }
 
-// type Expr struct {}, wrap interface{}
-type Expr struct {
+// type Scalar1 struct {}, wrap interface{}
+type Scalar1 struct {
     Value interface{}
 }
-// List of Expr types
+// List of Scalar1 types
 // bool
-// string
 // int32
-// []byte
+// int64
+// string
 
-// Create a new Expr variant
-func NewExpr() *Expr {
-    return &Expr {
+// Create a new Scalar1 variant
+func NewScalar1() *Scalar1 {
+    return &Scalar1 {
         Value: false,
     }
 }
 
-// Create a new Expr variant from the given value
-func NewExprFromValue(value interface{}) *Expr {
-    return &Expr {
+// Create a new Scalar1 variant from the given value
+func NewScalar1FromValue(value interface{}) *Scalar1 {
+    return &Scalar1 {
         Value: value,
     }
 }
 
 // Unwrap the variant
-func (v *Expr) Unwrap() interface{} {
+func (v *Scalar1) Unwrap() interface{} {
     return v.Value
 }
 
 // Get the key
-func (v *Expr) Key() ExprKey {
-    return ExprKey {
+func (v *Scalar1) Key() Scalar1Key {
+    return Scalar1Key {
         Value: v.Value,
     }
 }
 
 // Convert variant to string
-func (v *Expr) String() string {
+func (v *Scalar1) String() string {
     var sb strings.Builder
-    sb.WriteString("Expr(")
+    sb.WriteString("Scalar1(")
     sb.WriteString("type=")
     sb.WriteString(reflect.TypeOf(v.Value).String())
     sb.WriteString(",value=")
