@@ -1855,13 +1855,12 @@ func (fm *FieldModelOptional_NAME_) GetEnd(fbeBegin int) {
 
 // Get the optional value
 func (fm *FieldModelOptional_NAME_) Get() (*_TYPE_ARG_, error) {
-    fbeValue := _TYPE_NEW_
-
     fbeBegin, err := fm.GetBegin()
     if fbeBegin == 0 {
-        return fbeValue, err
+        return nil, err
     }
 
+    fbeValue := _TYPE_NEW_
     _GET_VALUE_
     fm.GetEnd(fbeBegin)
     return fbeValue, err
