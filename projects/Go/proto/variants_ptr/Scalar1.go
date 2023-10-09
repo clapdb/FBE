@@ -52,6 +52,11 @@ func NewScalar1FromValue(value interface{}) *Scalar1 {
     }
 }
 
+// Unwrap the variant
+func (v *Scalar1) Unwrap() interface{} {
+    return v.Value
+}
+
 // Get the key
 func (v *Scalar1) Key() Scalar1Key {
     return Scalar1Key {

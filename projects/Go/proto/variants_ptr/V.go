@@ -62,6 +62,11 @@ func NewVFromValue(value interface{}) *V {
     }
 }
 
+// Unwrap the variant
+func (v *V) Unwrap() interface{} {
+    return v.Value
+}
+
 // Get the key
 func (v *V) Key() VKey {
     return VKey {

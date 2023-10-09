@@ -52,6 +52,11 @@ func NewExprFromValue(value interface{}) *Expr {
     }
 }
 
+// Unwrap the variant
+func (v *Expr) Unwrap() interface{} {
+    return v.Value
+}
+
 // Get the key
 func (v *Expr) Key() ExprKey {
     return ExprKey {

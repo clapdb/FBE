@@ -6010,6 +6010,15 @@ void GeneratorGo::GenerateVariant(const std::shared_ptr<Package>& p, const std::
     Indent(-1);
     WriteLineIndent("}");
 
+    // Generate variant Unwrap method
+    WriteLine();
+    WriteLineIndent("// Unwrap the variant");
+    WriteLineIndent("func (v *" + variant_name + ") Unwrap() interface{} {");
+    Indent(1);
+    WriteLineIndent("return v.Value");
+    Indent(-1);
+    WriteLineIndent("}");
+
     // Get the key
     WriteLine();
     WriteLineIndent("// Get the key");
