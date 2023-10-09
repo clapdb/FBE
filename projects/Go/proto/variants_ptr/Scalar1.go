@@ -9,7 +9,8 @@ package variants_ptr
 
 import "fmt"
 import "strconv"
-// import "strings"
+import "strings"
+import "reflect"
 import "errors"
 import "fbeproj/proto/fbe"
 
@@ -21,11 +22,16 @@ var _ = fbe.Version
 var _ = fmt.Print
 var _ = strconv.FormatInt
 
-// type Scalar1Key interface{}, used as map key
-type Scalar1Key interface{}
+// type Scalar1Key struct{}
+type Scalar1Key struct {
+// same as Scalar1, but used as map key
+    Value interface{}
+}
 
-// type Scalar1 interface{}
-type Scalar1 interface{}
+// type Scalar1 struct {}, wrap interface{}
+type Scalar1 struct {
+    Value interface{}
+}
 // List of Scalar1 types
 // bool
 // int32
@@ -33,16 +39,34 @@ type Scalar1 interface{}
 // string
 
 // Create a new Scalar1 variant
-func NewScalar1() Scalar1 {
-    return true
+func NewScalar1() *Scalar1 {
+    return &Scalar1 {
+        Value: true,
+    }
 }
 
 // Create a new Scalar1 variant from the given value
-func NewScalar1FromValue(value Scalar1) Scalar1 {
-    return value
+func NewScalar1FromValue(value interface{}) *Scalar1 {
+    return &Scalar1 {
+        Value: value,
+    }
 }
 
-// Get the variant index
-func GetScalar1Index() int {
-    return 0
+// Get the key
+func (v *Scalar1) Key() Scalar1Key {
+    return Scalar1Key {
+        Value: v.Value,
+    }
+}
+
+// Convert variant to string
+func (v *Scalar1) String() string {
+    var sb strings.Builder
+    sb.WriteString("Scalar1(")
+    sb.WriteString("type=")
+    sb.WriteString(reflect.TypeOf(v.Value).String())
+    sb.WriteString(",value=")
+    sb.WriteString(fmt.Sprintf("%v", v.Value))
+    sb.WriteString(")")
+    return sb.String()
 }

@@ -123,12 +123,12 @@ func (fm *FieldModelOptionalV) Get() (*V, error) {
 
     fbeBegin, err := fm.GetBegin()
     if fbeBegin == 0 {
-        return &fbeValue, err
+        return fbeValue, err
     }
 
-    err = fm.value.GetValue(&fbeValue)
+    err = fm.value.GetValue(fbeValue)
     fm.GetEnd(fbeBegin)
-    return &fbeValue, err
+    return fbeValue, err
 }
 
 // Set the optional value (begin phase)

@@ -102,7 +102,20 @@ func (s *Scalar1Container) String() string {
     var sb strings.Builder
     sb.WriteString("Scalar1Container(")
     sb.WriteString("s=")
-    sb.WriteString("*variant Expr*")
+    if s.S != nil {
+        first := true
+        sb.WriteString("[" + strconv.FormatInt(int64(len(s.S)), 10) + "][{")
+        for _, v := range s.S {
+            if first { sb.WriteString("") } else { sb.WriteString(",") }
+            sb.WriteString(v.Key.String())
+            sb.WriteString("->")
+            sb.WriteString(v.Value.String())
+            first = false
+        }
+        sb.WriteString("}]")
+    } else {
+        sb.WriteString("s=[0][{}]")
+    }
     sb.WriteString(")")
     return sb.String()
 }

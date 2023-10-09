@@ -605,6 +605,199 @@ void FieldModel<::variants_ptr::V>::set(const ::variants_ptr::V& fbe_value) noex
 }
 
 
+FieldModel<::variants_ptr::Scalar1>::FieldModel(FBEBuffer& buffer, size_t offset) noexcept : _buffer(buffer), _offset(offset)
+{}
+
+size_t FieldModel<::variants_ptr::Scalar1>::fbe_body() const noexcept
+{
+    // variant type's fbe_size not included
+    size_t fbe_result = 4;
+    return fbe_result;
+}
+
+size_t FieldModel<::variants_ptr::Scalar1>::fbe_extra() const noexcept
+{
+    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+        return 0;
+
+    uint32_t fbe_struct_offset = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset());
+    if ((fbe_struct_offset == 0) || ((_buffer.offset() + fbe_struct_offset + 4) > _buffer.size()))
+        return 0;
+
+    _buffer.shift(fbe_struct_offset);
+
+    size_t fbe_result = fbe_body();
+
+    _buffer.unshift(fbe_struct_offset);
+
+    return fbe_result;
+}
+
+bool FieldModel<::variants_ptr::Scalar1>::verify() const noexcept
+{
+    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+        return true;
+
+    uint32_t fbe_variant_offset = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset());
+    if ((fbe_variant_offset == 0) || ((_buffer.offset() + fbe_variant_offset + 4) > _buffer.size()))
+        return false;
+
+    uint32_t fbe_variant_type = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_variant_offset);
+    if (fbe_variant_type < 0 || fbe_variant_type >= 4)
+        return false;
+
+    _buffer.shift(fbe_variant_offset);
+    switch(fbe_variant_type) {
+        case 0: {
+            FieldModel<bool> fbe_model(_buffer, 4);
+            if (!fbe_model.verify())
+                return false;
+            break;
+        }
+        case 1: {
+            FieldModel<int32_t> fbe_model(_buffer, 4);
+            if (!fbe_model.verify())
+                return false;
+            break;
+        }
+        case 2: {
+            FieldModel<int64_t> fbe_model(_buffer, 4);
+            if (!fbe_model.verify())
+                return false;
+            break;
+        }
+        case 3: {
+            FieldModel<stdb::memory::string> fbe_model(_buffer, 4);
+            if (!fbe_model.verify())
+                return false;
+            break;
+        }
+    }
+
+    _buffer.unshift(fbe_variant_offset);
+    return true;
+}
+
+void FieldModel<::variants_ptr::Scalar1>::get(::variants_ptr::Scalar1& fbe_value) const noexcept
+{
+    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+        return;
+
+    uint32_t fbe_variant_offset = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset());
+    assert(((fbe_variant_offset > 0) && ((_buffer.offset() + fbe_variant_offset + 4) <= _buffer.size())) && "Model is broken!");
+    if ((fbe_variant_offset == 0) || ((_buffer.offset() + fbe_variant_offset + 4) > _buffer.size()))
+        return;
+    uint32_t vairant_type_index = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_variant_offset);
+    assert(vairant_type_index >= 0 && vairant_type_index < 4 && "Model is broken!");
+
+    _buffer.shift(fbe_variant_offset);
+
+    switch(vairant_type_index) {
+        case 0: {
+            FieldModel<bool> fbe_model(_buffer, 4);
+            fbe_value.emplace<bool>();
+            auto& value = std::get<0>(fbe_value);
+            fbe_model.get(value);
+            break;
+        }
+        case 1: {
+            FieldModel<int32_t> fbe_model(_buffer, 4);
+            fbe_value.emplace<int32_t>();
+            auto& value = std::get<1>(fbe_value);
+            fbe_model.get(value);
+            break;
+        }
+        case 2: {
+            FieldModel<int64_t> fbe_model(_buffer, 4);
+            fbe_value.emplace<int64_t>();
+            auto& value = std::get<2>(fbe_value);
+            fbe_model.get(value);
+            break;
+        }
+        case 3: {
+            FieldModel<stdb::memory::string> fbe_model(_buffer, 4);
+            fbe_value.emplace<stdb::memory::string>();
+            auto& value = std::get<3>(fbe_value);
+            fbe_model.get(value);
+            break;
+        }
+    }
+
+    _buffer.unshift(fbe_variant_offset);
+}
+
+size_t FieldModel<::variants_ptr::Scalar1>::set_begin(size_t variant_type_fbe_size, size_t variant_type_index)
+{
+    assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
+    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+        return 0;
+
+    uint32_t fbe_variant_size = (uint32_t)(fbe_body() + variant_type_fbe_size);
+    uint32_t fbe_variant_offset = (uint32_t)(_buffer.allocate(fbe_variant_size) - _buffer.offset());
+    assert(((fbe_variant_offset > 0) && ((_buffer.offset() + fbe_variant_offset + fbe_variant_size) <= _buffer.size())) && "Model is broken!");
+    if ((fbe_variant_offset == 0) || ((_buffer.offset() + fbe_variant_offset + fbe_variant_size) > _buffer.size()))
+        return 0;
+
+    unaligned_store<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset(), fbe_variant_offset);
+    unaligned_store<uint32_t>(_buffer.data() + _buffer.offset() + fbe_variant_offset, variant_type_index);
+
+    _buffer.shift(fbe_variant_offset);
+    return fbe_variant_offset;
+}
+
+void FieldModel<::variants_ptr::Scalar1>::set_end(size_t fbe_begin)
+{
+    _buffer.unshift(fbe_begin);
+}
+
+// Set the variant value
+void FieldModel<::variants_ptr::Scalar1>::set(const ::variants_ptr::Scalar1& fbe_value) noexcept
+{
+    assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
+    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+        return;
+
+    std::visit(
+        overloaded
+        {
+            [this, fbe_variant_index = fbe_value.index()](bool v) {
+                FieldModel<bool> fbe_model(_buffer, 4);
+                size_t fbe_begin = set_begin(fbe_model.fbe_size(), fbe_variant_index);
+                if (fbe_begin == 0)
+                    return;
+                fbe_model.set(v);
+                set_end(fbe_begin);
+            }
+            , [this, fbe_variant_index = fbe_value.index()](int32_t v) {
+                FieldModel<int32_t> fbe_model(_buffer, 4);
+                size_t fbe_begin = set_begin(fbe_model.fbe_size(), fbe_variant_index);
+                if (fbe_begin == 0)
+                    return;
+                fbe_model.set(v);
+                set_end(fbe_begin);
+            }
+            , [this, fbe_variant_index = fbe_value.index()](int64_t v) {
+                FieldModel<int64_t> fbe_model(_buffer, 4);
+                size_t fbe_begin = set_begin(fbe_model.fbe_size(), fbe_variant_index);
+                if (fbe_begin == 0)
+                    return;
+                fbe_model.set(v);
+                set_end(fbe_begin);
+            }
+            , [this, fbe_variant_index = fbe_value.index()](const stdb::memory::string& v) {
+                FieldModel<stdb::memory::string> fbe_model(_buffer, 4);
+                size_t fbe_begin = set_begin(fbe_model.fbe_size(), fbe_variant_index);
+                if (fbe_begin == 0)
+                    return;
+                fbe_model.set(v);
+                set_end(fbe_begin);
+            }
+        },
+        fbe_value
+    );
+}
+
+
 FieldModelPtr_variants_ptr_Simple::FieldModelPtr_variants_ptr_Simple(FBEBuffer& buffer, size_t offset) noexcept : _buffer(buffer), _offset(offset)
 {}
 
@@ -2060,6 +2253,351 @@ size_t ValueContainerModel::serialize(const ::variants_ptr::ValueContainer& valu
 }
 
 size_t ValueContainerModel::deserialize(::variants_ptr::ValueContainer& value) noexcept
+{
+    if ((this->buffer().offset() + model.fbe_offset() - 4) > this->buffer().size())
+        return 0;
+
+    uint32_t fbe_full_size = unaligned_load<uint32_t>(this->buffer().data() + this->buffer().offset() + model.fbe_offset() - 4);
+    assert((fbe_full_size >= model.fbe_size()) && "Model is broken!");
+    if (fbe_full_size < model.fbe_size())
+        return 0;
+
+    model.get(value);
+    return fbe_full_size;
+}
+
+} // namespace variants_ptr
+
+FieldModelPtr_variants_ptr_Scalar1Container::FieldModelPtr_variants_ptr_Scalar1Container(FBEBuffer& buffer, size_t offset) noexcept : _buffer(buffer), _offset(offset)
+{}
+
+FieldModelPtr_variants_ptr_Scalar1Container::~FieldModelPtr_variants_ptr_Scalar1Container()
+{
+    if (ptr) delete ptr;
+}
+
+size_t FieldModelPtr_variants_ptr_Scalar1Container::fbe_extra() const noexcept
+{
+    if (!ptr) return 0;
+
+    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+        return 0;
+
+    uint32_t fbe_ptr_offset = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset() + 1);
+    if ((fbe_ptr_offset == 0) || ((_buffer.offset() + fbe_ptr_offset + 4) > _buffer.size()))
+        return 0;
+
+    _buffer.shift(fbe_ptr_offset);
+    size_t fbe_result = ptr->fbe_size() + ptr->fbe_extra();
+    _buffer.unshift(fbe_ptr_offset);
+
+    return fbe_result;
+}
+
+bool FieldModelPtr_variants_ptr_Scalar1Container::verify() const noexcept
+{
+    if (!ptr) return true;
+
+    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+        return true;
+
+    uint8_t fbe_has_value = *((const uint8_t *)(_buffer.data() + _buffer.offset() + fbe_offset()));
+    if (fbe_has_value == 0)
+        return true;
+
+    uint32_t fbe_optional_offset = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset() + 1);
+    if (fbe_optional_offset == 0)
+        return false;
+
+    _buffer.shift(fbe_optional_offset);
+    bool fbe_result = ptr->verify();
+    _buffer.unshift(fbe_optional_offset);
+    return fbe_result;
+}
+
+bool FieldModelPtr_variants_ptr_Scalar1Container::has_value() const noexcept
+{
+    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+        return false;
+
+    uint8_t fbe_has_value = *((const uint8_t *)(_buffer.data() + _buffer.offset() + fbe_offset()));
+    return (fbe_has_value != 0);
+}
+
+size_t FieldModelPtr_variants_ptr_Scalar1Container::get_begin() const noexcept
+{
+    if (!has_value())
+        return 0;
+
+    uint32_t fbe_ptr_offset = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset() + 1);
+    assert((fbe_ptr_offset > 0) && "Model is broken!");
+    if (fbe_ptr_offset == 0)
+        return 0;
+
+    _buffer.shift(fbe_ptr_offset);
+    return fbe_ptr_offset;
+}
+
+void FieldModelPtr_variants_ptr_Scalar1Container::get_end(size_t fbe_begin) const noexcept
+{
+    _buffer.unshift(fbe_begin);
+}
+
+void FieldModelPtr_variants_ptr_Scalar1Container::get(::variants_ptr::Scalar1Container** fbe_value) noexcept
+{
+    size_t fbe_begin = get_begin();
+    if (fbe_begin == 0)
+        return;
+
+    if (ptr) delete ptr;
+    ptr = new FieldModel_variants_ptr_Scalar1Container(_buffer, 0);
+
+    ::variants_ptr::Scalar1Container *tempModel = new ::variants_ptr::Scalar1Container();
+    ptr->get(*tempModel);
+    *fbe_value = tempModel;
+
+    get_end(fbe_begin);
+}
+
+size_t FieldModelPtr_variants_ptr_Scalar1Container::set_begin(bool has_value)
+{
+    assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
+    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+        return 0;
+
+    uint8_t fbe_has_value = has_value ? 1 : 0;
+    *((uint8_t *)(_buffer.data() + _buffer.offset() + fbe_offset())) = fbe_has_value;
+    if (fbe_has_value == 0)
+        return 0;
+
+    uint32_t fbe_ptr_size = 4;
+    uint32_t fbe_ptr_offset = (uint32_t)(_buffer.allocate(fbe_ptr_size) - _buffer.offset());
+    assert(((fbe_ptr_offset > 0) && ((_buffer.offset() + fbe_ptr_offset + fbe_ptr_size) <= _buffer.size())) && "Model is broken!");
+    if ((fbe_ptr_offset == 0) || ((_buffer.offset() + fbe_ptr_offset + fbe_ptr_size) > _buffer.size()))
+        return 0;
+
+    unaligned_store<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset() + 1, fbe_ptr_offset);
+
+    _buffer.shift(fbe_ptr_offset);
+    return fbe_ptr_offset;
+}
+
+void FieldModelPtr_variants_ptr_Scalar1Container::set_end(size_t fbe_begin)
+{
+    _buffer.unshift(fbe_begin);
+}
+
+void FieldModelPtr_variants_ptr_Scalar1Container::set(const ::variants_ptr::Scalar1Container* fbe_value) noexcept
+{
+    size_t fbe_begin = set_begin(fbe_value != nullptr);
+    if (fbe_begin == 0)
+        return;
+
+    if (fbe_value != nullptr) {
+        BaseFieldModel* temp = new FieldModel_variants_ptr_Scalar1Container(_buffer, 0);
+        if (ptr) delete ptr;
+        ptr = temp;
+        ptr->set(*fbe_value);
+    }
+
+    set_end(fbe_begin);
+}
+
+FieldModel_variants_ptr_Scalar1Container::FieldModel_variants_ptr_Scalar1Container(FBEBuffer& buffer, size_t offset) noexcept : _buffer(buffer), _offset(offset)
+    , s(buffer, 4 + 4)
+{}
+
+size_t FieldModel_variants_ptr_Scalar1Container::fbe_body() const noexcept
+{
+    size_t fbe_result = 4 + 4
+        + s.fbe_size()
+        ;
+    return fbe_result;
+}
+
+size_t FieldModel_variants_ptr_Scalar1Container::fbe_extra() const noexcept
+{
+    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+        return 0;
+
+    uint32_t fbe_struct_offset = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset());
+    if ((fbe_struct_offset == 0) || ((_buffer.offset() + fbe_struct_offset + 4) > _buffer.size()))
+        return 0;
+
+    _buffer.shift(fbe_struct_offset);
+
+    size_t fbe_result = fbe_body()
+        + s.fbe_extra()
+        ;
+
+    _buffer.unshift(fbe_struct_offset);
+
+    return fbe_result;
+}
+
+bool FieldModel_variants_ptr_Scalar1Container::verify(bool fbe_verify_type) const noexcept
+{
+    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+        return true;
+
+    uint32_t fbe_struct_offset = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset());
+    if ((fbe_struct_offset == 0) || ((_buffer.offset() + fbe_struct_offset + 4 + 4) > _buffer.size()))
+        return false;
+
+    uint32_t fbe_struct_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_struct_offset);
+    if (fbe_struct_size < (4 + 4))
+        return false;
+
+    uint32_t fbe_struct_type = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_struct_offset + 4);
+    if (fbe_verify_type && (fbe_struct_type != fbe_type()))
+        return false;
+
+    _buffer.shift(fbe_struct_offset);
+    bool fbe_result = verify_fields(fbe_struct_size);
+    _buffer.unshift(fbe_struct_offset);
+    return fbe_result;
+}
+
+bool FieldModel_variants_ptr_Scalar1Container::verify_fields([[maybe_unused]] size_t fbe_struct_size) const noexcept
+{
+    size_t fbe_current_size = 4 + 4;
+
+    if ((fbe_current_size + s.fbe_size()) > fbe_struct_size)
+        return true;
+    if (!s.verify())
+        return false;
+    fbe_current_size += s.fbe_size();
+
+    return true;
+}
+
+size_t FieldModel_variants_ptr_Scalar1Container::get_begin() const noexcept
+{
+    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+        return 0;
+
+    uint32_t fbe_struct_offset = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset());
+    assert(((fbe_struct_offset > 0) && ((_buffer.offset() + fbe_struct_offset + 4 + 4) <= _buffer.size())) && "Model is broken!");
+    if ((fbe_struct_offset == 0) || ((_buffer.offset() + fbe_struct_offset + 4 + 4) > _buffer.size()))
+        return 0;
+
+    uint32_t fbe_struct_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_struct_offset);
+    assert((fbe_struct_size >= (4 + 4)) && "Model is broken!");
+    if (fbe_struct_size < (4 + 4))
+        return 0;
+
+    _buffer.shift(fbe_struct_offset);
+    return fbe_struct_offset;
+}
+
+void FieldModel_variants_ptr_Scalar1Container::get_end(size_t fbe_begin) const noexcept
+{
+    _buffer.unshift(fbe_begin);
+}
+
+void FieldModel_variants_ptr_Scalar1Container::get(::FBE::Base& fbe_value) noexcept
+{
+    size_t fbe_begin = get_begin();
+    if (fbe_begin == 0)
+        return;
+
+    uint32_t fbe_struct_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset());
+    get_fields(fbe_value, fbe_struct_size);
+    get_end(fbe_begin);
+}
+
+void FieldModel_variants_ptr_Scalar1Container::get_fields([[maybe_unused]] ::FBE::Base& base_fbe_value, [[maybe_unused]] size_t fbe_struct_size) noexcept
+{
+    ::variants_ptr::Scalar1Container& fbe_value = static_cast<::variants_ptr::Scalar1Container&>(base_fbe_value);
+    size_t fbe_current_size = 4 + 4;
+
+    if ((fbe_current_size + s.fbe_size()) <= fbe_struct_size)
+        {
+            s.get(fbe_value.s);
+        }
+    else
+        fbe_value.s.clear();
+    fbe_current_size += s.fbe_size();
+}
+
+size_t FieldModel_variants_ptr_Scalar1Container::set_begin()
+{
+    assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
+    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+        return 0;
+
+    uint32_t fbe_struct_size = (uint32_t)fbe_body();
+    uint32_t fbe_struct_offset = (uint32_t)(_buffer.allocate(fbe_struct_size) - _buffer.offset());
+    assert(((fbe_struct_offset > 0) && ((_buffer.offset() + fbe_struct_offset + fbe_struct_size) <= _buffer.size())) && "Model is broken!");
+    if ((fbe_struct_offset == 0) || ((_buffer.offset() + fbe_struct_offset + fbe_struct_size) > _buffer.size()))
+        return 0;
+
+    unaligned_store<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset(), fbe_struct_offset);
+    unaligned_store<uint32_t>(_buffer.data() + _buffer.offset() + fbe_struct_offset, fbe_struct_size);
+    unaligned_store<uint32_t>(_buffer.data() + _buffer.offset() + fbe_struct_offset + 4, fbe_type());
+
+    _buffer.shift(fbe_struct_offset);
+    return fbe_struct_offset;
+}
+
+void FieldModel_variants_ptr_Scalar1Container::set_end(size_t fbe_begin)
+{
+    _buffer.unshift(fbe_begin);
+}
+
+void FieldModel_variants_ptr_Scalar1Container::set(const ::FBE::Base& fbe_value) noexcept
+{
+    size_t fbe_begin = set_begin();
+    if (fbe_begin == 0)
+        return;
+
+    set_fields(fbe_value);
+    set_end(fbe_begin);
+}
+
+void FieldModel_variants_ptr_Scalar1Container::set_fields([[maybe_unused]] const ::FBE::Base& base_fbe_value) noexcept
+{
+    [[maybe_unused]] const ::variants_ptr::Scalar1Container& fbe_value = static_cast<const ::variants_ptr::Scalar1Container&>(base_fbe_value);
+    s.set(fbe_value.s);
+}
+
+namespace variants_ptr {
+
+bool Scalar1ContainerModel::verify()
+{
+    if ((this->buffer().offset() + model.fbe_offset() - 4) > this->buffer().size())
+        return false;
+
+    uint32_t fbe_full_size = unaligned_load<uint32_t>(this->buffer().data() + this->buffer().offset() + model.fbe_offset() - 4);
+    if (fbe_full_size < model.fbe_size())
+        return false;
+
+    return model.verify();
+}
+
+size_t Scalar1ContainerModel::create_begin()
+{
+    size_t fbe_begin = this->buffer().allocate(4 + model.fbe_size());
+    return fbe_begin;
+}
+
+size_t Scalar1ContainerModel::create_end(size_t fbe_begin)
+{
+    size_t fbe_end = this->buffer().size();
+    uint32_t fbe_full_size = (uint32_t)(fbe_end - fbe_begin);
+    *((uint32_t*)(this->buffer().data() + this->buffer().offset() + model.fbe_offset() - 4)) = fbe_full_size;
+    return fbe_full_size;
+}
+
+size_t Scalar1ContainerModel::serialize(const ::variants_ptr::Scalar1Container& value)
+{
+    size_t fbe_begin = create_begin();
+    model.set(value);
+    size_t fbe_full_size = create_end(fbe_begin);
+    return fbe_full_size;
+}
+
+size_t Scalar1ContainerModel::deserialize(::variants_ptr::Scalar1Container& value) noexcept
 {
     if ((this->buffer().offset() + model.fbe_offset() - 4) > this->buffer().size())
         return 0;

@@ -216,7 +216,7 @@ func (fm *FieldModelMapScalar1Expr) Get() (map[Scalar1Key]struct{Key Scalar1; Va
         if err != nil {
             return values, err
         }
-        values[*key] = struct{Key Scalar1; Value Expr}{*key, *value}
+        values[key.Key()] = struct{Key Scalar1; Value Expr}{*key, *value}
         fbeModelKey.FBEShift(fbeModelKey.FBESize() + fbeModelValue.FBESize())
         fbeModelValue.FBEShift(fbeModelKey.FBESize() + fbeModelValue.FBESize())
     }

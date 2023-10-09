@@ -8,8 +8,8 @@ import (
 	"fbeproj/proto/simple"
 	"fbeproj/proto/test"
 	"fbeproj/proto/variants_ptr"
-	"testing"
 	"reflect"
+	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -1472,7 +1472,7 @@ func TestSerializationImport(t *testing.T) {
 // Test Expr
 func TestSerializationVariantString(t *testing.T) {
 	nestedStringVariant := variants_ptr.NewExprFromValue("nested variant string");
-	value := variants_ptr.NewExprContainerFromFieldValues("test variant string", &nestedStringVariant, nil)
+	value := variants_ptr.NewExprContainerFromFieldValues(*variants_ptr.NewExprFromValue("test variant string"), nestedStringVariant, nil)
 
 	// Serialize the struct to the FBE stream
 	writer := variants_ptr.NewExprContainerModel(fbe.NewEmptyBuffer())
@@ -1497,21 +1497,21 @@ func TestSerializationVariantString(t *testing.T) {
 	assert.EqualValues(t, reader.Model().FBEOffset(), 4+reader.Buffer().Size())
 
 
-	assert.Equal(t, "string",  reflect.TypeOf(valueCopy.E).String())
-	v, ok := (valueCopy.E).(string)
+	assert.Equal(t, "string",  reflect.TypeOf(valueCopy.E.Value).String())
+	v, ok := (valueCopy.E.Value).(string)
 	assert.True(t, ok)
 	assert.Equal(t, "test variant string", v)
 	
-	assert.Equal(t, "string",  reflect.TypeOf(*valueCopy.Eo).String())
+	assert.Equal(t, "string",  reflect.TypeOf(valueCopy.Eo.Value).String())
 	assert.NotNil(t, valueCopy.Eo)
-	nv, ok := (*valueCopy.Eo).(string)
+	nv, ok := (valueCopy.Eo.Value).(string)
 	assert.True(t, ok)
 	assert.Equal(t, "nested variant string", nv)
 }
 
 func TestSerializationVariantBool(t *testing.T) {
 	nestedBoolVariant := variants_ptr.NewExprFromValue(true);
-	value := variants_ptr.NewExprContainerFromFieldValues(true, &nestedBoolVariant, nil)
+	value := variants_ptr.NewExprContainerFromFieldValues(*variants_ptr.NewExprFromValue(true), nestedBoolVariant, nil)
 
 	// Serialize the struct to the FBE stream
 	writer := variants_ptr.NewExprContainerModel(fbe.NewEmptyBuffer())
@@ -1535,21 +1535,21 @@ func TestSerializationVariantBool(t *testing.T) {
 	reader.Next(deserialized)
 	assert.EqualValues(t, reader.Model().FBEOffset(), 4+reader.Buffer().Size())
 
-	assert.Equal(t, "bool",  reflect.TypeOf(valueCopy.E).String())
-	v, ok := (valueCopy.E).(bool)
+	assert.Equal(t, "bool",  reflect.TypeOf(valueCopy.E.Value).String())
+	v, ok := (valueCopy.E.Value).(bool)
 	assert.True(t, ok)
 	assert.Equal(t, true, v)
 
-	assert.Equal(t, "bool",  reflect.TypeOf(*valueCopy.Eo).String())
+	assert.Equal(t, "bool",  reflect.TypeOf(valueCopy.E.Value).String())
 	assert.NotNil(t, valueCopy.Eo)
-	nv, ok := (*valueCopy.Eo).(bool)
+	nv, ok := (valueCopy.Eo.Value).(bool)
 	assert.True(t, ok)
 	assert.Equal(t, true, nv)
 }
 
 func TestSerializationVariantInt32(t *testing.T) {
 	nestedInt32Variant := variants_ptr.NewExprFromValue(int32(24));
-	value := variants_ptr.NewExprContainerFromFieldValues(int32(42), &nestedInt32Variant, nil)
+	value := variants_ptr.NewExprContainerFromFieldValues(*variants_ptr.NewExprFromValue(int32(42)), nestedInt32Variant, nil)
 
 	// Serialize the struct to the FBE stream
 	writer := variants_ptr.NewExprContainerModel(fbe.NewEmptyBuffer())
@@ -1573,21 +1573,21 @@ func TestSerializationVariantInt32(t *testing.T) {
 	reader.Next(deserialized)
 	assert.EqualValues(t, reader.Model().FBEOffset(), 4+reader.Buffer().Size())
 
-	assert.Equal(t, "int32",  reflect.TypeOf(valueCopy.E).String())
-	v, ok := (valueCopy.E).(int32)
+	assert.Equal(t, "int32",  reflect.TypeOf(valueCopy.E.Value).String())
+	v, ok := (valueCopy.E.Value).(int32)
 	assert.True(t, ok)
 	assert.Equal(t, int32(42), v)
 
-	assert.Equal(t, "int32",  reflect.TypeOf(*valueCopy.Eo).String())
+	assert.Equal(t, "int32",  reflect.TypeOf(valueCopy.Eo.Value).String())
 	assert.NotNil(t, valueCopy.Eo)
-	nv, ok := (*valueCopy.Eo).(int32)
+	nv, ok := (valueCopy.Eo.Value).(int32)
 	assert.True(t, ok)
 	assert.Equal(t, int32(24), nv)
 }
 
 func TestSerializationVariantByteSlices(t *testing.T) {
-	var nestedByteSliceVariant variants_ptr.Expr = []byte("000");
-	value := variants_ptr.NewExprContainerFromFieldValues([]byte("ABCD"), &nestedByteSliceVariant, nil)
+	nestedByteSliceVariant := variants_ptr.NewExprFromValue([]byte("000"))
+	value := variants_ptr.NewExprContainerFromFieldValues(*variants_ptr.NewExprFromValue([]byte("ABCD")), nestedByteSliceVariant, nil)
 
 	// Serialize the struct to the FBE stream
 	writer := variants_ptr.NewExprContainerModel(fbe.NewEmptyBuffer())
@@ -1611,15 +1611,15 @@ func TestSerializationVariantByteSlices(t *testing.T) {
 	reader.Next(deserialized)
 	assert.EqualValues(t, reader.Model().FBEOffset(), 4+reader.Buffer().Size())
 
-	assert.Equal(t, "[]uint8",  reflect.TypeOf(valueCopy.E).String())
-	v, ok := (valueCopy.E).([]byte)
+	assert.Equal(t, "[]uint8",  reflect.TypeOf(valueCopy.E.Value).String())
+	v, ok := (valueCopy.E.Value).([]byte)
 	assert.True(t, ok)
 	assert.Equal(t, 4, len(v))
 	assert.Equal(t, "ABCD", string(v))
 
-	assert.Equal(t, "[]uint8",  reflect.TypeOf(*valueCopy.Eo).String())
+	assert.Equal(t, "[]uint8",  reflect.TypeOf(valueCopy.Eo.Value).String())
 	assert.NotNil(t, valueCopy.Eo)
-	nv, ok := (*valueCopy.Eo).([]byte)
+	nv, ok := (valueCopy.Eo.Value).([]byte)
 	assert.True(t, ok)
 	assert.Equal(t, 3, len(nv))
 	assert.Equal(t, "000", string(nv))
@@ -1630,7 +1630,7 @@ func TestSerializationVariantStruct(t *testing.T) {
 	var f64 float64 = 3.14
 	f64v := variants_ptr.NewVFromValue(f64);
 
-	value := variants_ptr.NewValueFromFieldValues(*simple, &f64v, nil)
+	value := variants_ptr.NewValueFromFieldValues(*variants_ptr.NewVFromValue(*simple), f64v, nil)
 
 
 	// Serialize the struct to the FBE stream
@@ -1655,22 +1655,22 @@ func TestSerializationVariantStruct(t *testing.T) {
 	reader.Next(deserialized)
 	assert.EqualValues(t, reader.Model().FBEOffset(), 4+reader.Buffer().Size())
 
-	assert.Equal(t, "variants_ptr.Simple",  reflect.TypeOf(valueCopy.V).String())
-	s, ok := (valueCopy.V).(variants_ptr.Simple)
+	assert.Equal(t, "variants_ptr.Simple",  reflect.TypeOf(valueCopy.V.Value).String())
+	s, ok := (valueCopy.V.Value).(variants_ptr.Simple)
 	assert.True(t, ok)
 	assert.Equal(t, "this is too simple", s.Name)
 
-	assert.Equal(t, "float64",  reflect.TypeOf(*valueCopy.Vo).String())
+	assert.Equal(t, "float64",  reflect.TypeOf(valueCopy.Vo.Value).String())
 	assert.NotNil(t, valueCopy.Vo)
-	f64copy, ok := (*valueCopy.Vo).(float64)
+	f64copy, ok := (valueCopy.Vo.Value).(float64)
 	assert.True(t, ok)
 	assert.Equal(t, 3.14, f64copy)
 }
 
 func TestSerializationVariantVariant(t *testing.T) {
-	var expr variants_ptr.Expr = variants_ptr.NewExprFromValue("simple is complex")
+	expr := variants_ptr.NewExprFromValue("simple is complex")
 
-	value := variants_ptr.NewValueFromFieldValues(expr, nil, nil)
+	value := variants_ptr.NewValueFromFieldValues(*variants_ptr.NewVFromValue(*expr), nil, nil) // V: Simple, Value: V
 
 	// Serialize the struct to the FBE stream
 	writer := variants_ptr.NewValueModel(fbe.NewEmptyBuffer())
@@ -1694,18 +1694,19 @@ func TestSerializationVariantVariant(t *testing.T) {
 	reader.Next(deserialized)
 	assert.EqualValues(t, reader.Model().FBEOffset(), 4+reader.Buffer().Size())
 
-	assert.Equal(t, "string",  reflect.TypeOf(valueCopy.V).String())
-	s, ok := (valueCopy.V).(string)
+	assert.Equal(t, "variants_ptr.Expr",  reflect.TypeOf(valueCopy.V.Value).String())
+	s, ok := (valueCopy.V.Value).(variants_ptr.Expr)
 	assert.True(t, ok)
 	assert.NotNil(t, s)
-	assert.Equal(t, "simple is complex", s)
+	ss, ok := s.Value.(string)
+	assert.Equal(t, "simple is complex", ss)
 }
 
 func TestSerializationVariantPtrStruct(t *testing.T) {
 	// Create a new struct
 	simple := variants_ptr.NewSimpleFromFieldValues("simple is complex")
 
-	value := variants_ptr.NewValueFromFieldValues(simple, nil, nil)
+	value := variants_ptr.NewValueFromFieldValues(*variants_ptr.NewVFromValue(simple), nil, nil) // V: *Simple, Value: V
 
 	// Serialize the struct to the FBE stream
 	writer := variants_ptr.NewValueModel(fbe.NewEmptyBuffer())
@@ -1729,8 +1730,8 @@ func TestSerializationVariantPtrStruct(t *testing.T) {
 	reader.Next(deserialized)
 	assert.EqualValues(t, reader.Model().FBEOffset(), 4+reader.Buffer().Size())
 
-	assert.Equal(t, "*variants_ptr.Simple",  reflect.TypeOf(valueCopy.V).String())
-	s, ok := (valueCopy.V).(*variants_ptr.Simple)
+	assert.Equal(t, "*variants_ptr.Simple",  reflect.TypeOf(valueCopy.V.Value).String())
+	s, ok := (valueCopy.V.Value).(*variants_ptr.Simple)
 	assert.True(t, ok)
 	assert.NotNil(t, s)
 	assert.Equal(t, "simple is complex", s.Name)
@@ -1738,13 +1739,13 @@ func TestSerializationVariantPtrStruct(t *testing.T) {
 
 func TestSerializationVariantVectorStruct(t *testing.T) {
 	// Create a new struct
-	simpleVector := []variants_ptr.Simple{{Name: "simple"}, {Name: "complex"}}
+	simpleVector := variants_ptr.NewVFromValue([]variants_ptr.Simple{{Name: "simple"}, {Name: "complex"}})
 
-	var stringVector variants_ptr.V = []string{"ABC", "123"}
+	stringVector := variants_ptr.NewVFromValue([]string{"ABC", "123"})
 
-	var simplePtrVector variants_ptr.V = []*variants_ptr.Simple{variants_ptr.NewSimpleFromFieldValues("123"), variants_ptr.NewSimpleFromFieldValues("ABC")}
+	simplePtrVector := variants_ptr.NewVFromValue([]*variants_ptr.Simple{variants_ptr.NewSimpleFromFieldValues("123"), variants_ptr.NewSimpleFromFieldValues("ABC")})
 
-	value := variants_ptr.NewValueFromFieldValues(simpleVector, &stringVector, &simplePtrVector)
+	value := variants_ptr.NewValueFromFieldValues(*simpleVector, stringVector, simplePtrVector) // Simple, []string, []*Simple
 
 	// Serialize the struct to the FBE stream
 	writer := variants_ptr.NewValueModel(fbe.NewEmptyBuffer())
@@ -1768,22 +1769,22 @@ func TestSerializationVariantVectorStruct(t *testing.T) {
 	reader.Next(deserialized)
 	assert.EqualValues(t, reader.Model().FBEOffset(), 4+reader.Buffer().Size())
 
-	assert.Equal(t, "[]variants_ptr.Simple",  reflect.TypeOf(valueCopy.V).String())
-	tt, ok := (valueCopy.V).([]variants_ptr.Simple)
+	assert.Equal(t, "[]variants_ptr.Simple",  reflect.TypeOf(valueCopy.V.Value).String())
+	tt, ok := (valueCopy.V.Value).([]variants_ptr.Simple)
 	assert.True(t, ok)
 	assert.Equal(t, 2, len(tt))
 	assert.Equal(t, "simple", tt[0].Name)
 	assert.Equal(t, "complex", tt[1].Name)
 
-	assert.Equal(t, "[]string",  reflect.TypeOf(*valueCopy.Vo).String())
-	tto, ok := (*valueCopy.Vo).([]string)
+	assert.Equal(t, "[]string",  reflect.TypeOf(valueCopy.Vo.Value).String())
+	tto, ok := (valueCopy.Vo.Value).([]string)
 	assert.True(t, ok)
 	assert.Equal(t, 2, len(tto))
 	assert.Equal(t, "ABC", tto[0])
 	assert.Equal(t, "123", tto[1])
 
-	assert.Equal(t, "[]*variants_ptr.Simple",  reflect.TypeOf(*valueCopy.Vo2).String())
-	tto2, ok := (*valueCopy.Vo2).([]*variants_ptr.Simple)
+	assert.Equal(t, "[]*variants_ptr.Simple",  reflect.TypeOf(valueCopy.Vo2.Value).String())
+	tto2, ok := (valueCopy.Vo2.Value).([]*variants_ptr.Simple)
 	assert.True(t, ok)
 	assert.Equal(t, 2, len(tto2))
 	assert.Equal(t, "123", tto2[0].Name)
@@ -1794,7 +1795,7 @@ func TestSerializationVariantVectorInt32(t *testing.T) {
 	// Create a new struct
 	int32Vector := []int32{24, 42}
 
-	value := variants_ptr.NewValueFromFieldValues(int32Vector, nil, nil)
+	value := variants_ptr.NewValueFromFieldValues(*variants_ptr.NewVFromValue(int32Vector), nil, nil)
 
 	// Serialize the struct to the FBE stream
 	writer := variants_ptr.NewValueModel(fbe.NewEmptyBuffer())
@@ -1818,8 +1819,8 @@ func TestSerializationVariantVectorInt32(t *testing.T) {
 	reader.Next(deserialized)
 	assert.EqualValues(t, reader.Model().FBEOffset(), 4+reader.Buffer().Size())
 
-	assert.Equal(t, "[]int32",  reflect.TypeOf(valueCopy.V).String())
-	tt, ok := (valueCopy.V).([]int32)
+	assert.Equal(t, "[]int32",  reflect.TypeOf(valueCopy.V.Value).String())
+	tt, ok := (valueCopy.V.Value).([]int32)
 	assert.True(t, ok)
 	assert.Equal(t, 2, len(tt))
 	assert.Equal(t, int32(42), tt[1])
@@ -1832,10 +1833,10 @@ func TestSerializationVariantMapStructInt(t *testing.T) {
 	simple2Int[24] = variants_ptr.Simple{Name: "simple"}
 	simple2Int[42] = variants_ptr.Simple{Name: "complex"}
 
-	var int322Bytes variants_ptr.V = map[int32][]byte{24: []byte("ABC"), 42: []byte("123")}
-	var string2Bytes variants_ptr.V = map[string][]byte{"24": []byte("ABC"), "42": []byte("123")}
+	int322Bytes := variants_ptr.NewVFromValue(map[int32][]byte{24: []byte("ABC"), 42: []byte("123")})
+	string2Bytes := variants_ptr.NewVFromValue(map[string][]byte{"24": []byte("ABC"), "42": []byte("123")})
 
-	value := variants_ptr.NewValueFromFieldValues(simple2Int, &int322Bytes, &string2Bytes)
+	value := variants_ptr.NewValueFromFieldValues(*variants_ptr.NewVFromValue(simple2Int), int322Bytes, string2Bytes)
 
 	// Serialize the struct to the FBE stream
 	writer := variants_ptr.NewValueModel(fbe.NewEmptyBuffer())
@@ -1859,22 +1860,22 @@ func TestSerializationVariantMapStructInt(t *testing.T) {
 	reader.Next(deserialized)
 	assert.EqualValues(t, reader.Model().FBEOffset(), 4+reader.Buffer().Size())
 
-	assert.Equal(t, "map[int32]variants_ptr.Simple",  reflect.TypeOf(valueCopy.V).String())
-	tt, ok := (valueCopy.V).(map[int32]variants_ptr.Simple)
+	assert.Equal(t, "map[int32]variants_ptr.Simple",  reflect.TypeOf(valueCopy.V.Value).String())
+	tt, ok := (valueCopy.V.Value).(map[int32]variants_ptr.Simple)
 	assert.True(t, ok)
 	assert.Equal(t, 2, len(tt))
 	assert.Equal(t, "simple", tt[24].Name)
 	assert.Equal(t, "complex", tt[42].Name)
 
-	assert.Equal(t, "map[int32][]uint8",  reflect.TypeOf(*valueCopy.Vo).String())
-	tto, ok := (*valueCopy.Vo).(map[int32][]byte)
+	assert.Equal(t, "map[int32][]uint8",  reflect.TypeOf(valueCopy.Vo.Value).String())
+	tto, ok := (valueCopy.Vo.Value).(map[int32][]byte)
 	assert.True(t, ok)
 	assert.Equal(t, 2, len(tto))
 	assert.Equal(t, "ABC", string(tto[24]))
 	assert.Equal(t, "123", string(tto[42]))
 
-	assert.Equal(t, "map[string][]uint8",  reflect.TypeOf(*valueCopy.Vo2).String())
-	tto2, ok := (*valueCopy.Vo2).(map[string][]byte)
+	assert.Equal(t, "map[string][]uint8",  reflect.TypeOf(valueCopy.Vo2.Value).String())
+	tto2, ok := (valueCopy.Vo2.Value).(map[string][]byte)
 	assert.True(t, ok)
 	assert.Equal(t, 2, len(tto2))
 	assert.Equal(t, "ABC", string(tto2["24"]))
@@ -1887,7 +1888,7 @@ func TestSerializationVariantVectorBytes(t *testing.T) {
 	byteSlices = append(byteSlices, []byte("ABCDE"))
 	byteSlices = append(byteSlices, []byte("12345"))
 
-	value := variants_ptr.NewValueFromFieldValues(byteSlices, nil, nil)
+	value := variants_ptr.NewValueFromFieldValues(*variants_ptr.NewVFromValue(byteSlices), nil, nil)
 
 	// Serialize the struct to the FBE stream
 	writer := variants_ptr.NewValueModel(fbe.NewEmptyBuffer())
@@ -1911,8 +1912,8 @@ func TestSerializationVariantVectorBytes(t *testing.T) {
 	reader.Next(deserialized)
 	assert.EqualValues(t, reader.Model().FBEOffset(), 4+reader.Buffer().Size())
 
-	assert.Equal(t, "[][]uint8",  reflect.TypeOf(valueCopy.V).String())
-	tt, ok := (valueCopy.V).([][]byte)
+	assert.Equal(t, "[][]uint8",  reflect.TypeOf(valueCopy.V.Value).String())
+	tt, ok := (valueCopy.V.Value).([][]byte)
 	assert.True(t, ok)
 	assert.Equal(t, 2, len(tt))
 	assert.Equal(t, "ABCDE", string(tt[0]))
@@ -1921,14 +1922,14 @@ func TestSerializationVariantVectorBytes(t *testing.T) {
 
 // Variant[] in struct
 func TestSerializationContainerVariant(t *testing.T) {
-	var v0 variants_ptr.V = int32(42)
-	var v1 variants_ptr.V = variants_ptr.NewVFromValue("nested variant string")
-	var v2 variants_ptr.V = variants_ptr.NewSimpleFromFieldValues("this is too simple")
+	v0 := variants_ptr.NewVFromValue(int32(42)) // int32
+	v1 := variants_ptr.NewVFromValue("nested variant string") // string
+	v2 := variants_ptr.NewVFromValue(*variants_ptr.NewSimpleFromFieldValues("this is too simple")) // Simple
 	
-	valueContainer := variants_ptr.NewValueContainerFromFieldValues([]variants_ptr.V{v0, v1, v2}, map[int32]variants_ptr.V{
-		1: true,
-		2: "this is a long story",
-		3: variants_ptr.NewSimpleFromFieldValues("this is too complex"),
+	valueContainer := variants_ptr.NewValueContainerFromFieldValues([]variants_ptr.V{*v0, *v1, *v2}, map[int32]variants_ptr.V{
+		1: *variants_ptr.NewVFromValue([]string{"this is", "a long", "story"}), // []string
+		2: *variants_ptr.NewVFromValue("this is a long story"), // string
+		3: *variants_ptr.NewVFromValue(variants_ptr.NewSimpleFromFieldValues("this is too complex")),  // *Simple
 	})
 
 	// Serialize the struct to the FBE stream
@@ -1955,53 +1956,56 @@ func TestSerializationContainerVariant(t *testing.T) {
 
 	assert.Equal(t, 3, len(valueContainerCopy.Vv))
 	
-	assert.Equal(t, "int32",  reflect.TypeOf(valueContainerCopy.Vv[0]).String())
-	t0, ok := (valueContainerCopy.Vv[0]).(int32)
+	assert.Equal(t, "int32",  reflect.TypeOf(valueContainerCopy.Vv[0].Value).String())
+	t0, ok := (valueContainerCopy.Vv[0].Value).(int32)
 	assert.True(t, ok)
 	assert.Equal(t, int32(42), t0)
 
-	assert.Equal(t, "string",  reflect.TypeOf(valueContainerCopy.Vv[1]).String())
-	t1, ok := (valueContainerCopy.Vv[1]).(string)
+	assert.Equal(t, "string",  reflect.TypeOf(valueContainerCopy.Vv[1].Value).String())
+	t1, ok := (valueContainerCopy.Vv[1].Value).(string)
 	assert.True(t, ok)
 	assert.Equal(t, "nested variant string", t1)
 
-	assert.Equal(t, "*variants_ptr.Simple",  reflect.TypeOf(valueContainerCopy.Vv[2]).String())
-	t2, ok := (valueContainerCopy.Vv[2]).(*variants_ptr.Simple)
+	assert.Equal(t, "variants_ptr.Simple",  reflect.TypeOf(valueContainerCopy.Vv[2].Value).String())
+	t2, ok := (valueContainerCopy.Vv[2].Value).(variants_ptr.Simple)
 	assert.True(t, ok)
 	assert.Equal(t, "this is too simple", t2.Name)
 
-	assert.Equal(t, 3, len(valueContainerCopy.Vv))
+	assert.Equal(t, 3, len(valueContainerCopy.Vm))
 	
-	assert.Equal(t, "bool",  reflect.TypeOf(valueContainerCopy.Vm[1]).String())
-	tt0, ok := (valueContainerCopy.Vm[1]).(bool)
+	assert.Equal(t, "[]string",  reflect.TypeOf(valueContainerCopy.Vm[1].Value).String())
+	tt0, ok := (valueContainerCopy.Vm[1].Value).([]string)
 	assert.True(t, ok)
-	assert.Equal(t, true, tt0)
+	assert.Equal(t, 3, len(tt0))
+	assert.Equal(t, "this is", tt0[0])
+	assert.Equal(t, "a long", tt0[1])
+	assert.Equal(t, "story", tt0[2])
 
-	assert.Equal(t, "string",  reflect.TypeOf(valueContainerCopy.Vm[2]).String())
-	tt1, ok := (valueContainerCopy.Vm[2]).(string)
+	assert.Equal(t, "string",  reflect.TypeOf(valueContainerCopy.Vm[2].Value).String())
+	tt1, ok := (valueContainerCopy.Vm[2].Value).(string)
 	assert.True(t, ok)
 	assert.Equal(t, "this is a long story", tt1)
 
-	assert.Equal(t, "*variants_ptr.Simple",  reflect.TypeOf(valueContainerCopy.Vm[3]).String())
-	tt2, ok := (valueContainerCopy.Vm[3]).(*variants_ptr.Simple)
+	assert.Equal(t, "*variants_ptr.Simple",  reflect.TypeOf(valueContainerCopy.Vm[3].Value).String())
+	tt2, ok := (valueContainerCopy.Vm[3].Value).(*variants_ptr.Simple)
 	assert.True(t, ok)
 	assert.Equal(t, "this is too complex", tt2.Name)
 }
 
 
 func TestSerializationVariantMap(t *testing.T) {
-	var k0 variants_ptr.Scalar1 = true
-	var k1 variants_ptr.Scalar1 = int32(42)
-	var k2 variants_ptr.Scalar1 = "this is too simple"
-	var v0 variants_ptr.Expr = false
-	var v1 variants_ptr.Expr = int32(24)
-	var v2 variants_ptr.Expr = "this is too complex"
+	k0 :=  variants_ptr.Scalar1{Value: true}
+	k1 :=  variants_ptr.Scalar1{Value: int32(42)}
+	k2 :=  variants_ptr.Scalar1{Value: "this is too simple"}
+	v0 := variants_ptr.NewExprFromValue(false)
+	v1 := variants_ptr.NewExprFromValue(int32(24))
+	v2 := variants_ptr.NewExprFromValue("this is too complex")
 
 	container := variants_ptr.NewScalar1Container()
 
-	container.S[k0] = struct{Key variants_ptr.Scalar1; Value variants_ptr.Expr}{k0, v0}
-	container.S[k1] = struct{Key variants_ptr.Scalar1; Value variants_ptr.Expr}{k1, v1}
-	container.S[k2] = struct{Key variants_ptr.Scalar1; Value variants_ptr.Expr}{k2, v2}
+	container.S[k0.Key()] = struct{Key variants_ptr.Scalar1; Value variants_ptr.Expr}{k0, *v0}
+	container.S[k1.Key()] = struct{Key variants_ptr.Scalar1; Value variants_ptr.Expr}{k1, *v1}
+	container.S[k2.Key()] = struct{Key variants_ptr.Scalar1; Value variants_ptr.Expr}{k2, *v2}
 
 	// Serialize the struct to the FBE stream
 	writer := variants_ptr.NewScalar1ContainerModel(fbe.NewEmptyBuffer())
@@ -2027,27 +2031,27 @@ func TestSerializationVariantMap(t *testing.T) {
 
 	assert.Equal(t, 3, len(containerCopy.S))
 
-	assert.Equal(t, "bool",  reflect.TypeOf(containerCopy.S[k0].Key).String())
-	kk0, ok := (containerCopy.S[k0].Key).(bool)
+	assert.Equal(t, "bool",  reflect.TypeOf(containerCopy.S[k0.Key()].Key.Value).String())
+	kk0, ok := (containerCopy.S[k0.Key()].Key.Value).(bool)
 	assert.True(t, ok)
 	assert.Equal(t, true, kk0)
-	vv0, ok := (containerCopy.S[k0].Value).(bool)
+	vv0, ok := (containerCopy.S[k0.Key()].Value.Value).(bool)
 	assert.True(t, ok)
 	assert.Equal(t, false, vv0)
 
-	assert.Equal(t, "int32",  reflect.TypeOf(containerCopy.S[k1].Key).String())
-	kk1, ok := (containerCopy.S[k1].Key).(int32)
+	assert.Equal(t, "int32",  reflect.TypeOf(containerCopy.S[k1.Key()].Key.Value).String())
+	kk1, ok := (containerCopy.S[k1.Key()].Key.Value).(int32)
 	assert.True(t, ok)
 	assert.Equal(t, int32(42), kk1)
-	vv1, ok := (containerCopy.S[k1].Value).(int32)
+	vv1, ok := (containerCopy.S[k1.Key()].Value.Value).(int32)
 	assert.True(t, ok)
 	assert.Equal(t, int32(24), vv1)
 
-	assert.Equal(t, "string",  reflect.TypeOf(containerCopy.S[k2].Key).String())
-	kk2, ok := (containerCopy.S[k2].Key).(string)
+	assert.Equal(t, "string",  reflect.TypeOf(containerCopy.S[k2.Key()].Key.Value).String())
+	kk2, ok := (containerCopy.S[k2.Key()].Key.Value).(string)
 	assert.True(t, ok)
 	assert.Equal(t, "this is too simple", kk2)
-	vv2, ok := (containerCopy.S[k2].Value).(string)
+	vv2, ok := (containerCopy.S[k2.Key()].Value.Value).(string)
 	assert.True(t, ok)
 	assert.Equal(t, "this is too complex", vv2)
 }

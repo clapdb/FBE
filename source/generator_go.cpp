@@ -1859,12 +1859,12 @@ func (fm *FieldModelOptional_NAME_) Get() (*_TYPE_ARG_, error) {
 
     fbeBegin, err := fm.GetBegin()
     if fbeBegin == 0 {
-        return &fbeValue, err
+        return fbeValue, err
     }
 
     _GET_VALUE_
     fm.GetEnd(fbeBegin)
-    return &fbeValue, err
+    return fbeValue, err
 }
 
 // Set the optional value (begin phase)
@@ -1919,7 +1919,7 @@ func (fm *FieldModelOptional_NAME_) Set(fbeValue *_TYPE_ARG_) error {
     code = std::regex_replace(code, std::regex("_TYPE_"), ConvertTypeFieldType(*variant.name, false, false));
     code = std::regex_replace(code, std::regex("_MODEL_NEW_"), ConvertNewName(model));
     code = std::regex_replace(code, std::regex("_MODEL_"), model);
-    code = std::regex_replace(code, std::regex("_GET_VALUE_"), IsGoType(*variant.name) ? "*fbeValue, err = fm.value.Get()" : "err = fm.value.GetValue(&fbeValue)");
+    code = std::regex_replace(code, std::regex("_GET_VALUE_"), IsGoType(*variant.name) ? "*fbeValue, err = fm.value.Get()" : "err = fm.value.GetValue(fbeValue)");
     code = std::regex_replace(code, std::regex("_SET_VALUE_"), IsGoType(*variant.name) ? "err = fm.value.Set(*fbeValue)" : "err = fm.value.Set(fbeValue)");
     code = std::regex_replace(code, std::regex("\n"), EndLine());
 
@@ -3270,7 +3270,7 @@ func (fm *FieldModelMap_KEY_NAME__VALUE_NAME_) Set(values _TYPE_) error {
     code = std::regex_replace(code, std::regex("_MODEL_VALUE_NEW_"), ConvertNewName(value_model));
     code = std::regex_replace(code, std::regex("_MODEL_KEY_"), key_model);
     code = std::regex_replace(code, std::regex("_MODEL_VALUE_"), value_model);
-    code = std::regex_replace(code, std::regex("_GET_KEY_"), IsVariantType(p, *field.key) ? ("*key") :(IsGoType(*field.key) ? "key" : "key.Key()"));
+    code = std::regex_replace(code, std::regex("_GET_KEY_"), (IsGoType(*field.key) ? "key" : "key.Key()"));
     code = std::regex_replace(code, std::regex("_GET_VALUE_"), IsGoType(*field.key) ? ((IsGoType(*field.type) || field.optional || field.ptr || field.ptr) ? "value" : "*value") : ("struct{Key " + ConvertTypeName(*field.key, false, false) + "; Value " + ConvertTypeName(*field.type, field.optional, field.ptr) + "}{*key, " + ((IsGoType(*field.type) || field.optional || field.ptr || field.ptr) ? "value" : "*value") + "}"));
     code = std::regex_replace(code, std::regex("_SET_KEY_"), IsGoType(*field.key) ? "key" : "&value.Key");
     code = std::regex_replace(code, std::regex("_SET_VALUE_"), IsGoType(*field.key) ? ((IsGoType(*field.type) || field.optional || field.ptr || field.ptr) ? "value" : "&value") : ((IsGoType(*field.type) || field.optional || field.ptr || field.ptr) ? "value.Value" : "&value.Value"));
@@ -5946,7 +5946,8 @@ void GeneratorGo::GenerateVariant(const std::shared_ptr<Package>& p, const std::
     WriteLine();
     WriteLineIndent("import \"fmt\"");
     WriteLineIndent("import \"strconv\"");
-    WriteLineIndent("// import \"strings\"");
+    WriteLineIndent("import \"strings\"");
+    WriteLineIndent("import \"reflect\"");
     GenerateImports(p);
 
     // Generate workaround for Go unused imports issue
@@ -5957,13 +5958,22 @@ void GeneratorGo::GenerateVariant(const std::shared_ptr<Package>& p, const std::
 
     // Generate Variant Key
     WriteLine();
-    WriteLineIndent("// type " + variant_name + "Key interface{}, used as map key");
-    WriteLineIndent("type " + variant_name + "Key interface{}");
+    WriteLineIndent("// type " + variant_name + "Key struct{}");
+    WriteLineIndent("type " + variant_name + "Key struct {");
+    WriteLineIndent("// same as " + variant_name + ", but used as map key");
+    Indent(1);
+    WriteLineIndent("Value interface{}");
+    Indent(-1);
+    WriteLineIndent("}");
 
     // Generate Variant interface{}
     WriteLine();
-    WriteLineIndent("// type " + variant_name + " interface{}");
-    WriteLineIndent("type " + variant_name + " interface{}");
+    WriteLineIndent("// type " + variant_name + " struct {}, wrap interface{}");
+    WriteLineIndent("type " + variant_name + " struct {");
+    Indent(1);
+    WriteLineIndent("Value interface{}");
+    Indent(-1);
+    WriteLineIndent("}");
 
     // list variant given type
     WriteLine("// List of " + variant_name + " types");
@@ -5978,41 +5988,58 @@ void GeneratorGo::GenerateVariant(const std::shared_ptr<Package>& p, const std::
     // Generate variant constructor
     WriteLine();
     WriteLineIndent("// Create a new " + variant_name + " variant");
-    WriteLineIndent("func New" + variant_name + "() " + variant_name + " {");
+    WriteLineIndent("func New" + variant_name + "() *" + variant_name + " {");
     Indent(1);
     // TODO(liuqi): Should return the first given type, nil is also acceptable
-    WriteLineIndent("return " + ConvertDefault(v));
+    WriteLineIndent("return &" + variant_name + " {");
+    Indent(1);
+    WriteLineIndent("Value: " +  ConvertDefault(v) + ",");
+    Indent(-1);
+    WriteLineIndent("}");
     Indent(-1);
     WriteLineIndent("}");
 
     // Generate variant constructor from the given value
     WriteLine();
     WriteLineIndent("// Create a new " + variant_name + " variant from the given value");
-    WriteLineIndent("func New" + variant_name + "FromValue(value " + variant_name + ") " + variant_name + " {");
+    WriteLineIndent("func New" + variant_name + "FromValue(value interface{}) *" + variant_name + " {");
     Indent(1);
-    WriteLineIndent("return value");
+    WriteLineIndent("return &" + variant_name + " {");
+    Indent(1);
+    WriteLineIndent("Value: value,");
+    Indent(-1);
+    WriteLineIndent("}");
     Indent(-1);
     WriteLineIndent("}");
 
-    // 
-    // Generate variant index, mock cpp std::variant::index()
+    // Get the key
     WriteLine();
-    WriteLineIndent("// Get the variant index");
-    WriteLineIndent("func Get" + variant_name + "Index() int {"); // variant_name = ConvertToUpper(*v->name);
+    WriteLineIndent("// Get the key");
+    WriteLineIndent("func (v *" + variant_name + ") Key() " + variant_name + "Key {");
     Indent(1);
-    WriteLineIndent("return 0");
+    WriteLineIndent("return " + variant_name + "Key {");
+    Indent(1);
+    WriteLineIndent("Value: v.Value,");
+    Indent(-1);
+    WriteLineIndent("}");
     Indent(-1);
     WriteLineIndent("}");
 
-    // Generate variant constructor from the given field values
-    // WriteLine();
-    // WriteLineIndent("// Create a new " + variant_name + " variant from the given field values");
-    // WriteLineIndent("func New" + variant_name + "FromValue(value interface{}) *" + variant_name + " {");
-    // Indent(1);
-    // WriteLineIndent("return &value");
-    // Indent(-1);
-    // WriteLineIndent("}");
-
+    // Convert variant to string
+    WriteLine();
+    WriteLineIndent("// Convert variant to string");
+    WriteLineIndent("func (v *" + variant_name + ") String() string {");
+    Indent(1);
+    WriteLineIndent("var sb strings.Builder");
+    WriteLineIndent("sb.WriteString(\"" + variant_name + "(\")");
+    WriteLineIndent("sb.WriteString(\"type=\")");
+    WriteLineIndent("sb.WriteString(reflect.TypeOf(v.Value).String())");
+    WriteLineIndent("sb.WriteString(\",value=\")");
+    WriteLineIndent("sb.WriteString(fmt.Sprintf(\"%v\", v.Value))");
+    WriteLineIndent("sb.WriteString(\")\")");
+    WriteLineIndent("return sb.String()");
+    Indent(-1);
+    WriteLineIndent("}");
 
     // Generate footer
     GenerateFooter();
@@ -6179,7 +6206,7 @@ void GeneratorGo::GenerateVariantFieldModel(const std::shared_ptr<Package>& p, c
     WriteLineIndent("func (fm *" + field_model_name + ") Get() (*" + struct_name + ", error) {");
     Indent(1);
     WriteLineIndent("fbeResult := New" + struct_name + "()");
-    WriteLineIndent("return &fbeResult, fm.GetValue(&fbeResult)");
+    WriteLineIndent("return fbeResult, fm.GetValue(fbeResult)");
     Indent(-1);
     WriteLineIndent("}");
     WriteLine();
@@ -6216,10 +6243,10 @@ void GeneratorGo::GenerateVariantFieldModel(const std::shared_ptr<Package>& p, c
         WriteLineIndent("model := " + ConvertVariantTypeFieldInitialization(*value));
         if (IsGoType(*value->type) || value->ptr || value->vector ||
             value->list || value->map || value->hash)
-            WriteLineIndent("*fbeValue, _ = model.Get()");
+            WriteLineIndent("fbeValue.Value, _ = model.Get()");
         else {
             WriteLineIndent("ptr, _ := model.Get()");
-            WriteLineIndent("*fbeValue = *ptr");
+            WriteLineIndent("fbeValue.Value = *ptr");
         }
         Indent(-1);
     }
@@ -6274,7 +6301,7 @@ void GeneratorGo::GenerateVariantFieldModel(const std::shared_ptr<Package>& p, c
     WriteLineIndent("}");
     WriteLine();
 
-    WriteLineIndent("switch t := (*fbeValue).(type) {");
+    WriteLineIndent("switch t := (fbeValue.Value).(type) {");
     for(auto index = 0; index < v->body->values.size(); index ++) {
         auto& value = v->body->values[index];
         WriteLineIndent("case " + ConvertTypeName(*value) + ":");
@@ -6556,7 +6583,7 @@ void GeneratorGo::GenerateStruct(const std::shared_ptr<Package>& p, const std::s
                 else if (field->map || field->list || field->vector || field->hash)
                     Write(ConvertDefault(*field));
                 else
-                    Write("New" + ConvertTypeName(*field) + "()");
+                    Write("*New" + ConvertTypeName(*field) + "()");
             } else 
                 Write(ConvertDefault(*field));
             WriteLine(",");
@@ -6713,10 +6740,6 @@ void GeneratorGo::GenerateStruct(const std::shared_ptr<Package>& p, const std::s
         for (const auto& field : s->body->fields)
         {
             WriteLineIndent("sb.WriteString(\"" + std::string(first ? "" : ",") + *field->name + "=\")");
-            if (IsVariantType(p, *field->type)) {
-                WriteLineIndent("sb.WriteString(\"*variant " + *field->type + "*\")");
-                continue;
-            }
             if (field->attributes && field->attributes->hidden)
                 WriteLineIndent("sb.WriteString(\"***\")");
             else if (field->array)
@@ -7471,7 +7494,7 @@ void GeneratorGo::GenerateStructFieldModel(const std::shared_ptr<Package>& p, co
                     } else if (field->hash || field->map || field->vector || field->list) {
                         WriteLine(ConvertDefault(*field));
                     } else {
-                        WriteLine("New" + ConvertTypeName(*field) + "()");
+                        WriteLine("*New" + ConvertTypeName(*field) + "()");
                     }
                 } else {
                     WriteLine(ConvertDefault(*field));

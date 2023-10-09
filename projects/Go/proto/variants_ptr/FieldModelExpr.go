@@ -118,7 +118,7 @@ func (fm *FieldModelExpr) Verify() bool {
 // Get the struct value
 func (fm *FieldModelExpr) Get() (*Expr, error) {
     fbeResult := NewExpr()
-    return &fbeResult, fm.GetValue(&fbeResult)
+    return fbeResult, fm.GetValue(fbeResult)
 }
 
 // Get the struct value by the given pointer
@@ -142,16 +142,16 @@ func (fm *FieldModelExpr) GetValue(fbeValue *Expr) error {
     switch fbeVariantIndex {
     case 0:
         model := fbe.NewFieldModelBool(fm.buffer, 4)
-        *fbeValue, _ = model.Get()
+        fbeValue.Value, _ = model.Get()
     case 1:
         model := fbe.NewFieldModelString(fm.buffer, 4)
-        *fbeValue, _ = model.Get()
+        fbeValue.Value, _ = model.Get()
     case 2:
         model := fbe.NewFieldModelInt32(fm.buffer, 4)
-        *fbeValue, _ = model.Get()
+        fbeValue.Value, _ = model.Get()
     case 3:
         model := NewFieldModelVectorByte(fm.buffer, 4)
-        *fbeValue, _ = model.Get()
+        fbeValue.Value, _ = model.Get()
     }
     fm.buffer.Unshift(fbeVariantOffset)
     return nil
@@ -188,7 +188,7 @@ func (fm *FieldModelExpr) Set(fbeValue *Expr) error {
         return errors.New("model is broken")
     }
 
-    switch t := (*fbeValue).(type) {
+    switch t := (fbeValue.Value).(type) {
     case bool:
         model := fbe.NewFieldModelBool(fm.buffer, 4)
         fbeBegin, err := fm.SetBegin(model.FBESize(), 0)
