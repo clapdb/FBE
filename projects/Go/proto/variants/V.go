@@ -9,7 +9,8 @@ package variants
 
 import "fmt"
 import "strconv"
-// import "strings"
+import "strings"
+import "reflect"
 import "errors"
 import "fbeproj/proto/fbe"
 
@@ -21,8 +22,16 @@ var _ = fbe.Version
 var _ = fmt.Print
 var _ = strconv.FormatInt
 
-// type V interface{}
-type V interface{}
+// type VKey struct{}
+type VKey struct {
+// same as V, but used as map key
+    Value interface{}
+}
+
+// type V struct {}, wrap interface{}
+type V struct {
+    Value interface{}
+}
 // List of V types
 // string
 // int32
@@ -38,16 +47,39 @@ type V interface{}
 // Expr
 
 // Create a new V variant
-func NewV() V {
-    return true
+func NewV() *V {
+    return &V {
+        Value: "",
+    }
 }
 
 // Create a new V variant from the given value
-func NewVFromValue(value V) V {
-    return value
+func NewVFromValue(value interface{}) *V {
+    return &V {
+        Value: value,
+    }
 }
 
-// Get the variant index
-func GetVIndex() int {
-    return 0
+// Unwrap the variant
+func (v *V) Unwrap() interface{} {
+    return v.Value
+}
+
+// Get the key
+func (v *V) Key() VKey {
+    return VKey {
+        Value: v.Value,
+    }
+}
+
+// Convert variant to string
+func (v *V) String() string {
+    var sb strings.Builder
+    sb.WriteString("V(")
+    sb.WriteString("type=")
+    sb.WriteString(reflect.TypeOf(v.Value).String())
+    sb.WriteString(",value=")
+    sb.WriteString(fmt.Sprintf("%v", v.Value))
+    sb.WriteString(")")
+    return sb.String()
 }

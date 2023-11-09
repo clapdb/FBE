@@ -41,7 +41,7 @@ type Value struct {
 // Create a new Value struct
 func NewValue() *Value {
     return &Value{
-        V: NewV(),
+        V: *NewV(),
     }
 }
 
@@ -102,7 +102,7 @@ func (s *Value) String() string {
     var sb strings.Builder
     sb.WriteString("Value(")
     sb.WriteString("v=")
-    sb.WriteString("*variant V*")
+    sb.WriteString(s.V.String())
     sb.WriteString(")")
     return sb.String()
 }

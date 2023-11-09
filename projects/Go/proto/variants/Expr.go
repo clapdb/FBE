@@ -9,7 +9,8 @@ package variants
 
 import "fmt"
 import "strconv"
-// import "strings"
+import "strings"
+import "reflect"
 import "errors"
 import "fbeproj/proto/fbe"
 
@@ -21,24 +22,55 @@ var _ = fbe.Version
 var _ = fmt.Print
 var _ = strconv.FormatInt
 
-// type Expr interface{}
-type Expr interface{}
+// type ExprKey struct{}
+type ExprKey struct {
+// same as Expr, but used as map key
+    Value interface{}
+}
+
+// type Expr struct {}, wrap interface{}
+type Expr struct {
+    Value interface{}
+}
 // List of Expr types
 // bool
 // int32
 // string
 
 // Create a new Expr variant
-func NewExpr() Expr {
-    return true
+func NewExpr() *Expr {
+    return &Expr {
+        Value: false,
+    }
 }
 
 // Create a new Expr variant from the given value
-func NewExprFromValue(value Expr) Expr {
-    return value
+func NewExprFromValue(value interface{}) *Expr {
+    return &Expr {
+        Value: value,
+    }
 }
 
-// Get the variant index
-func GetExprIndex() int {
-    return 0
+// Unwrap the variant
+func (v *Expr) Unwrap() interface{} {
+    return v.Value
+}
+
+// Get the key
+func (v *Expr) Key() ExprKey {
+    return ExprKey {
+        Value: v.Value,
+    }
+}
+
+// Convert variant to string
+func (v *Expr) String() string {
+    var sb strings.Builder
+    sb.WriteString("Expr(")
+    sb.WriteString("type=")
+    sb.WriteString(reflect.TypeOf(v.Value).String())
+    sb.WriteString(",value=")
+    sb.WriteString(fmt.Sprintf("%v", v.Value))
+    sb.WriteString(")")
+    return sb.String()
 }
