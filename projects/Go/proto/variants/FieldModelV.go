@@ -7,6 +7,8 @@
 
 package variants
 
+import "fmt"
+import "reflect"
 import "errors"
 import "fbeproj/proto/fbe"
 
@@ -73,14 +75,100 @@ func (fm *FieldModelV) Verify() bool {
         return false
     }
 
-    // TODO: verify the given type
+    fbeVariantOffset := int(fbe.ReadUInt32(fm.buffer.Data(), fm.buffer.Offset() + fm.FBEOffset()))
+    if (fbeVariantOffset == 0) || ((fm.buffer.Offset() + fbeVariantOffset + 4) > fm.buffer.Size()) {
+        return false
+    }
+
+    fbeVariantIndex := int(fbe.ReadUInt32(fm.buffer.Data(), fm.buffer.Offset() + fbeVariantOffset))
+    if (fbeVariantIndex < 0 || fbeVariantIndex >= 12) {
+        return false
+    }
+
+    fm.buffer.Shift(fbeVariantOffset)
+
+    switch fbeVariantIndex {
+    case 0:
+        model := fbe.NewFieldModelString(fm.buffer, 4)
+        if !model.Verify() {
+            return false
+        }
+        break
+    case 1:
+        model := fbe.NewFieldModelInt32(fm.buffer, 4)
+        if !model.Verify() {
+            return false
+        }
+        break
+    case 2:
+        model := fbe.NewFieldModelDouble(fm.buffer, 4)
+        if !model.Verify() {
+            return false
+        }
+        break
+    case 3:
+        model := NewFieldModelSimple(fm.buffer, 4)
+        if !model.Verify() {
+            return false
+        }
+        break
+    case 4:
+        model := NewFieldModelVectorSimple(fm.buffer, 4)
+        if !model.Verify() {
+            return false
+        }
+        break
+    case 5:
+        model := NewFieldModelVectorInt32(fm.buffer, 4)
+        if !model.Verify() {
+            return false
+        }
+        break
+    case 6:
+        model := NewFieldModelMapInt32Simple(fm.buffer, 4)
+        if !model.Verify() {
+            return false
+        }
+        break
+    case 7:
+        model := NewFieldModelVectorBytes(fm.buffer, 4)
+        if !model.Verify() {
+            return false
+        }
+        break
+    case 8:
+        model := NewFieldModelVectorString(fm.buffer, 4)
+        if !model.Verify() {
+            return false
+        }
+        break
+    case 9:
+        model := NewFieldModelMapInt32Bytes(fm.buffer, 4)
+        if !model.Verify() {
+            return false
+        }
+        break
+    case 10:
+        model := NewFieldModelMapStringBytes(fm.buffer, 4)
+        if !model.Verify() {
+            return false
+        }
+        break
+    case 11:
+        model := NewFieldModelExpr(fm.buffer, 4)
+        if !model.Verify() {
+            return false
+        }
+        break
+    }
+    fm.buffer.Unshift(fbeVariantOffset)
     return true
 }
 
 // Get the struct value
 func (fm *FieldModelV) Get() (*V, error) {
     fbeResult := NewV()
-    return &fbeResult, fm.GetValue(&fbeResult)
+    return fbeResult, fm.GetValue(fbeResult)
 }
 
 // Get the struct value by the given pointer
@@ -89,59 +177,61 @@ func (fm *FieldModelV) GetValue(fbeValue *V) error {
         return nil
     }
 
-    fbeStructOffset := int(fbe.ReadUInt32(fm.buffer.Data(), fm.buffer.Offset() + fm.FBEOffset()))
-    if (fbeStructOffset == 0) || ((fm.buffer.Offset() + fbeStructOffset + 4 + 4) > fm.buffer.Size()) {
+    fbeVariantOffset := int(fbe.ReadUInt32(fm.buffer.Data(), fm.buffer.Offset() + fm.FBEOffset()))
+    if (fbeVariantOffset == 0) || ((fm.buffer.Offset() + fbeVariantOffset + 4) > fm.buffer.Size()) {
         return errors.New("model is broken")
     }
 
-    fbeVariantIndex := int(fbe.ReadUInt32(fm.buffer.Data(), fm.buffer.Offset() + fbeStructOffset))
+    fbeVariantIndex := int(fbe.ReadUInt32(fm.buffer.Data(), fm.buffer.Offset() + fbeVariantOffset))
     if (fbeVariantIndex < 0 || fbeVariantIndex >= 12) {
         return errors.New("model is broken")
     }
 
-    fm.buffer.Shift(fbeStructOffset)
+    fm.buffer.Shift(fbeVariantOffset)
 
     switch fbeVariantIndex {
     case 0:
         model := fbe.NewFieldModelString(fm.buffer, 4)
-        *fbeValue, _ = model.Get()
+        fbeValue.Value, _ = model.Get()
     case 1:
         model := fbe.NewFieldModelInt32(fm.buffer, 4)
-        *fbeValue, _ = model.Get()
+        fbeValue.Value, _ = model.Get()
     case 2:
         model := fbe.NewFieldModelDouble(fm.buffer, 4)
-        *fbeValue, _ = model.Get()
+        fbeValue.Value, _ = model.Get()
     case 3:
         model := NewFieldModelSimple(fm.buffer, 4)
         ptr, _ := model.Get()
-        *fbeValue = *ptr
+        fbeValue.Value = *ptr
     case 4:
         model := NewFieldModelVectorSimple(fm.buffer, 4)
-        *fbeValue, _ = model.Get()
+        fbeValue.Value, _ = model.Get()
     case 5:
         model := NewFieldModelVectorInt32(fm.buffer, 4)
-        *fbeValue, _ = model.Get()
+        fbeValue.Value, _ = model.Get()
     case 6:
         model := NewFieldModelMapInt32Simple(fm.buffer, 4)
-        *fbeValue, _ = model.Get()
+        fbeValue.Value, _ = model.Get()
     case 7:
         model := NewFieldModelVectorBytes(fm.buffer, 4)
-        *fbeValue, _ = model.Get()
+        fbeValue.Value, _ = model.Get()
     case 8:
         model := NewFieldModelVectorString(fm.buffer, 4)
-        *fbeValue, _ = model.Get()
+        fbeValue.Value, _ = model.Get()
     case 9:
         model := NewFieldModelMapInt32Bytes(fm.buffer, 4)
-        *fbeValue, _ = model.Get()
+        fbeValue.Value, _ = model.Get()
     case 10:
         model := NewFieldModelMapStringBytes(fm.buffer, 4)
-        *fbeValue, _ = model.Get()
+        fbeValue.Value, _ = model.Get()
     case 11:
         model := NewFieldModelExpr(fm.buffer, 4)
         ptr, _ := model.Get()
-        *fbeValue = *ptr
+        fbeValue.Value = *ptr
+    default:
+        return fmt.Errorf("unknown fbeVariantIndex: %d", fbeVariantIndex)
     }
-    fm.buffer.Unshift(fbeStructOffset)
+    fm.buffer.Unshift(fbeVariantOffset)
     return nil
 }
 
@@ -176,7 +266,7 @@ func (fm *FieldModelV) Set(fbeValue *V) error {
         return errors.New("model is broken")
     }
 
-    switch t := (*fbeValue).(type) {
+    switch t := (fbeValue.Value).(type) {
     case string:
         model := fbe.NewFieldModelString(fm.buffer, 4)
         fbeBegin, err := fm.SetBegin(model.FBESize(), 0)
@@ -333,6 +423,8 @@ func (fm *FieldModelV) Set(fbeValue *V) error {
             return err
         }
         fm.SetEnd(fbeBegin)
+    default:
+        return fmt.Errorf("unsupported variant type: %s", reflect.TypeOf(t).String())
     }
 
     return nil

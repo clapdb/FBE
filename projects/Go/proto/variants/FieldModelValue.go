@@ -173,7 +173,7 @@ func (fm *FieldModelValue) GetFields(fbeValue *Value, fbeStructSize int) {
     if (fbeCurrentSize + fm.V.FBESize()) <= fbeStructSize {
         _ = fm.V.GetValue(&fbeValue.V)
     } else {
-        fbeValue.V = NewV()
+        fbeValue.V = *NewV()
     }
     fbeCurrentSize += fm.V.FBESize()
 }
