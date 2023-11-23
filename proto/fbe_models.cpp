@@ -318,7 +318,8 @@ size_t FieldModel<buffer_t>::get(void* data, size_t size) const noexcept
         return 0;
 
     size_t result = std::min(size, (size_t)fbe_bytes_size);
-    memcpy(data, (const char*)(_buffer.data() + _buffer.offset() + fbe_bytes_offset + 4), result);
+    if (result > 0)
+        memcpy(data, (const char*)(_buffer.data() + _buffer.offset() + fbe_bytes_offset + 4), result);
     return result;
 }
 
@@ -342,8 +343,10 @@ void FieldModel<buffer_t>::get(FastVec<uint8_t>& value) const noexcept
     if ((_buffer.offset() + fbe_bytes_offset + 4 + fbe_bytes_size) > _buffer.size())
         return;
 
-    const char* fbe_bytes = (const char*)(_buffer.data() + _buffer.offset() + fbe_bytes_offset + 4);
-    value.assign(fbe_bytes, fbe_bytes + fbe_bytes_size);
+    if (fbe_bytes_size > 0) {
+        const char* fbe_bytes = (const char*)(_buffer.data() + _buffer.offset() + fbe_bytes_offset + 4);
+        value.assign(fbe_bytes, fbe_bytes + fbe_bytes_size);
+    }
 }
 
 void FieldModel<buffer_t>::set(const void* data, size_t size)
@@ -365,7 +368,8 @@ void FieldModel<buffer_t>::set(const void* data, size_t size)
     unaligned_store<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset(), fbe_bytes_offset);
     unaligned_store<uint32_t>(_buffer.data() + _buffer.offset() + fbe_bytes_offset, fbe_bytes_size);
 
-    memcpy((char*)(_buffer.data() + _buffer.offset() + fbe_bytes_offset + 4), data, fbe_bytes_size);
+    if (fbe_bytes_size > 0)
+        memcpy((char*)(_buffer.data() + _buffer.offset() + fbe_bytes_offset + 4), data, fbe_bytes_size);
 }
 
 size_t FieldModel<pmr_buffer_t>::fbe_extra() const noexcept
