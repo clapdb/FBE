@@ -12,12 +12,12 @@ jobs:
         compiler: [clangd, gcc]
         include:
           - compiler: clangd
-            env: CC=/usr/bin/clang CXX=/usr/bin/clang++
+            env: CC=clang-16 CXX=clang++-16
           - compiler: gcc
             env: CC=/usr/local/bin/gcc CXX=/usr/local/bin/g++
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
       - name: 'Setup required packages'
         run: | 
@@ -28,6 +28,13 @@ jobs:
         uses: egor-tensin/setup-gcc@v1
         with:
           version: 12
+
+      - if: ${{ matrix.compiler == 'clangd'}}
+        name: "Setup clangd"
+        run: |
+          wget https://apt.llvm.org/llvm.sh
+          chmod +x ./llvm.sh
+          sudo ./llvm.sh 16
 
       - name: 'Setup cmake'
         run: cmake --version
