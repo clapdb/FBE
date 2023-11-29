@@ -45,7 +45,7 @@ int yyerror(const std::string& msg);
 
 // Define our terminal symbols (tokens)
 %token <token>  PDOMAIN PACKAGE OFFSET IMPORT VERSION ENUM FLAGS VARIANT STRUCT MESSAGE BASE ID KEY HIDDEN DEPRECATED REQ RES REJ
-%token <string> BOOL BYTE BYTES CHAR WCHAR INT8 UINT8 INT16 UINT16 INT32 UINT32 INT64 UINT64 FLOAT DOUBLE DECIMAL STRING USTRING TIMESTAMP UUID
+%token <string> BOOL BYTE BYTES CHAR WCHAR INT8 UINT8 INT16 UINT16 INT32 UINT32 INT64 UINT64 INT128 UINT128 FLOAT DOUBLE DECIMAL STRING USTRING TIMESTAMP UUID
 %token <string> CONST_TRUE CONST_FALSE CONST_NULL CONST_EPOCH CONST_UTC CONST_UUID0 CONST_UUID1 CONST_UUID4 CONST_CHAR CONST_INT CONST_FLOAT CONST_STRING
 %token <string> IDENTIFIER
 
@@ -176,6 +176,8 @@ enum_type
     | UINT32
     | INT64
     | UINT64
+    | INT128
+    | UINT128
     ;
 
 enum_body
@@ -226,6 +228,8 @@ variant_value_base
     | UINT32                                                                                { $$ = new FBE::VariantValue(); $$->type.reset($1); }
     | INT64                                                                                 { $$ = new FBE::VariantValue(); $$->type.reset($1); }
     | UINT64                                                                                { $$ = new FBE::VariantValue(); $$->type.reset($1); }
+    | INT128                                                                                 { $$ = new FBE::VariantValue(); $$->type.reset($1); }
+    | UINT128                                                                                { $$ = new FBE::VariantValue(); $$->type.reset($1); }
     | FLOAT                                                                                 { $$ = new FBE::VariantValue(); $$->type.reset($1); }
     | DOUBLE                                                                                { $$ = new FBE::VariantValue(); $$->type.reset($1); }
     | DECIMAL                                                                               { $$ = new FBE::VariantValue(); $$->type.reset($1); }
@@ -274,6 +278,8 @@ flags_type
     | UINT32
     | INT64
     | UINT64
+    | INT128
+    | UINT128
     ;
 
 flags_body
@@ -368,6 +374,8 @@ struct_field_base
     | UINT32                                                                                { $$ = new FBE::StructField(); $$->type.reset($1); }
     | INT64                                                                                 { $$ = new FBE::StructField(); $$->type.reset($1); }
     | UINT64                                                                                { $$ = new FBE::StructField(); $$->type.reset($1); }
+    | INT128                                                                                 { $$ = new FBE::StructField(); $$->type.reset($1); }
+    | UINT128                                                                                { $$ = new FBE::StructField(); $$->type.reset($1); }
     | FLOAT                                                                                 { $$ = new FBE::StructField(); $$->type.reset($1); }
     | DOUBLE                                                                                { $$ = new FBE::StructField(); $$->type.reset($1); }
     | DECIMAL                                                                               { $$ = new FBE::StructField(); $$->type.reset($1); }
