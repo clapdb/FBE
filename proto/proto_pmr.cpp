@@ -270,7 +270,7 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const Account& v
     {
         bool first = true;
         stream << ",orders=[" << value.orders.size() << "][";
-        for (const auto& it : value.orders)
+        for ([[maybe_unused]] const auto& it : value.orders)
         {
             stream << std::string(first ? "" : ",") << it;
             first = false;
@@ -322,7 +322,7 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const CharMap& v
     {
         bool first = true;
         stream << "abbr=[" << value.abbr.size()<< "][{";
-        for (const auto& it : value.abbr)
+        for ([[maybe_unused]] const auto& it : value.abbr)
         {
             stream << std::string(first ? "" : ",") << "'" << it.first << "'";
             stream << "->";

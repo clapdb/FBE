@@ -107,7 +107,7 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const Line& valu
     {
         bool first = true;
         stream << ",vv=[" << value.vv.size() << "][";
-        for (const auto& it : value.vv)
+        for ([[maybe_unused]] const auto& it : value.vv)
         {
             stream << std::string(first ? "" : ",") << it;
             first = false;
@@ -117,7 +117,7 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const Line& valu
     {
         bool first = true;
         stream << ",vm=[" << value.vm.size()<< "][{";
-        for (const auto& it : value.vm)
+        for ([[maybe_unused]] const auto& it : value.vm)
         {
             stream << std::string(first ? "" : ",") << "\"" << it.first << "\"";
             stream << "->";
@@ -190,7 +190,7 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const Line2& val
     {
         bool first = true;
         stream << "vm=[" << value.vm.size()<< "][{";
-        for (const auto& it : value.vm)
+        for ([[maybe_unused]] const auto& it : value.vm)
         {
             stream << std::string(first ? "" : ",") << it.first;
             stream << "->";

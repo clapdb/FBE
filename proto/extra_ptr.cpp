@@ -119,7 +119,7 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const Info& valu
     {
         bool first = true;
         stream << ",extras=[" << value.extras.size() << "][";
-        for (const auto& it : value.extras)
+        for ([[maybe_unused]] const auto& it : value.extras)
         {
             stream << std::string(first ? "" : ",") << "ptr of other struct: " << (it == nullptr ? "nullptr" : "true");
             first = false;
@@ -129,7 +129,7 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const Info& valu
     {
         bool first = true;
         stream << ",extras1=[" << value.extras1.size() << "][";
-        for (const auto& it : value.extras1)
+        for ([[maybe_unused]] const auto& it : value.extras1)
         {
             stream << std::string(first ? "" : ",") << "ptr of other struct: " << (it == nullptr ? "nullptr" : "true");
             first = false;
@@ -287,7 +287,7 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const Extra& val
     {
         bool first = true;
         stream << ",infov=[" << value.infov.size() << "][";
-        for (const auto& it : value.infov)
+        for ([[maybe_unused]] const auto& it : value.infov)
         {
             stream << std::string(first ? "" : ",") << it;
             first = false;
@@ -297,7 +297,7 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const Extra& val
     {
         bool first = true;
         stream << ",infopv=[" << value.infopv.size() << "][";
-        for (const auto& it : value.infopv)
+        for ([[maybe_unused]] const auto& it : value.infopv)
         {
             stream << std::string(first ? "" : ",") << "ptr of other struct: " << (it == nullptr ? "nullptr" : "true");
             first = false;
@@ -307,7 +307,7 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const Extra& val
     {
         bool first = true;
         stream << ",infol=[" << value.infol.size()<< "]<";
-        for (const auto& it : value.infol)
+        for ([[maybe_unused]] const auto& it : value.infol)
         {
             stream << std::string(first ? "" : ",") << it;
             first = false;
@@ -317,7 +317,7 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const Extra& val
     {
         bool first = true;
         stream << ",infopl=[" << value.infopl.size()<< "]<";
-        for (const auto& it : value.infopl)
+        for ([[maybe_unused]] const auto& it : value.infopl)
         {
             stream << std::string(first ? "" : ",") << "ptr of other struct: " << (it == nullptr ? "nullptr" : "true");
             first = false;

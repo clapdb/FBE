@@ -316,7 +316,7 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const Complex& v
     {
         bool first = true;
         stream << ",nums=[" << value.nums.size() << "][";
-        for (const auto& it : value.nums)
+        for ([[maybe_unused]] const auto& it : value.nums)
         {
             stream << std::string(first ? "" : ",") << it;
             first = false;

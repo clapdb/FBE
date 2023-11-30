@@ -1334,7 +1334,7 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const StructVect
     {
         bool first = true;
         stream << "f1=[" << value.f1.size() << "][";
-        for (const auto& it : value.f1)
+        for ([[maybe_unused]] const auto& it : value.f1)
         {
             stream << std::string(first ? "" : ",") << (int)it;
             first = false;
@@ -1344,7 +1344,7 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const StructVect
     {
         bool first = true;
         stream << ",f2=[" << value.f2.size() << "][";
-        for (const auto& it : value.f2)
+        for ([[maybe_unused]] const auto& it : value.f2)
         {
             if (it) stream << std::string(first ? "" : ",") << (int)*it; else stream << std::string(first ? "" : ",") << "null";
             first = false;
@@ -1354,7 +1354,7 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const StructVect
     {
         bool first = true;
         stream << ",f3=[" << value.f3.size() << "][";
-        for (const auto& it : value.f3)
+        for ([[maybe_unused]] const auto& it : value.f3)
         {
             stream << std::string(first ? "" : ",") << "bytes[" << it.size() << "]";
             first = false;
@@ -1364,7 +1364,7 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const StructVect
     {
         bool first = true;
         stream << ",f4=[" << value.f4.size() << "][";
-        for (const auto& it : value.f4)
+        for ([[maybe_unused]] const auto& it : value.f4)
         {
             if (it) stream << std::string(first ? "" : ",") << "bytes[" << it->size() << "]"; else stream << std::string(first ? "" : ",") << "null";
             first = false;
@@ -1374,7 +1374,7 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const StructVect
     {
         bool first = true;
         stream << ",f5=[" << value.f5.size() << "][";
-        for (const auto& it : value.f5)
+        for ([[maybe_unused]] const auto& it : value.f5)
         {
             stream << std::string(first ? "" : ",") << it;
             first = false;
@@ -1384,7 +1384,7 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const StructVect
     {
         bool first = true;
         stream << ",f6=[" << value.f6.size() << "][";
-        for (const auto& it : value.f6)
+        for ([[maybe_unused]] const auto& it : value.f6)
         {
             if (it) stream << std::string(first ? "" : ",") << *it; else stream << std::string(first ? "" : ",") << "null";
             first = false;
@@ -1394,7 +1394,7 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const StructVect
     {
         bool first = true;
         stream << ",f7=[" << value.f7.size() << "][";
-        for (const auto& it : value.f7)
+        for ([[maybe_unused]] const auto& it : value.f7)
         {
             stream << std::string(first ? "" : ",") << it;
             first = false;
@@ -1404,7 +1404,7 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const StructVect
     {
         bool first = true;
         stream << ",f8=[" << value.f8.size() << "][";
-        for (const auto& it : value.f8)
+        for ([[maybe_unused]] const auto& it : value.f8)
         {
             if (it) stream << std::string(first ? "" : ",") << *it; else stream << std::string(first ? "" : ",") << "null";
             first = false;
@@ -1414,7 +1414,7 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const StructVect
     {
         bool first = true;
         stream << ",f9=[" << value.f9.size() << "][";
-        for (const auto& it : value.f9)
+        for ([[maybe_unused]] const auto& it : value.f9)
         {
             stream << std::string(first ? "" : ",") << it;
             first = false;
@@ -1424,7 +1424,7 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const StructVect
     {
         bool first = true;
         stream << ",f10=[" << value.f10.size() << "][";
-        for (const auto& it : value.f10)
+        for ([[maybe_unused]] const auto& it : value.f10)
         {
             if (it) stream << std::string(first ? "" : ",") << *it; else stream << std::string(first ? "" : ",") << "null";
             first = false;
@@ -1521,7 +1521,7 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const StructList
     {
         bool first = true;
         stream << "f1=[" << value.f1.size()<< "]<";
-        for (const auto& it : value.f1)
+        for ([[maybe_unused]] const auto& it : value.f1)
         {
             stream << std::string(first ? "" : ",") << (int)it;
             first = false;
@@ -1531,7 +1531,7 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const StructList
     {
         bool first = true;
         stream << ",f2=[" << value.f2.size()<< "]<";
-        for (const auto& it : value.f2)
+        for ([[maybe_unused]] const auto& it : value.f2)
         {
             if (it) stream << std::string(first ? "" : ",") << (int)*it; else stream << std::string(first ? "" : ",") << "null";
             first = false;
@@ -1541,7 +1541,7 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const StructList
     {
         bool first = true;
         stream << ",f3=[" << value.f3.size()<< "]<";
-        for (const auto& it : value.f3)
+        for ([[maybe_unused]] const auto& it : value.f3)
         {
             stream << std::string(first ? "" : ",") << "bytes[" << it.size() << "]";
             first = false;
@@ -1551,7 +1551,7 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const StructList
     {
         bool first = true;
         stream << ",f4=[" << value.f4.size()<< "]<";
-        for (const auto& it : value.f4)
+        for ([[maybe_unused]] const auto& it : value.f4)
         {
             if (it) stream << std::string(first ? "" : ",") << "bytes[" << it->size() << "]"; else stream << std::string(first ? "" : ",") << "null";
             first = false;
@@ -1561,7 +1561,7 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const StructList
     {
         bool first = true;
         stream << ",f5=[" << value.f5.size()<< "]<";
-        for (const auto& it : value.f5)
+        for ([[maybe_unused]] const auto& it : value.f5)
         {
             stream << std::string(first ? "" : ",") << it;
             first = false;
@@ -1571,7 +1571,7 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const StructList
     {
         bool first = true;
         stream << ",f6=[" << value.f6.size()<< "]<";
-        for (const auto& it : value.f6)
+        for ([[maybe_unused]] const auto& it : value.f6)
         {
             if (it) stream << std::string(first ? "" : ",") << *it; else stream << std::string(first ? "" : ",") << "null";
             first = false;
@@ -1581,7 +1581,7 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const StructList
     {
         bool first = true;
         stream << ",f7=[" << value.f7.size()<< "]<";
-        for (const auto& it : value.f7)
+        for ([[maybe_unused]] const auto& it : value.f7)
         {
             stream << std::string(first ? "" : ",") << it;
             first = false;
@@ -1591,7 +1591,7 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const StructList
     {
         bool first = true;
         stream << ",f8=[" << value.f8.size()<< "]<";
-        for (const auto& it : value.f8)
+        for ([[maybe_unused]] const auto& it : value.f8)
         {
             if (it) stream << std::string(first ? "" : ",") << *it; else stream << std::string(first ? "" : ",") << "null";
             first = false;
@@ -1601,7 +1601,7 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const StructList
     {
         bool first = true;
         stream << ",f9=[" << value.f9.size()<< "]<";
-        for (const auto& it : value.f9)
+        for ([[maybe_unused]] const auto& it : value.f9)
         {
             stream << std::string(first ? "" : ",") << it;
             first = false;
@@ -1611,7 +1611,7 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const StructList
     {
         bool first = true;
         stream << ",f10=[" << value.f10.size()<< "]<";
-        for (const auto& it : value.f10)
+        for ([[maybe_unused]] const auto& it : value.f10)
         {
             if (it) stream << std::string(first ? "" : ",") << *it; else stream << std::string(first ? "" : ",") << "null";
             first = false;
@@ -1678,7 +1678,7 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const StructSet&
     {
         bool first = true;
         stream << "f1=[" << value.f1.size()<< "]{";
-        for (const auto& it : value.f1)
+        for ([[maybe_unused]] const auto& it : value.f1)
         {
             stream << std::string(first ? "" : ",") << (int)it;
             first = false;
@@ -1688,7 +1688,7 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const StructSet&
     {
         bool first = true;
         stream << ",f2=[" << value.f2.size()<< "]{";
-        for (const auto& it : value.f2)
+        for ([[maybe_unused]] const auto& it : value.f2)
         {
             stream << std::string(first ? "" : ",") << it;
             first = false;
@@ -1698,7 +1698,7 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const StructSet&
     {
         bool first = true;
         stream << ",f3=[" << value.f3.size()<< "]{";
-        for (const auto& it : value.f3)
+        for ([[maybe_unused]] const auto& it : value.f3)
         {
             stream << std::string(first ? "" : ",") << it;
             first = false;
@@ -1708,7 +1708,7 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const StructSet&
     {
         bool first = true;
         stream << ",f4=[" << value.f4.size()<< "]{";
-        for (const auto& it : value.f4)
+        for ([[maybe_unused]] const auto& it : value.f4)
         {
             stream << std::string(first ? "" : ",") << it;
             first = false;
@@ -1805,7 +1805,7 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const StructMap&
     {
         bool first = true;
         stream << "f1=[" << value.f1.size()<< "]<{";
-        for (const auto& it : value.f1)
+        for ([[maybe_unused]] const auto& it : value.f1)
         {
             stream << std::string(first ? "" : ",") << it.first;
             stream << "->";
@@ -1817,7 +1817,7 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const StructMap&
     {
         bool first = true;
         stream << ",f2=[" << value.f2.size()<< "]<{";
-        for (const auto& it : value.f2)
+        for ([[maybe_unused]] const auto& it : value.f2)
         {
             stream << std::string(first ? "" : ",") << it.first;
             stream << "->";
@@ -1829,7 +1829,7 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const StructMap&
     {
         bool first = true;
         stream << ",f3=[" << value.f3.size()<< "]<{";
-        for (const auto& it : value.f3)
+        for ([[maybe_unused]] const auto& it : value.f3)
         {
             stream << std::string(first ? "" : ",") << it.first;
             stream << "->";
@@ -1841,7 +1841,7 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const StructMap&
     {
         bool first = true;
         stream << ",f4=[" << value.f4.size()<< "]<{";
-        for (const auto& it : value.f4)
+        for ([[maybe_unused]] const auto& it : value.f4)
         {
             stream << std::string(first ? "" : ",") << it.first;
             stream << "->";
@@ -1853,7 +1853,7 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const StructMap&
     {
         bool first = true;
         stream << ",f5=[" << value.f5.size()<< "]<{";
-        for (const auto& it : value.f5)
+        for ([[maybe_unused]] const auto& it : value.f5)
         {
             stream << std::string(first ? "" : ",") << it.first;
             stream << "->";
@@ -1865,7 +1865,7 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const StructMap&
     {
         bool first = true;
         stream << ",f6=[" << value.f6.size()<< "]<{";
-        for (const auto& it : value.f6)
+        for ([[maybe_unused]] const auto& it : value.f6)
         {
             stream << std::string(first ? "" : ",") << it.first;
             stream << "->";
@@ -1877,7 +1877,7 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const StructMap&
     {
         bool first = true;
         stream << ",f7=[" << value.f7.size()<< "]<{";
-        for (const auto& it : value.f7)
+        for ([[maybe_unused]] const auto& it : value.f7)
         {
             stream << std::string(first ? "" : ",") << it.first;
             stream << "->";
@@ -1889,7 +1889,7 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const StructMap&
     {
         bool first = true;
         stream << ",f8=[" << value.f8.size()<< "]<{";
-        for (const auto& it : value.f8)
+        for ([[maybe_unused]] const auto& it : value.f8)
         {
             stream << std::string(first ? "" : ",") << it.first;
             stream << "->";
@@ -1901,7 +1901,7 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const StructMap&
     {
         bool first = true;
         stream << ",f9=[" << value.f9.size()<< "]<{";
-        for (const auto& it : value.f9)
+        for ([[maybe_unused]] const auto& it : value.f9)
         {
             stream << std::string(first ? "" : ",") << it.first;
             stream << "->";
@@ -1913,7 +1913,7 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const StructMap&
     {
         bool first = true;
         stream << ",f10=[" << value.f10.size()<< "]<{";
-        for (const auto& it : value.f10)
+        for ([[maybe_unused]] const auto& it : value.f10)
         {
             stream << std::string(first ? "" : ",") << it.first;
             stream << "->";
@@ -2012,7 +2012,7 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const StructHash
     {
         bool first = true;
         stream << "f1=[" << value.f1.size()<< "][{";
-        for (const auto& it : value.f1)
+        for ([[maybe_unused]] const auto& it : value.f1)
         {
             stream << std::string(first ? "" : ",") << "\"" << it.first << "\"";
             stream << "->";
@@ -2024,7 +2024,7 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const StructHash
     {
         bool first = true;
         stream << ",f2=[" << value.f2.size()<< "][{";
-        for (const auto& it : value.f2)
+        for ([[maybe_unused]] const auto& it : value.f2)
         {
             stream << std::string(first ? "" : ",") << "\"" << it.first << "\"";
             stream << "->";
@@ -2036,7 +2036,7 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const StructHash
     {
         bool first = true;
         stream << ",f3=[" << value.f3.size()<< "][{";
-        for (const auto& it : value.f3)
+        for ([[maybe_unused]] const auto& it : value.f3)
         {
             stream << std::string(first ? "" : ",") << "\"" << it.first << "\"";
             stream << "->";
@@ -2048,7 +2048,7 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const StructHash
     {
         bool first = true;
         stream << ",f4=[" << value.f4.size()<< "][{";
-        for (const auto& it : value.f4)
+        for ([[maybe_unused]] const auto& it : value.f4)
         {
             stream << std::string(first ? "" : ",") << "\"" << it.first << "\"";
             stream << "->";
@@ -2060,7 +2060,7 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const StructHash
     {
         bool first = true;
         stream << ",f5=[" << value.f5.size()<< "][{";
-        for (const auto& it : value.f5)
+        for ([[maybe_unused]] const auto& it : value.f5)
         {
             stream << std::string(first ? "" : ",") << "\"" << it.first << "\"";
             stream << "->";
@@ -2072,7 +2072,7 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const StructHash
     {
         bool first = true;
         stream << ",f6=[" << value.f6.size()<< "][{";
-        for (const auto& it : value.f6)
+        for ([[maybe_unused]] const auto& it : value.f6)
         {
             stream << std::string(first ? "" : ",") << "\"" << it.first << "\"";
             stream << "->";
@@ -2084,7 +2084,7 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const StructHash
     {
         bool first = true;
         stream << ",f7=[" << value.f7.size()<< "][{";
-        for (const auto& it : value.f7)
+        for ([[maybe_unused]] const auto& it : value.f7)
         {
             stream << std::string(first ? "" : ",") << "\"" << it.first << "\"";
             stream << "->";
@@ -2096,7 +2096,7 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const StructHash
     {
         bool first = true;
         stream << ",f8=[" << value.f8.size()<< "][{";
-        for (const auto& it : value.f8)
+        for ([[maybe_unused]] const auto& it : value.f8)
         {
             stream << std::string(first ? "" : ",") << "\"" << it.first << "\"";
             stream << "->";
@@ -2108,7 +2108,7 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const StructHash
     {
         bool first = true;
         stream << ",f9=[" << value.f9.size()<< "][{";
-        for (const auto& it : value.f9)
+        for ([[maybe_unused]] const auto& it : value.f9)
         {
             stream << std::string(first ? "" : ",") << "\"" << it.first << "\"";
             stream << "->";
@@ -2120,7 +2120,7 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const StructHash
     {
         bool first = true;
         stream << ",f10=[" << value.f10.size()<< "][{";
-        for (const auto& it : value.f10)
+        for ([[maybe_unused]] const auto& it : value.f10)
         {
             stream << std::string(first ? "" : ",") << "\"" << it.first << "\"";
             stream << "->";
@@ -2179,7 +2179,7 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const StructHash
     {
         bool first = true;
         stream << "f1=[" << value.f1.size()<< "][{";
-        for (const auto& it : value.f1)
+        for ([[maybe_unused]] const auto& it : value.f1)
         {
             stream << std::string(first ? "" : ",") << it.first;
             stream << "->";
@@ -2191,7 +2191,7 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const StructHash
     {
         bool first = true;
         stream << ",f2=[" << value.f2.size()<< "][{";
-        for (const auto& it : value.f2)
+        for ([[maybe_unused]] const auto& it : value.f2)
         {
             stream << std::string(first ? "" : ",") << it.first;
             stream << "->";
@@ -2235,67 +2235,6 @@ void StructEmpty::swap([[maybe_unused]] StructEmpty& other) noexcept
 std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const StructEmpty& value)
 {
     stream << "StructEmpty(";
-    stream << ")";
-    return stream;
-}
-
-Struct128::Struct128()
-    : f1((__int128_t)0)
-    , f2()
-    , f3((__uint128_t)0)
-    , f4()
-{}
-
-Struct128::Struct128([[maybe_unused]] allocator_type alloc)
-    : f1((__int128_t)0)
-    , f2(std::nullopt)
-    , f3((__uint128_t)0)
-    , f4(std::nullopt)
-{}
-
-Struct128::Struct128(__int128_t arg_f1, const std::optional<__int128_t>& arg_f2, __uint128_t arg_f3, const std::optional<__uint128_t>& arg_f4)
-    : f1(arg_f1)
-    , f2(arg_f2)
-    , f3(arg_f3)
-    , f4(arg_f4)
-{}
-
-bool Struct128::operator==([[maybe_unused]] const Struct128& other) const noexcept
-{
-    return (
-        (f1 == other.f1)
-        && (f2 == other.f2)
-        && (f3 == other.f3)
-        && (f4 == other.f4)
-        );
-}
-
-bool Struct128::operator<([[maybe_unused]] const Struct128& other) const noexcept
-{
-    return false;
-}
-
-std::string Struct128::string() const
-{
-    std::stringstream ss; ss << *this; return ss.str();
-}
-
-void Struct128::swap([[maybe_unused]] Struct128& other) noexcept
-{
-    using std::swap;
-    swap(f1, other.f1);
-    swap(f2, other.f2);
-    swap(f3, other.f3);
-    swap(f4, other.f4);
-}
-
-std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const Struct128& value)
-{
-    stream << "Struct128(";
-    stream << "f1="; stream << "(int128) operator<< unimplemented";
-    stream << ",f2="; if (value.f2) stream << "(optional int128) operator<< unimplemented"; else stream << "null";
-    stream << ",f3="; stream << "(uint128) operator<< unimplemented";
-    stream << ",f4="; if (value.f4) stream << "(optional uint128) operator<< unimplemented"; else stream << "null";
     stream << ")";
     return stream;
 }

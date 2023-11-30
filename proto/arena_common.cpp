@@ -138,7 +138,7 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const Expression
     {
         bool first = true;
         stream << "keys=[" << value.keys.size() << "][";
-        for (const auto& it : value.keys)
+        for ([[maybe_unused]] const auto& it : value.keys)
         {
             stream << std::string(first ? "" : ",") << "\"" << it << "\"";
             first = false;
@@ -148,7 +148,7 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const Expression
     {
         bool first = true;
         stream << ",aliases=[" << value.aliases.size() << "][";
-        for (const auto& it : value.aliases)
+        for ([[maybe_unused]] const auto& it : value.aliases)
         {
             stream << std::string(first ? "" : ",") << it;
             first = false;
@@ -158,7 +158,7 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const Expression
     {
         bool first = true;
         stream << ",alias_int=[" << value.alias_int.size()<< "]<{";
-        for (const auto& it : value.alias_int)
+        for ([[maybe_unused]] const auto& it : value.alias_int)
         {
             stream << std::string(first ? "" : ",") << it.first;
             stream << "->";
