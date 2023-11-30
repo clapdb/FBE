@@ -15,6 +15,7 @@
 #include "../proto/variants_models.h"
 #include "variants.h"
 #include <cstdint>
+#include <limits>
 
 template <typename T>
 #if defined(USING_STD_VECTOR)
@@ -1649,4 +1650,44 @@ TEST_CASE("Serialization: variant", "[FBE]") {
         REQUIRE(std::get<2>(v_copy_expr) == "42");
         REQUIRE(value == value_copy);
     }
+}
+
+TEST_CASE("Serialization: int128 and uint128", "[FBE]")
+{
+    // Create a new struct
+    test::Struct128 struct1;
+    struct1.f1 = std::numeric_limits<__int128_t>::min();
+    struct1.f2 = std::numeric_limits<__int128_t>::min();
+    struct1.f3 = std::numeric_limits<__uint128_t>::max();
+    struct1.f4 = std::numeric_limits<__uint128_t>::max();
+
+    // Serialize the struct to the FBE stream
+    FBE::test::Struct128Model writer;
+    size_t serialized = writer.serialize(struct1);
+    REQUIRE(serialized == writer.buffer().size());
+    REQUIRE(writer.verify());
+    writer.next(serialized);
+    REQUIRE(writer.model.fbe_offset() == (4 + writer.buffer().size()));
+
+
+    // Deserialize the struct from the FBE stream
+    test::Struct128 struct2;
+    FBE::test::Struct128Model reader;
+    REQUIRE(reader.model.fbe_offset() == 4);
+    reader.attach(writer.buffer());
+    REQUIRE(reader.verify());
+    size_t deserialized = reader.deserialize(struct2);
+    REQUIRE(deserialized == reader.buffer().size());
+    reader.next(deserialized);
+    REQUIRE(reader.model.fbe_offset() == (4 + reader.buffer().size()));
+
+    REQUIRE(struct1.f1 == struct2.f1);
+    REQUIRE(struct1.f2 == struct2.f2);
+    REQUIRE(struct1.f3 == struct2.f3);
+    REQUIRE(struct1.f4 == struct2.f4);
+    REQUIRE(struct2.f1 <  std::numeric_limits<int64_t>::min());
+    REQUIRE(struct2.f2.value() <  std::numeric_limits<int64_t>::min());
+    REQUIRE(struct2.f3 >  std::numeric_limits<uint64_t>::max());
+    REQUIRE(struct2.f4.value() >  std::numeric_limits<uint64_t>::max());
+    REQUIRE(struct1 == struct2);
 }

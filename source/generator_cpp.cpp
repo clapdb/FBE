@@ -7612,6 +7612,7 @@ bool GeneratorCpp::IsKnownType(const std::string& type)
             (type == "int16") || (type == "uint16") ||
             (type == "int32") || (type == "uint32") ||
             (type == "int64") || (type == "uint64") ||
+            (type == "int128") || (type == "uint128") ||
             (type == "float") || (type == "double") ||
             (type == "decimal") || (type == "string") ||
             (type == "timestamp") || (type == "uuid"));
@@ -7628,6 +7629,7 @@ bool GeneratorCpp::IsPrimitiveType(const std::string& type, bool optional)
             (type == "int16") || (type == "uint16") ||
             (type == "int32") || (type == "uint32") ||
             (type == "int64") || (type == "uint64") ||
+            (type == "int128") || (type == "uint128") ||
             (type == "float") || (type == "double") ||
             (type == "timestamp"));
 }
@@ -7656,6 +7658,10 @@ std::string GeneratorCpp::ConvertEnumType(const std::string& type)
         return "int64_t";
     else if (type == "uint64")
         return "uint64_t";
+    else if (type == "int128")
+        return "__int128_t";
+    else if (type == "uint128")
+        return "__uint128_t";
 
     yyerror("Unsupported enum base type - " + type);
     return "";
@@ -7692,6 +7698,10 @@ std::string GeneratorCpp::ConvertTypeName(const std::string& package, const std:
         return "int64_t";
     else if (type == "uint64")
         return "uint64_t";
+    else if (type == "int128")
+        return "__int128_t";
+    else if (type == "uint128")
+        return "__uint128_t";
     else if (type == "float")
         return "float";
     else if (type == "double")
@@ -7853,6 +7863,10 @@ std::string GeneratorCpp::ConvertConstantPrefix(const std::string& type)
         return "(int64_t)";
     else if (type == "uint64")
         return "(uint64_t)";
+    else if (type == "int128")
+        return "(__int128_t)";
+    else if (type == "uint128")
+        return "(__uint128_t)";
     else if (type == "float")
         return "(float)";
     else if (type == "double")
@@ -7893,7 +7907,7 @@ std::string GeneratorCpp::ConvertDefault(const std::string& package, const std::
         return "'\\0'";
     else if (type == "wchar")
         return "L'\\0'";
-    else if ((type == "byte") || (type == "int8") || (type == "uint8") || (type == "int16") || (type == "uint16") || (type == "int32") || (type == "uint32") || (type == "int64") || (type == "uint64") || (type == "timestamp"))
+    else if ((type == "byte") || (type == "int8") || (type == "uint8") || (type == "int16") || (type == "uint16") || (type == "int32") || (type == "uint32") || (type == "int64") || (type == "uint64") || (type == "int128") || (type == "uint128") || (type == "timestamp"))
         return ConvertConstantPrefix(type) + "0" + ConvertConstantSuffix(type);
     else if (type == "float")
         return "0.0f";
@@ -7950,6 +7964,8 @@ std::string GeneratorCpp::ConvertOutputStreamType(const std::string& type, const
         return "\"'\" << (char)" + std::string(optional ? "*" : "") + name + " << \"'\"";
     else if ((type == "string") || (type == "uuid"))
         return "\"\\\"\" << " + std::string(optional ? "*" : "") + wrapped_name + " << \"\\\"\"";
+    else if ((type == "int128") || (type == "uint128"))
+        return "\"(" + std::string(optional ? "optional " : "") + std::string(type) + ") operator<< unimplemented\"";
     return std::string(optional ? "*" : "") + wrapped_name;
 }
 
