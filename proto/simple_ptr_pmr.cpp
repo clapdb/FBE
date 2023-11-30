@@ -150,7 +150,7 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const Simple& va
     {
         bool first = true;
         stream << ",spv=[" << value.spv.size() << "][";
-        for (const auto& it : value.spv)
+        for ([[maybe_unused]] const auto& it : value.spv)
         {
             stream << std::string(first ? "" : ",") << "ptr of other struct: " << (it == nullptr ? "nullptr" : "true");
             first = false;
@@ -160,7 +160,7 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const Simple& va
     {
         bool first = true;
         stream << ",sv=[" << value.sv.size() << "][";
-        for (const auto& it : value.sv)
+        for ([[maybe_unused]] const auto& it : value.sv)
         {
             stream << std::string(first ? "" : ",") << it;
             first = false;
@@ -170,7 +170,7 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const Simple& va
     {
         bool first = true;
         stream << ",spm=[" << value.spm.size()<< "]<{";
-        for (const auto& it : value.spm)
+        for ([[maybe_unused]] const auto& it : value.spm)
         {
             stream << std::string(first ? "" : ",") << it.first;
             stream << "->";
@@ -182,7 +182,7 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const Simple& va
     {
         bool first = true;
         stream << ",sm=[" << value.sm.size()<< "]<{";
-        for (const auto& it : value.sm)
+        for ([[maybe_unused]] const auto& it : value.sm)
         {
             stream << std::string(first ? "" : ",") << it.first;
             stream << "->";

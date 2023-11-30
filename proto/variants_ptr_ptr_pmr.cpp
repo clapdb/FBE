@@ -58,7 +58,7 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const Expr& valu
             break;
         case 3:
             stream << "{byte}=[" << std::get<3>(value).size() << "][";
-            for (const auto& it : std::get<3>(value))
+            for ([[maybe_unused]] const auto& it : std::get<3>(value))
             {
                 stream << std::string(first ? "" : ",") << (int)it;
                 first = false;
@@ -235,7 +235,7 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const V& value)
             break;
         case 5:
             stream << "{Simple}=[" << std::get<5>(value).size() << "][";
-            for (const auto& it : std::get<5>(value))
+            for ([[maybe_unused]] const auto& it : std::get<5>(value))
             {
                 stream << std::string(first ? "" : ",") << it;
                 first = false;
@@ -244,7 +244,7 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const V& value)
             break;
         case 6:
             stream << "{int32}=[" << std::get<6>(value).size() << "][";
-            for (const auto& it : std::get<6>(value))
+            for ([[maybe_unused]] const auto& it : std::get<6>(value))
             {
                 stream << std::string(first ? "" : ",") << it;
                 first = false;
@@ -253,7 +253,7 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const V& value)
             break;
         case 7:
             stream << "{int32->Simple}=[" << std::get<7>(value).size() << "][";
-            for (const auto& it : std::get<7>(value))
+            for ([[maybe_unused]] const auto& it : std::get<7>(value))
             {
                 stream << std::string(first ? "" : ",") << it.first;
                 stream << "->";
@@ -264,7 +264,7 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const V& value)
             break;
         case 8:
             stream << "{bytes}=[" << std::get<8>(value).size() << "][";
-            for (const auto& it : std::get<8>(value))
+            for ([[maybe_unused]] const auto& it : std::get<8>(value))
             {
                 stream << std::string(first ? "" : ",") << "bytes[" << it.size() << "]";
                 first = false;
@@ -273,7 +273,7 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const V& value)
             break;
         case 9:
             stream << "{string}=[" << std::get<9>(value).size() << "][";
-            for (const auto& it : std::get<9>(value))
+            for ([[maybe_unused]] const auto& it : std::get<9>(value))
             {
                 stream << std::string(first ? "" : ",") << "\"" << it << "\"";
                 first = false;
@@ -282,7 +282,7 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const V& value)
             break;
         case 10:
             stream << "{int32->bytes}=[" << std::get<10>(value).size() << "][";
-            for (const auto& it : std::get<10>(value))
+            for ([[maybe_unused]] const auto& it : std::get<10>(value))
             {
                 stream << std::string(first ? "" : ",") << it.first;
                 stream << "->";
@@ -293,7 +293,7 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const V& value)
             break;
         case 11:
             stream << "{string->bytes}=[" << std::get<11>(value).size() << "][";
-            for (const auto& it : std::get<11>(value))
+            for ([[maybe_unused]] const auto& it : std::get<11>(value))
             {
                 stream << std::string(first ? "" : ",") << "\"" << it.first << "\"";
                 stream << "->";
@@ -304,7 +304,7 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const V& value)
             break;
         case 12:
             stream << "{Simple*}=[" << std::get<12>(value).size() << "][";
-            for (const auto& it : std::get<12>(value))
+            for ([[maybe_unused]] const auto& it : std::get<12>(value))
             {
                 stream << std::string(first ? "" : ",") << "ptr of other struct: " << (it == nullptr ? "nullptr" : "true");
                 if (it != nullptr)
@@ -724,7 +724,7 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const ValueConta
     {
         bool first = true;
         stream << "vv=[" << value.vv.size() << "][";
-        for (const auto& it : value.vv)
+        for ([[maybe_unused]] const auto& it : value.vv)
         {
             stream << std::string(first ? "" : ",") << it;
             first = false;
@@ -734,7 +734,7 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const ValueConta
     {
         bool first = true;
         stream << ",vm=[" << value.vm.size()<< "][{";
-        for (const auto& it : value.vm)
+        for ([[maybe_unused]] const auto& it : value.vm)
         {
             stream << std::string(first ? "" : ",") << it.first;
             stream << "->";
@@ -813,7 +813,7 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const Scalar1Con
     {
         bool first = true;
         stream << "s=[" << value.s.size()<< "][{";
-        for (const auto& it : value.s)
+        for ([[maybe_unused]] const auto& it : value.s)
         {
             stream << std::string(first ? "" : ",") << it.first;
             stream << "->";

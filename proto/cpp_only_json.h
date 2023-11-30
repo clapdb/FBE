@@ -43,6 +43,12 @@ struct ValueWriter<TWriter, ::cpp_only::Struct128>
             return false;
         if (!FBE::JSON::to_json_key(writer, "f4") || !FBE::JSON::to_json(writer, value.f4, true))
             return false;
+        if (!FBE::JSON::to_json_key(writer, "f5") || !FBE::JSON::to_json(writer, value.f5, true))
+            return false;
+        if (!FBE::JSON::to_json_key(writer, "f6") || !FBE::JSON::to_json(writer, value.f6, true))
+            return false;
+        if (!FBE::JSON::to_json_key(writer, "f7") || !FBE::JSON::to_json(writer, value.f7, true))
+            return false;
         if (scope)
             if (!writer.EndObject())
                 return false;
@@ -62,6 +68,9 @@ struct ValueReader<TJson, ::cpp_only::Struct128>
         result &= FBE::JSON::from_json(json, value.f2, "f2");
         result &= FBE::JSON::from_json(json, value.f3, "f3");
         result &= FBE::JSON::from_json(json, value.f4, "f4");
+        result &= FBE::JSON::from_json(json, value.f5, "f5");
+        result &= FBE::JSON::from_json(json, value.f6, "f6");
+        result &= FBE::JSON::from_json(json, value.f7, "f7");
         return result;
     }
 };

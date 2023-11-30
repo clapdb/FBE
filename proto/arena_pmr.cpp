@@ -67,7 +67,7 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const Item& valu
     {
         bool first = true;
         stream << ",expressions=[" << value.expressions.size() << "][";
-        for (const auto& it : value.expressions)
+        for ([[maybe_unused]] const auto& it : value.expressions)
         {
             stream << std::string(first ? "" : ",") << it;
             first = false;
@@ -77,7 +77,7 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const Item& valu
     {
         bool first = true;
         stream << ",aliases_int=[" << value.aliases_int.size()<< "]<{";
-        for (const auto& it : value.aliases_int)
+        for ([[maybe_unused]] const auto& it : value.aliases_int)
         {
             stream << std::string(first ? "" : ",") << it.first;
             stream << "->";

@@ -25,6 +25,45 @@
 
 namespace FBE {
 
+template <>
+class FieldModel<::cpp_only_pmr::LargeNum>
+{
+public:
+    FieldModel(FBEBuffer& buffer, size_t offset) noexcept;
+
+    // Get the field offset
+    size_t fbe_offset() const noexcept { return _offset; }
+    // Get the field size
+    size_t fbe_size() const noexcept { return 4; }
+    // Get the field body size
+    size_t fbe_body() const noexcept;
+    // Get the field extra size
+    size_t fbe_extra() const noexcept;
+
+    // Shift the current field offset
+    void fbe_shift(size_t size) noexcept { _offset += size; }
+    // Unshift the current field offset
+    void fbe_unshift(size_t size) noexcept { _offset -= size; }
+
+    // Check if the variant value is valid
+    bool verify() const noexcept;
+
+    // Get the variant value
+    void get(::cpp_only_pmr::LargeNum& fbe_value) const noexcept;
+
+    // Set the variant value (begin phase)
+    size_t set_begin(size_t variant_type_fbe_size, size_t variant_type_index);
+    // Set the variant value (end phase)
+    void set_end(size_t fbe_begin);
+
+    // Set the variant value
+    void set(const ::cpp_only_pmr::LargeNum& fbe_value) noexcept;
+
+private:
+    FBEBuffer& _buffer;
+    size_t _offset;
+};
+
 // Fast Binary Encoding ::cpp_only_pmr::Struct128 field model
 template <>
 class FieldModel<::cpp_only_pmr::Struct128>
@@ -82,6 +121,9 @@ public:
     FieldModel<std::optional<__int128_t>> f2;
     FieldModel<__uint128_t> f3;
     FieldModel<std::optional<__uint128_t>> f4;
+    FieldModelVector<__int128_t> f5;
+    FieldModelMap<__uint128_t, __int128_t> f6;
+    FieldModel<::cpp_only_pmr::LargeNum> f7;
 };
 
 namespace cpp_only_pmr {

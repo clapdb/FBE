@@ -30,6 +30,11 @@ using namespace ::cpp_only;
 } // namespace FBE
 
 namespace cpp_only {
+// forward declaration
+struct Struct128;
+
+using LargeNum = std::variant<int64_t, __int128_t, __uint128_t, FastVec<__int128_t>, std::unordered_map<__uint128_t, __int128_t>>;
+std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const LargeNum& value);
 
 struct Struct128
 {
@@ -37,11 +42,14 @@ struct Struct128
     std::optional<__int128_t> f2;
     __uint128_t f3;
     std::optional<__uint128_t> f4;
+    FastVec<__int128_t> f5;
+    std::unordered_map<__uint128_t, __int128_t> f6;
+    ::cpp_only::LargeNum f7;
 
     size_t fbe_type() const noexcept { return 1; }
 
     Struct128();
-    Struct128(__int128_t arg_f1, const std::optional<__int128_t>& arg_f2, __uint128_t arg_f3, const std::optional<__uint128_t>& arg_f4);
+    Struct128(__int128_t arg_f1, const std::optional<__int128_t>& arg_f2, __uint128_t arg_f3, const std::optional<__uint128_t>& arg_f4, const FastVec<__int128_t>& arg_f5, const std::unordered_map<__uint128_t, __int128_t>& arg_f6, const ::cpp_only::LargeNum& arg_f7);
     Struct128(const Struct128& other) = default;
     Struct128(Struct128&& other) = default;
     ~Struct128() = default;

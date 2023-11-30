@@ -14,6 +14,9 @@ FinalModel<::cpp_only::Struct128>::FinalModel(FBEBuffer& buffer, size_t offset) 
     , f2(buffer, 0)
     , f3(buffer, 0)
     , f4(buffer, 0)
+    , f5(buffer, 0)
+    , f6(buffer, 0)
+    , f7(buffer, 0)
 {}
 
 size_t FinalModel<::cpp_only::Struct128>::fbe_allocation_size(const ::cpp_only::Struct128& fbe_value) const noexcept
@@ -23,6 +26,9 @@ size_t FinalModel<::cpp_only::Struct128>::fbe_allocation_size(const ::cpp_only::
         + f2.fbe_allocation_size(fbe_value.f2)
         + f3.fbe_allocation_size(fbe_value.f3)
         + f4.fbe_allocation_size(fbe_value.f4)
+        + f5.fbe_allocation_size(fbe_value.f5)
+        + f6.fbe_allocation_size(fbe_value.f6)
+        + f7.fbe_allocation_size(fbe_value.f7)
         ;
     return fbe_result;
 }
@@ -64,6 +70,24 @@ size_t FinalModel<::cpp_only::Struct128>::verify_fields() const noexcept
         return std::numeric_limits<std::size_t>::max();
     fbe_current_offset += fbe_field_size;
 
+    f5.fbe_offset(fbe_current_offset);
+    fbe_field_size = f5.verify();
+    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
+        return std::numeric_limits<std::size_t>::max();
+    fbe_current_offset += fbe_field_size;
+
+    f6.fbe_offset(fbe_current_offset);
+    fbe_field_size = f6.verify();
+    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
+        return std::numeric_limits<std::size_t>::max();
+    fbe_current_offset += fbe_field_size;
+
+    f7.fbe_offset(fbe_current_offset);
+    fbe_field_size = f7.verify();
+    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
+        return std::numeric_limits<std::size_t>::max();
+    fbe_current_offset += fbe_field_size;
+
     return fbe_current_offset;
 }
 
@@ -101,6 +125,21 @@ size_t FinalModel<::cpp_only::Struct128>::get_fields([[maybe_unused]] ::cpp_only
     fbe_current_offset += fbe_field_size;
     fbe_current_size += fbe_field_size;
 
+    f5.fbe_offset(fbe_current_offset);
+    fbe_field_size = f5.get(fbe_value.f5);
+    fbe_current_offset += fbe_field_size;
+    fbe_current_size += fbe_field_size;
+
+    f6.fbe_offset(fbe_current_offset);
+    fbe_field_size = f6.get(fbe_value.f6);
+    fbe_current_offset += fbe_field_size;
+    fbe_current_size += fbe_field_size;
+
+    f7.fbe_offset(fbe_current_offset);
+    fbe_field_size = f7.get(fbe_value.f7);
+    fbe_current_offset += fbe_field_size;
+    fbe_current_size += fbe_field_size;
+
     return fbe_current_size;
 }
 
@@ -135,6 +174,21 @@ size_t FinalModel<::cpp_only::Struct128>::set_fields([[maybe_unused]] const ::cp
 
     f4.fbe_offset(fbe_current_offset);
     fbe_field_size = f4.set(fbe_value.f4);
+    fbe_current_offset += fbe_field_size;
+    fbe_current_size += fbe_field_size;
+
+    f5.fbe_offset(fbe_current_offset);
+    fbe_field_size = f5.set(fbe_value.f5);
+    fbe_current_offset += fbe_field_size;
+    fbe_current_size += fbe_field_size;
+
+    f6.fbe_offset(fbe_current_offset);
+    fbe_field_size = f6.set(fbe_value.f6);
+    fbe_current_offset += fbe_field_size;
+    fbe_current_size += fbe_field_size;
+
+    f7.fbe_offset(fbe_current_offset);
+    fbe_field_size = f7.set(fbe_value.f7);
     fbe_current_offset += fbe_field_size;
     fbe_current_size += fbe_field_size;
 

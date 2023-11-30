@@ -1,5 +1,13 @@
 package cpp_only
 
+variant LargeNum {
+    int64;
+    int128;
+    uint128;
+    int128[];
+    int128{uint128};
+}
+
 // int128 and uint128
 struct Struct128
 {
@@ -7,4 +15,7 @@ struct Struct128
     int128? f2;
     uint128 f3;
     uint128? f4;
+    int128[] f5;
+    int128{uint128} f6;
+    LargeNum f7;
 }

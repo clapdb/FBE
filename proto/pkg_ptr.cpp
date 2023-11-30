@@ -152,7 +152,7 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const Detail& va
     {
         bool first = true;
         stream << "extrav=[" << value.extrav.size() << "][";
-        for (const auto& it : value.extrav)
+        for ([[maybe_unused]] const auto& it : value.extrav)
         {
             stream << std::string(first ? "" : ",") << it;
             first = false;
@@ -162,7 +162,7 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const Detail& va
     {
         bool first = true;
         stream << ",extram=[" << value.extram.size()<< "]<{";
-        for (const auto& it : value.extram)
+        for ([[maybe_unused]] const auto& it : value.extram)
         {
             stream << std::string(first ? "" : ",") << it.first;
             stream << "->";

@@ -70,6 +70,9 @@ public:
     FinalModel<std::optional<__int128_t>> f2;
     FinalModel<__uint128_t> f3;
     FinalModel<std::optional<__uint128_t>> f4;
+    FinalModelVector<__int128_t> f5;
+    FinalModelMap<__uint128_t, __int128_t> f6;
+    FinalModel<::cpp_only::LargeNum> f7;
 };
 
 namespace cpp_only {
