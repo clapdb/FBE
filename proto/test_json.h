@@ -1043,45 +1043,6 @@ struct ValueReader<TJson, ::test::StructEmpty>
     }
 };
 
-template <class TWriter>
-struct ValueWriter<TWriter, ::test::Struct128>
-{
-    static bool to_json(TWriter& writer, const ::test::Struct128& value, bool scope = true)
-    {
-        if (scope)
-            if (!writer.StartObject())
-                return false;
-        if (!FBE::JSON::to_json_key(writer, "f1") || !FBE::JSON::to_json(writer, value.f1, true))
-            return false;
-        if (!FBE::JSON::to_json_key(writer, "f2") || !FBE::JSON::to_json(writer, value.f2, true))
-            return false;
-        if (!FBE::JSON::to_json_key(writer, "f3") || !FBE::JSON::to_json(writer, value.f3, true))
-            return false;
-        if (!FBE::JSON::to_json_key(writer, "f4") || !FBE::JSON::to_json(writer, value.f4, true))
-            return false;
-        if (scope)
-            if (!writer.EndObject())
-                return false;
-        return true;
-    }
-};
-
-template <class TJson>
-struct ValueReader<TJson, ::test::Struct128>
-{
-    static bool from_json(const TJson& json, ::test::Struct128& value, const char* key = nullptr)
-    {
-        if (key != nullptr)
-            return FBE::JSON::from_json_child(json, value, key);
-        bool result = true;
-        result &= FBE::JSON::from_json(json, value.f1, "f1");
-        result &= FBE::JSON::from_json(json, value.f2, "f2");
-        result &= FBE::JSON::from_json(json, value.f3, "f3");
-        result &= FBE::JSON::from_json(json, value.f4, "f4");
-        return result;
-    }
-};
-
 } // namespace JSON
 
 } // namespace FBE

@@ -315,12 +315,3 @@ struct StructHashEx
 struct StructEmpty
 {
 }
-
-// int128 and uint128
-struct Struct128
-{
-    int128 f1;
-    int128? f2;
-    uint128 f3;
-    uint128? f4;
-}

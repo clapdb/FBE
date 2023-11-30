@@ -108,11 +108,13 @@ if(NOT FBEC_MODULE)
 
   # Proto FBE models
   file(GLOB FBE_FILES RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}/proto" "proto/*.fbe")
+  file(GLOB CPP_ONLY_FBE_FILES RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}/proto" "proto/cpp_only.fbe")
   file(GLOB FBE_FILE_ARENA RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}/proto" "proto/arena_common.fbe")
   file(GLOB FBE_FILE_ARENA_IMPORT RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}/proto" "proto/arena.fbe")
   list(REMOVE_ITEM FBE_FILES
     ${FBE_FILE_ARENA}
     ${FBE_FILE_ARENA_IMPORT}
+    ${CPP_ONLY_FBE_FILES}
   )
   foreach(FBE_FILE ${FBE_FILES})
     string(REGEX REPLACE "(.*)\\.fbe" "\\1.h" FBE_HEADER ${FBE_FILE})
@@ -125,13 +127,31 @@ if(NOT FBEC_MODULE)
       OUTPUT ${FBE_OUTPUT_FILE}
       COMMAND $<TARGET_FILE:fbec> --cpp --final --json --proto --input ${FBE_INPUT_FILE} --output ${FBE_OUTPUT_DIR}
       # COMMAND $<TARGET_FILE:fbec> --csharp --final --json --proto --input ${FBE_INPUT_FILE} --output ${CMAKE_CURRENT_SOURCE_DIR}/projects/CSharp/Proto
-      # COMMAND $<TARGET_FILE:fbec> --go --final --json --proto --go-module-path fbeproj/proto --input ${FBE_INPUT_FILE} --output ${CMAKE_CURRENT_SOURCE_DIR}/projects/Go/proto
+      COMMAND $<TARGET_FILE:fbec> --go --final --json --proto --go-module-path fbeproj/proto --input ${FBE_INPUT_FILE} --output ${CMAKE_CURRENT_SOURCE_DIR}/projects/Go/proto
       # COMMAND $<TARGET_FILE:fbec> --java --final --json --proto --input ${FBE_INPUT_FILE} --output ${CMAKE_CURRENT_SOURCE_DIR}/projects/Java/src
       # COMMAND $<TARGET_FILE:fbec> --javascript --final --json --proto --input ${FBE_INPUT_FILE} --output ${CMAKE_CURRENT_SOURCE_DIR}/projects/JavaScript/proto
       # COMMAND $<TARGET_FILE:fbec> --kotlin --final --json --proto --input ${FBE_INPUT_FILE} --output ${CMAKE_CURRENT_SOURCE_DIR}/projects/Kotlin/src
       # COMMAND $<TARGET_FILE:fbec> --python --final --json --proto --input ${FBE_INPUT_FILE} --output ${CMAKE_CURRENT_SOURCE_DIR}/projects/Python/proto
       # COMMAND $<TARGET_FILE:fbec> --ruby --final --json --proto --input ${FBE_INPUT_FILE} --output ${CMAKE_CURRENT_SOURCE_DIR}/projects/Ruby/proto
       # COMMAND $<TARGET_FILE:fbec> --swift --final --json --proto --input ${FBE_INPUT_FILE} --output ${CMAKE_CURRENT_SOURCE_DIR}/projects/Swift/Proto
+      DEPENDS ${FBE_INPUT_FILE} COMMENT "Generating FBE proto for ${FBE_INPUT_FILE}..." VERBATIM
+    )
+    add_custom_target(${FBE_TARGET} DEPENDS ${FBE_OUTPUT_FILE})
+    set_target_properties(${FBE_TARGET} PROPERTIES FOLDER "proto")
+    list(APPEND PROTO_DEPENDENCIES ${FBE_TARGET})
+    list(APPEND PROTO_FILES ${FBE_OUTPUT_FILE})
+  endforeach()
+
+  foreach(FBE_FILE ${CPP_ONLY_FBE_FILES})
+    string(REGEX REPLACE "(.*)\\.fbe" "\\1.h" FBE_HEADER ${FBE_FILE})
+    set(FBE_INPUT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/proto")
+    set(FBE_INPUT_FILE "${FBE_INPUT_DIR}/${FBE_FILE}")
+    set(FBE_OUTPUT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/proto")
+    set(FBE_OUTPUT_FILE "${FBE_OUTPUT_DIR}/${FBE_HEADER}")
+    set(FBE_TARGET "${FBE_FILE}_TARGET")
+    add_custom_command(
+      OUTPUT ${FBE_OUTPUT_FILE}
+      COMMAND $<TARGET_FILE:fbec> --cpp --final --json --proto --input ${FBE_INPUT_FILE} --output ${FBE_OUTPUT_DIR}
       DEPENDS ${FBE_INPUT_FILE} COMMENT "Generating FBE proto for ${FBE_INPUT_FILE}..." VERBATIM
     )
     add_custom_target(${FBE_TARGET} DEPENDS ${FBE_OUTPUT_FILE})
@@ -178,7 +198,7 @@ if(NOT FBEC_MODULE)
     add_custom_command(
       OUTPUT ${FBE_OUTPUT_FILE}
       COMMAND $<TARGET_FILE:fbec> --cpp --ptr --input ${FBE_INPUT_FILE} --output ${FBE_OUTPUT_DIR}
-      # COMMAND $<TARGET_FILE:fbec> --go --json --proto --go-module-path fbeproj/proto --input ${FBE_INPUT_FILE} --output ${CMAKE_CURRENT_SOURCE_DIR}/projects/Go/proto
+      COMMAND $<TARGET_FILE:fbec> --go --json --proto --go-module-path fbeproj/proto --input ${FBE_INPUT_FILE} --output ${CMAKE_CURRENT_SOURCE_DIR}/projects/Go/proto
       DEPENDS ${FBE_INPUT_FILE} COMMENT "Generating FBE proto for ${FBE_INPUT_FILE}..." VERBATIM
     )
     add_custom_target(${FBE_TARGET} DEPENDS ${FBE_OUTPUT_FILE})
@@ -197,7 +217,7 @@ if(NOT FBEC_MODULE)
     add_custom_command(
       OUTPUT ${FBE_OUTPUT_FILE}
       COMMAND $<TARGET_FILE:fbec> --cpp --import-ptr --ptr --input ${FBE_INPUT_FILE} --output ${FBE_OUTPUT_DIR}
-      # COMMAND $<TARGET_FILE:fbec> --go --json --proto --go-module-path fbeproj/proto --input ${FBE_INPUT_FILE} --output ${CMAKE_CURRENT_SOURCE_DIR}/projects/Go/proto
+      COMMAND $<TARGET_FILE:fbec> --go --json --proto --go-module-path fbeproj/proto --input ${FBE_INPUT_FILE} --output ${CMAKE_CURRENT_SOURCE_DIR}/projects/Go/proto
       DEPENDS ${FBE_INPUT_FILE} COMMENT "Generating FBE proto for ${FBE_INPUT_FILE}..." VERBATIM
     )
     add_custom_target(${FBE_TARGET} DEPENDS ${FBE_OUTPUT_FILE})

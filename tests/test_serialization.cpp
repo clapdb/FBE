@@ -13,6 +13,7 @@
 #include "../proto/proto_models.h"
 #include "../proto/test_models.h"
 #include "../proto/variants_models.h"
+#include "../proto/cpp_only_models.h"
 #include "variants.h"
 #include <cstdint>
 #include <limits>
@@ -1655,14 +1656,14 @@ TEST_CASE("Serialization: variant", "[FBE]") {
 TEST_CASE("Serialization: int128 and uint128", "[FBE]")
 {
     // Create a new struct
-    test::Struct128 struct1;
+    cpp_only::Struct128 struct1;
     struct1.f1 = std::numeric_limits<__int128_t>::min();
     struct1.f2 = std::numeric_limits<__int128_t>::min();
     struct1.f3 = std::numeric_limits<__uint128_t>::max();
     struct1.f4 = std::numeric_limits<__uint128_t>::max();
 
     // Serialize the struct to the FBE stream
-    FBE::test::Struct128Model writer;
+    FBE::cpp_only::Struct128Model writer;
     size_t serialized = writer.serialize(struct1);
     REQUIRE(serialized == writer.buffer().size());
     REQUIRE(writer.verify());
@@ -1671,8 +1672,8 @@ TEST_CASE("Serialization: int128 and uint128", "[FBE]")
 
 
     // Deserialize the struct from the FBE stream
-    test::Struct128 struct2;
-    FBE::test::Struct128Model reader;
+    cpp_only::Struct128 struct2;
+    FBE::cpp_only::Struct128Model reader;
     REQUIRE(reader.model.fbe_offset() == 4);
     reader.attach(writer.buffer());
     REQUIRE(reader.verify());
