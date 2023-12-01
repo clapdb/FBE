@@ -1117,4 +1117,224 @@ size_t AccountMessageFinalModel::deserialize(::proto::AccountMessage& value) con
 
 } // namespace proto
 
+FinalModel<::proto::PremiumAccount>::FinalModel(FBEBuffer& buffer, size_t offset) noexcept : _buffer(buffer), _offset(offset)
+    , id(buffer, 0)
+    , name(buffer, 0)
+    , info(buffer, 0)
+    , private_wallet(buffer, 0)
+    , private_orders(buffer, 0)
+    , private_state(buffer, 0)
+{}
+
+size_t FinalModel<::proto::PremiumAccount>::fbe_allocation_size(const ::proto::PremiumAccount& fbe_value) const noexcept
+{
+    size_t fbe_result = 0
+        + id.fbe_allocation_size(fbe_value.id)
+        + name.fbe_allocation_size(fbe_value.name)
+        + info.fbe_allocation_size(fbe_value.info)
+        + private_wallet.fbe_allocation_size(fbe_value.private_wallet)
+        + private_orders.fbe_allocation_size(fbe_value.private_orders)
+        + private_state.fbe_allocation_size(fbe_value.private_state)
+        ;
+    return fbe_result;
+}
+
+size_t FinalModel<::proto::PremiumAccount>::verify() const noexcept
+{
+    _buffer.shift(fbe_offset());
+    size_t fbe_result = verify_fields();
+    _buffer.unshift(fbe_offset());
+    return fbe_result;
+}
+
+size_t FinalModel<::proto::PremiumAccount>::verify_fields() const noexcept
+{
+    size_t fbe_current_offset = 0;
+    size_t fbe_field_size;
+
+    id.fbe_offset(fbe_current_offset);
+    fbe_field_size = id.verify();
+    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
+        return std::numeric_limits<std::size_t>::max();
+    fbe_current_offset += fbe_field_size;
+
+    name.fbe_offset(fbe_current_offset);
+    fbe_field_size = name.verify();
+    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
+        return std::numeric_limits<std::size_t>::max();
+    fbe_current_offset += fbe_field_size;
+
+    info.fbe_offset(fbe_current_offset);
+    fbe_field_size = info.verify();
+    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
+        return std::numeric_limits<std::size_t>::max();
+    fbe_current_offset += fbe_field_size;
+
+    private_wallet.fbe_offset(fbe_current_offset);
+    fbe_field_size = private_wallet.verify();
+    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
+        return std::numeric_limits<std::size_t>::max();
+    fbe_current_offset += fbe_field_size;
+
+    private_orders.fbe_offset(fbe_current_offset);
+    fbe_field_size = private_orders.verify();
+    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
+        return std::numeric_limits<std::size_t>::max();
+    fbe_current_offset += fbe_field_size;
+
+    private_state.fbe_offset(fbe_current_offset);
+    fbe_field_size = private_state.verify();
+    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
+        return std::numeric_limits<std::size_t>::max();
+    fbe_current_offset += fbe_field_size;
+
+    return fbe_current_offset;
+}
+
+size_t FinalModel<::proto::PremiumAccount>::get(::proto::PremiumAccount& fbe_value) const noexcept
+{
+    _buffer.shift(fbe_offset());
+    size_t fbe_result = get_fields(fbe_value);
+    _buffer.unshift(fbe_offset());
+    return fbe_result;
+}
+
+size_t FinalModel<::proto::PremiumAccount>::get_fields([[maybe_unused]] ::proto::PremiumAccount& fbe_value) const noexcept
+{
+    size_t fbe_current_offset = 0;
+    size_t fbe_current_size = 0;
+    size_t fbe_field_size;
+
+    id.fbe_offset(fbe_current_offset);
+    fbe_field_size = id.get(fbe_value.id);
+    fbe_current_offset += fbe_field_size;
+    fbe_current_size += fbe_field_size;
+
+    name.fbe_offset(fbe_current_offset);
+    fbe_field_size = name.get(fbe_value.name);
+    fbe_current_offset += fbe_field_size;
+    fbe_current_size += fbe_field_size;
+
+    info.fbe_offset(fbe_current_offset);
+    fbe_field_size = info.get(fbe_value.info);
+    fbe_current_offset += fbe_field_size;
+    fbe_current_size += fbe_field_size;
+
+    private_wallet.fbe_offset(fbe_current_offset);
+    fbe_field_size = private_wallet.get(fbe_value.private_wallet);
+    fbe_current_offset += fbe_field_size;
+    fbe_current_size += fbe_field_size;
+
+    private_orders.fbe_offset(fbe_current_offset);
+    fbe_field_size = private_orders.get(fbe_value.private_orders);
+    fbe_current_offset += fbe_field_size;
+    fbe_current_size += fbe_field_size;
+
+    private_state.fbe_offset(fbe_current_offset);
+    fbe_field_size = private_state.get(fbe_value.private_state);
+    fbe_current_offset += fbe_field_size;
+    fbe_current_size += fbe_field_size;
+
+    return fbe_current_size;
+}
+
+size_t FinalModel<::proto::PremiumAccount>::set(const ::proto::PremiumAccount& fbe_value) noexcept
+{
+    _buffer.shift(fbe_offset());
+    size_t fbe_result = set_fields(fbe_value);
+    _buffer.unshift(fbe_offset());
+    return fbe_result;
+}
+
+size_t FinalModel<::proto::PremiumAccount>::set_fields([[maybe_unused]] const ::proto::PremiumAccount& fbe_value) noexcept
+{
+    size_t fbe_current_offset = 0;
+    size_t fbe_current_size = 0;
+    size_t fbe_field_size;
+
+    id.fbe_offset(fbe_current_offset);
+    fbe_field_size = id.set(fbe_value.id);
+    fbe_current_offset += fbe_field_size;
+    fbe_current_size += fbe_field_size;
+
+    name.fbe_offset(fbe_current_offset);
+    fbe_field_size = name.set(fbe_value.name);
+    fbe_current_offset += fbe_field_size;
+    fbe_current_size += fbe_field_size;
+
+    info.fbe_offset(fbe_current_offset);
+    fbe_field_size = info.set(fbe_value.info);
+    fbe_current_offset += fbe_field_size;
+    fbe_current_size += fbe_field_size;
+
+    private_wallet.fbe_offset(fbe_current_offset);
+    fbe_field_size = private_wallet.set(fbe_value.private_wallet);
+    fbe_current_offset += fbe_field_size;
+    fbe_current_size += fbe_field_size;
+
+    private_orders.fbe_offset(fbe_current_offset);
+    fbe_field_size = private_orders.set(fbe_value.private_orders);
+    fbe_current_offset += fbe_field_size;
+    fbe_current_size += fbe_field_size;
+
+    private_state.fbe_offset(fbe_current_offset);
+    fbe_field_size = private_state.set(fbe_value.private_state);
+    fbe_current_offset += fbe_field_size;
+    fbe_current_size += fbe_field_size;
+
+    return fbe_current_size;
+}
+
+namespace proto {
+
+bool PremiumAccountFinalModel::verify()
+{
+    if ((this->buffer().offset() + _model.fbe_offset()) > this->buffer().size())
+        return false;
+
+    size_t fbe_struct_size = unaligned_load<uint32_t>(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 8);
+    size_t fbe_struct_type = unaligned_load<uint32_t>(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 4);
+    if ((fbe_struct_size == 0) || (fbe_struct_type != fbe_type()))
+        return false;
+
+    return ((8 + _model.verify()) == fbe_struct_size);
+}
+
+size_t PremiumAccountFinalModel::serialize(const ::proto::PremiumAccount& value)
+{
+    size_t fbe_initial_size = this->buffer().size();
+
+    uint32_t fbe_struct_type = (uint32_t)fbe_type();
+    uint32_t fbe_struct_size = (uint32_t)(8 + _model.fbe_allocation_size(value));
+    uint32_t fbe_struct_offset = (uint32_t)(this->buffer().allocate(fbe_struct_size) - this->buffer().offset());
+    assert(((this->buffer().offset() + fbe_struct_offset + fbe_struct_size) <= this->buffer().size()) && "Model is broken!");
+    if ((this->buffer().offset() + fbe_struct_offset + fbe_struct_size) > this->buffer().size())
+        return 0;
+
+    fbe_struct_size = (uint32_t)(8 + _model.set(value));
+    this->buffer().resize(fbe_initial_size + fbe_struct_size);
+
+    *((uint32_t*)(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 8)) = fbe_struct_size;
+    *((uint32_t*)(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 4)) = fbe_struct_type;
+
+    return fbe_struct_size;
+}
+
+size_t PremiumAccountFinalModel::deserialize(::proto::PremiumAccount& value) const noexcept
+{
+    assert(((this->buffer().offset() + _model.fbe_offset()) <= this->buffer().size()) && "Model is broken!");
+    if ((this->buffer().offset() + _model.fbe_offset()) > this->buffer().size())
+        return 0;
+
+    size_t fbe_struct_size = unaligned_load<uint32_t>(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 8);
+    size_t fbe_struct_type = unaligned_load<uint32_t>(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 4);
+    assert(((fbe_struct_size > 0) && (fbe_struct_type == fbe_type())) && "Model is broken!");
+    if ((fbe_struct_size == 0) || (fbe_struct_type != fbe_type()))
+        return 8;
+
+    return 8 + _model.get(value);
+}
+
+} // namespace proto
+
 } // namespace FBE

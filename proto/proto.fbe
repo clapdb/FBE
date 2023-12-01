@@ -89,3 +89,12 @@ message AccountMessage
 {
     Account body;
 }
+
+struct PremiumAccount {
+    [key] int32 id;
+    string name;
+    string info; // test skipping empty field.
+    Balance private_wallet; // test skipping empty filed
+    Order[] private_orders; // test skipping empty filed
+    State private_state = State.bad; // test skipping empty filed
+}

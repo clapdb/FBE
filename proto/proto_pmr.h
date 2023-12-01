@@ -441,4 +441,60 @@ struct std::hash<proto_pmr::AccountMessage>
 
 namespace proto_pmr {
 
+struct PremiumAccount
+{
+    ArenaManagedCreateOnlyTag;
+
+    int32_t id;
+    stdb::memory::arena_string name;
+    stdb::memory::arena_string info;
+    ::proto_pmr::Balance private_wallet;
+    pmr::vector<::proto_pmr::Order> private_orders;
+    ::proto_pmr::State private_state;
+
+    size_t fbe_type() const noexcept { return 5; }
+
+    PremiumAccount();
+    explicit PremiumAccount(allocator_type alloc);
+    PremiumAccount(int32_t arg_id, const stdb::memory::arena_string& arg_name, const stdb::memory::arena_string& arg_info, const ::proto_pmr::Balance& arg_private_wallet, const pmr::vector<::proto_pmr::Order>& arg_private_orders, const ::proto_pmr::State& arg_private_state);
+    PremiumAccount(const PremiumAccount& other) = default;
+    PremiumAccount(PremiumAccount&& other) = default;
+    ~PremiumAccount() = default;
+
+    PremiumAccount& operator=(const PremiumAccount& other) = default;
+    PremiumAccount& operator=(PremiumAccount&& other) = default;
+
+    bool operator==(const PremiumAccount& other) const noexcept;
+    bool operator!=(const PremiumAccount& other) const noexcept { return !operator==(other); }
+    bool operator<(const PremiumAccount& other) const noexcept;
+    bool operator<=(const PremiumAccount& other) const noexcept { return operator<(other) || operator==(other); }
+    bool operator>(const PremiumAccount& other) const noexcept { return !operator<=(other); }
+    bool operator>=(const PremiumAccount& other) const noexcept { return !operator<(other); }
+
+    std::string string() const;
+
+    friend std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const PremiumAccount& value);
+
+    void swap(PremiumAccount& other) noexcept;
+    friend void swap(PremiumAccount& value1, PremiumAccount& value2) noexcept { value1.swap(value2); }
+};
+
+} // namespace proto_pmr
+
+template<>
+struct std::hash<proto_pmr::PremiumAccount>
+{
+    typedef proto_pmr::PremiumAccount argument_type;
+    typedef size_t result_type;
+
+    result_type operator() ([[maybe_unused]] const argument_type& value) const
+    {
+        result_type result = 17;
+        result = result * 31 + std::hash<decltype(value.id)>()(value.id);
+        return result;
+    }
+};
+
+namespace proto_pmr {
+
 } // namespace proto_pmr

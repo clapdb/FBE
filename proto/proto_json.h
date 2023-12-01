@@ -339,6 +339,51 @@ struct ValueReader<TJson, ::proto::AccountMessage>
     }
 };
 
+template <class TWriter>
+struct ValueWriter<TWriter, ::proto::PremiumAccount>
+{
+    static bool to_json(TWriter& writer, const ::proto::PremiumAccount& value, bool scope = true)
+    {
+        if (scope)
+            if (!writer.StartObject())
+                return false;
+        if (!FBE::JSON::to_json_key(writer, "id") || !FBE::JSON::to_json(writer, value.id, true))
+            return false;
+        if (!FBE::JSON::to_json_key(writer, "name") || !FBE::JSON::to_json(writer, value.name, true))
+            return false;
+        if (!FBE::JSON::to_json_key(writer, "info") || !FBE::JSON::to_json(writer, value.info, true))
+            return false;
+        if (!FBE::JSON::to_json_key(writer, "private_wallet") || !FBE::JSON::to_json(writer, value.private_wallet, true))
+            return false;
+        if (!FBE::JSON::to_json_key(writer, "private_orders") || !FBE::JSON::to_json(writer, value.private_orders, true))
+            return false;
+        if (!FBE::JSON::to_json_key(writer, "private_state") || !FBE::JSON::to_json(writer, value.private_state, true))
+            return false;
+        if (scope)
+            if (!writer.EndObject())
+                return false;
+        return true;
+    }
+};
+
+template <class TJson>
+struct ValueReader<TJson, ::proto::PremiumAccount>
+{
+    static bool from_json(const TJson& json, ::proto::PremiumAccount& value, const char* key = nullptr)
+    {
+        if (key != nullptr)
+            return FBE::JSON::from_json_child(json, value, key);
+        bool result = true;
+        result &= FBE::JSON::from_json(json, value.id, "id");
+        result &= FBE::JSON::from_json(json, value.name, "name");
+        result &= FBE::JSON::from_json(json, value.info, "info");
+        result &= FBE::JSON::from_json(json, value.private_wallet, "private_wallet");
+        result &= FBE::JSON::from_json(json, value.private_orders, "private_orders");
+        result &= FBE::JSON::from_json(json, value.private_state, "private_state");
+        return result;
+    }
+};
+
 } // namespace JSON
 
 } // namespace FBE

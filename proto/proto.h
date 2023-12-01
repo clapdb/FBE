@@ -418,4 +418,57 @@ struct std::hash<proto::AccountMessage>
 
 namespace proto {
 
+struct PremiumAccount
+{
+    int32_t id;
+    stdb::memory::string name;
+    stdb::memory::string info;
+    ::proto::Balance private_wallet;
+    FastVec<::proto::Order> private_orders;
+    ::proto::State private_state;
+
+    size_t fbe_type() const noexcept { return 5; }
+
+    PremiumAccount();
+    PremiumAccount(int32_t arg_id, const stdb::memory::string& arg_name, const stdb::memory::string& arg_info, const ::proto::Balance& arg_private_wallet, const FastVec<::proto::Order>& arg_private_orders, const ::proto::State& arg_private_state);
+    PremiumAccount(const PremiumAccount& other) = default;
+    PremiumAccount(PremiumAccount&& other) = default;
+    ~PremiumAccount() = default;
+
+    PremiumAccount& operator=(const PremiumAccount& other) = default;
+    PremiumAccount& operator=(PremiumAccount&& other) = default;
+
+    bool operator==(const PremiumAccount& other) const noexcept;
+    bool operator!=(const PremiumAccount& other) const noexcept { return !operator==(other); }
+    bool operator<(const PremiumAccount& other) const noexcept;
+    bool operator<=(const PremiumAccount& other) const noexcept { return operator<(other) || operator==(other); }
+    bool operator>(const PremiumAccount& other) const noexcept { return !operator<=(other); }
+    bool operator>=(const PremiumAccount& other) const noexcept { return !operator<(other); }
+
+    std::string string() const;
+
+    friend std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const PremiumAccount& value);
+
+    void swap(PremiumAccount& other) noexcept;
+    friend void swap(PremiumAccount& value1, PremiumAccount& value2) noexcept { value1.swap(value2); }
+};
+
+} // namespace proto
+
+template<>
+struct std::hash<proto::PremiumAccount>
+{
+    typedef proto::PremiumAccount argument_type;
+    typedef size_t result_type;
+
+    result_type operator() ([[maybe_unused]] const argument_type& value) const
+    {
+        result_type result = 17;
+        result = result * 31 + std::hash<decltype(value.id)>()(value.id);
+        return result;
+    }
+};
+
+namespace proto {
+
 } // namespace proto
