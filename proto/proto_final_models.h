@@ -571,4 +571,82 @@ private:
 
 } // namespace proto
 
+// Fast Binary Encoding ::proto::PremiumAccount final model
+template <>
+class FinalModel<::proto::PremiumAccount>
+{
+public:
+    FinalModel(FBEBuffer& buffer, size_t offset) noexcept;
+
+    // Get the allocation size
+    size_t fbe_allocation_size(const ::proto::PremiumAccount& fbe_value) const noexcept;
+    // Get the final offset
+    size_t fbe_offset() const noexcept { return _offset; }
+    // Set the final offset
+    size_t fbe_offset(size_t offset) const noexcept { return _offset = offset; }
+    // Get the final type
+    static constexpr size_t fbe_type() noexcept { return 5; }
+
+    // Shift the current final offset
+    void fbe_shift(size_t size) noexcept { _offset += size; }
+    // Unshift the current final offset
+    void fbe_unshift(size_t size) noexcept { _offset -= size; }
+
+    // Check if the struct value is valid
+    size_t verify() const noexcept;
+    // Check if the struct fields are valid
+    size_t verify_fields() const noexcept;
+
+    // Get the struct value
+    size_t get(::proto::PremiumAccount& fbe_value) const noexcept;
+    // Get the struct fields values
+    size_t get_fields(::proto::PremiumAccount& fbe_value) const noexcept;
+
+    // Set the struct value
+    size_t set(const ::proto::PremiumAccount& fbe_value) noexcept;
+    // Set the struct fields values
+    size_t set_fields(const ::proto::PremiumAccount& fbe_value) noexcept;
+
+private:
+    FBEBuffer& _buffer;
+    mutable size_t _offset;
+
+public:
+    FinalModel<int32_t> id;
+    FinalModel<stdb::memory::string> name;
+    FinalModel<stdb::memory::string> info;
+    FinalModel<::proto::Balance> private_wallet;
+    FinalModelVector<::proto::Order> private_orders;
+    FinalModel<::proto::State> private_state;
+};
+
+namespace proto {
+
+// Fast Binary Encoding PremiumAccount final model
+class PremiumAccountFinalModel : public FBE::Model
+{
+public:
+    PremiumAccountFinalModel() : _model(this->buffer(), 8) {}
+    PremiumAccountFinalModel(const std::shared_ptr<FBEBuffer>& buffer) : FBE::Model(buffer), _model(this->buffer(), 8) {}
+
+    // Get the model type
+    static constexpr size_t fbe_type() noexcept { return FinalModel<::proto::PremiumAccount>::fbe_type(); }
+
+    // Check if the struct value is valid
+    bool verify();
+
+    // Serialize the struct value
+    size_t serialize(const ::proto::PremiumAccount& value);
+    // Deserialize the struct value
+    size_t deserialize(::proto::PremiumAccount& value) const noexcept;
+
+    // Move to the next struct value
+    void next(size_t prev) noexcept { _model.fbe_shift(prev); }
+
+private:
+    FinalModel<::proto::PremiumAccount> _model;
+};
+
+} // namespace proto
+
 } // namespace FBE

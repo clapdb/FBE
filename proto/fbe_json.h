@@ -1028,7 +1028,8 @@ struct NodeReader
         // Try to find a member with the given key
         rapidjson::Value::ConstMemberIterator member = json.FindMember(key);
         if (member == json.MemberEnd())
-            return false;
+            // omitted field in json str is allowed.
+            return true;
 
         return FBE::JSON::from_json(member->value, value);
     }

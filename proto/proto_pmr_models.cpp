@@ -1627,4 +1627,290 @@ size_t AccountMessageModel::deserialize(::proto_pmr::AccountMessage& value) cons
 
 } // namespace proto_pmr
 
+FieldModel<::proto_pmr::PremiumAccount>::FieldModel(FBEBuffer& buffer, size_t offset) noexcept : _buffer(buffer), _offset(offset)
+    , id(buffer, 4 + 4)
+    , name(buffer, id.fbe_offset() + id.fbe_size())
+    , info(buffer, name.fbe_offset() + name.fbe_size())
+    , private_wallet(buffer, info.fbe_offset() + info.fbe_size())
+    , private_orders(buffer, private_wallet.fbe_offset() + private_wallet.fbe_size())
+    , private_state(buffer, private_orders.fbe_offset() + private_orders.fbe_size())
+{}
+
+size_t FieldModel<::proto_pmr::PremiumAccount>::fbe_body() const noexcept
+{
+    size_t fbe_result = 4 + 4
+        + id.fbe_size()
+        + name.fbe_size()
+        + info.fbe_size()
+        + private_wallet.fbe_size()
+        + private_orders.fbe_size()
+        + private_state.fbe_size()
+        ;
+    return fbe_result;
+}
+
+size_t FieldModel<::proto_pmr::PremiumAccount>::fbe_extra() const noexcept
+{
+    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+        return 0;
+
+    uint32_t fbe_struct_offset = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset());
+    if ((fbe_struct_offset == 0) || ((_buffer.offset() + fbe_struct_offset + 4) > _buffer.size()))
+        return 0;
+
+    _buffer.shift(fbe_struct_offset);
+
+    size_t fbe_result = fbe_body()
+        + id.fbe_extra()
+        + name.fbe_extra()
+        + info.fbe_extra()
+        + private_wallet.fbe_extra()
+        + private_orders.fbe_extra()
+        + private_state.fbe_extra()
+        ;
+
+    _buffer.unshift(fbe_struct_offset);
+
+    return fbe_result;
+}
+
+bool FieldModel<::proto_pmr::PremiumAccount>::verify(bool fbe_verify_type) const noexcept
+{
+    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+        return true;
+
+    uint32_t fbe_struct_offset = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset());
+    if ((fbe_struct_offset == 0) || ((_buffer.offset() + fbe_struct_offset + 4 + 4) > _buffer.size()))
+        return false;
+
+    uint32_t fbe_struct_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_struct_offset);
+    if (fbe_struct_size < (4 + 4))
+        return false;
+
+    uint32_t fbe_struct_type = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_struct_offset + 4);
+    if (fbe_verify_type && (fbe_struct_type != fbe_type()))
+        return false;
+
+    _buffer.shift(fbe_struct_offset);
+    bool fbe_result = verify_fields(fbe_struct_size);
+    _buffer.unshift(fbe_struct_offset);
+    return fbe_result;
+}
+
+bool FieldModel<::proto_pmr::PremiumAccount>::verify_fields([[maybe_unused]] size_t fbe_struct_size) const noexcept
+{
+    size_t fbe_current_size = 4 + 4;
+
+    if ((fbe_current_size + id.fbe_size()) > fbe_struct_size)
+        return true;
+    if (!id.verify())
+        return false;
+    fbe_current_size += id.fbe_size();
+
+    if ((fbe_current_size + name.fbe_size()) > fbe_struct_size)
+        return true;
+    if (!name.verify())
+        return false;
+    fbe_current_size += name.fbe_size();
+
+    if ((fbe_current_size + info.fbe_size()) > fbe_struct_size)
+        return true;
+    if (!info.verify())
+        return false;
+    fbe_current_size += info.fbe_size();
+
+    if ((fbe_current_size + private_wallet.fbe_size()) > fbe_struct_size)
+        return true;
+    if (!private_wallet.verify())
+        return false;
+    fbe_current_size += private_wallet.fbe_size();
+
+    if ((fbe_current_size + private_orders.fbe_size()) > fbe_struct_size)
+        return true;
+    if (!private_orders.verify())
+        return false;
+    fbe_current_size += private_orders.fbe_size();
+
+    if ((fbe_current_size + private_state.fbe_size()) > fbe_struct_size)
+        return true;
+    if (!private_state.verify())
+        return false;
+    fbe_current_size += private_state.fbe_size();
+
+    return true;
+}
+
+size_t FieldModel<::proto_pmr::PremiumAccount>::get_begin() const noexcept
+{
+    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+        return 0;
+
+    uint32_t fbe_struct_offset = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset());
+    assert(((fbe_struct_offset > 0) && ((_buffer.offset() + fbe_struct_offset + 4 + 4) <= _buffer.size())) && "Model is broken!");
+    if ((fbe_struct_offset == 0) || ((_buffer.offset() + fbe_struct_offset + 4 + 4) > _buffer.size()))
+        return 0;
+
+    uint32_t fbe_struct_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_struct_offset);
+    assert((fbe_struct_size >= (4 + 4)) && "Model is broken!");
+    if (fbe_struct_size < (4 + 4))
+        return 0;
+
+    _buffer.shift(fbe_struct_offset);
+    return fbe_struct_offset;
+}
+
+void FieldModel<::proto_pmr::PremiumAccount>::get_end(size_t fbe_begin) const noexcept
+{
+    _buffer.unshift(fbe_begin);
+}
+
+void FieldModel<::proto_pmr::PremiumAccount>::get(::proto_pmr::PremiumAccount& fbe_value) const noexcept
+{
+    size_t fbe_begin = get_begin();
+    if (fbe_begin == 0)
+        return;
+
+    uint32_t fbe_struct_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset());
+    get_fields(fbe_value, fbe_struct_size);
+    get_end(fbe_begin);
+}
+
+void FieldModel<::proto_pmr::PremiumAccount>::get_fields([[maybe_unused]] ::proto_pmr::PremiumAccount& fbe_value, [[maybe_unused]] size_t fbe_struct_size) const noexcept
+{
+    size_t fbe_current_size = 4 + 4;
+
+    if ((fbe_current_size + id.fbe_size()) <= fbe_struct_size)
+        id.get(fbe_value.id);
+    else
+        fbe_value.id = (int32_t)0ll;
+    fbe_current_size += id.fbe_size();
+
+    if ((fbe_current_size + name.fbe_size()) <= fbe_struct_size)
+        name.get(fbe_value.name);
+    else
+        fbe_value.name = "";
+    fbe_current_size += name.fbe_size();
+
+    if ((fbe_current_size + info.fbe_size()) <= fbe_struct_size)
+        info.get(fbe_value.info);
+    else
+        fbe_value.info = "";
+    fbe_current_size += info.fbe_size();
+
+    if ((fbe_current_size + private_wallet.fbe_size()) <= fbe_struct_size)
+        private_wallet.get(fbe_value.private_wallet);
+    else
+        fbe_value.private_wallet = ::proto_pmr::Balance();
+    fbe_current_size += private_wallet.fbe_size();
+
+    if ((fbe_current_size + private_orders.fbe_size()) <= fbe_struct_size)
+        private_orders.get(fbe_value.private_orders);
+    else
+        fbe_value.private_orders.clear();
+    fbe_current_size += private_orders.fbe_size();
+
+    if ((fbe_current_size + private_state.fbe_size()) <= fbe_struct_size)
+        private_state.get(fbe_value.private_state, State::bad);
+    else
+        fbe_value.private_state = State::bad;
+    fbe_current_size += private_state.fbe_size();
+}
+
+size_t FieldModel<::proto_pmr::PremiumAccount>::set_begin()
+{
+    assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
+    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+        return 0;
+
+    uint32_t fbe_struct_size = (uint32_t)fbe_body();
+    uint32_t fbe_struct_offset = (uint32_t)(_buffer.allocate(fbe_struct_size) - _buffer.offset());
+    assert(((fbe_struct_offset > 0) && ((_buffer.offset() + fbe_struct_offset + fbe_struct_size) <= _buffer.size())) && "Model is broken!");
+    if ((fbe_struct_offset == 0) || ((_buffer.offset() + fbe_struct_offset + fbe_struct_size) > _buffer.size()))
+        return 0;
+
+    unaligned_store<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset(), fbe_struct_offset);
+    unaligned_store<uint32_t>(_buffer.data() + _buffer.offset() + fbe_struct_offset, fbe_struct_size);
+    unaligned_store<uint32_t>(_buffer.data() + _buffer.offset() + fbe_struct_offset + 4, (uint32_t)fbe_type());
+
+    _buffer.shift(fbe_struct_offset);
+    return fbe_struct_offset;
+}
+
+void FieldModel<::proto_pmr::PremiumAccount>::set_end(size_t fbe_begin)
+{
+    _buffer.unshift(fbe_begin);
+}
+
+void FieldModel<::proto_pmr::PremiumAccount>::set(const ::proto_pmr::PremiumAccount& fbe_value) noexcept
+{
+    size_t fbe_begin = set_begin();
+    if (fbe_begin == 0)
+        return;
+
+    set_fields(fbe_value);
+    set_end(fbe_begin);
+}
+
+void FieldModel<::proto_pmr::PremiumAccount>::set_fields([[maybe_unused]] const ::proto_pmr::PremiumAccount& fbe_value) noexcept
+{
+    id.set(fbe_value.id);
+    name.set(fbe_value.name);
+    info.set(fbe_value.info);
+    private_wallet.set(fbe_value.private_wallet);
+    private_orders.set(fbe_value.private_orders);
+    private_state.set(fbe_value.private_state);
+}
+
+namespace proto_pmr {
+
+bool PremiumAccountModel::verify()
+{
+    if ((this->buffer().offset() + model.fbe_offset() - 4) > this->buffer().size())
+        return false;
+
+    uint32_t fbe_full_size = unaligned_load<uint32_t>(this->buffer().data() + this->buffer().offset() + model.fbe_offset() - 4);
+    if (fbe_full_size < model.fbe_size())
+        return false;
+
+    return model.verify();
+}
+
+size_t PremiumAccountModel::create_begin()
+{
+    size_t fbe_begin = this->buffer().allocate(4 + model.fbe_size());
+    return fbe_begin;
+}
+
+size_t PremiumAccountModel::create_end(size_t fbe_begin)
+{
+    size_t fbe_end = this->buffer().size();
+    uint32_t fbe_full_size = (uint32_t)(fbe_end - fbe_begin);
+    unaligned_store<uint32_t>(this->buffer().data() + this->buffer().offset() + model.fbe_offset() - 4, fbe_full_size);
+    return fbe_full_size;
+}
+
+size_t PremiumAccountModel::serialize(const ::proto_pmr::PremiumAccount& value)
+{
+    size_t fbe_begin = create_begin();
+    model.set(value);
+    size_t fbe_full_size = create_end(fbe_begin);
+    return fbe_full_size;
+}
+
+size_t PremiumAccountModel::deserialize(::proto_pmr::PremiumAccount& value) const noexcept
+{
+    if ((this->buffer().offset() + model.fbe_offset() - 4) > this->buffer().size())
+        return 0;
+
+    uint32_t fbe_full_size = unaligned_load<uint32_t>(this->buffer().data() + this->buffer().offset() + model.fbe_offset() - 4);
+    assert((fbe_full_size >= model.fbe_size()) && "Model is broken!");
+    if (fbe_full_size < model.fbe_size())
+        return 0;
+
+    model.get(value);
+    return fbe_full_size;
+}
+
+} // namespace proto_pmr
+
 } // namespace FBE

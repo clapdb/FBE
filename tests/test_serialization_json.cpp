@@ -20,7 +20,7 @@ TEST_CASE("Serialization (JSON): domain", "[FBE]")
     rapidjson::Document json;
     json.Parse(R"JSON({"id":1,"name":"Test","state":6,"wallet":{"currency":"USD","amount":1000.0},"asset":{"currency":"EUR","amount":100.0},"orders":[{"id":1,"symbol":"EURUSD","side":0,"type":0,"price":1.23456,"volume":1000.0},{"id":2,"symbol":"EURUSD","side":1,"type":1,"price":1.0,"volume":100.0},{"id":3,"symbol":"EURUSD","side":0,"type":2,"price":1.5,"volume":10.0}]})JSON");
 
-    // Create a new account from the source JSON string
+    // Create a new account from the source JSON string 
     proto::Account account1;
     REQUIRE(FBE::JSON::from_json(json, account1));
 
@@ -66,6 +66,41 @@ TEST_CASE("Serialization (JSON): domain", "[FBE]")
     REQUIRE(account2.orders[2].type == proto::OrderType::stop);
     REQUIRE(account2.orders[2].price == 1.5);
     REQUIRE(account2.orders[2].volume == 10.0);
+    REQUIRE(account1 == account2);
+}
+
+TEST_CASE("Serialization (JSON): omit fields", "[FBE]")
+{
+    // Define a source JSON string
+    rapidjson::Document json;
+    json.Parse(R"JSON({"id":1,"name":"Test"})JSON");
+
+    // Create a new account from the source JSON string 
+    proto::PremiumAccount account1;
+    REQUIRE(FBE::JSON::from_json(json, account1));
+
+    // Serialize the account to the JSON stream
+    rapidjson::StringBuffer buffer;
+    rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
+    REQUIRE(FBE::JSON::to_json(writer, account1));
+
+    // Check the serialized JSON size
+    REQUIRE(buffer.GetSize() > 0);
+
+    // Parse the JSON document
+    json.Parse(buffer.GetString());
+
+    // Deserialize the account from the JSON stream
+    proto::PremiumAccount account2;
+    REQUIRE(FBE::JSON::from_json(json, account2));
+
+    REQUIRE(account2.id == 1);
+    REQUIRE(account2.name == "Test");
+    REQUIRE(account2.info == "");
+    REQUIRE(account2.private_wallet.amount == 0);
+    REQUIRE(account2.private_wallet.currency == "");
+    REQUIRE(account2.private_orders.empty());
+    REQUIRE(account2.private_state == proto::State::bad);
     REQUIRE(account1 == account2);
 }
 

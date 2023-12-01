@@ -464,4 +464,90 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const AccountMes
     return stream;
 }
 
+PremiumAccount::PremiumAccount()
+    : id((int32_t)0ll)
+    , name()
+    , info()
+    , private_wallet()
+    , private_orders()
+    , private_state(State::bad)
+{}
+
+PremiumAccount::PremiumAccount([[maybe_unused]] allocator_type alloc)
+    : id((int32_t)0ll)
+    , name(alloc)
+    , info(alloc)
+    , private_wallet(alloc)
+    , private_orders(alloc)
+    , private_state(State::bad)
+{}
+
+PremiumAccount::PremiumAccount(int32_t arg_id, const stdb::memory::arena_string& arg_name, const stdb::memory::arena_string& arg_info, const ::proto_pmr::Balance& arg_private_wallet, const pmr::vector<::proto_pmr::Order>& arg_private_orders, const ::proto_pmr::State& arg_private_state)
+    : id(arg_id)
+    , name(arg_name)
+    , info(arg_info)
+    , private_wallet(arg_private_wallet)
+    , private_orders(arg_private_orders)
+    , private_state(arg_private_state)
+{}
+
+bool PremiumAccount::operator==([[maybe_unused]] const PremiumAccount& other) const noexcept
+{
+    return (
+        (id == other.id)
+        && (name == other.name)
+        && (info == other.info)
+        && (private_wallet == other.private_wallet)
+        && (private_orders == other.private_orders)
+        && (private_state == other.private_state)
+        );
+}
+
+bool PremiumAccount::operator<([[maybe_unused]] const PremiumAccount& other) const noexcept
+{
+    if (id < other.id)
+        return true;
+    if (other.id < id)
+        return false;
+    return false;
+}
+
+std::string PremiumAccount::string() const
+{
+    std::stringstream ss; ss << *this; return ss.str();
+}
+
+void PremiumAccount::swap([[maybe_unused]] PremiumAccount& other) noexcept
+{
+    using std::swap;
+    swap(id, other.id);
+    swap(name, other.name);
+    swap(info, other.info);
+    swap(private_wallet, other.private_wallet);
+    swap(private_orders, other.private_orders);
+    swap(private_state, other.private_state);
+}
+
+std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const PremiumAccount& value)
+{
+    stream << "PremiumAccount(";
+    stream << "id="; stream << value.id;
+    stream << ",name="; stream << "\"" << value.name << "\"";
+    stream << ",info="; stream << "\"" << value.info << "\"";
+    stream << ",private_wallet="; stream << value.private_wallet;
+    {
+        bool first = true;
+        stream << ",private_orders=[" << value.private_orders.size() << "][";
+        for (const auto& it : value.private_orders)
+        {
+            stream << std::string(first ? "" : ",") << it;
+            first = false;
+        }
+        stream << "]";
+    }
+    stream << ",private_state="; stream << value.private_state;
+    stream << ")";
+    return stream;
+}
+
 } // namespace proto_pmr

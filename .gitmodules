@@ -4,3 +4,6 @@
 [submodule "modules/memory"]
 	path = modules/memory
 	url = https://github.com/stdbio/memory.git
+[submodule "modules/rapidjson"]
+	path = modules/rapidjson
+	url = https://github.com/Tencent/rapidjson.git

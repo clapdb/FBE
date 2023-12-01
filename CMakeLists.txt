@@ -53,11 +53,13 @@ find_package(LibUUID)
 
 include_directories("modules/memory")
 include_directories("modules/Catch2/single_include")
+include_directories("modules/rapidjson/include")
 
 
 # Modules
 add_subdirectory("modules/Catch2")
 add_subdirectory("modules/memory")
+add_subdirectory("modules/rapidjson")
 
 # Link libraries
 #list(APPEND LINKLIBS cppcommon)
