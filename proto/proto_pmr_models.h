@@ -103,7 +103,7 @@ private:
 
 public:
     FieldModel<int32_t> id;
-    FieldModel<stdb::memory::arena_string> symbol;
+    FieldModel<ArenaString> symbol;
     FieldModel<::proto_pmr::OrderSide> side;
     FieldModel<::proto_pmr::OrderType> type;
     FieldModel<double> price;
@@ -199,7 +199,7 @@ private:
     size_t _offset;
 
 public:
-    FieldModel<stdb::memory::arena_string> currency;
+    FieldModel<ArenaString> currency;
     FieldModel<double> amount;
 };
 
@@ -293,7 +293,7 @@ private:
 
 public:
     FieldModel<int32_t> id;
-    FieldModel<stdb::memory::arena_string> name;
+    FieldModel<ArenaString> name;
     FieldModel<::proto_pmr::State> state;
     FieldModel<::proto_pmr::Balance> wallet;
     FieldModel<std::optional<::proto_pmr::Balance>> asset;
@@ -389,7 +389,7 @@ private:
     size_t _offset;
 
 public:
-    FieldModelMap<char, stdb::memory::arena_string> abbr;
+    FieldModelMap<char, ArenaString> abbr;
 };
 
 namespace proto_pmr {
@@ -758,8 +758,8 @@ private:
 
 public:
     FieldModel<int32_t> id;
-    FieldModel<stdb::memory::arena_string> name;
-    FieldModel<stdb::memory::arena_string> info;
+    FieldModel<ArenaString> name;
+    FieldModel<ArenaString> info;
     FieldModel<::proto_pmr::Balance> private_wallet;
     FieldModelVector<::proto_pmr::Order> private_orders;
     FieldModel<::proto_pmr::State> private_state;

@@ -65,7 +65,7 @@ bool FieldModel<::variants::Expr>::verify() const noexcept
             break;
         }
         case 2: {
-            FieldModel<stdb::memory::string> fbe_model(_buffer, 4);
+            FieldModel<FBEString> fbe_model(_buffer, 4);
             if (!fbe_model.verify())
                 return false;
             break;
@@ -106,8 +106,8 @@ void FieldModel<::variants::Expr>::get(::variants::Expr& fbe_value) const noexce
             break;
         }
         case 2: {
-            FieldModel<stdb::memory::string> fbe_model(_buffer, 4);
-            fbe_value.emplace<stdb::memory::string>();
+            FieldModel<FBEString> fbe_model(_buffer, 4);
+            fbe_value.emplace<FBEString>();
             auto& value = std::get<2>(fbe_value);
             fbe_model.get(value);
             break;
@@ -167,8 +167,8 @@ void FieldModel<::variants::Expr>::set(const ::variants::Expr& fbe_value) noexce
                 fbe_model.set(v);
                 set_end(fbe_begin);
             }
-            , [this, fbe_variant_index = fbe_value.index()](const stdb::memory::string& v) {
-                FieldModel<stdb::memory::string> fbe_model(_buffer, 4);
+            , [this, fbe_variant_index = fbe_value.index()](const FBEString& v) {
+                FieldModel<FBEString> fbe_model(_buffer, 4);
                 size_t fbe_begin = set_begin(fbe_model.fbe_size(), fbe_variant_index);
                 if (fbe_begin == 0)
                     return;
@@ -225,7 +225,7 @@ bool FieldModel<::variants::V>::verify() const noexcept
     _buffer.shift(fbe_variant_offset);
     switch(fbe_variant_type) {
         case 0: {
-            FieldModel<stdb::memory::string> fbe_model(_buffer, 4);
+            FieldModel<FBEString> fbe_model(_buffer, 4);
             if (!fbe_model.verify())
                 return false;
             break;
@@ -273,7 +273,7 @@ bool FieldModel<::variants::V>::verify() const noexcept
             break;
         }
         case 8: {
-            FieldModelVector<stdb::memory::string> fbe_model(_buffer, 4);
+            FieldModelVector<FBEString> fbe_model(_buffer, 4);
             if (!fbe_model.verify())
                 return false;
             break;
@@ -285,7 +285,7 @@ bool FieldModel<::variants::V>::verify() const noexcept
             break;
         }
         case 10: {
-            FieldModelMap<stdb::memory::string, FBE::buffer_t> fbe_model(_buffer, 4);
+            FieldModelMap<FBEString, FBE::buffer_t> fbe_model(_buffer, 4);
             if (!fbe_model.verify())
                 return false;
             break;
@@ -318,8 +318,8 @@ void FieldModel<::variants::V>::get(::variants::V& fbe_value) const noexcept
 
     switch(vairant_type_index) {
         case 0: {
-            FieldModel<stdb::memory::string> fbe_model(_buffer, 4);
-            fbe_value.emplace<stdb::memory::string>();
+            FieldModel<FBEString> fbe_model(_buffer, 4);
+            fbe_value.emplace<FBEString>();
             auto& value = std::get<0>(fbe_value);
             fbe_model.get(value);
             break;
@@ -374,8 +374,8 @@ void FieldModel<::variants::V>::get(::variants::V& fbe_value) const noexcept
             break;
         }
         case 8: {
-            FieldModelVector<stdb::memory::string> fbe_model(_buffer, 4);
-            fbe_value.emplace<FastVec<stdb::memory::string>>();
+            FieldModelVector<FBEString> fbe_model(_buffer, 4);
+            fbe_value.emplace<FastVec<FBEString>>();
             auto& value = std::get<8>(fbe_value);
             fbe_model.get(value);
             break;
@@ -388,8 +388,8 @@ void FieldModel<::variants::V>::get(::variants::V& fbe_value) const noexcept
             break;
         }
         case 10: {
-            FieldModelMap<stdb::memory::string, FBE::buffer_t> fbe_model(_buffer, 4);
-            fbe_value.emplace<std::unordered_map<stdb::memory::string, FBE::buffer_t>>();
+            FieldModelMap<FBEString, FBE::buffer_t> fbe_model(_buffer, 4);
+            fbe_value.emplace<std::unordered_map<FBEString, FBE::buffer_t>>();
             auto& value = std::get<10>(fbe_value);
             fbe_model.get(value);
             break;
@@ -440,8 +440,8 @@ void FieldModel<::variants::V>::set(const ::variants::V& fbe_value) noexcept
     std::visit(
         overloaded
         {
-            [this, fbe_variant_index = fbe_value.index()](const stdb::memory::string& v) {
-                FieldModel<stdb::memory::string> fbe_model(_buffer, 4);
+            [this, fbe_variant_index = fbe_value.index()](const FBEString& v) {
+                FieldModel<FBEString> fbe_model(_buffer, 4);
                 size_t fbe_begin = set_begin(fbe_model.fbe_size(), fbe_variant_index);
                 if (fbe_begin == 0)
                     return;
@@ -504,8 +504,8 @@ void FieldModel<::variants::V>::set(const ::variants::V& fbe_value) noexcept
                 fbe_model.set(v);
                 set_end(fbe_begin);
             }
-            , [this, fbe_variant_index = fbe_value.index()](const FastVec<stdb::memory::string>& v) {
-                FieldModelVector<stdb::memory::string> fbe_model(_buffer, 4);
+            , [this, fbe_variant_index = fbe_value.index()](const FastVec<FBEString>& v) {
+                FieldModelVector<FBEString> fbe_model(_buffer, 4);
                 size_t fbe_begin = set_begin(fbe_model.fbe_size(), fbe_variant_index);
                 if (fbe_begin == 0)
                     return;
@@ -520,8 +520,8 @@ void FieldModel<::variants::V>::set(const ::variants::V& fbe_value) noexcept
                 fbe_model.set(v);
                 set_end(fbe_begin);
             }
-            , [this, fbe_variant_index = fbe_value.index()](const std::unordered_map<stdb::memory::string, FBE::buffer_t>& v) {
-                FieldModelMap<stdb::memory::string, FBE::buffer_t> fbe_model(_buffer, 4);
+            , [this, fbe_variant_index = fbe_value.index()](const std::unordered_map<FBEString, FBE::buffer_t>& v) {
+                FieldModelMap<FBEString, FBE::buffer_t> fbe_model(_buffer, 4);
                 size_t fbe_begin = set_begin(fbe_model.fbe_size(), fbe_variant_index);
                 if (fbe_begin == 0)
                     return;

@@ -64,8 +64,8 @@ struct Extra : FBE::Base
 {
     ArenaManagedCreateOnlyTag;
 
-    stdb::memory::arena_string name;
-    stdb::memory::arena_string detail;
+    ArenaString name;
+    ArenaString detail;
     ::sa_pmr::Sex sex;
     ::sa_pmr::MyFLags flag;
 
@@ -73,7 +73,7 @@ struct Extra : FBE::Base
 
     Extra();
     explicit Extra(allocator_type alloc);
-    Extra(const stdb::memory::arena_string& arg_name, const stdb::memory::arena_string& arg_detail, ::sa_pmr::Sex arg_sex, ::sa_pmr::MyFLags arg_flag);
+    Extra(const ArenaString& arg_name, const ArenaString& arg_detail, ::sa_pmr::Sex arg_sex, ::sa_pmr::MyFLags arg_flag);
     Extra(const Extra& other) = default;
     Extra(Extra&& other) noexcept;
     ~Extra() override;
@@ -117,7 +117,7 @@ struct Simple : FBE::Base
 {
     ArenaManagedCreateOnlyTag;
 
-    stdb::memory::arena_string name;
+    ArenaString name;
     int32_t depth;
     std::array<::sa_pmr::Extra, 1> sa;
     ::sa_pmr::Sex sex;
@@ -126,7 +126,7 @@ struct Simple : FBE::Base
 
     Simple();
     explicit Simple(allocator_type alloc);
-    Simple(const stdb::memory::arena_string& arg_name, int32_t arg_depth, std::array<::sa_pmr::Extra, 1> arg_sa, ::sa_pmr::Sex arg_sex);
+    Simple(const ArenaString& arg_name, int32_t arg_depth, std::array<::sa_pmr::Extra, 1> arg_sa, ::sa_pmr::Sex arg_sex);
     Simple(const Simple& other) = default;
     Simple(Simple&& other) noexcept;
     ~Simple() override;
@@ -170,7 +170,7 @@ struct Complex : FBE::Base
 {
     ArenaManagedCreateOnlyTag;
 
-    stdb::memory::arena_string name;
+    ArenaString name;
     std::optional<::sa_pmr::Sex> sex;
     std::optional<::sa_pmr::MyFLags> flag;
     std::optional<::sa_pmr::Extra> extra;
@@ -180,7 +180,7 @@ struct Complex : FBE::Base
 
     Complex();
     explicit Complex(allocator_type alloc);
-    Complex(const stdb::memory::arena_string& arg_name, std::optional<::sa_pmr::Sex> arg_sex, std::optional<::sa_pmr::MyFLags> arg_flag, std::optional<::sa_pmr::Extra> arg_extra, pmr::vector<int64_t> arg_nums);
+    Complex(const ArenaString& arg_name, std::optional<::sa_pmr::Sex> arg_sex, std::optional<::sa_pmr::MyFLags> arg_flag, std::optional<::sa_pmr::Extra> arg_extra, pmr::vector<int64_t> arg_nums);
     Complex(const Complex& other) = default;
     Complex(Complex&& other) noexcept;
     ~Complex() override;

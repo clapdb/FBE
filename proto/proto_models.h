@@ -103,7 +103,7 @@ private:
 
 public:
     FieldModel<int32_t> id;
-    FieldModel<stdb::memory::string> symbol;
+    FieldModel<FBEString> symbol;
     FieldModel<::proto::OrderSide> side;
     FieldModel<::proto::OrderType> type;
     FieldModel<double> price;
@@ -199,7 +199,7 @@ private:
     size_t _offset;
 
 public:
-    FieldModel<stdb::memory::string> currency;
+    FieldModel<FBEString> currency;
     FieldModel<double> amount;
 };
 
@@ -293,7 +293,7 @@ private:
 
 public:
     FieldModel<int32_t> id;
-    FieldModel<stdb::memory::string> name;
+    FieldModel<FBEString> name;
     FieldModel<::proto::State> state;
     FieldModel<::proto::Balance> wallet;
     FieldModel<std::optional<::proto::Balance>> asset;
@@ -389,7 +389,7 @@ private:
     size_t _offset;
 
 public:
-    FieldModelMap<char, stdb::memory::string> abbr;
+    FieldModelMap<char, FBEString> abbr;
 };
 
 namespace proto {
@@ -758,8 +758,8 @@ private:
 
 public:
     FieldModel<int32_t> id;
-    FieldModel<stdb::memory::string> name;
-    FieldModel<stdb::memory::string> info;
+    FieldModel<FBEString> name;
+    FieldModel<FBEString> info;
     FieldModel<::proto::Balance> private_wallet;
     FieldModelVector<::proto::Order> private_orders;
     FieldModel<::proto::State> private_state;

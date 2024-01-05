@@ -183,7 +183,7 @@ private:
     size_t _offset;
 
 public:
-    FieldModel<stdb::memory::string> info;
+    FieldModel<FBEString> info;
     FieldModelPtr_extra_Extra extra;
     FieldModelCustomVector<FieldModelPtr_extra_Extra, ::extra::Extra> extras;
     FieldModelCustomVector<FieldModelPtr_extra_Extra, ::extra::Extra> extras1;
@@ -278,7 +278,7 @@ private:
 
 public:
     FieldModel<int64_t> num;
-    FieldModel<stdb::memory::string> data;
+    FieldModel<FBEString> data;
     FieldModelPtr_extra_Info info;
     FieldModelPtr_extra_Info info2;
     FieldModel_extra_Info info3;

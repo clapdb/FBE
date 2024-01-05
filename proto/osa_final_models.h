@@ -82,8 +82,8 @@ private:
     mutable size_t _offset;
 
 public:
-    FinalModel<stdb::memory::string> name;
-    FinalModel<stdb::memory::string> detail;
+    FinalModel<FBEString> name;
+    FinalModel<FBEString> detail;
     FinalModel<::osa::Sex> sex;
     FinalModel<::osa::MyFLags> flag;
 };
@@ -158,7 +158,7 @@ private:
     mutable size_t _offset;
 
 public:
-    FinalModel<stdb::memory::string> name;
+    FinalModel<FBEString> name;
     FinalModel<int32_t> depth;
     FinalModelArray<::osa::Extra, 1> sa;
     FinalModel<::osa::Sex> sex;

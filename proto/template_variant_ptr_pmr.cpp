@@ -23,7 +23,7 @@ Line::Line([[maybe_unused]] allocator_type alloc)
     , vo(std::nullopt)
 {}
 
-Line::Line(::variants_pmr::V arg_v, pmr::vector<::variants_pmr::V> arg_vv, pmr::unordered_map<stdb::memory::arena_string, ::variants_pmr::V> arg_vm, std::optional<::variants_pmr::V> arg_vo)
+Line::Line(::variants_pmr::V arg_v, pmr::vector<::variants_pmr::V> arg_vv, pmr::unordered_map<ArenaString, ::variants_pmr::V> arg_vm, std::optional<::variants_pmr::V> arg_vo)
     : v(std::move(arg_v))
     , vv(std::move(arg_vv))
     , vm(std::move(arg_vm))

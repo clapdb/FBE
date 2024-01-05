@@ -40,13 +40,13 @@ struct Line : FBE::Base
 {
     ::variants::V v;
     FastVec<::variants::V> vv;
-    std::unordered_map<stdb::memory::string, ::variants::V> vm;
+    std::unordered_map<FBEString, ::variants::V> vm;
     std::optional<::variants::V> vo;
 
     size_t fbe_type() const noexcept { return 1; }
 
     Line();
-    Line(::variants::V arg_v, FastVec<::variants::V> arg_vv, std::unordered_map<stdb::memory::string, ::variants::V> arg_vm, std::optional<::variants::V> arg_vo);
+    Line(::variants::V arg_v, FastVec<::variants::V> arg_vv, std::unordered_map<FBEString, ::variants::V> arg_vm, std::optional<::variants::V> arg_vo);
     Line(const Line& other) = default;
     Line(Line&& other) noexcept;
     ~Line() override;

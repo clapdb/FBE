@@ -159,8 +159,8 @@ public:
     FieldModel<double> f28;
     FieldModel<FBE::decimal_t> f29;
     FieldModel<FBE::decimal_t> f30;
-    FieldModel<stdb::memory::arena_string> f31;
-    FieldModel<stdb::memory::arena_string> f32;
+    FieldModel<ArenaString> f31;
+    FieldModel<ArenaString> f32;
     FieldModel<uint64_t> f33;
     FieldModel<uint64_t> f34;
     FieldModel<uint64_t> f35;
@@ -310,9 +310,9 @@ public:
     FieldModel<std::optional<FBE::decimal_t>> f142;
     FieldModel<std::optional<FBE::decimal_t>> f143;
     FieldModel<std::optional<FBE::decimal_t>> f144;
-    FieldModel<std::optional<stdb::memory::arena_string>> f145;
-    FieldModel<std::optional<stdb::memory::arena_string>> f146;
-    FieldModel<std::optional<stdb::memory::arena_string>> f147;
+    FieldModel<std::optional<ArenaString>> f145;
+    FieldModel<std::optional<ArenaString>> f146;
+    FieldModel<std::optional<ArenaString>> f147;
     FieldModel<std::optional<uint64_t>> f148;
     FieldModel<std::optional<uint64_t>> f149;
     FieldModel<std::optional<uint64_t>> f150;
@@ -1119,16 +1119,16 @@ private:
     size_t _offset;
 
 public:
-    FieldModelMap<stdb::memory::arena_string, uint8_t> f1;
-    FieldModelMap<stdb::memory::arena_string, std::optional<uint8_t>> f2;
-    FieldModelMap<stdb::memory::arena_string, FBE::pmr_buffer_t> f3;
-    FieldModelMap<stdb::memory::arena_string, std::optional<FBE::pmr_buffer_t>> f4;
-    FieldModelMap<stdb::memory::arena_string, ::test_pmr::EnumSimple> f5;
-    FieldModelMap<stdb::memory::arena_string, std::optional<::test_pmr::EnumSimple>> f6;
-    FieldModelMap<stdb::memory::arena_string, ::test_pmr::FlagsSimple> f7;
-    FieldModelMap<stdb::memory::arena_string, std::optional<::test_pmr::FlagsSimple>> f8;
-    FieldModelMap<stdb::memory::arena_string, ::test_pmr::StructSimple> f9;
-    FieldModelMap<stdb::memory::arena_string, std::optional<::test_pmr::StructSimple>> f10;
+    FieldModelMap<ArenaString, uint8_t> f1;
+    FieldModelMap<ArenaString, std::optional<uint8_t>> f2;
+    FieldModelMap<ArenaString, FBE::pmr_buffer_t> f3;
+    FieldModelMap<ArenaString, std::optional<FBE::pmr_buffer_t>> f4;
+    FieldModelMap<ArenaString, ::test_pmr::EnumSimple> f5;
+    FieldModelMap<ArenaString, std::optional<::test_pmr::EnumSimple>> f6;
+    FieldModelMap<ArenaString, ::test_pmr::FlagsSimple> f7;
+    FieldModelMap<ArenaString, std::optional<::test_pmr::FlagsSimple>> f8;
+    FieldModelMap<ArenaString, ::test_pmr::StructSimple> f9;
+    FieldModelMap<ArenaString, std::optional<::test_pmr::StructSimple>> f10;
 };
 
 namespace test_pmr {

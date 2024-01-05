@@ -94,8 +94,8 @@ private:
     size_t _offset;
 
 public:
-    FieldModel<stdb::memory::arena_string> name;
-    FieldModel<stdb::memory::arena_string> detail;
+    FieldModel<ArenaString> name;
+    FieldModel<ArenaString> detail;
     FieldModel<::osa_pmr::Sex> sex;
     FieldModel<::osa_pmr::MyFLags> flag;
 };
@@ -189,7 +189,7 @@ private:
     size_t _offset;
 
 public:
-    FieldModel<stdb::memory::arena_string> name;
+    FieldModel<ArenaString> name;
     FieldModel<int32_t> depth;
     FieldModelArray<::osa_pmr::Extra, 1> sa;
     FieldModel<::osa_pmr::Sex> sex;

@@ -71,6 +71,7 @@ struct KeyWriter<TWriter, char>
     }
 };
 
+#if defined(USING_SEASTAR_STRING) || defined(USING_MEMORY_STRING)
 template <class TWriter>
 struct KeyWriter<TWriter, std::string>
 {
@@ -79,20 +80,21 @@ struct KeyWriter<TWriter, std::string>
         return writer.Key(key);
     }
 };
+#endif
 
 template <class TWriter>
-struct KeyWriter<TWriter, stdb::memory::string>
+struct KeyWriter<TWriter, FBEString>
 {
-    static bool to_json_key(TWriter& writer, const stdb::memory::string& key)
+    static bool to_json_key(TWriter& writer, const FBEString& key)
     {
         return writer.Key(key.c_str());
     }
 };
 
 template <class TWriter>
-struct KeyWriter<TWriter, stdb::memory::arena_string>
+struct KeyWriter<TWriter, ArenaString>
 {
-    static bool to_json_key(TWriter& writer, const stdb::memory::arena_string& key)
+    static bool to_json_key(TWriter& writer, const ArenaString& key)
     {
         return writer.Key(key.c_str());
     }
@@ -257,6 +259,7 @@ struct ValueWriter<TWriter, FBE::uuid_t>
     }
 };
 
+#if defined(USING_SEASTAR_STRING) || defined(USING_MEMORY_STRING)
 template <class TWriter>
 struct ValueWriter<TWriter, std::string>
 {
@@ -265,20 +268,21 @@ struct ValueWriter<TWriter, std::string>
         return writer.String(value);
     }
 };
+#endif
 
 template <class TWriter>
-struct ValueWriter<TWriter, stdb::memory::string>
+struct ValueWriter<TWriter, FBEString>
 {
-    static bool to_json(TWriter& writer, const stdb::memory::string& value, bool scope = true)
+    static bool to_json(TWriter& writer, const FBEString& value, bool scope = true)
     {
         return writer.String(value.c_str());
     }
 };
 
 template <class TWriter>
-struct ValueWriter<TWriter, stdb::memory::arena_string>
+struct ValueWriter<TWriter, ArenaString>
 {
-    static bool to_json(TWriter& writer, const stdb::memory::arena_string& value, bool scope = true)
+    static bool to_json(TWriter& writer, const ArenaString& value, bool scope = true)
     {
         return writer.String(value.c_str());
     }
@@ -441,6 +445,7 @@ bool from_json_key(const TJson& json, T& key)
     return KeyReader<TJson, T>::from_json_key(json, key);
 }
 
+#if defined(USING_SEASTAR_STRING) || defined(USING_MEMORY_STRING)
 template <class TJson>
 struct KeyReader<TJson, std::string>
 {
@@ -449,20 +454,21 @@ struct KeyReader<TJson, std::string>
         return FBE::JSON::from_json(json, key);
     }
 };
+#endif
 
 template <class TJson>
-struct KeyReader<TJson, stdb::memory::string>
+struct KeyReader<TJson, FBEString>
 {
-    static bool from_json_key(const TJson& json, stdb::memory::string& key)
+    static bool from_json_key(const TJson& json, FBEString& key)
     {
         return FBE::JSON::from_json(json, key);
     }
 };
 
 template <class TJson>
-struct KeyReader<TJson, stdb::memory::arena_string>
+struct KeyReader<TJson, ArenaString>
 {
-    static bool from_json_key(const TJson& json, stdb::memory::arena_string& key)
+    static bool from_json_key(const TJson& json, ArenaString& key)
     {
         return FBE::JSON::from_json(json, key);
     }
@@ -766,6 +772,7 @@ struct ValueReader<TJson, FBE::uuid_t>
     }
 };
 
+#if defined(USING_SEASTAR_STRING) || defined(USING_MEMORY_STRING)
 template <class TJson>
 struct ValueReader<TJson, std::string>
 {
@@ -782,11 +789,12 @@ struct ValueReader<TJson, std::string>
         return true;
     }
 };
+#endif
 
 template <class TJson>
-struct ValueReader<TJson, stdb::memory::string>
+struct ValueReader<TJson, FBEString>
 {
-    static bool from_json(const TJson& json, stdb::memory::string& value)
+    static bool from_json(const TJson& json, FBEString& value)
     {
         value = "";
 
@@ -801,9 +809,9 @@ struct ValueReader<TJson, stdb::memory::string>
 };
 
 template <class TJson>
-struct ValueReader<TJson, stdb::memory::arena_string>
+struct ValueReader<TJson, ArenaString>
 {
-    static bool from_json(const TJson& json, stdb::memory::arena_string& value)
+    static bool from_json(const TJson& json, ArenaString& value)
     {
         value = "";
 

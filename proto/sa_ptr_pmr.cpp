@@ -38,7 +38,7 @@ Extra::Extra([[maybe_unused]] allocator_type alloc)
     , flag()
 {}
 
-Extra::Extra(const stdb::memory::arena_string& arg_name, const stdb::memory::arena_string& arg_detail, ::sa_pmr::Sex arg_sex, ::sa_pmr::MyFLags arg_flag)
+Extra::Extra(const ArenaString& arg_name, const ArenaString& arg_detail, ::sa_pmr::Sex arg_sex, ::sa_pmr::MyFLags arg_flag)
     : name(arg_name)
     , detail(arg_detail)
     , sex(std::move(arg_sex))
@@ -125,7 +125,7 @@ Simple::Simple([[maybe_unused]] allocator_type alloc)
     , sex()
 {}
 
-Simple::Simple(const stdb::memory::arena_string& arg_name, int32_t arg_depth, std::array<::sa_pmr::Extra, 1> arg_sa, ::sa_pmr::Sex arg_sex)
+Simple::Simple(const ArenaString& arg_name, int32_t arg_depth, std::array<::sa_pmr::Extra, 1> arg_sa, ::sa_pmr::Sex arg_sex)
     : name(arg_name)
     , depth(arg_depth)
     , sa(std::move(arg_sa))
@@ -224,7 +224,7 @@ Complex::Complex([[maybe_unused]] allocator_type alloc)
     , nums(alloc)
 {}
 
-Complex::Complex(const stdb::memory::arena_string& arg_name, std::optional<::sa_pmr::Sex> arg_sex, std::optional<::sa_pmr::MyFLags> arg_flag, std::optional<::sa_pmr::Extra> arg_extra, pmr::vector<int64_t> arg_nums)
+Complex::Complex(const ArenaString& arg_name, std::optional<::sa_pmr::Sex> arg_sex, std::optional<::sa_pmr::MyFLags> arg_flag, std::optional<::sa_pmr::Extra> arg_extra, pmr::vector<int64_t> arg_nums)
     : name(arg_name)
     , sex()
     , flag()

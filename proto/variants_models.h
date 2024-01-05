@@ -156,7 +156,7 @@ private:
     size_t _offset;
 
 public:
-    FieldModel<stdb::memory::string> name;
+    FieldModel<FBEString> name;
 };
 
 namespace variants {

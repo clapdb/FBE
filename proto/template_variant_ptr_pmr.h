@@ -44,14 +44,14 @@ struct Line : FBE::Base
 
     ::variants_pmr::V v;
     pmr::vector<::variants_pmr::V> vv;
-    pmr::unordered_map<stdb::memory::arena_string, ::variants_pmr::V> vm;
+    pmr::unordered_map<ArenaString, ::variants_pmr::V> vm;
     std::optional<::variants_pmr::V> vo;
 
     size_t fbe_type() const noexcept { return 1; }
 
     Line();
     explicit Line(allocator_type alloc);
-    Line(::variants_pmr::V arg_v, pmr::vector<::variants_pmr::V> arg_vv, pmr::unordered_map<stdb::memory::arena_string, ::variants_pmr::V> arg_vm, std::optional<::variants_pmr::V> arg_vo);
+    Line(::variants_pmr::V arg_v, pmr::vector<::variants_pmr::V> arg_vv, pmr::unordered_map<ArenaString, ::variants_pmr::V> arg_vm, std::optional<::variants_pmr::V> arg_vo);
     Line(const Line& other) = default;
     Line(Line&& other) noexcept;
     ~Line() override;

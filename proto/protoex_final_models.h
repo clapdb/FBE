@@ -93,7 +93,7 @@ private:
 
 public:
     FinalModel<int32_t> id;
-    FinalModel<stdb::memory::string> symbol;
+    FinalModel<FBEString> symbol;
     FinalModel<::protoex::OrderSide> side;
     FinalModel<::protoex::OrderType> type;
     FinalModel<double> price;
@@ -247,7 +247,7 @@ private:
 
 public:
     FinalModel<int32_t> id;
-    FinalModel<stdb::memory::string> name;
+    FinalModel<FBEString> name;
     FinalModel<::protoex::StateEx> state;
     FinalModel<::protoex::Balance> wallet;
     FinalModel<std::optional<::protoex::Balance>> asset;

@@ -241,7 +241,7 @@ private:
 public:
     FieldModel<::variants_pmr::V> v;
     FieldModelVector<::variants_pmr::V> vv;
-    FieldModelMap<stdb::memory::arena_string, ::variants_pmr::V> vm;
+    FieldModelMap<ArenaString, ::variants_pmr::V> vm;
     FieldModel<std::optional<::variants_pmr::V>> vo;
 };
 

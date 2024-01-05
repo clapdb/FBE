@@ -65,7 +65,7 @@ bool FieldModel<::variants_pmr::Expr>::verify() const noexcept
             break;
         }
         case 2: {
-            FieldModel<stdb::memory::arena_string> fbe_model(_buffer, 4);
+            FieldModel<ArenaString> fbe_model(_buffer, 4);
             if (!fbe_model.verify())
                 return false;
             break;
@@ -106,8 +106,8 @@ void FieldModel<::variants_pmr::Expr>::get(::variants_pmr::Expr& fbe_value) cons
             break;
         }
         case 2: {
-            FieldModel<stdb::memory::arena_string> fbe_model(_buffer, 4);
-            fbe_value.emplace<stdb::memory::arena_string>();
+            FieldModel<ArenaString> fbe_model(_buffer, 4);
+            fbe_value.emplace<ArenaString>();
             auto& value = std::get<2>(fbe_value);
             fbe_model.get(value);
             break;
@@ -167,8 +167,8 @@ void FieldModel<::variants_pmr::Expr>::set(const ::variants_pmr::Expr& fbe_value
                 fbe_model.set(v);
                 set_end(fbe_begin);
             }
-            , [this, fbe_variant_index = fbe_value.index()](const stdb::memory::arena_string& v) {
-                FieldModel<stdb::memory::arena_string> fbe_model(_buffer, 4);
+            , [this, fbe_variant_index = fbe_value.index()](const ArenaString& v) {
+                FieldModel<ArenaString> fbe_model(_buffer, 4);
                 size_t fbe_begin = set_begin(fbe_model.fbe_size(), fbe_variant_index);
                 if (fbe_begin == 0)
                     return;
@@ -225,7 +225,7 @@ bool FieldModel<::variants_pmr::V>::verify() const noexcept
     _buffer.shift(fbe_variant_offset);
     switch(fbe_variant_type) {
         case 0: {
-            FieldModel<stdb::memory::arena_string> fbe_model(_buffer, 4);
+            FieldModel<ArenaString> fbe_model(_buffer, 4);
             if (!fbe_model.verify())
                 return false;
             break;
@@ -273,7 +273,7 @@ bool FieldModel<::variants_pmr::V>::verify() const noexcept
             break;
         }
         case 8: {
-            FieldModelVector<stdb::memory::arena_string> fbe_model(_buffer, 4);
+            FieldModelVector<ArenaString> fbe_model(_buffer, 4);
             if (!fbe_model.verify())
                 return false;
             break;
@@ -285,7 +285,7 @@ bool FieldModel<::variants_pmr::V>::verify() const noexcept
             break;
         }
         case 10: {
-            FieldModelMap<stdb::memory::arena_string, FBE::pmr_buffer_t> fbe_model(_buffer, 4);
+            FieldModelMap<ArenaString, FBE::pmr_buffer_t> fbe_model(_buffer, 4);
             if (!fbe_model.verify())
                 return false;
             break;
@@ -318,8 +318,8 @@ void FieldModel<::variants_pmr::V>::get(::variants_pmr::V& fbe_value) const noex
 
     switch(vairant_type_index) {
         case 0: {
-            FieldModel<stdb::memory::arena_string> fbe_model(_buffer, 4);
-            fbe_value.emplace<stdb::memory::arena_string>();
+            FieldModel<ArenaString> fbe_model(_buffer, 4);
+            fbe_value.emplace<ArenaString>();
             auto& value = std::get<0>(fbe_value);
             fbe_model.get(value);
             break;
@@ -374,8 +374,8 @@ void FieldModel<::variants_pmr::V>::get(::variants_pmr::V& fbe_value) const noex
             break;
         }
         case 8: {
-            FieldModelVector<stdb::memory::arena_string> fbe_model(_buffer, 4);
-            fbe_value.emplace<pmr::vector<stdb::memory::arena_string>>();
+            FieldModelVector<ArenaString> fbe_model(_buffer, 4);
+            fbe_value.emplace<pmr::vector<ArenaString>>();
             auto& value = std::get<8>(fbe_value);
             fbe_model.get(value);
             break;
@@ -388,8 +388,8 @@ void FieldModel<::variants_pmr::V>::get(::variants_pmr::V& fbe_value) const noex
             break;
         }
         case 10: {
-            FieldModelMap<stdb::memory::arena_string, FBE::pmr_buffer_t> fbe_model(_buffer, 4);
-            fbe_value.emplace<pmr::unordered_map<stdb::memory::arena_string, FBE::pmr_buffer_t>>();
+            FieldModelMap<ArenaString, FBE::pmr_buffer_t> fbe_model(_buffer, 4);
+            fbe_value.emplace<pmr::unordered_map<ArenaString, FBE::pmr_buffer_t>>();
             auto& value = std::get<10>(fbe_value);
             fbe_model.get(value);
             break;
@@ -440,8 +440,8 @@ void FieldModel<::variants_pmr::V>::set(const ::variants_pmr::V& fbe_value) noex
     std::visit(
         overloaded
         {
-            [this, fbe_variant_index = fbe_value.index()](const stdb::memory::arena_string& v) {
-                FieldModel<stdb::memory::arena_string> fbe_model(_buffer, 4);
+            [this, fbe_variant_index = fbe_value.index()](const ArenaString& v) {
+                FieldModel<ArenaString> fbe_model(_buffer, 4);
                 size_t fbe_begin = set_begin(fbe_model.fbe_size(), fbe_variant_index);
                 if (fbe_begin == 0)
                     return;
@@ -504,8 +504,8 @@ void FieldModel<::variants_pmr::V>::set(const ::variants_pmr::V& fbe_value) noex
                 fbe_model.set(v);
                 set_end(fbe_begin);
             }
-            , [this, fbe_variant_index = fbe_value.index()](const pmr::vector<stdb::memory::arena_string>& v) {
-                FieldModelVector<stdb::memory::arena_string> fbe_model(_buffer, 4);
+            , [this, fbe_variant_index = fbe_value.index()](const pmr::vector<ArenaString>& v) {
+                FieldModelVector<ArenaString> fbe_model(_buffer, 4);
                 size_t fbe_begin = set_begin(fbe_model.fbe_size(), fbe_variant_index);
                 if (fbe_begin == 0)
                     return;
@@ -520,8 +520,8 @@ void FieldModel<::variants_pmr::V>::set(const ::variants_pmr::V& fbe_value) noex
                 fbe_model.set(v);
                 set_end(fbe_begin);
             }
-            , [this, fbe_variant_index = fbe_value.index()](const pmr::unordered_map<stdb::memory::arena_string, FBE::pmr_buffer_t>& v) {
-                FieldModelMap<stdb::memory::arena_string, FBE::pmr_buffer_t> fbe_model(_buffer, 4);
+            , [this, fbe_variant_index = fbe_value.index()](const pmr::unordered_map<ArenaString, FBE::pmr_buffer_t>& v) {
+                FieldModelMap<ArenaString, FBE::pmr_buffer_t> fbe_model(_buffer, 4);
                 size_t fbe_begin = set_begin(fbe_model.fbe_size(), fbe_variant_index);
                 if (fbe_begin == 0)
                     return;

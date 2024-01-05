@@ -83,7 +83,7 @@ Order::Order([[maybe_unused]] allocator_type alloc)
     , volume((double)0.0)
 {}
 
-Order::Order(int32_t arg_id, const stdb::memory::arena_string& arg_symbol, const ::proto_pmr::OrderSide& arg_side, const ::proto_pmr::OrderType& arg_type, double arg_price, double arg_volume)
+Order::Order(int32_t arg_id, const ArenaString& arg_symbol, const ::proto_pmr::OrderSide& arg_side, const ::proto_pmr::OrderType& arg_type, double arg_price, double arg_volume)
     : id(arg_id)
     , symbol(arg_symbol)
     , side(arg_side)
@@ -152,7 +152,7 @@ Balance::Balance([[maybe_unused]] allocator_type alloc)
     , amount((double)0.0)
 {}
 
-Balance::Balance(const stdb::memory::arena_string& arg_currency, double arg_amount)
+Balance::Balance(const ArenaString& arg_currency, double arg_amount)
     : currency(arg_currency)
     , amount(arg_amount)
 {}
@@ -213,7 +213,7 @@ Account::Account([[maybe_unused]] allocator_type alloc)
     , orders(alloc)
 {}
 
-Account::Account(int32_t arg_id, const stdb::memory::arena_string& arg_name, const ::proto_pmr::State& arg_state, const ::proto_pmr::Balance& arg_wallet, const std::optional<::proto_pmr::Balance>& arg_asset, const pmr::vector<::proto_pmr::Order>& arg_orders)
+Account::Account(int32_t arg_id, const ArenaString& arg_name, const ::proto_pmr::State& arg_state, const ::proto_pmr::Balance& arg_wallet, const std::optional<::proto_pmr::Balance>& arg_asset, const pmr::vector<::proto_pmr::Order>& arg_orders)
     : id(arg_id)
     , name(arg_name)
     , state(arg_state)
@@ -289,7 +289,7 @@ CharMap::CharMap([[maybe_unused]] allocator_type alloc)
     : abbr(alloc)
 {}
 
-CharMap::CharMap(const pmr::unordered_map<char, stdb::memory::arena_string>& arg_abbr)
+CharMap::CharMap(const pmr::unordered_map<char, ArenaString>& arg_abbr)
     : abbr(arg_abbr)
 {}
 
@@ -482,7 +482,7 @@ PremiumAccount::PremiumAccount([[maybe_unused]] allocator_type alloc)
     , private_state(State::bad)
 {}
 
-PremiumAccount::PremiumAccount(int32_t arg_id, const stdb::memory::arena_string& arg_name, const stdb::memory::arena_string& arg_info, const ::proto_pmr::Balance& arg_private_wallet, const pmr::vector<::proto_pmr::Order>& arg_private_orders, const ::proto_pmr::State& arg_private_state)
+PremiumAccount::PremiumAccount(int32_t arg_id, const ArenaString& arg_name, const ArenaString& arg_info, const ::proto_pmr::Balance& arg_private_wallet, const pmr::vector<::proto_pmr::Order>& arg_private_orders, const ::proto_pmr::State& arg_private_state)
     : id(arg_id)
     , name(arg_name)
     , info(arg_info)
@@ -538,7 +538,7 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const PremiumAcc
     {
         bool first = true;
         stream << ",private_orders=[" << value.private_orders.size() << "][";
-        for (const auto& it : value.private_orders)
+        for ([[maybe_unused]] const auto& it : value.private_orders)
         {
             stream << std::string(first ? "" : ",") << it;
             first = false;

@@ -36,23 +36,23 @@ namespace variants_pmr {
 struct Simple;
 struct Value;
 
-using Expr = std::variant<bool, int32_t, stdb::memory::arena_string>;
+using Expr = std::variant<bool, int32_t, ArenaString>;
 std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const Expr& value);
 
-using V = std::variant<stdb::memory::arena_string, int32_t, double, ::variants_pmr::Simple, pmr::vector<::variants_pmr::Simple>, pmr::vector<int32_t>, pmr::unordered_map<int32_t, ::variants_pmr::Simple>, pmr::vector<FBE::pmr_buffer_t>, pmr::vector<stdb::memory::arena_string>, pmr::unordered_map<int32_t, FBE::pmr_buffer_t>, pmr::unordered_map<stdb::memory::arena_string, FBE::pmr_buffer_t>, ::variants_pmr::Expr>;
+using V = std::variant<ArenaString, int32_t, double, ::variants_pmr::Simple, pmr::vector<::variants_pmr::Simple>, pmr::vector<int32_t>, pmr::unordered_map<int32_t, ::variants_pmr::Simple>, pmr::vector<FBE::pmr_buffer_t>, pmr::vector<ArenaString>, pmr::unordered_map<int32_t, FBE::pmr_buffer_t>, pmr::unordered_map<ArenaString, FBE::pmr_buffer_t>, ::variants_pmr::Expr>;
 std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const V& value);
 
 struct Simple
 {
     ArenaManagedCreateOnlyTag;
 
-    stdb::memory::arena_string name;
+    ArenaString name;
 
     size_t fbe_type() const noexcept { return 1; }
 
     Simple();
     explicit Simple(allocator_type alloc);
-    explicit Simple(const stdb::memory::arena_string& arg_name);
+    explicit Simple(const ArenaString& arg_name);
     Simple(const Simple& other) = default;
     Simple(Simple&& other) = default;
     ~Simple() = default;

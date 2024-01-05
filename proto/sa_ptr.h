@@ -60,15 +60,15 @@ CppLogging::Record& operator<<(CppLogging::Record& record, MyFLags value);
 
 struct Extra : FBE::Base
 {
-    stdb::memory::string name;
-    stdb::memory::string detail;
+    FBEString name;
+    FBEString detail;
     ::sa::Sex sex;
     ::sa::MyFLags flag;
 
     size_t fbe_type() const noexcept { return 1; }
 
     Extra();
-    Extra(const stdb::memory::string& arg_name, const stdb::memory::string& arg_detail, ::sa::Sex arg_sex, ::sa::MyFLags arg_flag);
+    Extra(const FBEString& arg_name, const FBEString& arg_detail, ::sa::Sex arg_sex, ::sa::MyFLags arg_flag);
     Extra(const Extra& other) = default;
     Extra(Extra&& other) noexcept;
     ~Extra() override;
@@ -110,7 +110,7 @@ namespace sa {
 
 struct Simple : FBE::Base
 {
-    stdb::memory::string name;
+    FBEString name;
     int32_t depth;
     std::array<::sa::Extra, 1> sa;
     ::sa::Sex sex;
@@ -118,7 +118,7 @@ struct Simple : FBE::Base
     size_t fbe_type() const noexcept { return 2; }
 
     Simple();
-    Simple(const stdb::memory::string& arg_name, int32_t arg_depth, std::array<::sa::Extra, 1> arg_sa, ::sa::Sex arg_sex);
+    Simple(const FBEString& arg_name, int32_t arg_depth, std::array<::sa::Extra, 1> arg_sa, ::sa::Sex arg_sex);
     Simple(const Simple& other) = default;
     Simple(Simple&& other) noexcept;
     ~Simple() override;
@@ -160,7 +160,7 @@ namespace sa {
 
 struct Complex : FBE::Base
 {
-    stdb::memory::string name;
+    FBEString name;
     std::optional<::sa::Sex> sex;
     std::optional<::sa::MyFLags> flag;
     std::optional<::sa::Extra> extra;
@@ -169,7 +169,7 @@ struct Complex : FBE::Base
     size_t fbe_type() const noexcept { return 3; }
 
     Complex();
-    Complex(const stdb::memory::string& arg_name, std::optional<::sa::Sex> arg_sex, std::optional<::sa::MyFLags> arg_flag, std::optional<::sa::Extra> arg_extra, FastVec<int64_t> arg_nums);
+    Complex(const FBEString& arg_name, std::optional<::sa::Sex> arg_sex, std::optional<::sa::MyFLags> arg_flag, std::optional<::sa::Extra> arg_extra, FastVec<int64_t> arg_nums);
     Complex(const Complex& other) = default;
     Complex(Complex&& other) noexcept;
     ~Complex() override;

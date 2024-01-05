@@ -147,8 +147,8 @@ public:
     FinalModel<double> f28;
     FinalModel<FBE::decimal_t> f29;
     FinalModel<FBE::decimal_t> f30;
-    FinalModel<stdb::memory::string> f31;
-    FinalModel<stdb::memory::string> f32;
+    FinalModel<FBEString> f31;
+    FinalModel<FBEString> f32;
     FinalModel<uint64_t> f33;
     FinalModel<uint64_t> f34;
     FinalModel<uint64_t> f35;
@@ -279,9 +279,9 @@ public:
     FinalModel<std::optional<FBE::decimal_t>> f142;
     FinalModel<std::optional<FBE::decimal_t>> f143;
     FinalModel<std::optional<FBE::decimal_t>> f144;
-    FinalModel<std::optional<stdb::memory::string>> f145;
-    FinalModel<std::optional<stdb::memory::string>> f146;
-    FinalModel<std::optional<stdb::memory::string>> f147;
+    FinalModel<std::optional<FBEString>> f145;
+    FinalModel<std::optional<FBEString>> f146;
+    FinalModel<std::optional<FBEString>> f147;
     FinalModel<std::optional<uint64_t>> f148;
     FinalModel<std::optional<uint64_t>> f149;
     FinalModel<std::optional<uint64_t>> f150;
@@ -936,16 +936,16 @@ private:
     mutable size_t _offset;
 
 public:
-    FinalModelMap<stdb::memory::string, uint8_t> f1;
-    FinalModelMap<stdb::memory::string, std::optional<uint8_t>> f2;
-    FinalModelMap<stdb::memory::string, FBE::buffer_t> f3;
-    FinalModelMap<stdb::memory::string, std::optional<FBE::buffer_t>> f4;
-    FinalModelMap<stdb::memory::string, ::test::EnumSimple> f5;
-    FinalModelMap<stdb::memory::string, std::optional<::test::EnumSimple>> f6;
-    FinalModelMap<stdb::memory::string, ::test::FlagsSimple> f7;
-    FinalModelMap<stdb::memory::string, std::optional<::test::FlagsSimple>> f8;
-    FinalModelMap<stdb::memory::string, ::test::StructSimple> f9;
-    FinalModelMap<stdb::memory::string, std::optional<::test::StructSimple>> f10;
+    FinalModelMap<FBEString, uint8_t> f1;
+    FinalModelMap<FBEString, std::optional<uint8_t>> f2;
+    FinalModelMap<FBEString, FBE::buffer_t> f3;
+    FinalModelMap<FBEString, std::optional<FBE::buffer_t>> f4;
+    FinalModelMap<FBEString, ::test::EnumSimple> f5;
+    FinalModelMap<FBEString, std::optional<::test::EnumSimple>> f6;
+    FinalModelMap<FBEString, ::test::FlagsSimple> f7;
+    FinalModelMap<FBEString, std::optional<::test::FlagsSimple>> f8;
+    FinalModelMap<FBEString, ::test::StructSimple> f9;
+    FinalModelMap<FBEString, std::optional<::test::StructSimple>> f10;
 };
 
 namespace test {

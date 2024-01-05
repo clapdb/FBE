@@ -78,7 +78,7 @@ CppLogging::Record& operator<<(CppLogging::Record& record, State value);
 struct Order
 {
     int32_t id;
-    stdb::memory::string symbol;
+    FBEString symbol;
     ::proto::OrderSide side;
     ::proto::OrderType type;
     double price;
@@ -87,7 +87,7 @@ struct Order
     size_t fbe_type() const noexcept { return 1; }
 
     Order();
-    Order(int32_t arg_id, const stdb::memory::string& arg_symbol, const ::proto::OrderSide& arg_side, const ::proto::OrderType& arg_type, double arg_price, double arg_volume);
+    Order(int32_t arg_id, const FBEString& arg_symbol, const ::proto::OrderSide& arg_side, const ::proto::OrderType& arg_type, double arg_price, double arg_volume);
     Order(const Order& other) = default;
     Order(Order&& other) = default;
     ~Order() = default;
@@ -130,13 +130,13 @@ namespace proto {
 
 struct Balance
 {
-    stdb::memory::string currency;
+    FBEString currency;
     double amount;
 
     size_t fbe_type() const noexcept { return 2; }
 
     Balance();
-    Balance(const stdb::memory::string& arg_currency, double arg_amount);
+    Balance(const FBEString& arg_currency, double arg_amount);
     Balance(const Balance& other) = default;
     Balance(Balance&& other) = default;
     ~Balance() = default;
@@ -180,7 +180,7 @@ namespace proto {
 struct Account
 {
     int32_t id;
-    stdb::memory::string name;
+    FBEString name;
     ::proto::State state;
     ::proto::Balance wallet;
     std::optional<::proto::Balance> asset;
@@ -189,7 +189,7 @@ struct Account
     size_t fbe_type() const noexcept { return 3; }
 
     Account();
-    Account(int32_t arg_id, const stdb::memory::string& arg_name, const ::proto::State& arg_state, const ::proto::Balance& arg_wallet, const std::optional<::proto::Balance>& arg_asset, const FastVec<::proto::Order>& arg_orders);
+    Account(int32_t arg_id, const FBEString& arg_name, const ::proto::State& arg_state, const ::proto::Balance& arg_wallet, const std::optional<::proto::Balance>& arg_asset, const FastVec<::proto::Order>& arg_orders);
     Account(const Account& other) = default;
     Account(Account&& other) = default;
     ~Account() = default;
@@ -232,12 +232,12 @@ namespace proto {
 
 struct CharMap
 {
-    std::unordered_map<char, stdb::memory::string> abbr;
+    std::unordered_map<char, FBEString> abbr;
 
     size_t fbe_type() const noexcept { return 1; }
 
     CharMap();
-    explicit CharMap(const std::unordered_map<char, stdb::memory::string>& arg_abbr);
+    explicit CharMap(const std::unordered_map<char, FBEString>& arg_abbr);
     CharMap(const CharMap& other) = default;
     CharMap(CharMap&& other) = default;
     ~CharMap() = default;
@@ -421,8 +421,8 @@ namespace proto {
 struct PremiumAccount
 {
     int32_t id;
-    stdb::memory::string name;
-    stdb::memory::string info;
+    FBEString name;
+    FBEString info;
     ::proto::Balance private_wallet;
     FastVec<::proto::Order> private_orders;
     ::proto::State private_state;
@@ -430,7 +430,7 @@ struct PremiumAccount
     size_t fbe_type() const noexcept { return 5; }
 
     PremiumAccount();
-    PremiumAccount(int32_t arg_id, const stdb::memory::string& arg_name, const stdb::memory::string& arg_info, const ::proto::Balance& arg_private_wallet, const FastVec<::proto::Order>& arg_private_orders, const ::proto::State& arg_private_state);
+    PremiumAccount(int32_t arg_id, const FBEString& arg_name, const FBEString& arg_info, const ::proto::Balance& arg_private_wallet, const FastVec<::proto::Order>& arg_private_orders, const ::proto::State& arg_private_state);
     PremiumAccount(const PremiumAccount& other) = default;
     PremiumAccount(PremiumAccount&& other) = default;
     ~PremiumAccount() = default;

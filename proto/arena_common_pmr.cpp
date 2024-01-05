@@ -56,7 +56,7 @@ Alias::Alias([[maybe_unused]] allocator_type alloc)
     , expr()
 {}
 
-Alias::Alias(const stdb::memory::arena_string& arg_name, const ::arena_common_pmr::Optr& arg_optr, const ::arena_common_pmr::Expr& arg_expr)
+Alias::Alias(const ArenaString& arg_name, const ::arena_common_pmr::Optr& arg_optr, const ::arena_common_pmr::Expr& arg_expr)
     : name(arg_name)
     , optr(arg_optr)
     , expr(arg_expr)
@@ -111,7 +111,7 @@ Expression::Expression([[maybe_unused]] allocator_type alloc)
     , alias_int(alloc)
 {}
 
-Expression::Expression(const pmr::vector<stdb::memory::arena_string>& arg_keys, const pmr::vector<::arena_common_pmr::Alias>& arg_aliases, const pmr::map<int32_t, ::arena_common_pmr::Alias>& arg_alias_int)
+Expression::Expression(const pmr::vector<ArenaString>& arg_keys, const pmr::vector<::arena_common_pmr::Alias>& arg_aliases, const pmr::map<int32_t, ::arena_common_pmr::Alias>& arg_alias_int)
     : keys(arg_keys)
     , aliases(arg_aliases)
     , alias_int(arg_alias_int)

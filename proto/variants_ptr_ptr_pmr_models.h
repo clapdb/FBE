@@ -459,7 +459,7 @@ private:
     size_t _offset;
 
 public:
-    FieldModel<stdb::memory::arena_string> name;
+    FieldModel<ArenaString> name;
 };
 
 namespace variants_ptr_pmr {

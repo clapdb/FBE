@@ -94,8 +94,8 @@ private:
     size_t _offset;
 
 public:
-    FieldModel<stdb::memory::string> name;
-    FieldModel<stdb::memory::string> detail;
+    FieldModel<FBEString> name;
+    FieldModel<FBEString> detail;
     FieldModel<::osa::Sex> sex;
     FieldModel<::osa::MyFLags> flag;
 };
@@ -189,7 +189,7 @@ private:
     size_t _offset;
 
 public:
-    FieldModel<stdb::memory::string> name;
+    FieldModel<FBEString> name;
     FieldModel<int32_t> depth;
     FieldModelArray<::osa::Extra, 1> sa;
     FieldModel<::osa::Sex> sex;

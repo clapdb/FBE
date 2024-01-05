@@ -74,7 +74,7 @@ Order::Order()
     , volume((double)0.0)
 {}
 
-Order::Order(int32_t arg_id, const stdb::memory::string& arg_symbol, const ::proto::OrderSide& arg_side, const ::proto::OrderType& arg_type, double arg_price, double arg_volume)
+Order::Order(int32_t arg_id, const FBEString& arg_symbol, const ::proto::OrderSide& arg_side, const ::proto::OrderType& arg_type, double arg_price, double arg_volume)
     : id(arg_id)
     , symbol(arg_symbol)
     , side(arg_side)
@@ -138,7 +138,7 @@ Balance::Balance()
     , amount((double)0.0)
 {}
 
-Balance::Balance(const stdb::memory::string& arg_currency, double arg_amount)
+Balance::Balance(const FBEString& arg_currency, double arg_amount)
     : currency(arg_currency)
     , amount(arg_amount)
 {}
@@ -190,7 +190,7 @@ Account::Account()
     , orders()
 {}
 
-Account::Account(int32_t arg_id, const stdb::memory::string& arg_name, const ::proto::State& arg_state, const ::proto::Balance& arg_wallet, const std::optional<::proto::Balance>& arg_asset, const FastVec<::proto::Order>& arg_orders)
+Account::Account(int32_t arg_id, const FBEString& arg_name, const ::proto::State& arg_state, const ::proto::Balance& arg_wallet, const std::optional<::proto::Balance>& arg_asset, const FastVec<::proto::Order>& arg_orders)
     : id(arg_id)
     , name(arg_name)
     , state(arg_state)
@@ -262,7 +262,7 @@ CharMap::CharMap()
     : abbr()
 {}
 
-CharMap::CharMap(const std::unordered_map<char, stdb::memory::string>& arg_abbr)
+CharMap::CharMap(const std::unordered_map<char, FBEString>& arg_abbr)
     : abbr(arg_abbr)
 {}
 
@@ -434,7 +434,7 @@ PremiumAccount::PremiumAccount()
     , private_state(State::bad)
 {}
 
-PremiumAccount::PremiumAccount(int32_t arg_id, const stdb::memory::string& arg_name, const stdb::memory::string& arg_info, const ::proto::Balance& arg_private_wallet, const FastVec<::proto::Order>& arg_private_orders, const ::proto::State& arg_private_state)
+PremiumAccount::PremiumAccount(int32_t arg_id, const FBEString& arg_name, const FBEString& arg_info, const ::proto::Balance& arg_private_wallet, const FastVec<::proto::Order>& arg_private_orders, const ::proto::State& arg_private_state)
     : id(arg_id)
     , name(arg_name)
     , info(arg_info)
@@ -490,7 +490,7 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const PremiumAcc
     {
         bool first = true;
         stream << ",private_orders=[" << value.private_orders.size() << "][";
-        for (const auto& it : value.private_orders)
+        for ([[maybe_unused]] const auto& it : value.private_orders)
         {
             stream << std::string(first ? "" : ",") << it;
             first = false;

@@ -88,7 +88,7 @@ Order::Order()
     , sl((double)-10.0)
 {}
 
-Order::Order(int32_t arg_id, const stdb::memory::string& arg_symbol, const ::protoex::OrderSide& arg_side, const ::protoex::OrderType& arg_type, double arg_price, double arg_volume, double arg_tp, double arg_sl)
+Order::Order(int32_t arg_id, const FBEString& arg_symbol, const ::protoex::OrderSide& arg_side, const ::protoex::OrderType& arg_type, double arg_price, double arg_volume, double arg_tp, double arg_sl)
     : id(arg_id)
     , symbol(arg_symbol)
     , side(arg_side)
@@ -212,7 +212,7 @@ Account::Account()
     , orders()
 {}
 
-Account::Account(int32_t arg_id, const stdb::memory::string& arg_name, const ::protoex::StateEx& arg_state, const ::protoex::Balance& arg_wallet, const std::optional<::protoex::Balance>& arg_asset, const FastVec<::protoex::Order>& arg_orders)
+Account::Account(int32_t arg_id, const FBEString& arg_name, const ::protoex::StateEx& arg_state, const ::protoex::Balance& arg_wallet, const std::optional<::protoex::Balance>& arg_asset, const FastVec<::protoex::Order>& arg_orders)
     : id(arg_id)
     , name(arg_name)
     , state(arg_state)

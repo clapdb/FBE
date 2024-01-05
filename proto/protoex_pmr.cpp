@@ -99,7 +99,7 @@ Order::Order([[maybe_unused]] allocator_type alloc)
     , sl((double)-10.0)
 {}
 
-Order::Order(int32_t arg_id, const stdb::memory::arena_string& arg_symbol, const ::protoex_pmr::OrderSide& arg_side, const ::protoex_pmr::OrderType& arg_type, double arg_price, double arg_volume, double arg_tp, double arg_sl)
+Order::Order(int32_t arg_id, const ArenaString& arg_symbol, const ::protoex_pmr::OrderSide& arg_side, const ::protoex_pmr::OrderType& arg_type, double arg_price, double arg_volume, double arg_tp, double arg_sl)
     : id(arg_id)
     , symbol(arg_symbol)
     , side(arg_side)
@@ -237,7 +237,7 @@ Account::Account([[maybe_unused]] allocator_type alloc)
     , orders(alloc)
 {}
 
-Account::Account(int32_t arg_id, const stdb::memory::arena_string& arg_name, const ::protoex_pmr::StateEx& arg_state, const ::protoex_pmr::Balance& arg_wallet, const std::optional<::protoex_pmr::Balance>& arg_asset, const pmr::vector<::protoex_pmr::Order>& arg_orders)
+Account::Account(int32_t arg_id, const ArenaString& arg_name, const ::protoex_pmr::StateEx& arg_state, const ::protoex_pmr::Balance& arg_wallet, const std::optional<::protoex_pmr::Balance>& arg_asset, const pmr::vector<::protoex_pmr::Order>& arg_orders)
     : id(arg_id)
     , name(arg_name)
     , state(arg_state)
