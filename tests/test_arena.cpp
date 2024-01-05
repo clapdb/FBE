@@ -9,6 +9,7 @@
 #include "arena_pmr.h"
 #include "arena_ptr_ptr_pmr.h"
 #include "catch2/catch.hpp"
+#include "fbe.h"
 #include "test.h"
 #include "arena/arena.hpp"
 #include "../proto/arena_pmr_models.h"
@@ -105,7 +106,7 @@ TEST_CASE_METHOD(ArenaTest, "Arena (template import template)", "[template-based
     expr.keys.reserve(1);
     expr.aliases.reserve(1);
 
-    stdb::memory::arena_string name("an alias name", arena.get_memory_resource());
+    FBE::ArenaString name("an alias name", arena.get_memory_resource());
     expr.keys.emplace_back(std::move(name));
 
     ::arena_common_pmr::Alias alias(arena.get_memory_resource());
@@ -186,7 +187,7 @@ TEST_CASE_METHOD(ArenaTest, "Arena (ptr import template)", "[ptr-based FBE]") {
         line->expression.keys.reserve(1);
         line->expression.aliases.reserve(1);
 
-        stdb::memory::arena_string name("an alias name", arena.get_memory_resource());
+        FBE::ArenaString name("an alias name", arena.get_memory_resource());
         line->expression.keys.emplace_back(std::move(name));
 
         ::arena_common_pmr::Alias alias(arena.get_memory_resource());

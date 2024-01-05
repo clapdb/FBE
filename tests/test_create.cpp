@@ -8,6 +8,7 @@
 // Created by Ivan Shynkarenka on 07.05.2018
 //
 
+#include "fbe.h"
 #include "test.h"
 
 #include "../proto/proto_models.h"
@@ -21,22 +22,22 @@ TEST_CASE("Create & access", "[FBE]")
     size_t model_begin = writer.create_begin();
     size_t account_begin = writer.model.set_begin();
     writer.model.id.set(1);
-    writer.model.name.set(stdb::memory::string("Test"));
+    writer.model.name.set(FBE::FBEString("Test"));
     writer.model.state.set(proto::State::good);
     size_t wallet_begin = writer.model.wallet.set_begin();
-    writer.model.wallet.currency.set(stdb::memory::string("USD"));
+    writer.model.wallet.currency.set(FBE::FBEString("USD"));
     writer.model.wallet.amount.set(1000.0);
     writer.model.wallet.set_end(wallet_begin);
     size_t asset_begin = writer.model.asset.set_begin(true);
     size_t asset_wallet_begin = writer.model.asset.value.set_begin();
-    writer.model.asset.value.currency.set(stdb::memory::string("EUR"));
+    writer.model.asset.value.currency.set(FBE::FBEString("EUR"));
     writer.model.asset.value.amount.set(100.0);
     writer.model.asset.set_end(asset_begin);
     writer.model.asset.value.set_end(asset_wallet_begin);
     auto order = writer.model.orders.resize(3);
     size_t order_begin = order.set_begin();
     order.id.set(1);
-    order.symbol.set(stdb::memory::string("EURUSD"));
+    order.symbol.set(FBE::FBEString("EURUSD"));
     order.side.set(proto::OrderSide::buy);
     order.type.set(proto::OrderType::market);
     order.price.set(1.23456);
@@ -45,7 +46,7 @@ TEST_CASE("Create & access", "[FBE]")
     order.fbe_shift(order.fbe_size());
     order_begin = order.set_begin();
     order.id.set(2);
-    order.symbol.set(stdb::memory::string("EURUSD"));
+    order.symbol.set(FBE::FBEString("EURUSD"));
     order.side.set(proto::OrderSide::sell);
     order.type.set(proto::OrderType::limit);
     order.price.set(1.0);
@@ -54,7 +55,7 @@ TEST_CASE("Create & access", "[FBE]")
     order.fbe_shift(order.fbe_size());
     order_begin = order.set_begin();
     order.id.set(3);
-    order.symbol.set(stdb::memory::string("EURUSD"));
+    order.symbol.set(FBE::FBEString("EURUSD"));
     order.side.set(proto::OrderSide::buy);
     order.type.set(proto::OrderType::stop);
     order.price.set(1.5);
@@ -78,11 +79,11 @@ TEST_CASE("Create & access", "[FBE]")
     REQUIRE(reader.verify());
 
     int32_t id;
-    stdb::memory::string name;
+    FBE::FBEString name;
     proto::State state;
-    stdb::memory::string wallet_currency;
+    FBE::FBEString wallet_currency;
     double wallet_amount;
-    stdb::memory::string asset_wallet_currency;
+    FBE::FBEString asset_wallet_currency;
     double asset_wallet_amount;
 
     account_begin = reader.model.get_begin();
@@ -113,7 +114,7 @@ TEST_CASE("Create & access", "[FBE]")
     REQUIRE(reader.model.orders.size() == 3);
 
     int order_id;
-    stdb::memory::string order_symbol;
+    FBE::FBEString order_symbol;
     proto::OrderSide order_side;
     proto::OrderType order_type;
     double order_price;

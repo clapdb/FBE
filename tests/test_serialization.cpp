@@ -8,6 +8,7 @@
 // Created by Ivan Shynkarenka on 18.04.2018
 //
 
+#include "fbe.h"
 #include "test.h"
 
 #include "../proto/proto_models.h"
@@ -59,26 +60,26 @@ TEST_CASE("Serialization: domain", "[FBE]")
     REQUIRE(account2.id == 1);
     REQUIRE(account2.name == "Test");
     REQUIRE((account2.state | proto::State::good));
-    REQUIRE(stdb::memory::string(account2.wallet.currency) == "USD");
+    REQUIRE(FBE::FBEString(account2.wallet.currency) == "USD");
     REQUIRE(account2.wallet.amount == 1000.0);
     REQUIRE(account2.asset.has_value());
-    REQUIRE(stdb::memory::string(account2.asset.value().currency) == "EUR");
+    REQUIRE(FBE::FBEString(account2.asset.value().currency) == "EUR");
     REQUIRE(account2.asset.value().amount == 100.0);
     REQUIRE(account2.orders.size() == 3);
     REQUIRE(account2.orders[0].id == 1);
-    REQUIRE(stdb::memory::string(account2.orders[0].symbol) == "EURUSD");
+    REQUIRE(FBE::FBEString(account2.orders[0].symbol) == "EURUSD");
     REQUIRE(account2.orders[0].side == proto::OrderSide::buy);
     REQUIRE(account2.orders[0].type == proto::OrderType::market);
     REQUIRE(account2.orders[0].price == 1.23456);
     REQUIRE(account2.orders[0].volume == 1000.0);
     REQUIRE(account2.orders[1].id == 2);
-    REQUIRE(stdb::memory::string(account2.orders[1].symbol) == "EURUSD");
+    REQUIRE(FBE::FBEString(account2.orders[1].symbol) == "EURUSD");
     REQUIRE(account2.orders[1].side == proto::OrderSide::sell);
     REQUIRE(account2.orders[1].type == proto::OrderType::limit);
     REQUIRE(account2.orders[1].price == 1.0);
     REQUIRE(account2.orders[1].volume == 100.0);
     REQUIRE(account2.orders[2].id == 3);
-    REQUIRE(stdb::memory::string(account2.orders[2].symbol) == "EURUSD");
+    REQUIRE(FBE::FBEString(account2.orders[2].symbol) == "EURUSD");
     REQUIRE(account2.orders[2].side == proto::OrderSide::buy);
     REQUIRE(account2.orders[2].type == proto::OrderType::stop);
     REQUIRE(account2.orders[2].price == 1.5);
@@ -1358,7 +1359,7 @@ TEST_CASE("Serialization: struct hash extended", "[FBE]")
 
 TEST_CASE("Serialization: variant", "[FBE]") {
     SECTION ("string") {
-        ::variants::Value value{stdb::memory::string("variant v")};
+        ::variants::Value value{FBE::FBEString("variant v")};
 
         FBE::variants::ValueModel writer;
         size_t serialized = writer.serialize(value);
@@ -1374,7 +1375,7 @@ TEST_CASE("Serialization: variant", "[FBE]") {
         REQUIRE(deserialized == reader.buffer().size());
 
         REQUIRE(value_copy.v.index() == 0);
-        REQUIRE(std::get<stdb::memory::string>(value_copy.v) == "variant v");
+        REQUIRE(std::get<FBE::FBEString>(value_copy.v) == "variant v");
         REQUIRE(value == value_copy);
     }
 
@@ -1541,7 +1542,7 @@ TEST_CASE("Serialization: variant", "[FBE]") {
     }
     
     SECTION ("vector of string") {
-        FastVec<stdb::memory::string> string_v {"hello", "world"};
+        FastVec<FBE::FBEString> string_v {"hello", "world"};
 
         ::variants::Value value;
         REQUIRE(value.v.index() == 0);
@@ -1598,7 +1599,7 @@ TEST_CASE("Serialization: variant", "[FBE]") {
     }
 
     SECTION ("hash with string and bytes") {
-        std::unordered_map<stdb::memory::string, FBE::buffer_t> m;
+        std::unordered_map<FBE::FBEString, FBE::buffer_t> m;
         FastVec<uint8_t> v {65, 66, 67, 68, 69};
         m.emplace("hello world", FBE::buffer_t(v));
 

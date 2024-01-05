@@ -116,9 +116,9 @@ private:
     void GenerateFBEFieldModelBytes_Source();
     void GenerateFBEFieldModelPMRBytes_Header();
     void GenerateFBEFieldModelPMRBytes_Source();
-    void GenerateFBEFieldModelMemoryString_Header();
-    void GenerateFBEFieldModelMemoryString_Source();
-    void GenerateFBEFieldModelMemoryArenaString_Header();
+    void GenerateFBEFieldModelFBEString_Header();
+    void GenerateFBEFieldModelFBEString_Source();
+    void GenerateFBEFieldModeArenaString_Header();
     void GenerateFBEFieldModelMemoryArenaString_Source();
     void GenerateFBEFieldModelOptional_Header();
     void GenerateFBEFieldModelOptional_Inline();

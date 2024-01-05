@@ -289,7 +289,7 @@ TEST_CASE("Serialization (extra circular-dependency)", "[Ptr-based FBE]")
 
 TEST_CASE("Serilization (identical with templated-based code without ptr)", "[Ptr-based FBE]")
 {
-    ::std::array<::osa::Extra, 1> osa_v = {::osa::Extra(stdb::memory::string("extra"), "detail", ::osa::Sex::male, ::osa::MyFLags::flag1)};
+    ::std::array<::osa::Extra, 1> osa_v = {::osa::Extra(FBE::FBEString("extra"), "detail", ::osa::Sex::male, ::osa::MyFLags::flag1)};
     ::osa::Simple osa = {
         "original",
         12,
@@ -302,7 +302,7 @@ TEST_CASE("Serilization (identical with templated-based code without ptr)", "[Pt
     REQUIRE(serialized_osa == osa_writer.buffer().size());
     REQUIRE(osa_writer.verify());
 
-    ::std::array<::sa::Extra, 1> sa_v = {::sa::Extra(stdb::memory::string("extra"), "detail", ::sa::Sex::male, ::sa::MyFLags::flag1)};
+    ::std::array<::sa::Extra, 1> sa_v = {::sa::Extra(FBE::FBEString("extra"), "detail", ::sa::Sex::male, ::sa::MyFLags::flag1)};
     ::sa::Simple sa = {
         "original",
         12,
@@ -416,7 +416,7 @@ TEST_CASE("Serialization (optional)", "[Ptr-based FBE]") {
     REQUIRE(c1 == c1_copy);
 }
 TEST_CASE("Serialization (ptr-based import templated-based fbe)", "[Ptr-based FBE]") {
-    ::osa::Extra extra(stdb::memory::string("extra"), "detail", ::osa::Sex::male, ::osa::MyFLags::flag1);
+    ::osa::Extra extra(FBE::FBEString("extra"), "detail", ::osa::Sex::male, ::osa::MyFLags::flag1);
 
     ::pkg::Info&& pkg_info = {
         "pkg_info", ::osa::Sex::male, ::osa::MyFLags::flag2,  std::move(extra)
@@ -481,7 +481,7 @@ TEST_CASE("Serialization (ptr-based import templated-based fbe)", "[Ptr-based FB
 TEST_CASE("Serialization (variant)", "[Ptr-based FBE]") {
     SECTION ("string") {
         ::variants_ptr::Value value;
-        value.v.emplace<stdb::memory::string>("variant v");
+        value.v.emplace<FBE::FBEString>("variant v");
 
         FBE::variants_ptr::ValueModel writer;
         size_t serialized = writer.serialize(value);
@@ -497,7 +497,7 @@ TEST_CASE("Serialization (variant)", "[Ptr-based FBE]") {
         REQUIRE(deserialized == reader.buffer().size());
 
         REQUIRE(value_copy.v.index() == 1);
-        REQUIRE(std::get<stdb::memory::string>(value_copy.v) == "variant v");
+        REQUIRE(std::get<FBE::FBEString>(value_copy.v) == "variant v");
         REQUIRE(value == value_copy);
     }
 
@@ -689,7 +689,7 @@ TEST_CASE("Serialization (variant)", "[Ptr-based FBE]") {
     }
     
     SECTION ("vector of string") {
-        FastVec<stdb::memory::string> string_v {"hello", "world"};
+        FastVec<FBE::FBEString> string_v {"hello", "world"};
 
         ::variants_ptr::Value value;
         REQUIRE(value.v.index() == 0);
@@ -746,7 +746,7 @@ TEST_CASE("Serialization (variant)", "[Ptr-based FBE]") {
     }
 
     SECTION ("hash with string and bytes") {
-        std::unordered_map<stdb::memory::string, FBE::buffer_t> m;
+        std::unordered_map<FBE::FBEString, FBE::buffer_t> m;
         FastVec<uint8_t> v {65, 66, 67, 68, 69};
         m.emplace("hello world", FBE::buffer_t(v));
 
@@ -813,9 +813,9 @@ TEST_CASE("Serialization (variant)", "[Ptr-based FBE]") {
     SECTION ("variant used in container") {
         ::variants_ptr::ValueContainer value_container;
         value_container.vv.emplace_back(::variants_ptr::V{42});
-        value_container.vv.emplace_back(::variants_ptr::V{stdb::memory::string("42")});
+        value_container.vv.emplace_back(::variants_ptr::V{FBE::FBEString("42")});
         value_container.vm.emplace(1, ::variants_ptr::V{42});
-        value_container.vm.emplace(2, ::variants_ptr::V{stdb::memory::string("42")});
+        value_container.vm.emplace(2, ::variants_ptr::V{FBE::FBEString("42")});
 
         FBE::variants_ptr::ValueContainerModel writer;
         size_t serialized = writer.serialize(value_container);
@@ -833,13 +833,13 @@ TEST_CASE("Serialization (variant)", "[Ptr-based FBE]") {
         REQUIRE(value_container_copy.vv.size() == 2);
         REQUIRE(std::holds_alternative<int32_t>(value_container_copy.vv.at(0)));
         REQUIRE(std::get<int32_t>(value_container_copy.vv.at(0)) == 42);
-        REQUIRE(std::holds_alternative<stdb::memory::string>(value_container_copy.vv.at(1)));
-        REQUIRE(std::get<stdb::memory::string>(value_container_copy.vv.at(1)) == "42");
+        REQUIRE(std::holds_alternative<FBE::FBEString>(value_container_copy.vv.at(1)));
+        REQUIRE(std::get<FBE::FBEString>(value_container_copy.vv.at(1)) == "42");
         REQUIRE(value_container_copy.vm.size() == 2);
         REQUIRE(std::holds_alternative<int32_t>(value_container_copy.vm.at(1)));
         REQUIRE(std::get<int32_t>(value_container_copy.vm.at(1)) == 42);
-        REQUIRE(std::holds_alternative<stdb::memory::string>(value_container_copy.vm.at(2)));
-        REQUIRE(std::get<stdb::memory::string>(value_container_copy.vm.at(2)) == "42");
+        REQUIRE(std::holds_alternative<FBE::FBEString>(value_container_copy.vm.at(2)));
+        REQUIRE(std::get<FBE::FBEString>(value_container_copy.vm.at(2)) == "42");
         REQUIRE(value_container == value_container_copy);
     }
 
@@ -896,7 +896,7 @@ TEST_CASE("Serialization (import template)", "[Ptr-based FBE]") {
         ::variants::V v1;
         v1.emplace<FastVec<::variants::Simple>>(std::move(vs));
         line.vv.emplace_back(std::move(v1));
-        ::variants::V v2 {stdb::memory::string("hello")};
+        ::variants::V v2 {FBE::FBEString("hello")};
         line.vv.emplace_back(std::move(v2));
 
         ::variants::V v3 {42};
@@ -925,9 +925,9 @@ TEST_CASE("Serialization (import template)", "[Ptr-based FBE]") {
         REQUIRE(std::get<FastVec<::variants::Simple>>(line_copy.vv.at(0)).size() == 2);
         REQUIRE(std::get<FastVec<::variants::Simple>>(line_copy.vv.at(0)).at(0).name == "simple1");
         REQUIRE(std::get<FastVec<::variants::Simple>>(line_copy.vv.at(0)).at(1).name == "simple2");
-        REQUIRE(std::holds_alternative<stdb::memory::string>(line_copy.vv.at(1)));
-        REQUIRE(std::get<stdb::memory::string>(line_copy.vv.at(1)) == "hello");
-        REQUIRE(std::holds_alternative<stdb::memory::string>(line_copy.vv.at(1)));
+        REQUIRE(std::holds_alternative<FBE::FBEString>(line_copy.vv.at(1)));
+        REQUIRE(std::get<FBE::FBEString>(line_copy.vv.at(1)) == "hello");
+        REQUIRE(std::holds_alternative<FBE::FBEString>(line_copy.vv.at(1)));
         REQUIRE(line_copy.vm.size() == 2);
         REQUIRE(std::holds_alternative<int32_t>(line_copy.vm.at("key3")));
         REQUIRE(std::get<int32_t>(line_copy.vm.at("key3")) == 42);
