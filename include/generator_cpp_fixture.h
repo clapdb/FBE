@@ -53,9 +53,17 @@ namespace pmr = std::pmr;
 #endif
 #include <utility>
 #include <variant>
-#include "string/string.hpp"
-#include "string/arena_string.hpp"
 #include "container/stdb_vector.hpp"
+
+#if defined(USING_SEASTAR_STRING)
+#include <seastar/core/sstring.hh>
+#elif defined(USING_MEMORY_STRING)
+#include "string/string.hpp"
+#endif
+
+#if defined(USING_MEMORY_ARENA_STRING)
+#include "string/arena_string.hpp"
+#endif
 
 namespace FBE {
     template <typename T>
@@ -65,7 +73,21 @@ namespace FBE {
     using FastVec = stdb::container::stdb_vector<T>;
     #endif
     using Safety = stdb::container::Safety;
-}
+
+    #if defined(USING_SEASTAR_STRING)
+    using FBEString = seastar::sstring;
+    #elif defined(USING_MEMORY_STRING)
+    using FBEString = stdb::memory::string;
+    #else
+    using FBEString = std::string;
+    #endif
+
+    #if defined(USING_MEMORY_ARENA_STRING)
+    using ArenaString = stdb::memory::arena_string;
+    #else
+    using ArenaString = pmr::string;
+    #endif
+} // namespace FBE
 
 #if defined(unix) || defined(__unix) || defined(__unix__) || defined(__APPLE__)
 #include <time.h>
@@ -294,7 +316,7 @@ public:
     pmr_buffer_t() = default;
     explicit pmr_buffer_t(allocator_type alloc): _data(alloc) {}
     explicit pmr_buffer_t(size_t capacity) { reserve(capacity); }
-    explicit pmr_buffer_t(const stdb::memory::arena_string& str) { assign(str); }
+    explicit pmr_buffer_t(const ArenaString& str) { assign(str); }
     pmr_buffer_t(size_t size, uint8_t value) { assign(size, value); }
     pmr_buffer_t(const uint8_t* data, size_t size) { assign(data, size); }
     explicit pmr_buffer_t(const pmr::vector<uint8_t>& other) : _data(other) {}
@@ -308,7 +330,7 @@ public:
     };
     ~pmr_buffer_t() = default;
 
-    pmr_buffer_t& operator=(const stdb::memory::arena_string& str) { assign(str); return *this; }
+    pmr_buffer_t& operator=(const ArenaString& str) { assign(str); return *this; }
     pmr_buffer_t& operator=(const pmr::vector<uint8_t>& other) { _data = other; return *this; }
     pmr_buffer_t& operator=(pmr::vector<uint8_t>&& other) { _data = std::move(other); return *this; }
     pmr_buffer_t& operator=(const pmr_buffer_t& other) = default;
@@ -340,14 +362,14 @@ public:
     void resize(size_t size, uint8_t value = 0) { _data.resize(size, value); }
     void shrink_to_fit() { _data.shrink_to_fit(); }
 
-    void assign(const stdb::memory::arena_string& str) { assign((const uint8_t*)str.c_str(), str.size()); }
+    void assign(const ArenaString& str) { assign((const uint8_t*)str.c_str(), str.size()); }
     void assign(const pmr::vector<uint8_t>& vec) { assign(vec.begin(), vec.end()); }
     void assign(size_t size, uint8_t value) { _data.assign(size, value); }
     void assign(const uint8_t* data, size_t size) { _data.assign(data, data + size); }
     template <class InputIterator>
     void assign(InputIterator first, InputIterator last) { _data.assign(first, last); }
     iterator insert(const_iterator position, uint8_t value) { return _data.insert(position, value); }
-    iterator insert(const_iterator position, const stdb::memory::arena_string& str) { return insert(position, (const uint8_t*)str.c_str(), str.size()); }
+    iterator insert(const_iterator position, const ArenaString& str) { return insert(position, (const uint8_t*)str.c_str(), str.size()); }
     iterator insert(const_iterator position, const pmr::vector<uint8_t>& vec) { return insert(position, vec.begin(), vec.end()); }
     iterator insert(const_iterator position, size_t size, uint8_t value) { return _data.insert(position, size, value); }
     iterator insert(const_iterator position, const uint8_t* data, size_t size) { return _data.insert(position, data, data + size); }
@@ -2076,11 +2098,11 @@ void FieldModel<pmr_buffer_t>::set(const void* data, size_t size)
 )CODE";
     }
 
-    static std::string GenerateFBEFieldModelMemoryString_Header() {
+    static std::string GenerateFBEFieldModelFBEString_Header() {
       return R"CODE(
 // Fast Binary Encoding field model string specialization
 template <>
-class FieldModel<stdb::memory::string>
+class FieldModel<FBEString>
 {
 public:
     FieldModel(FBEBuffer& buffer, size_t offset) noexcept : _buffer(buffer), _offset(offset) {}
@@ -2109,9 +2131,9 @@ public:
     template <size_t N>
     size_t get(std::array<char, N>& data) const noexcept { return get(data.data(), data.size()); }
     // Get the pmr string value
-    void get(stdb::memory::string& value) const noexcept;
+    void get(FBEString& value) const noexcept;
     // Get the pmr string value
-    void get(stdb::memory::string& value, const stdb::memory::string& defaults) const noexcept;
+    void get(FBEString& value, const FBEString& defaults) const noexcept;
 
     // Set the string value
     void set(const char* data, size_t size);
@@ -2122,7 +2144,7 @@ public:
     template <size_t N>
     void set(const std::array<char, N>& data) { set(data.data(), data.size()); }
     // Set the string value
-    void set(const stdb::memory::string& value);
+    void set(const FBEString& value);
 
 private:
     FBEBuffer& _buffer;
@@ -2131,11 +2153,11 @@ private:
 )CODE";
     }
 
-    static std::string GenerateFBEFieldModelMemoryArenaString_Header() {
+    static std::string GenerateFBEFieldModeArenaString_Header() {
       return R"CODE(
 // Fast Binary Encoding field model string specialization
 template <>
-class FieldModel<stdb::memory::arena_string>
+class FieldModel<ArenaString>
 {
 public:
     FieldModel(FBEBuffer& buffer, size_t offset) noexcept : _buffer(buffer), _offset(offset) {}
@@ -2164,9 +2186,9 @@ public:
     template <size_t N>
     size_t get(std::array<char, N>& data) const noexcept { return get(data.data(), data.size()); }
     // Get the pmr string value
-    void get(stdb::memory::arena_string& value) const noexcept;
+    void get(ArenaString& value) const noexcept;
     // Get the pmr string value
-    void get(stdb::memory::arena_string& value, const stdb::memory::arena_string& defaults) const noexcept;
+    void get(ArenaString& value, const ArenaString& defaults) const noexcept;
 
     // Set the string value
     void set(const char* data, size_t size);
@@ -2177,7 +2199,7 @@ public:
     template <size_t N>
     void set(const std::array<char, N>& data) { set(data.data(), data.size()); }
     // Set the string value
-    void set(const stdb::memory::arena_string& value);
+    void set(const ArenaString& value);
 
 private:
     FBEBuffer& _buffer;
@@ -2186,9 +2208,9 @@ private:
 )CODE";
     }
 
-    static std::string GenerateFBEFieldModelMemoryString_Source() {
+    static std::string GenerateFBEFieldModelFBEString_Source() {
       return R"CODE(
-size_t FieldModel<stdb::memory::string>::fbe_extra() const noexcept
+size_t FieldModel<FBEString>::fbe_extra() const noexcept
 {
     if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
         return 0;
@@ -2201,7 +2223,7 @@ size_t FieldModel<stdb::memory::string>::fbe_extra() const noexcept
     return (size_t)(4 + fbe_string_size);
 }
 
-bool FieldModel<stdb::memory::string>::verify() const noexcept
+bool FieldModel<FBEString>::verify() const noexcept
 {
     if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
         return true;
@@ -2220,7 +2242,7 @@ bool FieldModel<stdb::memory::string>::verify() const noexcept
     return true;
 }
 
-size_t FieldModel<stdb::memory::string>::get(char* data, size_t size) const noexcept
+size_t FieldModel<FBEString>::get(char* data, size_t size) const noexcept
 {
     assert(((size == 0) || (data != nullptr)) && "Invalid buffer!");
     if ((size > 0) && (data == nullptr))
@@ -2247,9 +2269,11 @@ size_t FieldModel<stdb::memory::string>::get(char* data, size_t size) const noex
     return result;
 }
 
-void FieldModel<stdb::memory::string>::get(stdb::memory::string& value) const noexcept
+void FieldModel<FBEString>::get(FBEString& value) const noexcept
 {
+    #if !defined(USING_SEASTAR_STRING)
     value.clear();
+    #endif
 
     if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
         return;
@@ -2267,10 +2291,15 @@ void FieldModel<stdb::memory::string>::get(stdb::memory::string& value) const no
     if ((_buffer.offset() + fbe_string_offset + 4 + fbe_string_size) > _buffer.size())
         return;
 
+    #if defined(USING_SEASTAR_STRING)
+    value.resize(fbe_string_size);
+    memcpy(value.data(), (const char*)(_buffer.data() + _buffer.offset() + fbe_string_offset + 4), fbe_string_size);
+    #else
     value.assign((const char*)(_buffer.data() + _buffer.offset() + fbe_string_offset + 4), fbe_string_size);
+    #endif
 }
 
-void FieldModel<stdb::memory::string>::get(stdb::memory::string& value, const stdb::memory::string& defaults) const noexcept
+void FieldModel<FBEString>::get(FBEString& value, const FBEString& defaults) const noexcept
 {
     value = defaults;
 
@@ -2290,10 +2319,15 @@ void FieldModel<stdb::memory::string>::get(stdb::memory::string& value, const st
     if ((_buffer.offset() + fbe_string_offset + 4 + fbe_string_size) > _buffer.size())
         return;
 
+    #if defined(USING_SEASTAR_STRING)
+    value.resize(fbe_string_size);
+    memcpy(value.data(), (const char*)(_buffer.data() + _buffer.offset() + fbe_string_offset + 4), fbe_string_size);
+    #else
     value.assign((const char*)(_buffer.data() + _buffer.offset() + fbe_string_offset + 4), fbe_string_size);
+    #endif
 }
 
-void FieldModel<stdb::memory::string>::set(const char* data, size_t size)
+void FieldModel<FBEString>::set(const char* data, size_t size)
 {
     assert(((size == 0) || (data != nullptr)) && "Invalid buffer!");
     if ((size > 0) && (data == nullptr))
@@ -2316,7 +2350,7 @@ void FieldModel<stdb::memory::string>::set(const char* data, size_t size)
     memcpy((char*)(_buffer.data() + _buffer.offset() + fbe_string_offset + 4), data, fbe_string_size);
 }
 
-void FieldModel<stdb::memory::string>::set(const stdb::memory::string& value)
+void FieldModel<FBEString>::set(const FBEString& value)
 {
     assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
     if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
@@ -2338,7 +2372,7 @@ void FieldModel<stdb::memory::string>::set(const stdb::memory::string& value)
     
     static std::string GenerateFBEFieldModelMemoryArenaString_Source() {
       return R"CODE(
-size_t FieldModel<stdb::memory::arena_string>::fbe_extra() const noexcept
+size_t FieldModel<ArenaString>::fbe_extra() const noexcept
 {
     if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
         return 0;
@@ -2351,7 +2385,7 @@ size_t FieldModel<stdb::memory::arena_string>::fbe_extra() const noexcept
     return (size_t)(4 + fbe_string_size);
 }
 
-bool FieldModel<stdb::memory::arena_string>::verify() const noexcept
+bool FieldModel<ArenaString>::verify() const noexcept
 {
     if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
         return true;
@@ -2370,7 +2404,7 @@ bool FieldModel<stdb::memory::arena_string>::verify() const noexcept
     return true;
 }
 
-size_t FieldModel<stdb::memory::arena_string>::get(char* data, size_t size) const noexcept
+size_t FieldModel<ArenaString>::get(char* data, size_t size) const noexcept
 {
     assert(((size == 0) || (data != nullptr)) && "Invalid buffer!");
     if ((size > 0) && (data == nullptr))
@@ -2397,7 +2431,7 @@ size_t FieldModel<stdb::memory::arena_string>::get(char* data, size_t size) cons
     return result;
 }
 
-void FieldModel<stdb::memory::arena_string>::get(stdb::memory::arena_string& value) const noexcept
+void FieldModel<ArenaString>::get(ArenaString& value) const noexcept
 {
     value.clear();
 
@@ -2420,7 +2454,7 @@ void FieldModel<stdb::memory::arena_string>::get(stdb::memory::arena_string& val
     value.assign((const char*)(_buffer.data() + _buffer.offset() + fbe_string_offset + 4), fbe_string_size);
 }
 
-void FieldModel<stdb::memory::arena_string>::get(stdb::memory::arena_string& value, const stdb::memory::arena_string& defaults) const noexcept
+void FieldModel<ArenaString>::get(ArenaString& value, const ArenaString& defaults) const noexcept
 {
     value = defaults;
 
@@ -2443,7 +2477,7 @@ void FieldModel<stdb::memory::arena_string>::get(stdb::memory::arena_string& val
     value.assign((const char*)(_buffer.data() + _buffer.offset() + fbe_string_offset + 4), fbe_string_size);
 }
 
-void FieldModel<stdb::memory::arena_string>::set(const char* data, size_t size)
+void FieldModel<ArenaString>::set(const char* data, size_t size)
 {
     assert(((size == 0) || (data != nullptr)) && "Invalid buffer!");
     if ((size > 0) && (data == nullptr))
@@ -2466,7 +2500,7 @@ void FieldModel<stdb::memory::arena_string>::set(const char* data, size_t size)
     memcpy((char*)(_buffer.data() + _buffer.offset() + fbe_string_offset + 4), data, fbe_string_size);
 }
 
-void FieldModel<stdb::memory::arena_string>::set(const stdb::memory::arena_string& value)
+void FieldModel<ArenaString>::set(const ArenaString& value)
 {
     assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
     if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
@@ -5605,6 +5639,7 @@ struct KeyWriter<TWriter, char>
     }
 };
 
+#if defined(USING_SEASTAR_STRING) || defined(USING_MEMORY_STRING)
 template <class TWriter>
 struct KeyWriter<TWriter, std::string>
 {
@@ -5613,20 +5648,21 @@ struct KeyWriter<TWriter, std::string>
         return writer.Key(key);
     }
 };
+#endif
 
 template <class TWriter>
-struct KeyWriter<TWriter, stdb::memory::string>
+struct KeyWriter<TWriter, FBEString>
 {
-    static bool to_json_key(TWriter& writer, const stdb::memory::string& key)
+    static bool to_json_key(TWriter& writer, const FBEString& key)
     {
         return writer.Key(key.c_str());
     }
 };
 
 template <class TWriter>
-struct KeyWriter<TWriter, stdb::memory::arena_string>
+struct KeyWriter<TWriter, ArenaString>
 {
-    static bool to_json_key(TWriter& writer, const stdb::memory::arena_string& key)
+    static bool to_json_key(TWriter& writer, const ArenaString& key)
     {
         return writer.Key(key.c_str());
     }
@@ -5791,6 +5827,7 @@ struct ValueWriter<TWriter, FBE::uuid_t>
     }
 };
 
+#if defined(USING_SEASTAR_STRING) || defined(USING_MEMORY_STRING)
 template <class TWriter>
 struct ValueWriter<TWriter, std::string>
 {
@@ -5799,20 +5836,21 @@ struct ValueWriter<TWriter, std::string>
         return writer.String(value);
     }
 };
+#endif
 
 template <class TWriter>
-struct ValueWriter<TWriter, stdb::memory::string>
+struct ValueWriter<TWriter, FBEString>
 {
-    static bool to_json(TWriter& writer, const stdb::memory::string& value, bool scope = true)
+    static bool to_json(TWriter& writer, const FBEString& value, bool scope = true)
     {
         return writer.String(value.c_str());
     }
 };
 
 template <class TWriter>
-struct ValueWriter<TWriter, stdb::memory::arena_string>
+struct ValueWriter<TWriter, ArenaString>
 {
-    static bool to_json(TWriter& writer, const stdb::memory::arena_string& value, bool scope = true)
+    static bool to_json(TWriter& writer, const ArenaString& value, bool scope = true)
     {
         return writer.String(value.c_str());
     }
@@ -5975,6 +6013,7 @@ bool from_json_key(const TJson& json, T& key)
     return KeyReader<TJson, T>::from_json_key(json, key);
 }
 
+#if defined(USING_SEASTAR_STRING) || defined(USING_MEMORY_STRING)
 template <class TJson>
 struct KeyReader<TJson, std::string>
 {
@@ -5983,20 +6022,21 @@ struct KeyReader<TJson, std::string>
         return FBE::JSON::from_json(json, key);
     }
 };
+#endif
 
 template <class TJson>
-struct KeyReader<TJson, stdb::memory::string>
+struct KeyReader<TJson, FBEString>
 {
-    static bool from_json_key(const TJson& json, stdb::memory::string& key)
+    static bool from_json_key(const TJson& json, FBEString& key)
     {
         return FBE::JSON::from_json(json, key);
     }
 };
 
 template <class TJson>
-struct KeyReader<TJson, stdb::memory::arena_string>
+struct KeyReader<TJson, ArenaString>
 {
-    static bool from_json_key(const TJson& json, stdb::memory::arena_string& key)
+    static bool from_json_key(const TJson& json, ArenaString& key)
     {
         return FBE::JSON::from_json(json, key);
     }
@@ -6300,6 +6340,7 @@ struct ValueReader<TJson, FBE::uuid_t>
     }
 };
 
+#if defined(USING_SEASTAR_STRING) || defined(USING_MEMORY_STRING)
 template <class TJson>
 struct ValueReader<TJson, std::string>
 {
@@ -6316,11 +6357,12 @@ struct ValueReader<TJson, std::string>
         return true;
     }
 };
+#endif
 
 template <class TJson>
-struct ValueReader<TJson, stdb::memory::string>
+struct ValueReader<TJson, FBEString>
 {
-    static bool from_json(const TJson& json, stdb::memory::string& value)
+    static bool from_json(const TJson& json, FBEString& value)
     {
         value = "";
 
@@ -6335,9 +6377,9 @@ struct ValueReader<TJson, stdb::memory::string>
 };
 
 template <class TJson>
-struct ValueReader<TJson, stdb::memory::arena_string>
+struct ValueReader<TJson, ArenaString>
 {
-    static bool from_json(const TJson& json, stdb::memory::arena_string& value)
+    static bool from_json(const TJson& json, ArenaString& value)
     {
         value = "";
 

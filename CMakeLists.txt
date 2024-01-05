@@ -69,6 +69,19 @@ if (FBE_USING_STD_VECTOR)
   add_definitions(-DUSING_STD_VECTOR)
 endif()
 
+option(FBE_USING_SEASTAR_STRING "using seastar string" OFF)
+option(FBE_USING_MEMORY_STRING "using memory string" OFF)
+if (FBE_USING_SEASTAR_STRING)
+  add_definitions(-DUSING_SEASTAR_STRING)
+elseif(FBE_USING_MEMORY_STRING)
+  add_definitions(-DUSING_MEMORY_STRING)
+endif()
+
+option(FBE_USING_MEMORY_ARENA_STRING "using memory arena string" OFF)
+if (FBE_USING_MEMORY_ARENA_STRING)
+  add_definitions(-DUSING_MEMORY_ARENA_STRING)
+endif()
+
 # System directories
 #include_directories("${CMAKE_CURRENT_SOURCE_DIR}/CppCommon")
 include_directories(SYSTEM "${CMAKE_CURRENT_SOURCE_DIR}/modules")

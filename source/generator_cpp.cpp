@@ -589,9 +589,9 @@ void GeneratorCpp::GenerateFBEFieldModelPMRBytes_Source()
     Write(code);
 }
 
-void GeneratorCpp::GenerateFBEFieldModelMemoryString_Header()
+void GeneratorCpp::GenerateFBEFieldModelFBEString_Header()
 {
-    std::string code = GeneratorCPPFixture::GenerateFBEFieldModelMemoryString_Header();
+    std::string code = GeneratorCPPFixture::GenerateFBEFieldModelFBEString_Header();
 
     // Prepare code template
     code = std::regex_replace(code, std::regex("\n"), EndLine());
@@ -599,9 +599,9 @@ void GeneratorCpp::GenerateFBEFieldModelMemoryString_Header()
     Write(code);
 }
 
-void GeneratorCpp::GenerateFBEFieldModelMemoryArenaString_Header()
+void GeneratorCpp::GenerateFBEFieldModeArenaString_Header()
 {
-    std::string code = GeneratorCPPFixture::GenerateFBEFieldModelMemoryArenaString_Header();
+    std::string code = GeneratorCPPFixture::GenerateFBEFieldModeArenaString_Header();
 
     // Prepare code template
     code = std::regex_replace(code, std::regex("\n"), EndLine());
@@ -609,9 +609,9 @@ void GeneratorCpp::GenerateFBEFieldModelMemoryArenaString_Header()
     Write(code);
 }
 
-void GeneratorCpp::GenerateFBEFieldModelMemoryString_Source()
+void GeneratorCpp::GenerateFBEFieldModelFBEString_Source()
 {
-    std::string code = GeneratorCPPFixture::GenerateFBEFieldModelMemoryString_Source();
+    std::string code = GeneratorCPPFixture::GenerateFBEFieldModelFBEString_Source();
 
     // Prepare code template
     code = std::regex_replace(code, std::regex("\n"), EndLine());
@@ -1049,8 +1049,8 @@ void GeneratorCpp::GenerateFBEModels_Header(const fs::path& path)
     GenerateFBEFieldModelPMRBytes_Header();
 //    GenerateFBEFieldModelString_Header();
 //    GenerateFBEFieldModelPMRString_Header();
-    GenerateFBEFieldModelMemoryString_Header();
-    GenerateFBEFieldModelMemoryArenaString_Header();
+    GenerateFBEFieldModelFBEString_Header();
+    GenerateFBEFieldModeArenaString_Header();
     GenerateFBEFieldModelOptional_Header();
     GenerateFBEFieldModelArray_Header();
     GenerateFBEFieldModelVector_Header();
@@ -1132,7 +1132,7 @@ void GeneratorCpp::GenerateFBEModels_Source(const fs::path& path)
     GenerateFBEFieldModelPMRBytes_Source();
 //    GenerateFBEFieldModelString_Source();
 //    GenerateFBEFieldModelPMRString_Source();
-    GenerateFBEFieldModelMemoryString_Source();
+    GenerateFBEFieldModelFBEString_Source();
     GenerateFBEFieldModelMemoryArenaString_Source();
 
     // Generate namespace end
@@ -7717,7 +7717,7 @@ std::string GeneratorCpp::ConvertTypeName(const std::string& package, const std:
     else if (type == "decimal")
         return "FBE::decimal_t";
     else if (type == "string")
-        return Arena()? "stdb::memory::arena_string":"stdb::memory::string";
+        return Arena()? "ArenaString":"FBEString";
     else if (type == "timestamp")
         return "uint64_t";
     else if (type == "uuid")
