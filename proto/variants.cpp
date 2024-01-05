@@ -139,7 +139,7 @@ Simple::Simple()
     : name()
 {}
 
-Simple::Simple(const stdb::memory::string& arg_name)
+Simple::Simple(const FBEString& arg_name)
     : name(arg_name)
 {}
 

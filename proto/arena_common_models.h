@@ -125,7 +125,7 @@ private:
     size_t _offset;
 
 public:
-    FieldModel<stdb::memory::string> name;
+    FieldModel<FBEString> name;
     FieldModel<::arena_common::Optr> optr;
     FieldModel<::arena_common::Expr> expr;
 };
@@ -219,7 +219,7 @@ private:
     size_t _offset;
 
 public:
-    FieldModelVector<stdb::memory::string> keys;
+    FieldModelVector<FBEString> keys;
     FieldModelVector<::arena_common::Alias> aliases;
     FieldModelMap<int32_t, ::arena_common::Alias> alias_int;
 };

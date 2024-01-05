@@ -62,8 +62,8 @@ struct Extra
 {
     ArenaManagedCreateOnlyTag;
 
-    stdb::memory::arena_string name;
-    stdb::memory::arena_string detail;
+    ArenaString name;
+    ArenaString detail;
     ::osa_pmr::Sex sex;
     ::osa_pmr::MyFLags flag;
 
@@ -71,7 +71,7 @@ struct Extra
 
     Extra();
     explicit Extra(allocator_type alloc);
-    Extra(const stdb::memory::arena_string& arg_name, const stdb::memory::arena_string& arg_detail, const ::osa_pmr::Sex& arg_sex, const ::osa_pmr::MyFLags& arg_flag);
+    Extra(const ArenaString& arg_name, const ArenaString& arg_detail, const ::osa_pmr::Sex& arg_sex, const ::osa_pmr::MyFLags& arg_flag);
     Extra(const Extra& other) = default;
     Extra(Extra&& other) = default;
     ~Extra() = default;
@@ -115,7 +115,7 @@ struct Simple
 {
     ArenaManagedCreateOnlyTag;
 
-    stdb::memory::arena_string name;
+    ArenaString name;
     int32_t depth;
     std::array<::osa_pmr::Extra, 1> sa;
     ::osa_pmr::Sex sex;
@@ -124,7 +124,7 @@ struct Simple
 
     Simple();
     explicit Simple(allocator_type alloc);
-    Simple(const stdb::memory::arena_string& arg_name, int32_t arg_depth, const std::array<::osa_pmr::Extra, 1>& arg_sa, const ::osa_pmr::Sex& arg_sex);
+    Simple(const ArenaString& arg_name, int32_t arg_depth, const std::array<::osa_pmr::Extra, 1>& arg_sa, const ::osa_pmr::Sex& arg_sex);
     Simple(const Simple& other) = default;
     Simple(Simple&& other) = default;
     ~Simple() = default;

@@ -56,9 +56,17 @@ namespace pmr = std::pmr;
 #endif
 #include <utility>
 #include <variant>
-#include "string/string.hpp"
-#include "string/arena_string.hpp"
 #include "container/stdb_vector.hpp"
+
+#if defined(USING_SEASTAR_STRING)
+#include <seastar/core/sstring.hh>
+#elif defined(USING_MEMORY_STRING)
+#include "string/string.hpp"
+#endif
+
+#if defined(USING_MEMORY_ARENA_STRING)
+#include "string/arena_string.hpp"
+#endif
 
 namespace FBE {
     template <typename T>
@@ -68,7 +76,21 @@ namespace FBE {
     using FastVec = stdb::container::stdb_vector<T>;
     #endif
     using Safety = stdb::container::Safety;
-}
+
+    #if defined(USING_SEASTAR_STRING)
+    using FBEString = seastar::sstring;
+    #elif defined(USING_MEMORY_STRING)
+    using FBEString = stdb::memory::string;
+    #else
+    using FBEString = std::string;
+    #endif
+
+    #if defined(USING_MEMORY_ARENA_STRING)
+    using ArenaString = stdb::memory::arena_string;
+    #else
+    using ArenaString = pmr::string;
+    #endif
+} // namespace FBE
 
 #if defined(unix) || defined(__unix) || defined(__unix__) || defined(__APPLE__)
 #include <time.h>
@@ -250,7 +272,7 @@ public:
     pmr_buffer_t() = default;
     explicit pmr_buffer_t(allocator_type alloc): _data(alloc) {}
     explicit pmr_buffer_t(size_t capacity) { reserve(capacity); }
-    explicit pmr_buffer_t(const stdb::memory::arena_string& str) { assign(str); }
+    explicit pmr_buffer_t(const ArenaString& str) { assign(str); }
     pmr_buffer_t(size_t size, uint8_t value) { assign(size, value); }
     pmr_buffer_t(const uint8_t* data, size_t size) { assign(data, size); }
     explicit pmr_buffer_t(const pmr::vector<uint8_t>& other) : _data(other) {}
@@ -264,7 +286,7 @@ public:
     };
     ~pmr_buffer_t() = default;
 
-    pmr_buffer_t& operator=(const stdb::memory::arena_string& str) { assign(str); return *this; }
+    pmr_buffer_t& operator=(const ArenaString& str) { assign(str); return *this; }
     pmr_buffer_t& operator=(const pmr::vector<uint8_t>& other) { _data = other; return *this; }
     pmr_buffer_t& operator=(pmr::vector<uint8_t>&& other) { _data = std::move(other); return *this; }
     pmr_buffer_t& operator=(const pmr_buffer_t& other) = default;
@@ -296,14 +318,14 @@ public:
     void resize(size_t size, uint8_t value = 0) { _data.resize(size, value); }
     void shrink_to_fit() { _data.shrink_to_fit(); }
 
-    void assign(const stdb::memory::arena_string& str) { assign((const uint8_t*)str.c_str(), str.size()); }
+    void assign(const ArenaString& str) { assign((const uint8_t*)str.c_str(), str.size()); }
     void assign(const pmr::vector<uint8_t>& vec) { assign(vec.begin(), vec.end()); }
     void assign(size_t size, uint8_t value) { _data.assign(size, value); }
     void assign(const uint8_t* data, size_t size) { _data.assign(data, data + size); }
     template <class InputIterator>
     void assign(InputIterator first, InputIterator last) { _data.assign(first, last); }
     iterator insert(const_iterator position, uint8_t value) { return _data.insert(position, value); }
-    iterator insert(const_iterator position, const stdb::memory::arena_string& str) { return insert(position, (const uint8_t*)str.c_str(), str.size()); }
+    iterator insert(const_iterator position, const ArenaString& str) { return insert(position, (const uint8_t*)str.c_str(), str.size()); }
     iterator insert(const_iterator position, const pmr::vector<uint8_t>& vec) { return insert(position, vec.begin(), vec.end()); }
     iterator insert(const_iterator position, size_t size, uint8_t value) { return _data.insert(position, size, value); }
     iterator insert(const_iterator position, const uint8_t* data, size_t size) { return _data.insert(position, data, data + size); }

@@ -160,8 +160,8 @@ struct StructSimple
     double f28;
     FBE::decimal_t f29;
     FBE::decimal_t f30;
-    stdb::memory::string f31;
-    stdb::memory::string f32;
+    FBEString f31;
+    FBEString f32;
     uint64_t f33;
     uint64_t f34;
     uint64_t f35;
@@ -178,7 +178,7 @@ struct StructSimple
     size_t fbe_type() const noexcept { return 110; }
 
     StructSimple();
-    StructSimple(int32_t arg_id, bool arg_f1, bool arg_f2, uint8_t arg_f3, uint8_t arg_f4, char arg_f5, char arg_f6, wchar_t arg_f7, wchar_t arg_f8, int8_t arg_f9, int8_t arg_f10, uint8_t arg_f11, uint8_t arg_f12, int16_t arg_f13, int16_t arg_f14, uint16_t arg_f15, uint16_t arg_f16, int32_t arg_f17, int32_t arg_f18, uint32_t arg_f19, uint32_t arg_f20, int64_t arg_f21, int64_t arg_f22, uint64_t arg_f23, uint64_t arg_f24, float arg_f25, float arg_f26, double arg_f27, double arg_f28, const FBE::decimal_t& arg_f29, const FBE::decimal_t& arg_f30, const stdb::memory::string& arg_f31, const stdb::memory::string& arg_f32, uint64_t arg_f33, uint64_t arg_f34, uint64_t arg_f35, const FBE::uuid_t& arg_f36, const FBE::uuid_t& arg_f37, const FBE::uuid_t& arg_f38, const ::proto::OrderSide& arg_f39, const ::proto::OrderType& arg_f40, const ::proto::Order& arg_f41, const ::proto::Balance& arg_f42, const ::proto::State& arg_f43, const ::proto::Account& arg_f44);
+    StructSimple(int32_t arg_id, bool arg_f1, bool arg_f2, uint8_t arg_f3, uint8_t arg_f4, char arg_f5, char arg_f6, wchar_t arg_f7, wchar_t arg_f8, int8_t arg_f9, int8_t arg_f10, uint8_t arg_f11, uint8_t arg_f12, int16_t arg_f13, int16_t arg_f14, uint16_t arg_f15, uint16_t arg_f16, int32_t arg_f17, int32_t arg_f18, uint32_t arg_f19, uint32_t arg_f20, int64_t arg_f21, int64_t arg_f22, uint64_t arg_f23, uint64_t arg_f24, float arg_f25, float arg_f26, double arg_f27, double arg_f28, const FBE::decimal_t& arg_f29, const FBE::decimal_t& arg_f30, const FBEString& arg_f31, const FBEString& arg_f32, uint64_t arg_f33, uint64_t arg_f34, uint64_t arg_f35, const FBE::uuid_t& arg_f36, const FBE::uuid_t& arg_f37, const FBE::uuid_t& arg_f38, const ::proto::OrderSide& arg_f39, const ::proto::OrderType& arg_f40, const ::proto::Order& arg_f41, const ::proto::Balance& arg_f42, const ::proto::State& arg_f43, const ::proto::Account& arg_f44);
     StructSimple(const StructSimple& other) = default;
     StructSimple(StructSimple&& other) = default;
     ~StructSimple() = default;
@@ -266,9 +266,9 @@ struct StructOptional : public ::test::StructSimple
     std::optional<FBE::decimal_t> f142;
     std::optional<FBE::decimal_t> f143;
     std::optional<FBE::decimal_t> f144;
-    std::optional<stdb::memory::string> f145;
-    std::optional<stdb::memory::string> f146;
-    std::optional<stdb::memory::string> f147;
+    std::optional<FBEString> f145;
+    std::optional<FBEString> f146;
+    std::optional<FBEString> f147;
     std::optional<uint64_t> f148;
     std::optional<uint64_t> f149;
     std::optional<uint64_t> f150;
@@ -291,7 +291,7 @@ struct StructOptional : public ::test::StructSimple
     size_t fbe_type() const noexcept { return 111; }
 
     StructOptional();
-    StructOptional(const ::test::StructSimple& base, const std::optional<bool>& arg_f100, const std::optional<bool>& arg_f101, const std::optional<bool>& arg_f102, const std::optional<uint8_t>& arg_f103, const std::optional<uint8_t>& arg_f104, const std::optional<uint8_t>& arg_f105, const std::optional<char>& arg_f106, const std::optional<char>& arg_f107, const std::optional<char>& arg_f108, const std::optional<wchar_t>& arg_f109, const std::optional<wchar_t>& arg_f110, const std::optional<wchar_t>& arg_f111, const std::optional<int8_t>& arg_f112, const std::optional<int8_t>& arg_f113, const std::optional<int8_t>& arg_f114, const std::optional<uint8_t>& arg_f115, const std::optional<uint8_t>& arg_f116, const std::optional<uint8_t>& arg_f117, const std::optional<int16_t>& arg_f118, const std::optional<int16_t>& arg_f119, const std::optional<int16_t>& arg_f120, const std::optional<uint16_t>& arg_f121, const std::optional<uint16_t>& arg_f122, const std::optional<uint16_t>& arg_f123, const std::optional<int32_t>& arg_f124, const std::optional<int32_t>& arg_f125, const std::optional<int32_t>& arg_f126, const std::optional<uint32_t>& arg_f127, const std::optional<uint32_t>& arg_f128, const std::optional<uint32_t>& arg_f129, const std::optional<int64_t>& arg_f130, const std::optional<int64_t>& arg_f131, const std::optional<int64_t>& arg_f132, const std::optional<uint64_t>& arg_f133, const std::optional<uint64_t>& arg_f134, const std::optional<uint64_t>& arg_f135, const std::optional<float>& arg_f136, const std::optional<float>& arg_f137, const std::optional<float>& arg_f138, const std::optional<double>& arg_f139, const std::optional<double>& arg_f140, const std::optional<double>& arg_f141, const std::optional<FBE::decimal_t>& arg_f142, const std::optional<FBE::decimal_t>& arg_f143, const std::optional<FBE::decimal_t>& arg_f144, const std::optional<stdb::memory::string>& arg_f145, const std::optional<stdb::memory::string>& arg_f146, const std::optional<stdb::memory::string>& arg_f147, const std::optional<uint64_t>& arg_f148, const std::optional<uint64_t>& arg_f149, const std::optional<uint64_t>& arg_f150, const std::optional<FBE::uuid_t>& arg_f151, const std::optional<FBE::uuid_t>& arg_f152, const std::optional<FBE::uuid_t>& arg_f153, const std::optional<::proto::OrderSide>& arg_f154, const std::optional<::proto::OrderSide>& arg_f155, const std::optional<::proto::OrderType>& arg_f156, const std::optional<::proto::OrderType>& arg_f157, const std::optional<::proto::Order>& arg_f158, const std::optional<::proto::Order>& arg_f159, const std::optional<::proto::Balance>& arg_f160, const std::optional<::proto::Balance>& arg_f161, const std::optional<::proto::State>& arg_f162, const std::optional<::proto::State>& arg_f163, const std::optional<::proto::Account>& arg_f164, const std::optional<::proto::Account>& arg_f165);
+    StructOptional(const ::test::StructSimple& base, const std::optional<bool>& arg_f100, const std::optional<bool>& arg_f101, const std::optional<bool>& arg_f102, const std::optional<uint8_t>& arg_f103, const std::optional<uint8_t>& arg_f104, const std::optional<uint8_t>& arg_f105, const std::optional<char>& arg_f106, const std::optional<char>& arg_f107, const std::optional<char>& arg_f108, const std::optional<wchar_t>& arg_f109, const std::optional<wchar_t>& arg_f110, const std::optional<wchar_t>& arg_f111, const std::optional<int8_t>& arg_f112, const std::optional<int8_t>& arg_f113, const std::optional<int8_t>& arg_f114, const std::optional<uint8_t>& arg_f115, const std::optional<uint8_t>& arg_f116, const std::optional<uint8_t>& arg_f117, const std::optional<int16_t>& arg_f118, const std::optional<int16_t>& arg_f119, const std::optional<int16_t>& arg_f120, const std::optional<uint16_t>& arg_f121, const std::optional<uint16_t>& arg_f122, const std::optional<uint16_t>& arg_f123, const std::optional<int32_t>& arg_f124, const std::optional<int32_t>& arg_f125, const std::optional<int32_t>& arg_f126, const std::optional<uint32_t>& arg_f127, const std::optional<uint32_t>& arg_f128, const std::optional<uint32_t>& arg_f129, const std::optional<int64_t>& arg_f130, const std::optional<int64_t>& arg_f131, const std::optional<int64_t>& arg_f132, const std::optional<uint64_t>& arg_f133, const std::optional<uint64_t>& arg_f134, const std::optional<uint64_t>& arg_f135, const std::optional<float>& arg_f136, const std::optional<float>& arg_f137, const std::optional<float>& arg_f138, const std::optional<double>& arg_f139, const std::optional<double>& arg_f140, const std::optional<double>& arg_f141, const std::optional<FBE::decimal_t>& arg_f142, const std::optional<FBE::decimal_t>& arg_f143, const std::optional<FBE::decimal_t>& arg_f144, const std::optional<FBEString>& arg_f145, const std::optional<FBEString>& arg_f146, const std::optional<FBEString>& arg_f147, const std::optional<uint64_t>& arg_f148, const std::optional<uint64_t>& arg_f149, const std::optional<uint64_t>& arg_f150, const std::optional<FBE::uuid_t>& arg_f151, const std::optional<FBE::uuid_t>& arg_f152, const std::optional<FBE::uuid_t>& arg_f153, const std::optional<::proto::OrderSide>& arg_f154, const std::optional<::proto::OrderSide>& arg_f155, const std::optional<::proto::OrderType>& arg_f156, const std::optional<::proto::OrderType>& arg_f157, const std::optional<::proto::Order>& arg_f158, const std::optional<::proto::Order>& arg_f159, const std::optional<::proto::Balance>& arg_f160, const std::optional<::proto::Balance>& arg_f161, const std::optional<::proto::State>& arg_f162, const std::optional<::proto::State>& arg_f163, const std::optional<::proto::Account>& arg_f164, const std::optional<::proto::Account>& arg_f165);
     StructOptional(const StructOptional& other) = default;
     StructOptional(StructOptional&& other) = default;
     ~StructOptional() = default;
@@ -716,21 +716,21 @@ namespace test {
 
 struct StructHash
 {
-    std::unordered_map<stdb::memory::string, uint8_t> f1;
-    std::unordered_map<stdb::memory::string, std::optional<uint8_t>> f2;
-    std::unordered_map<stdb::memory::string, FBE::buffer_t> f3;
-    std::unordered_map<stdb::memory::string, std::optional<FBE::buffer_t>> f4;
-    std::unordered_map<stdb::memory::string, ::test::EnumSimple> f5;
-    std::unordered_map<stdb::memory::string, std::optional<::test::EnumSimple>> f6;
-    std::unordered_map<stdb::memory::string, ::test::FlagsSimple> f7;
-    std::unordered_map<stdb::memory::string, std::optional<::test::FlagsSimple>> f8;
-    std::unordered_map<stdb::memory::string, ::test::StructSimple> f9;
-    std::unordered_map<stdb::memory::string, std::optional<::test::StructSimple>> f10;
+    std::unordered_map<FBEString, uint8_t> f1;
+    std::unordered_map<FBEString, std::optional<uint8_t>> f2;
+    std::unordered_map<FBEString, FBE::buffer_t> f3;
+    std::unordered_map<FBEString, std::optional<FBE::buffer_t>> f4;
+    std::unordered_map<FBEString, ::test::EnumSimple> f5;
+    std::unordered_map<FBEString, std::optional<::test::EnumSimple>> f6;
+    std::unordered_map<FBEString, ::test::FlagsSimple> f7;
+    std::unordered_map<FBEString, std::optional<::test::FlagsSimple>> f8;
+    std::unordered_map<FBEString, ::test::StructSimple> f9;
+    std::unordered_map<FBEString, std::optional<::test::StructSimple>> f10;
 
     size_t fbe_type() const noexcept { return 141; }
 
     StructHash();
-    StructHash(const std::unordered_map<stdb::memory::string, uint8_t>& arg_f1, const std::unordered_map<stdb::memory::string, std::optional<uint8_t>>& arg_f2, const std::unordered_map<stdb::memory::string, FBE::buffer_t>& arg_f3, const std::unordered_map<stdb::memory::string, std::optional<FBE::buffer_t>>& arg_f4, const std::unordered_map<stdb::memory::string, ::test::EnumSimple>& arg_f5, const std::unordered_map<stdb::memory::string, std::optional<::test::EnumSimple>>& arg_f6, const std::unordered_map<stdb::memory::string, ::test::FlagsSimple>& arg_f7, const std::unordered_map<stdb::memory::string, std::optional<::test::FlagsSimple>>& arg_f8, const std::unordered_map<stdb::memory::string, ::test::StructSimple>& arg_f9, const std::unordered_map<stdb::memory::string, std::optional<::test::StructSimple>>& arg_f10);
+    StructHash(const std::unordered_map<FBEString, uint8_t>& arg_f1, const std::unordered_map<FBEString, std::optional<uint8_t>>& arg_f2, const std::unordered_map<FBEString, FBE::buffer_t>& arg_f3, const std::unordered_map<FBEString, std::optional<FBE::buffer_t>>& arg_f4, const std::unordered_map<FBEString, ::test::EnumSimple>& arg_f5, const std::unordered_map<FBEString, std::optional<::test::EnumSimple>>& arg_f6, const std::unordered_map<FBEString, ::test::FlagsSimple>& arg_f7, const std::unordered_map<FBEString, std::optional<::test::FlagsSimple>>& arg_f8, const std::unordered_map<FBEString, ::test::StructSimple>& arg_f9, const std::unordered_map<FBEString, std::optional<::test::StructSimple>>& arg_f10);
     StructHash(const StructHash& other) = default;
     StructHash(StructHash&& other) = default;
     ~StructHash() = default;

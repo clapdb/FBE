@@ -39,26 +39,26 @@ struct Value;
 struct ValueContainer;
 struct Scalar1Container;
 
-using Expr = std::variant<bool, stdb::memory::string, int32_t, FastVec<uint8_t>>;
+using Expr = std::variant<bool, FBEString, int32_t, FastVec<uint8_t>>;
 std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const Expr& value);
 auto is_equal(const Expr& lhs, const Expr& rhs) -> bool;
 
-using V = std::variant<int32_t, stdb::memory::string, double, ::variants_ptr::Simple, ::variants_ptr::Simple*, FastVec<::variants_ptr::Simple>, FastVec<int32_t>, std::unordered_map<int32_t, ::variants_ptr::Simple>, FastVec<FBE::buffer_t>, FastVec<stdb::memory::string>, std::unordered_map<int32_t, FBE::buffer_t>, std::unordered_map<stdb::memory::string, FBE::buffer_t>, FastVec<::variants_ptr::Simple*>, ::variants_ptr::Expr>;
+using V = std::variant<int32_t, FBEString, double, ::variants_ptr::Simple, ::variants_ptr::Simple*, FastVec<::variants_ptr::Simple>, FastVec<int32_t>, std::unordered_map<int32_t, ::variants_ptr::Simple>, FastVec<FBE::buffer_t>, FastVec<FBEString>, std::unordered_map<int32_t, FBE::buffer_t>, std::unordered_map<FBEString, FBE::buffer_t>, FastVec<::variants_ptr::Simple*>, ::variants_ptr::Expr>;
 std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const V& value);
 auto is_equal(const V& lhs, const V& rhs) -> bool;
 
-using Scalar1 = std::variant<bool, int32_t, int64_t, stdb::memory::string>;
+using Scalar1 = std::variant<bool, int32_t, int64_t, FBEString>;
 std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const Scalar1& value);
 auto is_equal(const Scalar1& lhs, const Scalar1& rhs) -> bool;
 
 struct Simple : FBE::Base
 {
-    stdb::memory::string name;
+    FBEString name;
 
     size_t fbe_type() const noexcept { return 1; }
 
     Simple();
-    explicit Simple(const stdb::memory::string& arg_name);
+    explicit Simple(const FBEString& arg_name);
     Simple(const Simple& other) = default;
     Simple(Simple&& other) noexcept;
     ~Simple() override;

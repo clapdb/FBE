@@ -84,7 +84,7 @@ CppLogging::Record& operator<<(CppLogging::Record& record, StateEx value);
 struct Order
 {
     int32_t id;
-    stdb::memory::string symbol;
+    FBEString symbol;
     ::protoex::OrderSide side;
     ::protoex::OrderType type;
     double price;
@@ -95,7 +95,7 @@ struct Order
     size_t fbe_type() const noexcept { return 1; }
 
     Order();
-    Order(int32_t arg_id, const stdb::memory::string& arg_symbol, const ::protoex::OrderSide& arg_side, const ::protoex::OrderType& arg_type, double arg_price, double arg_volume, double arg_tp, double arg_sl);
+    Order(int32_t arg_id, const FBEString& arg_symbol, const ::protoex::OrderSide& arg_side, const ::protoex::OrderType& arg_type, double arg_price, double arg_volume, double arg_tp, double arg_sl);
     Order(const Order& other) = default;
     Order(Order&& other) = default;
     ~Order() = default;
@@ -187,7 +187,7 @@ namespace protoex {
 struct Account
 {
     int32_t id;
-    stdb::memory::string name;
+    FBEString name;
     ::protoex::StateEx state;
     ::protoex::Balance wallet;
     std::optional<::protoex::Balance> asset;
@@ -196,7 +196,7 @@ struct Account
     size_t fbe_type() const noexcept { return 3; }
 
     Account();
-    Account(int32_t arg_id, const stdb::memory::string& arg_name, const ::protoex::StateEx& arg_state, const ::protoex::Balance& arg_wallet, const std::optional<::protoex::Balance>& arg_asset, const FastVec<::protoex::Order>& arg_orders);
+    Account(int32_t arg_id, const FBEString& arg_name, const ::protoex::StateEx& arg_state, const ::protoex::Balance& arg_wallet, const std::optional<::protoex::Balance>& arg_asset, const FastVec<::protoex::Order>& arg_orders);
     Account(const Account& other) = default;
     Account(Account&& other) = default;
     ~Account() = default;

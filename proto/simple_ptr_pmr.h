@@ -39,7 +39,7 @@ struct Simple : FBE::Base
 {
     ArenaManagedCreateOnlyTag;
 
-    stdb::memory::arena_string info;
+    ArenaString info;
     ::simple_pmr::Simple* simple;
     int32_t depth;
     pmr::vector<::simple_pmr::Simple*> spv;
@@ -51,7 +51,7 @@ struct Simple : FBE::Base
 
     Simple();
     explicit Simple(allocator_type alloc);
-    Simple(const stdb::memory::arena_string& arg_info, std::unique_ptr<::simple_pmr::Simple> arg_simple, int32_t arg_depth, pmr::vector<std::unique_ptr<::simple_pmr::Simple>> arg_spv, pmr::vector<::simple_pmr::Simple> arg_sv, pmr::map<int32_t, std::unique_ptr<::simple_pmr::Simple>> arg_spm, pmr::map<int32_t, ::simple_pmr::Simple> arg_sm);
+    Simple(const ArenaString& arg_info, std::unique_ptr<::simple_pmr::Simple> arg_simple, int32_t arg_depth, pmr::vector<std::unique_ptr<::simple_pmr::Simple>> arg_spv, pmr::vector<::simple_pmr::Simple> arg_sv, pmr::map<int32_t, std::unique_ptr<::simple_pmr::Simple>> arg_spm, pmr::map<int32_t, ::simple_pmr::Simple> arg_sm);
     Simple(const Simple& other) = default;
     Simple(Simple&& other) noexcept;
     ~Simple() override;

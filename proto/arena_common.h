@@ -49,19 +49,19 @@ CppLogging::Record& operator<<(CppLogging::Record& record, Optr value);
 struct Alias;
 struct Expression;
 
-using Expr = std::variant<bool, int32_t, stdb::memory::string>;
+using Expr = std::variant<bool, int32_t, FBEString>;
 std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const Expr& value);
 
 struct Alias
 {
-    stdb::memory::string name;
+    FBEString name;
     ::arena_common::Optr optr;
     ::arena_common::Expr expr;
 
     size_t fbe_type() const noexcept { return 1; }
 
     Alias();
-    Alias(const stdb::memory::string& arg_name, const ::arena_common::Optr& arg_optr, const ::arena_common::Expr& arg_expr);
+    Alias(const FBEString& arg_name, const ::arena_common::Optr& arg_optr, const ::arena_common::Expr& arg_expr);
     Alias(const Alias& other) = default;
     Alias(Alias&& other) = default;
     ~Alias() = default;
@@ -103,14 +103,14 @@ namespace arena_common {
 
 struct Expression
 {
-    FastVec<stdb::memory::string> keys;
+    FastVec<FBEString> keys;
     FastVec<::arena_common::Alias> aliases;
     std::map<int32_t, ::arena_common::Alias> alias_int;
 
     size_t fbe_type() const noexcept { return 2; }
 
     Expression();
-    Expression(const FastVec<stdb::memory::string>& arg_keys, const FastVec<::arena_common::Alias>& arg_aliases, const std::map<int32_t, ::arena_common::Alias>& arg_alias_int);
+    Expression(const FastVec<FBEString>& arg_keys, const FastVec<::arena_common::Alias>& arg_aliases, const std::map<int32_t, ::arena_common::Alias>& arg_alias_int);
     Expression(const Expression& other) = default;
     Expression(Expression&& other) = default;
     ~Expression() = default;

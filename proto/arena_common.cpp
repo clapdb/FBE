@@ -50,7 +50,7 @@ Alias::Alias()
     , expr()
 {}
 
-Alias::Alias(const stdb::memory::string& arg_name, const ::arena_common::Optr& arg_optr, const ::arena_common::Expr& arg_expr)
+Alias::Alias(const FBEString& arg_name, const ::arena_common::Optr& arg_optr, const ::arena_common::Expr& arg_expr)
     : name(arg_name)
     , optr(arg_optr)
     , expr(arg_expr)
@@ -99,7 +99,7 @@ Expression::Expression()
     , alias_int()
 {}
 
-Expression::Expression(const FastVec<stdb::memory::string>& arg_keys, const FastVec<::arena_common::Alias>& arg_aliases, const std::map<int32_t, ::arena_common::Alias>& arg_alias_int)
+Expression::Expression(const FastVec<FBEString>& arg_keys, const FastVec<::arena_common::Alias>& arg_aliases, const std::map<int32_t, ::arena_common::Alias>& arg_alias_int)
     : keys(arg_keys)
     , aliases(arg_aliases)
     , alias_int(arg_alias_int)

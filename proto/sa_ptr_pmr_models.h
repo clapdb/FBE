@@ -252,8 +252,8 @@ private:
     size_t _offset;
 
 public:
-    FieldModel<stdb::memory::arena_string> name;
-    FieldModel<stdb::memory::arena_string> detail;
+    FieldModel<ArenaString> name;
+    FieldModel<ArenaString> detail;
     FieldModel<::sa_pmr::Sex> sex;
     FieldModel<::sa_pmr::MyFLags> flag;
 };
@@ -346,7 +346,7 @@ private:
     size_t _offset;
 
 public:
-    FieldModel<stdb::memory::arena_string> name;
+    FieldModel<ArenaString> name;
     FieldModel<int32_t> depth;
     FieldModelCustomArray<FieldModelPMR_sa_Extra, ::sa_pmr::Extra, 1> sa;
     FieldModel<::sa_pmr::Sex> sex;
@@ -440,7 +440,7 @@ private:
     size_t _offset;
 
 public:
-    FieldModel<stdb::memory::arena_string> name;
+    FieldModel<ArenaString> name;
     FieldModel<std::optional<::sa_pmr::Sex>> sex;
     FieldModel<std::optional<::sa_pmr::MyFLags>> flag;
     FieldModelStructOptional<FieldModelPMR_sa_Extra, ::sa_pmr::Extra> extra;

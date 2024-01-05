@@ -82,7 +82,7 @@ struct Order
     ArenaManagedCreateOnlyTag;
 
     int32_t id;
-    stdb::memory::arena_string symbol;
+    ArenaString symbol;
     ::proto_pmr::OrderSide side;
     ::proto_pmr::OrderType type;
     double price;
@@ -92,7 +92,7 @@ struct Order
 
     Order();
     explicit Order(allocator_type alloc);
-    Order(int32_t arg_id, const stdb::memory::arena_string& arg_symbol, const ::proto_pmr::OrderSide& arg_side, const ::proto_pmr::OrderType& arg_type, double arg_price, double arg_volume);
+    Order(int32_t arg_id, const ArenaString& arg_symbol, const ::proto_pmr::OrderSide& arg_side, const ::proto_pmr::OrderType& arg_type, double arg_price, double arg_volume);
     Order(const Order& other) = default;
     Order(Order&& other) = default;
     ~Order() = default;
@@ -137,14 +137,14 @@ struct Balance
 {
     ArenaManagedCreateOnlyTag;
 
-    stdb::memory::arena_string currency;
+    ArenaString currency;
     double amount;
 
     size_t fbe_type() const noexcept { return 2; }
 
     Balance();
     explicit Balance(allocator_type alloc);
-    Balance(const stdb::memory::arena_string& arg_currency, double arg_amount);
+    Balance(const ArenaString& arg_currency, double arg_amount);
     Balance(const Balance& other) = default;
     Balance(Balance&& other) = default;
     ~Balance() = default;
@@ -190,7 +190,7 @@ struct Account
     ArenaManagedCreateOnlyTag;
 
     int32_t id;
-    stdb::memory::arena_string name;
+    ArenaString name;
     ::proto_pmr::State state;
     ::proto_pmr::Balance wallet;
     std::optional<::proto_pmr::Balance> asset;
@@ -200,7 +200,7 @@ struct Account
 
     Account();
     explicit Account(allocator_type alloc);
-    Account(int32_t arg_id, const stdb::memory::arena_string& arg_name, const ::proto_pmr::State& arg_state, const ::proto_pmr::Balance& arg_wallet, const std::optional<::proto_pmr::Balance>& arg_asset, const pmr::vector<::proto_pmr::Order>& arg_orders);
+    Account(int32_t arg_id, const ArenaString& arg_name, const ::proto_pmr::State& arg_state, const ::proto_pmr::Balance& arg_wallet, const std::optional<::proto_pmr::Balance>& arg_asset, const pmr::vector<::proto_pmr::Order>& arg_orders);
     Account(const Account& other) = default;
     Account(Account&& other) = default;
     ~Account() = default;
@@ -245,13 +245,13 @@ struct CharMap
 {
     ArenaManagedCreateOnlyTag;
 
-    pmr::unordered_map<char, stdb::memory::arena_string> abbr;
+    pmr::unordered_map<char, ArenaString> abbr;
 
     size_t fbe_type() const noexcept { return 1; }
 
     CharMap();
     explicit CharMap(allocator_type alloc);
-    explicit CharMap(const pmr::unordered_map<char, stdb::memory::arena_string>& arg_abbr);
+    explicit CharMap(const pmr::unordered_map<char, ArenaString>& arg_abbr);
     CharMap(const CharMap& other) = default;
     CharMap(CharMap&& other) = default;
     ~CharMap() = default;
@@ -446,8 +446,8 @@ struct PremiumAccount
     ArenaManagedCreateOnlyTag;
 
     int32_t id;
-    stdb::memory::arena_string name;
-    stdb::memory::arena_string info;
+    ArenaString name;
+    ArenaString info;
     ::proto_pmr::Balance private_wallet;
     pmr::vector<::proto_pmr::Order> private_orders;
     ::proto_pmr::State private_state;
@@ -456,7 +456,7 @@ struct PremiumAccount
 
     PremiumAccount();
     explicit PremiumAccount(allocator_type alloc);
-    PremiumAccount(int32_t arg_id, const stdb::memory::arena_string& arg_name, const stdb::memory::arena_string& arg_info, const ::proto_pmr::Balance& arg_private_wallet, const pmr::vector<::proto_pmr::Order>& arg_private_orders, const ::proto_pmr::State& arg_private_state);
+    PremiumAccount(int32_t arg_id, const ArenaString& arg_name, const ArenaString& arg_info, const ::proto_pmr::Balance& arg_private_wallet, const pmr::vector<::proto_pmr::Order>& arg_private_orders, const ::proto_pmr::State& arg_private_state);
     PremiumAccount(const PremiumAccount& other) = default;
     PremiumAccount(PremiumAccount&& other) = default;
     ~PremiumAccount() = default;

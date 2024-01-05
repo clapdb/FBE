@@ -130,7 +130,7 @@ private:
     size_t _offset;
 
 public:
-    FieldModel<stdb::memory::string> info;
+    FieldModel<FBEString> info;
     FieldModelPtr_simple_Simple simple;
     FieldModel<int32_t> depth;
     FieldModelCustomVector<FieldModelPtr_simple_Simple, ::simple::Simple> spv;

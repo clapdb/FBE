@@ -105,7 +105,7 @@ private:
 
 public:
     FieldModel<int32_t> id;
-    FieldModel<stdb::memory::arena_string> symbol;
+    FieldModel<ArenaString> symbol;
     FieldModel<::protoex_pmr::OrderSide> side;
     FieldModel<::protoex_pmr::OrderType> type;
     FieldModel<double> price;
@@ -297,7 +297,7 @@ private:
 
 public:
     FieldModel<int32_t> id;
-    FieldModel<stdb::memory::arena_string> name;
+    FieldModel<ArenaString> name;
     FieldModel<::protoex_pmr::StateEx> state;
     FieldModel<::protoex_pmr::Balance> wallet;
     FieldModel<std::optional<::protoex_pmr::Balance>> asset;

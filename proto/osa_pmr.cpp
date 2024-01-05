@@ -38,7 +38,7 @@ Extra::Extra([[maybe_unused]] allocator_type alloc)
     , flag()
 {}
 
-Extra::Extra(const stdb::memory::arena_string& arg_name, const stdb::memory::arena_string& arg_detail, const ::osa_pmr::Sex& arg_sex, const ::osa_pmr::MyFLags& arg_flag)
+Extra::Extra(const ArenaString& arg_name, const ArenaString& arg_detail, const ::osa_pmr::Sex& arg_sex, const ::osa_pmr::MyFLags& arg_flag)
     : name(arg_name)
     , detail(arg_detail)
     , sex(arg_sex)
@@ -99,7 +99,7 @@ Simple::Simple([[maybe_unused]] allocator_type alloc)
     , sex()
 {}
 
-Simple::Simple(const stdb::memory::arena_string& arg_name, int32_t arg_depth, const std::array<::osa_pmr::Extra, 1>& arg_sa, const ::osa_pmr::Sex& arg_sex)
+Simple::Simple(const ArenaString& arg_name, int32_t arg_depth, const std::array<::osa_pmr::Extra, 1>& arg_sa, const ::osa_pmr::Sex& arg_sex)
     : name(arg_name)
     , depth(arg_depth)
     , sa(arg_sa)

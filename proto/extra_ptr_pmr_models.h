@@ -183,7 +183,7 @@ private:
     size_t _offset;
 
 public:
-    FieldModel<stdb::memory::arena_string> info;
+    FieldModel<ArenaString> info;
     FieldModelPMRPtr_extra_Extra extra;
     FieldModelCustomVector<FieldModelPMRPtr_extra_Extra, ::extra_pmr::Extra> extras;
     FieldModelCustomVector<FieldModelPMRPtr_extra_Extra, ::extra_pmr::Extra> extras1;
@@ -278,7 +278,7 @@ private:
 
 public:
     FieldModel<int64_t> num;
-    FieldModel<stdb::memory::arena_string> data;
+    FieldModel<ArenaString> data;
     FieldModelPMRPtr_extra_Info info;
     FieldModelPMRPtr_extra_Info info2;
     FieldModelPMR_extra_Info info3;

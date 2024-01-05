@@ -66,7 +66,7 @@ private:
     mutable size_t _offset;
 
 public:
-    FinalModel<stdb::memory::string> name;
+    FinalModel<FBEString> name;
 };
 
 namespace variants {

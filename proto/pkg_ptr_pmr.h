@@ -41,7 +41,7 @@ struct Info : FBE::Base
 {
     ArenaManagedCreateOnlyTag;
 
-    stdb::memory::arena_string info;
+    ArenaString info;
     ::osa_pmr::Sex sex;
     ::osa_pmr::MyFLags flag;
     ::osa_pmr::Extra extra;
@@ -50,7 +50,7 @@ struct Info : FBE::Base
 
     Info();
     explicit Info(allocator_type alloc);
-    Info(const stdb::memory::arena_string& arg_info, ::osa_pmr::Sex arg_sex, ::osa_pmr::MyFLags arg_flag, ::osa_pmr::Extra arg_extra);
+    Info(const ArenaString& arg_info, ::osa_pmr::Sex arg_sex, ::osa_pmr::MyFLags arg_flag, ::osa_pmr::Extra arg_extra);
     Info(const Info& other) = default;
     Info(Info&& other) noexcept;
     ~Info() override;

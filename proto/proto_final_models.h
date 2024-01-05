@@ -91,7 +91,7 @@ private:
 
 public:
     FinalModel<int32_t> id;
-    FinalModel<stdb::memory::string> symbol;
+    FinalModel<FBEString> symbol;
     FinalModel<::proto::OrderSide> side;
     FinalModel<::proto::OrderType> type;
     FinalModel<double> price;
@@ -168,7 +168,7 @@ private:
     mutable size_t _offset;
 
 public:
-    FinalModel<stdb::memory::string> currency;
+    FinalModel<FBEString> currency;
     FinalModel<double> amount;
 };
 
@@ -243,7 +243,7 @@ private:
 
 public:
     FinalModel<int32_t> id;
-    FinalModel<stdb::memory::string> name;
+    FinalModel<FBEString> name;
     FinalModel<::proto::State> state;
     FinalModel<::proto::Balance> wallet;
     FinalModel<std::optional<::proto::Balance>> asset;
@@ -320,7 +320,7 @@ private:
     mutable size_t _offset;
 
 public:
-    FinalModelMap<char, stdb::memory::string> abbr;
+    FinalModelMap<char, FBEString> abbr;
 };
 
 namespace proto {
@@ -613,8 +613,8 @@ private:
 
 public:
     FinalModel<int32_t> id;
-    FinalModel<stdb::memory::string> name;
-    FinalModel<stdb::memory::string> info;
+    FinalModel<FBEString> name;
+    FinalModel<FBEString> info;
     FinalModel<::proto::Balance> private_wallet;
     FinalModelVector<::proto::Order> private_orders;
     FinalModel<::proto::State> private_state;

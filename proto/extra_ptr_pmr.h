@@ -41,7 +41,7 @@ struct Info : FBE::Base
 {
     ArenaManagedCreateOnlyTag;
 
-    stdb::memory::arena_string info;
+    ArenaString info;
     ::extra_pmr::Extra* extra;
     pmr::vector<::extra_pmr::Extra*> extras;
     pmr::vector<::extra_pmr::Extra*> extras1;
@@ -50,7 +50,7 @@ struct Info : FBE::Base
 
     Info();
     explicit Info(allocator_type alloc);
-    Info(const stdb::memory::arena_string& arg_info, std::unique_ptr<::extra_pmr::Extra> arg_extra, pmr::vector<std::unique_ptr<::extra_pmr::Extra>> arg_extras, pmr::vector<std::unique_ptr<::extra_pmr::Extra>> arg_extras1);
+    Info(const ArenaString& arg_info, std::unique_ptr<::extra_pmr::Extra> arg_extra, pmr::vector<std::unique_ptr<::extra_pmr::Extra>> arg_extras, pmr::vector<std::unique_ptr<::extra_pmr::Extra>> arg_extras1);
     Info(const Info& other) = default;
     Info(Info&& other) noexcept;
     ~Info() override;
@@ -97,7 +97,7 @@ struct Extra : FBE::Base
     ArenaManagedCreateOnlyTag;
 
     int64_t num;
-    stdb::memory::arena_string data;
+    ArenaString data;
     ::extra_pmr::Info* info;
     ::extra_pmr::Info* info2;
     ::extra_pmr::Info info3;
@@ -110,7 +110,7 @@ struct Extra : FBE::Base
 
     Extra();
     explicit Extra(allocator_type alloc);
-    Extra(int64_t arg_num, const stdb::memory::arena_string& arg_data, std::unique_ptr<::extra_pmr::Info> arg_info, std::unique_ptr<::extra_pmr::Info> arg_info2, ::extra_pmr::Info arg_info3, pmr::vector<::extra_pmr::Info> arg_infov, pmr::vector<std::unique_ptr<::extra_pmr::Info>> arg_infopv, pmr::list<::extra_pmr::Info> arg_infol, pmr::list<std::unique_ptr<::extra_pmr::Info>> arg_infopl);
+    Extra(int64_t arg_num, const ArenaString& arg_data, std::unique_ptr<::extra_pmr::Info> arg_info, std::unique_ptr<::extra_pmr::Info> arg_info2, ::extra_pmr::Info arg_info3, pmr::vector<::extra_pmr::Info> arg_infov, pmr::vector<std::unique_ptr<::extra_pmr::Info>> arg_infopv, pmr::list<::extra_pmr::Info> arg_infol, pmr::list<std::unique_ptr<::extra_pmr::Info>> arg_infopl);
     Extra(const Extra& other) = default;
     Extra(Extra&& other) noexcept;
     ~Extra() override;

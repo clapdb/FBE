@@ -16,7 +16,7 @@ Info::Info()
     , extra()
 {}
 
-Info::Info(const stdb::memory::string& arg_info, ::osa::Sex arg_sex, ::osa::MyFLags arg_flag, ::osa::Extra arg_extra)
+Info::Info(const FBEString& arg_info, ::osa::Sex arg_sex, ::osa::MyFLags arg_flag, ::osa::Extra arg_extra)
     : info(arg_info)
     , sex(std::move(arg_sex))
     , flag(std::move(arg_flag))

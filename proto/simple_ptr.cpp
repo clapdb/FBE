@@ -19,7 +19,7 @@ Simple::Simple()
     , sm()
 {}
 
-Simple::Simple(const stdb::memory::string& arg_info, std::unique_ptr<::simple::Simple> arg_simple, int32_t arg_depth, FastVec<std::unique_ptr<::simple::Simple>> arg_spv, FastVec<::simple::Simple> arg_sv, std::map<int32_t, std::unique_ptr<::simple::Simple>> arg_spm, std::map<int32_t, ::simple::Simple> arg_sm)
+Simple::Simple(const FBEString& arg_info, std::unique_ptr<::simple::Simple> arg_simple, int32_t arg_depth, FastVec<std::unique_ptr<::simple::Simple>> arg_spv, FastVec<::simple::Simple> arg_sv, std::map<int32_t, std::unique_ptr<::simple::Simple>> arg_spm, std::map<int32_t, ::simple::Simple> arg_sm)
     : info(arg_info)
     , simple(arg_simple.release())
     , depth(arg_depth)

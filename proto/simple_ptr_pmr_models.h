@@ -130,7 +130,7 @@ private:
     size_t _offset;
 
 public:
-    FieldModel<stdb::memory::arena_string> info;
+    FieldModel<ArenaString> info;
     FieldModelPMRPtr_simple_Simple simple;
     FieldModel<int32_t> depth;
     FieldModelCustomVector<FieldModelPMRPtr_simple_Simple, ::simple_pmr::Simple> spv;

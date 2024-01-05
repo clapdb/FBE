@@ -58,15 +58,15 @@ CppLogging::Record& operator<<(CppLogging::Record& record, MyFLags value);
 
 struct Extra
 {
-    stdb::memory::string name;
-    stdb::memory::string detail;
+    FBEString name;
+    FBEString detail;
     ::osa::Sex sex;
     ::osa::MyFLags flag;
 
     size_t fbe_type() const noexcept { return 1; }
 
     Extra();
-    Extra(const stdb::memory::string& arg_name, const stdb::memory::string& arg_detail, const ::osa::Sex& arg_sex, const ::osa::MyFLags& arg_flag);
+    Extra(const FBEString& arg_name, const FBEString& arg_detail, const ::osa::Sex& arg_sex, const ::osa::MyFLags& arg_flag);
     Extra(const Extra& other) = default;
     Extra(Extra&& other) = default;
     ~Extra() = default;
@@ -108,7 +108,7 @@ namespace osa {
 
 struct Simple
 {
-    stdb::memory::string name;
+    FBEString name;
     int32_t depth;
     std::array<::osa::Extra, 1> sa;
     ::osa::Sex sex;
@@ -116,7 +116,7 @@ struct Simple
     size_t fbe_type() const noexcept { return 2; }
 
     Simple();
-    Simple(const stdb::memory::string& arg_name, int32_t arg_depth, const std::array<::osa::Extra, 1>& arg_sa, const ::osa::Sex& arg_sex);
+    Simple(const FBEString& arg_name, int32_t arg_depth, const std::array<::osa::Extra, 1>& arg_sa, const ::osa::Sex& arg_sex);
     Simple(const Simple& other) = default;
     Simple(Simple&& other) = default;
     ~Simple() = default;

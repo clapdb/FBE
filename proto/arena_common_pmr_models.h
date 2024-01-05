@@ -125,7 +125,7 @@ private:
     size_t _offset;
 
 public:
-    FieldModel<stdb::memory::arena_string> name;
+    FieldModel<ArenaString> name;
     FieldModel<::arena_common_pmr::Optr> optr;
     FieldModel<::arena_common_pmr::Expr> expr;
 };
@@ -219,7 +219,7 @@ private:
     size_t _offset;
 
 public:
-    FieldModelVector<stdb::memory::arena_string> keys;
+    FieldModelVector<ArenaString> keys;
     FieldModelVector<::arena_common_pmr::Alias> aliases;
     FieldModelMap<int32_t, ::arena_common_pmr::Alias> alias_int;
 };

@@ -105,7 +105,7 @@ private:
 
 public:
     FieldModel<int32_t> id;
-    FieldModel<stdb::memory::string> symbol;
+    FieldModel<FBEString> symbol;
     FieldModel<::protoex::OrderSide> side;
     FieldModel<::protoex::OrderType> type;
     FieldModel<double> price;
@@ -297,7 +297,7 @@ private:
 
 public:
     FieldModel<int32_t> id;
-    FieldModel<stdb::memory::string> name;
+    FieldModel<FBEString> name;
     FieldModel<::protoex::StateEx> state;
     FieldModel<::protoex::Balance> wallet;
     FieldModel<std::optional<::protoex::Balance>> asset;

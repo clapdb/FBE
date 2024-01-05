@@ -29,7 +29,7 @@ Simple::Simple([[maybe_unused]] allocator_type alloc)
     , sm(alloc)
 {}
 
-Simple::Simple(const stdb::memory::arena_string& arg_info, std::unique_ptr<::simple_pmr::Simple> arg_simple, int32_t arg_depth, pmr::vector<std::unique_ptr<::simple_pmr::Simple>> arg_spv, pmr::vector<::simple_pmr::Simple> arg_sv, pmr::map<int32_t, std::unique_ptr<::simple_pmr::Simple>> arg_spm, pmr::map<int32_t, ::simple_pmr::Simple> arg_sm)
+Simple::Simple(const ArenaString& arg_info, std::unique_ptr<::simple_pmr::Simple> arg_simple, int32_t arg_depth, pmr::vector<std::unique_ptr<::simple_pmr::Simple>> arg_spv, pmr::vector<::simple_pmr::Simple> arg_sv, pmr::map<int32_t, std::unique_ptr<::simple_pmr::Simple>> arg_spm, pmr::map<int32_t, ::simple_pmr::Simple> arg_sm)
     : info(arg_info)
     , simple(arg_simple.release())
     , depth(arg_depth)

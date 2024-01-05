@@ -16,7 +16,7 @@ Line::Line()
     , vo()
 {}
 
-Line::Line(::variants::V arg_v, FastVec<::variants::V> arg_vv, std::unordered_map<stdb::memory::string, ::variants::V> arg_vm, std::optional<::variants::V> arg_vo)
+Line::Line(::variants::V arg_v, FastVec<::variants::V> arg_vv, std::unordered_map<FBEString, ::variants::V> arg_vm, std::optional<::variants::V> arg_vo)
     : v(std::move(arg_v))
     , vv(std::move(arg_vv))
     , vm(std::move(arg_vm))

@@ -383,7 +383,7 @@ Simple::Simple([[maybe_unused]] allocator_type alloc)
     : name(alloc)
 {}
 
-Simple::Simple(const stdb::memory::arena_string& arg_name)
+Simple::Simple(const ArenaString& arg_name)
     : name(arg_name)
 {}
 
