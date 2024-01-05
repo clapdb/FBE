@@ -52,14 +52,10 @@ include_directories(SYSTEM ${Boost_INCLUDE_DIRS})
 find_package(LibUUID)
 
 include_directories("modules/memory")
-include_directories("modules/Catch2/single_include")
-include_directories("modules/rapidjson/include")
 
 
 # Modules
-add_subdirectory("modules/Catch2")
 add_subdirectory("modules/memory")
-add_subdirectory("modules/rapidjson")
 
 # Link libraries
 #list(APPEND LINKLIBS cppcommon)
@@ -120,6 +116,11 @@ list(APPEND INSTALL_TARGETS fbec)
 
 # Additional module components: benchmarks, examples, plugins, tests, tools and install
 if(NOT FBEC_MODULE)
+  include_directories("modules/Catch2/single_include")
+  include_directories("modules/rapidjson/include")
+
+  # Modules
+  add_subdirectory("modules/Catch2")
 
   # Proto FBE models
   file(GLOB FBE_FILES RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}/proto" "proto/*.fbe")
