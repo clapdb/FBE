@@ -803,7 +803,11 @@ struct ValueReader<TJson, FBEString>
             return false;
 
         // Save the value
+        #if defined(USING_SEASTAR_STRING)
+        value = json.GetString();
+        #else
         value.assign(json.GetString(), (size_t)json.GetStringLength());
+        #endif
         return true;
     }
 };
