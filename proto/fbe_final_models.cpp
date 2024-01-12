@@ -344,7 +344,8 @@ size_t FinalModel<buffer_t>::set(const void* data, size_t size)
 
     *((uint32_t*)(_buffer.data() + _buffer.offset() + fbe_offset())) = fbe_bytes_size;
 
-    memcpy((char*)(_buffer.data() + _buffer.offset() + fbe_offset() + 4), data, fbe_bytes_size);
+    if (fbe_bytes_size > 0)
+        memcpy((char*)(_buffer.data() + _buffer.offset() + fbe_offset() + 4), data, fbe_bytes_size);
     return 4 + fbe_bytes_size;
 }
 
@@ -414,7 +415,8 @@ size_t FinalModel<std::string>::set(const char* data, size_t size)
 
     *((uint32_t*)(_buffer.data() + _buffer.offset() + fbe_offset())) = fbe_string_size;
 
-    memcpy((char*)(_buffer.data() + _buffer.offset() + fbe_offset() + 4), data, fbe_string_size);
+    if (fbe_string_size > 0)
+        memcpy((char*)(_buffer.data() + _buffer.offset() + fbe_offset() + 4), data, fbe_string_size);
     return 4 + fbe_string_size;
 }
 
@@ -431,7 +433,8 @@ size_t FinalModel<std::string>::set(const std::string& value)
 
     *((uint32_t*)(_buffer.data() + _buffer.offset() + fbe_offset())) = fbe_string_size;
 
-    memcpy((char*)(_buffer.data() + _buffer.offset() + fbe_offset() + 4), value.data(), fbe_string_size);
+    if (fbe_string_size > 0)
+        memcpy((char*)(_buffer.data() + _buffer.offset() + fbe_offset() + 4), value.data(), fbe_string_size);
     return 4 + fbe_string_size;
 }
 
