@@ -4356,7 +4356,9 @@ size_t FinalModel<FBEString>::get(char* data, size_t size) const noexcept
 
 size_t FinalModel<FBEString>::get(FBEString& value) const noexcept
 {
+    #if !defined(USING_SEASTAR_STRING)
     value.clear();
+    #endif
 
     assert(((_buffer.offset() + fbe_offset() + 4) <= _buffer.size()) && "Model is broken!");
     if ((_buffer.offset() + fbe_offset() + 4) > _buffer.size())
@@ -4366,8 +4368,12 @@ size_t FinalModel<FBEString>::get(FBEString& value) const noexcept
     assert(((_buffer.offset() + fbe_offset() + 4 + fbe_string_size) <= _buffer.size()) && "Model is broken!");
     if ((_buffer.offset() + fbe_offset() + 4 + fbe_string_size) > _buffer.size())
         return 4;
-
+    #if !defined(USING_SEASTAR_STRING)
     value.assign((const char*)(_buffer.data() + _buffer.offset() + fbe_offset() + 4), fbe_string_size);
+    #else
+    value.resize(fbe_string_size);
+    memcpy(value.data(), (const char*)(_buffer.data() + _buffer.offset() + fbe_offset() + 4), fbe_string_size);
+    #endif
     return 4 + fbe_string_size;
 }
 
