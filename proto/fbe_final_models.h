@@ -229,7 +229,7 @@ private:
 
 // Fast Binary Encoding final model string specialization
 template <>
-class FinalModel<std::string>
+class FinalModel<FBEString>
 {
 public:
     FinalModel(FBEBuffer& buffer, size_t offset) noexcept : _buffer(buffer), _offset(offset) {}
