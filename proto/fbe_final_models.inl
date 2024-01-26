@@ -34,7 +34,7 @@ inline size_t FinalModelBase<T, TBase>::set(T value) noexcept
     if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
         return 0;
 
-    *((TBase*)(_buffer.data() + _buffer.offset() + fbe_offset())) = (TBase)value;
+    unaligned_store<TBase>(_buffer.data() + _buffer.offset() + fbe_offset(), (TBase)value);
     return fbe_size();
 }
 
