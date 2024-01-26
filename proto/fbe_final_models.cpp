@@ -6,6 +6,8 @@
 //------------------------------------------------------------------------------
 
 #include "fbe_final_models.h"
+#include "fbe.h"
+#include <cstdint>
 
 namespace FBE {
 
@@ -342,7 +344,7 @@ size_t FinalModel<buffer_t>::set(const void* data, size_t size)
     if ((_buffer.offset() + fbe_offset() + 4 + fbe_bytes_size) > _buffer.size())
         return 4;
 
-    *((uint32_t*)(_buffer.data() + _buffer.offset() + fbe_offset())) = fbe_bytes_size;
+    unaligned_store<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset(), fbe_bytes_size);
 
     if (fbe_bytes_size > 0)
         memcpy((char*)(_buffer.data() + _buffer.offset() + fbe_offset() + 4), data, fbe_bytes_size);
@@ -431,7 +433,7 @@ size_t FinalModel<FBEString>::set(const std::string& value)
     if ((_buffer.offset() + fbe_offset() + 4 + fbe_string_size) > _buffer.size())
         return 4;
 
-    *((uint32_t*)(_buffer.data() + _buffer.offset() + fbe_offset())) = fbe_string_size;
+    unaligned_store<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset(), fbe_string_size);
 
     if (fbe_string_size > 0)
         memcpy((char*)(_buffer.data() + _buffer.offset() + fbe_offset() + 4), value.data(), fbe_string_size);
