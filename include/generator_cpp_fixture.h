@@ -3179,10 +3179,17 @@ inline void FieldModelVector<T>::get(pmr::vector<T>& values) const noexcept
     auto fbe_model = (*this)[0];
     for (size_t i = fbe_vector_size; i-- > 0;)
     {
-        T value = T();
-        fbe_model.get(value);
-        values.emplace_back(std::move(value));
-        fbe_model.fbe_shift(fbe_model.fbe_size());
+        if constexpr (std::is_constructible_v<T, std::polymorphic_allocator>) {
+            T value{values.get_allocator()};
+            fbe_model.get(value);
+            values.emplace_back(std::move(value));
+            fbe_model.fbe_shift(fbe_model.fbe_size());
+        } else {
+            T value = T();
+            fbe_model.get(value);
+            values.emplace_back(std::move(value));
+            fbe_model.fbe_shift(fbe_model.fbe_size());
+        }
     }
 }
 
@@ -3198,10 +3205,17 @@ inline void FieldModelVector<T>::get(pmr::list<T>& values) const noexcept
     auto fbe_model = (*this)[0];
     for (size_t i = fbe_vector_size; i-- > 0;)
     {
-        T value = T();
-        fbe_model.get(value);
-        values.emplace_back(std::move(value));
-        fbe_model.fbe_shift(fbe_model.fbe_size());
+        if constexpr (std::is_constructible_v<T, std::polymorphic_allocator>) {
+            T value{values.get_allocator()};
+            fbe_model.get(value);
+            values.emplace_back(std::move(value));
+            fbe_model.fbe_shift(fbe_model.fbe_size());
+        } else {
+            T value = T();
+            fbe_model.get(value);
+            values.emplace_back(std::move(value));
+            fbe_model.fbe_shift(fbe_model.fbe_size());
+        }
     }
 }
 
@@ -3217,10 +3231,18 @@ inline void FieldModelVector<T>::get(pmr::set<T>& values) const noexcept
     auto fbe_model = (*this)[0];
     for (size_t i = fbe_vector_size; i-- > 0;)
     {
-        T value = T();
-        fbe_model.get(value);
-        values.emplace(std::move(value));
-        fbe_model.fbe_shift(fbe_model.fbe_size());
+
+        if constexpr (std::is_constructible_v<T, std::polymorphic_allocator>) {
+            T value{values.get_allocator()};
+            fbe_model.get(value);
+            values.emplace(std::move(value));
+            fbe_model.fbe_shift(fbe_model.fbe_size());
+        } else {
+            T value = T();
+            fbe_model.get(value);
+            values.emplace(std::move(value));
+            fbe_model.fbe_shift(fbe_model.fbe_size());
+        }
     }
 }
 
@@ -3552,11 +3574,21 @@ inline void FieldModelMap<TKey, TValue>::get(pmr::map<TKey, TValue>& values) con
     auto fbe_model = (*this)[0];
     for (size_t i = fbe_map_size; i-- > 0;)
     {
-        TKey key;
-        TValue value;
-        fbe_model.first.get(key);
-        fbe_model.second.get(value);
-        values.emplace(std::move(key), std::move(value));
+        std::unique_ptr<TKey> key_ptr = nullptr;
+        std::unique_ptr<TValue> value_ptr = nullptr;
+        if constexpr (std::is_constructible_v<TKey, std::polymorphic_allocator>) {
+            key_ptr = std::make_unique<TKey>(values.get_allocator());
+        } else {
+            key_ptr = std::make_unique<TKey>();
+        }
+        if constexpr (std::is_constructible_v<TValue, std::polymorphic_allocator>) {
+            value_ptr = std::make_unique<TValue>(values.get_allocator());
+        } else {
+            value_ptr = std::make_unique<TValue>();
+        }
+        fbe_model.first.get(*key_ptr);
+        fbe_model.second.get(*value_ptr);
+        values.emplace(std::move(*key_ptr), std::move(*value_ptr));
         fbe_model.first.fbe_shift(fbe_model.first.fbe_size() + fbe_model.second.fbe_size());
         fbe_model.second.fbe_shift(fbe_model.first.fbe_size() + fbe_model.second.fbe_size());
     }
@@ -3574,11 +3606,21 @@ inline void FieldModelMap<TKey, TValue>::get(pmr::unordered_map<TKey, TValue>& v
     auto fbe_model = (*this)[0];
     for (size_t i = fbe_map_size; i-- > 0;)
     {
-        TKey key;
-        TValue value;
-        fbe_model.first.get(key);
-        fbe_model.second.get(value);
-        values.emplace(std::move(key), std::move(value));
+        std::unique_ptr<TKey> key_ptr = nullptr;
+        std::unique_ptr<TValue> value_ptr = nullptr;
+        if constexpr (std::is_constructible_v<TKey, std::polymorphic_allocator>) {
+            key_ptr = std::make_unique<TKey>(values.get_allocator());
+        } else {
+            key_ptr = std::make_unique<TKey>();
+        }
+        if constexpr (std::is_constructible_v<TValue, std::polymorphic_allocator>) {
+            value_ptr = std::make_unique<TValue>(values.get_allocator());
+        } else {
+            value_ptr = std::make_unique<TValue>();
+        }
+        fbe_model.first.get(*key_ptr);
+        fbe_model.second.get(*value_ptr);
+        values.emplace(std::move(*key_ptr), std::move(*value_ptr));
         fbe_model.first.fbe_shift(fbe_model.first.fbe_size() + fbe_model.second.fbe_size());
         fbe_model.second.fbe_shift(fbe_model.first.fbe_size() + fbe_model.second.fbe_size());
     }
