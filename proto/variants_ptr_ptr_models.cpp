@@ -175,7 +175,7 @@ void FieldModel<::variants_ptr::Expr>::set(const ::variants_ptr::Expr& fbe_value
     std::visit(
         overloaded
         {
-[this, fbe_variant_index = fbe_value.index()](std::monostate v) {
+            [this, fbe_variant_index = fbe_value.index()](std::monostate v) {
                 FieldModel<std::monostate> fbe_model(_buffer, 4);
                 size_t fbe_begin = set_begin(fbe_model.fbe_size(), fbe_variant_index);
                 if (fbe_begin == 0)
@@ -517,7 +517,7 @@ void FieldModel<::variants_ptr::V>::set(const ::variants_ptr::V& fbe_value) noex
     std::visit(
         overloaded
         {
-[this, fbe_variant_index = fbe_value.index()](std::monostate v) {
+            [this, fbe_variant_index = fbe_value.index()](std::monostate v) {
                 FieldModel<std::monostate> fbe_model(_buffer, 4);
                 size_t fbe_begin = set_begin(fbe_model.fbe_size(), fbe_variant_index);
                 if (fbe_begin == 0)
@@ -809,7 +809,7 @@ void FieldModel<::variants_ptr::Scalar1>::set(const ::variants_ptr::Scalar1& fbe
     std::visit(
         overloaded
         {
-[this, fbe_variant_index = fbe_value.index()](std::monostate v) {
+            [this, fbe_variant_index = fbe_value.index()](std::monostate v) {
                 FieldModel<std::monostate> fbe_model(_buffer, 4);
                 size_t fbe_begin = set_begin(fbe_model.fbe_size(), fbe_variant_index);
                 if (fbe_begin == 0)

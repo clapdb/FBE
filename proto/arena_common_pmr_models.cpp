@@ -47,7 +47,7 @@ bool FieldModel<::arena_common_pmr::Expr>::verify() const noexcept
         return false;
 
     uint32_t fbe_variant_type = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_variant_offset);
-    if (fbe_variant_type < 0 || fbe_variant_type >= 3)
+    if (fbe_variant_type < 0 || fbe_variant_type > 3)
         return false;
 
     _buffer.shift(fbe_variant_offset);
@@ -91,12 +91,12 @@ void FieldModel<::arena_common_pmr::Expr>::get(::arena_common_pmr::Expr& fbe_val
     assert(((fbe_variant_offset > 0) && ((_buffer.offset() + fbe_variant_offset + 4) <= _buffer.size())) && "Model is broken!");
     if ((fbe_variant_offset == 0) || ((_buffer.offset() + fbe_variant_offset + 4) > _buffer.size()))
         return;
-    uint32_t vairant_type_index = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_variant_offset);
-    assert(vairant_type_index >= 0 && vairant_type_index < 3 && "Model is broken!");
+    uint32_t variant_type_index = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_variant_offset);
+    assert(variant_type_index >= 0 && variant_type_index <= 3 && "Model is broken!");
 
     _buffer.shift(fbe_variant_offset);
 
-    switch(vairant_type_index) {
+    switch(variant_type_index) {
         case 0: {
             FieldModel<std::monostate> fbe_model(_buffer, 4);
             fbe_value.emplace<std::monostate>();
@@ -162,7 +162,7 @@ void FieldModel<::arena_common_pmr::Expr>::set(const ::arena_common_pmr::Expr& f
     std::visit(
         overloaded
         {
-[this, fbe_variant_index = fbe_value.index()](std::monostate v) {
+            [this, fbe_variant_index = fbe_value.index()](std::monostate v) {
                 FieldModel<std::monostate> fbe_model(_buffer, 4);
                 size_t fbe_begin = set_begin(fbe_model.fbe_size(), fbe_variant_index);
                 if (fbe_begin == 0)

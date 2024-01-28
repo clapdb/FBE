@@ -162,7 +162,7 @@ void FieldModel<::variants::Expr>::set(const ::variants::Expr& fbe_value) noexce
     std::visit(
         overloaded
         {
-[this, fbe_variant_index = fbe_value.index()](std::monostate v) {
+            [this, fbe_variant_index = fbe_value.index()](std::monostate v) {
                 FieldModel<std::monostate> fbe_model(_buffer, 4);
                 size_t fbe_begin = set_begin(fbe_model.fbe_size(), fbe_variant_index);
                 if (fbe_begin == 0)
@@ -470,7 +470,7 @@ void FieldModel<::variants::V>::set(const ::variants::V& fbe_value) noexcept
     std::visit(
         overloaded
         {
-[this, fbe_variant_index = fbe_value.index()](std::monostate v) {
+            [this, fbe_variant_index = fbe_value.index()](std::monostate v) {
                 FieldModel<std::monostate> fbe_model(_buffer, 4);
                 size_t fbe_begin = set_begin(fbe_model.fbe_size(), fbe_variant_index);
                 if (fbe_begin == 0)

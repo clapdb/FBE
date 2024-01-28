@@ -6702,7 +6702,7 @@ void GeneratorCpp::GenerateVariantFieldModel_Source(const std::shared_ptr<Packag
     WriteLineIndent("overloaded");
     WriteLineIndent("{");
     Indent(1);
-    WriteLine("[this, fbe_variant_index = fbe_value.index()](std::monostate v) {");
+    WriteLineIndent("[this, fbe_variant_index = fbe_value.index()](std::monostate v) {");
     Indent(1);
     WriteLineIndent("FieldModel<std::monostate> fbe_model(_buffer, 4);");
     WriteLineIndent("size_t fbe_begin = set_begin(fbe_model.fbe_size(), fbe_variant_index);");

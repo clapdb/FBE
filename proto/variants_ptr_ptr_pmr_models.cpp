@@ -175,7 +175,7 @@ void FieldModel<::variants_ptr_pmr::Expr>::set(const ::variants_ptr_pmr::Expr& f
     std::visit(
         overloaded
         {
-[this, fbe_variant_index = fbe_value.index()](std::monostate v) {
+            [this, fbe_variant_index = fbe_value.index()](std::monostate v) {
                 FieldModel<std::monostate> fbe_model(_buffer, 4);
                 size_t fbe_begin = set_begin(fbe_model.fbe_size(), fbe_variant_index);
                 if (fbe_begin == 0)
@@ -517,7 +517,7 @@ void FieldModel<::variants_ptr_pmr::V>::set(const ::variants_ptr_pmr::V& fbe_val
     std::visit(
         overloaded
         {
-[this, fbe_variant_index = fbe_value.index()](std::monostate v) {
+            [this, fbe_variant_index = fbe_value.index()](std::monostate v) {
                 FieldModel<std::monostate> fbe_model(_buffer, 4);
                 size_t fbe_begin = set_begin(fbe_model.fbe_size(), fbe_variant_index);
                 if (fbe_begin == 0)
@@ -809,7 +809,7 @@ void FieldModel<::variants_ptr_pmr::Scalar1>::set(const ::variants_ptr_pmr::Scal
     std::visit(
         overloaded
         {
-[this, fbe_variant_index = fbe_value.index()](std::monostate v) {
+            [this, fbe_variant_index = fbe_value.index()](std::monostate v) {
                 FieldModel<std::monostate> fbe_model(_buffer, 4);
                 size_t fbe_begin = set_begin(fbe_model.fbe_size(), fbe_variant_index);
                 if (fbe_begin == 0)
