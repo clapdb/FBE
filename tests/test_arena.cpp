@@ -160,8 +160,8 @@ TEST_CASE_METHOD(ArenaTest, "Arena (template import template)", "[template-based
     REQUIRE(copy.optr == ::arena_common_pmr::Optr::LE);
     REQUIRE(copy.alias.name == "an alias name for item");
     REQUIRE(copy.alias.optr == ::arena_common_pmr::Optr::LT);
-    REQUIRE(copy.alias.expr.index() == 1);
-    REQUIRE(std::get<1>(copy.alias.expr) == 42);
+    REQUIRE(copy.alias.expr.index() == 2);
+    REQUIRE(std::get<2>(copy.alias.expr) == 42);
     REQUIRE(copy.aliases_int.size() == 1);
     REQUIRE(copy.aliases_int.at(42).name == "an alias name 4");
     REQUIRE(copy.aliases_int.at(42).optr == ::arena_common_pmr::Optr::EQ);

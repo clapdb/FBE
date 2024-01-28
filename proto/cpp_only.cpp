@@ -15,29 +15,32 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const LargeNum& 
     [[maybe_unused]] bool first = true;
     switch (value.index()) {
         case 0:
-            stream<< "{int64}";
-            stream << std::get<0>(value);
+            stream << "{empty}";
             break;
         case 1:
+            stream<< "{int64}";
+            stream << std::get<1>(value);
+            break;
+        case 2:
             stream<< "{int128}";
             stream << "unimplemented";
             break;
-        case 2:
+        case 3:
             stream<< "{uint128}";
             stream << "unimplemented";
             break;
-        case 3:
-            stream << "{int128}=[" << std::get<3>(value).size() << "][";
-            for ([[maybe_unused]] const auto& it : std::get<3>(value))
+        case 4:
+            stream << "{int128}=[" << std::get<4>(value).size() << "][";
+            for ([[maybe_unused]] const auto& it : std::get<4>(value))
             {
                 stream << std::string(first ? "" : ",") << "(int128) operator<< unimplemented";
                 first = false;
             }
             stream << "]";
             break;
-        case 4:
-            stream << "{uint128->int128}=[" << std::get<4>(value).size() << "][";
-            for ([[maybe_unused]] const auto& it : std::get<4>(value))
+        case 5:
+            stream << "{uint128->int128}=[" << std::get<5>(value).size() << "][";
+            for ([[maybe_unused]] const auto& it : std::get<5>(value))
             {
                 stream << std::string(first ? "" : ",") << "(uint128) operator<< unimplemented";
                 stream << "->";

@@ -15,16 +15,19 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const Expr& valu
     [[maybe_unused]] bool first = true;
     switch (value.index()) {
         case 0:
-            stream<< "{bool}";
-            stream << std::get<0>(value);
+            stream << "{empty}";
             break;
         case 1:
-            stream<< "{int32}";
+            stream<< "{bool}";
             stream << std::get<1>(value);
             break;
         case 2:
-            stream<< "{string}";
+            stream<< "{int32}";
             stream << std::get<2>(value);
+            break;
+        case 3:
+            stream<< "{string}";
+            stream << std::get<3>(value);
             break;
         default:
             static_assert("unreachable branch");
@@ -39,32 +42,26 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const V& value)
     [[maybe_unused]] bool first = true;
     switch (value.index()) {
         case 0:
-            stream<< "{string}";
-            stream << std::get<0>(value);
+            stream << "{empty}";
             break;
         case 1:
-            stream<< "{int32}";
+            stream<< "{string}";
             stream << std::get<1>(value);
             break;
         case 2:
-            stream<< "{double}";
+            stream<< "{int32}";
             stream << std::get<2>(value);
             break;
         case 3:
-            stream<< "{Simple}";
+            stream<< "{double}";
             stream << std::get<3>(value);
             break;
         case 4:
-            stream << "{Simple}=[" << std::get<4>(value).size() << "][";
-            for ([[maybe_unused]] const auto& it : std::get<4>(value))
-            {
-                stream << std::string(first ? "" : ",") << it;
-                first = false;
-            }
-            stream << "]";
+            stream<< "{Simple}";
+            stream << std::get<4>(value);
             break;
         case 5:
-            stream << "{int32}=[" << std::get<5>(value).size() << "][";
+            stream << "{Simple}=[" << std::get<5>(value).size() << "][";
             for ([[maybe_unused]] const auto& it : std::get<5>(value))
             {
                 stream << std::string(first ? "" : ",") << it;
@@ -73,8 +70,17 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const V& value)
             stream << "]";
             break;
         case 6:
-            stream << "{int32->Simple}=[" << std::get<6>(value).size() << "][";
+            stream << "{int32}=[" << std::get<6>(value).size() << "][";
             for ([[maybe_unused]] const auto& it : std::get<6>(value))
+            {
+                stream << std::string(first ? "" : ",") << it;
+                first = false;
+            }
+            stream << "]";
+            break;
+        case 7:
+            stream << "{int32->Simple}=[" << std::get<7>(value).size() << "][";
+            for ([[maybe_unused]] const auto& it : std::get<7>(value))
             {
                 stream << std::string(first ? "" : ",") << it.first;
                 stream << "->";
@@ -83,27 +89,27 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const V& value)
             }
             stream << "]";
             break;
-        case 7:
-            stream << "{bytes}=[" << std::get<7>(value).size() << "][";
-            for ([[maybe_unused]] const auto& it : std::get<7>(value))
+        case 8:
+            stream << "{bytes}=[" << std::get<8>(value).size() << "][";
+            for ([[maybe_unused]] const auto& it : std::get<8>(value))
             {
                 stream << std::string(first ? "" : ",") << "bytes[" << it.size() << "]";
                 first = false;
             }
             stream << "]";
             break;
-        case 8:
-            stream << "{string}=[" << std::get<8>(value).size() << "][";
-            for ([[maybe_unused]] const auto& it : std::get<8>(value))
+        case 9:
+            stream << "{string}=[" << std::get<9>(value).size() << "][";
+            for ([[maybe_unused]] const auto& it : std::get<9>(value))
             {
                 stream << std::string(first ? "" : ",") << "\"" << it << "\"";
                 first = false;
             }
             stream << "]";
             break;
-        case 9:
-            stream << "{int32->bytes}=[" << std::get<9>(value).size() << "][";
-            for ([[maybe_unused]] const auto& it : std::get<9>(value))
+        case 10:
+            stream << "{int32->bytes}=[" << std::get<10>(value).size() << "][";
+            for ([[maybe_unused]] const auto& it : std::get<10>(value))
             {
                 stream << std::string(first ? "" : ",") << it.first;
                 stream << "->";
@@ -112,9 +118,9 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const V& value)
             }
             stream << "]";
             break;
-        case 10:
-            stream << "{string->bytes}=[" << std::get<10>(value).size() << "][";
-            for ([[maybe_unused]] const auto& it : std::get<10>(value))
+        case 11:
+            stream << "{string->bytes}=[" << std::get<11>(value).size() << "][";
+            for ([[maybe_unused]] const auto& it : std::get<11>(value))
             {
                 stream << std::string(first ? "" : ",") << "\"" << it.first << "\"";
                 stream << "->";
@@ -123,9 +129,9 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const V& value)
             }
             stream << "]";
             break;
-        case 11:
+        case 12:
             stream<< "{Expr}";
-            stream << std::get<11>(value);
+            stream << std::get<12>(value);
             break;
         default:
             static_assert("unreachable branch");

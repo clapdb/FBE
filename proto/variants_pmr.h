@@ -36,10 +36,10 @@ namespace variants_pmr {
 struct Simple;
 struct Value;
 
-using Expr = std::variant<bool, int32_t, ArenaString>;
+using Expr = std::variant<std::monostate, bool, int32_t, ArenaString>;
 std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const Expr& value);
 
-using V = std::variant<ArenaString, int32_t, double, ::variants_pmr::Simple, pmr::vector<::variants_pmr::Simple>, pmr::vector<int32_t>, pmr::unordered_map<int32_t, ::variants_pmr::Simple>, pmr::vector<FBE::pmr_buffer_t>, pmr::vector<ArenaString>, pmr::unordered_map<int32_t, FBE::pmr_buffer_t>, pmr::unordered_map<ArenaString, FBE::pmr_buffer_t>, ::variants_pmr::Expr>;
+using V = std::variant<std::monostate, ArenaString, int32_t, double, ::variants_pmr::Simple, pmr::vector<::variants_pmr::Simple>, pmr::vector<int32_t>, pmr::unordered_map<int32_t, ::variants_pmr::Simple>, pmr::vector<FBE::pmr_buffer_t>, pmr::vector<ArenaString>, pmr::unordered_map<int32_t, FBE::pmr_buffer_t>, pmr::unordered_map<ArenaString, FBE::pmr_buffer_t>, ::variants_pmr::Expr>;
 std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const V& value);
 
 struct Simple

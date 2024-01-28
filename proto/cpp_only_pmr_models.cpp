@@ -53,30 +53,36 @@ bool FieldModel<::cpp_only_pmr::LargeNum>::verify() const noexcept
     _buffer.shift(fbe_variant_offset);
     switch(fbe_variant_type) {
         case 0: {
-            FieldModel<int64_t> fbe_model(_buffer, 4);
+            FieldModel<std::monostate> fbe_model(_buffer, 4);
             if (!fbe_model.verify())
                 return false;
             break;
         }
         case 1: {
-            FieldModel<__int128_t> fbe_model(_buffer, 4);
+            FieldModel<int64_t> fbe_model(_buffer, 4);
             if (!fbe_model.verify())
                 return false;
             break;
         }
         case 2: {
-            FieldModel<__uint128_t> fbe_model(_buffer, 4);
+            FieldModel<__int128_t> fbe_model(_buffer, 4);
             if (!fbe_model.verify())
                 return false;
             break;
         }
         case 3: {
-            FieldModelVector<__int128_t> fbe_model(_buffer, 4);
+            FieldModel<__uint128_t> fbe_model(_buffer, 4);
             if (!fbe_model.verify())
                 return false;
             break;
         }
         case 4: {
+            FieldModelVector<__int128_t> fbe_model(_buffer, 4);
+            if (!fbe_model.verify())
+                return false;
+            break;
+        }
+        case 5: {
             FieldModelMap<__uint128_t, __int128_t> fbe_model(_buffer, 4);
             if (!fbe_model.verify())
                 return false;
@@ -104,37 +110,42 @@ void FieldModel<::cpp_only_pmr::LargeNum>::get(::cpp_only_pmr::LargeNum& fbe_val
 
     switch(vairant_type_index) {
         case 0: {
-            FieldModel<int64_t> fbe_model(_buffer, 4);
-            fbe_value.emplace<int64_t>();
-            auto& value = std::get<0>(fbe_value);
-            fbe_model.get(value);
+            FieldModel<std::monostate> fbe_model(_buffer, 4);
+            fbe_value.emplace<std::monostate>();
             break;
         }
         case 1: {
-            FieldModel<__int128_t> fbe_model(_buffer, 4);
-            fbe_value.emplace<__int128_t>();
+            FieldModel<int64_t> fbe_model(_buffer, 4);
+            fbe_value.emplace<int64_t>();
             auto& value = std::get<1>(fbe_value);
             fbe_model.get(value);
             break;
         }
         case 2: {
-            FieldModel<__uint128_t> fbe_model(_buffer, 4);
-            fbe_value.emplace<__uint128_t>();
+            FieldModel<__int128_t> fbe_model(_buffer, 4);
+            fbe_value.emplace<__int128_t>();
             auto& value = std::get<2>(fbe_value);
             fbe_model.get(value);
             break;
         }
         case 3: {
-            FieldModelVector<__int128_t> fbe_model(_buffer, 4);
-            fbe_value.emplace<pmr::vector<__int128_t>>();
+            FieldModel<__uint128_t> fbe_model(_buffer, 4);
+            fbe_value.emplace<__uint128_t>();
             auto& value = std::get<3>(fbe_value);
             fbe_model.get(value);
             break;
         }
         case 4: {
+            FieldModelVector<__int128_t> fbe_model(_buffer, 4);
+            fbe_value.emplace<pmr::vector<__int128_t>>();
+            auto& value = std::get<4>(fbe_value);
+            fbe_model.get(value);
+            break;
+        }
+        case 5: {
             FieldModelMap<__uint128_t, __int128_t> fbe_model(_buffer, 4);
             fbe_value.emplace<pmr::unordered_map<__uint128_t, __int128_t>>();
-            auto& value = std::get<4>(fbe_value);
+            auto& value = std::get<5>(fbe_value);
             fbe_model.get(value);
             break;
         }
@@ -177,7 +188,15 @@ void FieldModel<::cpp_only_pmr::LargeNum>::set(const ::cpp_only_pmr::LargeNum& f
     std::visit(
         overloaded
         {
-            [this, fbe_variant_index = fbe_value.index()](int64_t v) {
+[this, fbe_variant_index = fbe_value.index()](std::monostate v) {
+                FieldModel<std::monostate> fbe_model(_buffer, 4);
+                size_t fbe_begin = set_begin(fbe_model.fbe_size(), fbe_variant_index);
+                if (fbe_begin == 0)
+                    return;
+                fbe_model.set(v);
+                set_end(fbe_begin);
+            }
+            , [this, fbe_variant_index = fbe_value.index()](int64_t v) {
                 FieldModel<int64_t> fbe_model(_buffer, 4);
                 size_t fbe_begin = set_begin(fbe_model.fbe_size(), fbe_variant_index);
                 if (fbe_begin == 0)

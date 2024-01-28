@@ -25,16 +25,19 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const Expr& valu
     [[maybe_unused]] bool first = true;
     switch (value.index()) {
         case 0:
-            stream<< "{bool}";
-            stream << std::get<0>(value);
+            stream << "{empty}";
             break;
         case 1:
-            stream<< "{int32}";
+            stream<< "{bool}";
             stream << std::get<1>(value);
             break;
         case 2:
-            stream<< "{string}";
+            stream<< "{int32}";
             stream << std::get<2>(value);
+            break;
+        case 3:
+            stream<< "{string}";
+            stream << std::get<3>(value);
             break;
         default:
             static_assert("unreachable branch");

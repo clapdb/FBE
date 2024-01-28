@@ -49,7 +49,7 @@ CppLogging::Record& operator<<(CppLogging::Record& record, Optr value);
 struct Alias;
 struct Expression;
 
-using Expr = std::variant<bool, int32_t, FBEString>;
+using Expr = std::variant<std::monostate, bool, int32_t, FBEString>;
 std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const Expr& value);
 
 struct Alias

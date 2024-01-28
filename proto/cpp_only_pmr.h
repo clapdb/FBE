@@ -35,7 +35,7 @@ namespace cpp_only_pmr {
 // forward declaration
 struct Struct128;
 
-using LargeNum = std::variant<int64_t, __int128_t, __uint128_t, pmr::vector<__int128_t>, pmr::unordered_map<__uint128_t, __int128_t>>;
+using LargeNum = std::variant<std::monostate, int64_t, __int128_t, __uint128_t, pmr::vector<__int128_t>, pmr::unordered_map<__uint128_t, __int128_t>>;
 std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const LargeNum& value);
 
 struct Struct128

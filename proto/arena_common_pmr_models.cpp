@@ -53,18 +53,24 @@ bool FieldModel<::arena_common_pmr::Expr>::verify() const noexcept
     _buffer.shift(fbe_variant_offset);
     switch(fbe_variant_type) {
         case 0: {
-            FieldModel<bool> fbe_model(_buffer, 4);
+            FieldModel<std::monostate> fbe_model(_buffer, 4);
             if (!fbe_model.verify())
                 return false;
             break;
         }
         case 1: {
-            FieldModel<int32_t> fbe_model(_buffer, 4);
+            FieldModel<bool> fbe_model(_buffer, 4);
             if (!fbe_model.verify())
                 return false;
             break;
         }
         case 2: {
+            FieldModel<int32_t> fbe_model(_buffer, 4);
+            if (!fbe_model.verify())
+                return false;
+            break;
+        }
+        case 3: {
             FieldModel<ArenaString> fbe_model(_buffer, 4);
             if (!fbe_model.verify())
                 return false;
@@ -92,23 +98,28 @@ void FieldModel<::arena_common_pmr::Expr>::get(::arena_common_pmr::Expr& fbe_val
 
     switch(vairant_type_index) {
         case 0: {
-            FieldModel<bool> fbe_model(_buffer, 4);
-            fbe_value.emplace<bool>();
-            auto& value = std::get<0>(fbe_value);
-            fbe_model.get(value);
+            FieldModel<std::monostate> fbe_model(_buffer, 4);
+            fbe_value.emplace<std::monostate>();
             break;
         }
         case 1: {
-            FieldModel<int32_t> fbe_model(_buffer, 4);
-            fbe_value.emplace<int32_t>();
+            FieldModel<bool> fbe_model(_buffer, 4);
+            fbe_value.emplace<bool>();
             auto& value = std::get<1>(fbe_value);
             fbe_model.get(value);
             break;
         }
         case 2: {
+            FieldModel<int32_t> fbe_model(_buffer, 4);
+            fbe_value.emplace<int32_t>();
+            auto& value = std::get<2>(fbe_value);
+            fbe_model.get(value);
+            break;
+        }
+        case 3: {
             FieldModel<ArenaString> fbe_model(_buffer, 4);
             fbe_value.emplace<ArenaString>();
-            auto& value = std::get<2>(fbe_value);
+            auto& value = std::get<3>(fbe_value);
             fbe_model.get(value);
             break;
         }
@@ -151,7 +162,15 @@ void FieldModel<::arena_common_pmr::Expr>::set(const ::arena_common_pmr::Expr& f
     std::visit(
         overloaded
         {
-            [this, fbe_variant_index = fbe_value.index()](bool v) {
+[this, fbe_variant_index = fbe_value.index()](std::monostate v) {
+                FieldModel<std::monostate> fbe_model(_buffer, 4);
+                size_t fbe_begin = set_begin(fbe_model.fbe_size(), fbe_variant_index);
+                if (fbe_begin == 0)
+                    return;
+                fbe_model.set(v);
+                set_end(fbe_begin);
+            }
+            , [this, fbe_variant_index = fbe_value.index()](bool v) {
                 FieldModel<bool> fbe_model(_buffer, 4);
                 size_t fbe_begin = set_begin(fbe_model.fbe_size(), fbe_variant_index);
                 if (fbe_begin == 0)

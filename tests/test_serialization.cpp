@@ -1374,7 +1374,7 @@ TEST_CASE("Serialization: variant", "[FBE]") {
         size_t deserialized = reader.deserialize(value_copy);
         REQUIRE(deserialized == reader.buffer().size());
 
-        REQUIRE(value_copy.v.index() == 0);
+        REQUIRE(value_copy.v.index() == 1);
         REQUIRE(std::get<FBE::FBEString>(value_copy.v) == "variant v");
         REQUIRE(value == value_copy);
     }
@@ -1396,7 +1396,7 @@ TEST_CASE("Serialization: variant", "[FBE]") {
         size_t deserialized = reader.deserialize(value_copy);
         REQUIRE(deserialized == reader.buffer().size());
 
-        REQUIRE(value_copy.v.index() == 1);
+        REQUIRE(value_copy.v.index() == 2);
         REQUIRE(std::get<int32_t>(value_copy.v) == 42);
         REQUIRE(value == value_copy);
     }
@@ -1418,7 +1418,7 @@ TEST_CASE("Serialization: variant", "[FBE]") {
         size_t deserialized = reader.deserialize(value_copy);
         REQUIRE(deserialized == reader.buffer().size());
 
-        REQUIRE(value_copy.v.index() == 3);
+        REQUIRE(value_copy.v.index() == 4);
         REQUIRE(std::get<::variants::Simple>(value_copy.v).name == "simple");
         REQUIRE(value == value_copy);
     }
@@ -1427,34 +1427,6 @@ TEST_CASE("Serialization: variant", "[FBE]") {
         FastVec<::variants::Simple> v;
         v.emplace_back(::variants::Simple{"simple1"});
         v.emplace_back(::variants::Simple{"simple2"});
-
-        ::variants::Value value;
-        REQUIRE(value.v.index() == 0);
-        value.v.emplace<4>(std::move(v));
-
-        FBE::variants::ValueModel writer;
-        size_t serialized = writer.serialize(value);
-        REQUIRE(serialized == writer.buffer().size());
-        REQUIRE(writer.verify());
-
-        FBE::variants::ValueModel reader;
-        reader.attach(writer.buffer());
-        REQUIRE(reader.verify());
-
-        ::variants::Value value_copy;
-        size_t deserialized = reader.deserialize(value_copy);
-        REQUIRE(deserialized == reader.buffer().size());
-
-        REQUIRE(value_copy.v.index() == 4);
-        auto& v_copy = std::get<4>(value_copy.v);
-        REQUIRE(v_copy.size() == 2);
-        REQUIRE(v_copy.at(0).name == "simple1");
-        REQUIRE(v_copy.at(1).name == "simple2");
-        REQUIRE(value == value_copy);
-    }
-
-    SECTION ("vector of primitive type") {
-        FastVec<int32_t> v {1,2,3};
 
         ::variants::Value value;
         REQUIRE(value.v.index() == 0);
@@ -1475,21 +1447,18 @@ TEST_CASE("Serialization: variant", "[FBE]") {
 
         REQUIRE(value_copy.v.index() == 5);
         auto& v_copy = std::get<5>(value_copy.v);
-        REQUIRE(v_copy.size() ==3);
-        REQUIRE(v_copy.at(0) == 1);
-        REQUIRE(v_copy.at(1) == 2);
-        REQUIRE(v_copy.at(2) == 3);
+        REQUIRE(v_copy.size() == 2);
+        REQUIRE(v_copy.at(0).name == "simple1");
+        REQUIRE(v_copy.at(1).name == "simple2");
         REQUIRE(value == value_copy);
     }
 
-    SECTION ("hash with primitive and struct") {
-        std::unordered_map<int32_t, ::variants::Simple> m;
-        m.emplace(1, ::variants::Simple{"simple1"});
-        m.emplace(2, ::variants::Simple{"simple2"});
+    SECTION ("vector of primitive type") {
+        FastVec<int32_t> v {1,2,3};
 
         ::variants::Value value;
         REQUIRE(value.v.index() == 0);
-        value.v.emplace<6>(std::move(m));
+        value.v.emplace<6>(std::move(v));
 
         FBE::variants::ValueModel writer;
         size_t serialized = writer.serialize(value);
@@ -1506,20 +1475,21 @@ TEST_CASE("Serialization: variant", "[FBE]") {
 
         REQUIRE(value_copy.v.index() == 6);
         auto& v_copy = std::get<6>(value_copy.v);
-        REQUIRE(v_copy.size() == 2);
-        REQUIRE(v_copy.at(1).name == "simple1");
-        REQUIRE(v_copy.at(2).name == "simple2");
+        REQUIRE(v_copy.size() ==3);
+        REQUIRE(v_copy.at(0) == 1);
+        REQUIRE(v_copy.at(1) == 2);
+        REQUIRE(v_copy.at(2) == 3);
         REQUIRE(value == value_copy);
     }
 
-    SECTION ("container of bytes") {
-        FastVec<uint8_t> v {65, 66, 67, 68, 69};
-        FastVec<FBE::buffer_t> bytes_v;
-        bytes_v.emplace_back(FBE::buffer_t(v));
+    SECTION ("hash with primitive and struct") {
+        std::unordered_map<int32_t, ::variants::Simple> m;
+        m.emplace(1, ::variants::Simple{"simple1"});
+        m.emplace(2, ::variants::Simple{"simple2"});
 
         ::variants::Value value;
         REQUIRE(value.v.index() == 0);
-        value.v.emplace<7>(std::move(bytes_v));
+        value.v.emplace<7>(std::move(m));
 
         FBE::variants::ValueModel writer;
         size_t serialized = writer.serialize(value);
@@ -1536,17 +1506,20 @@ TEST_CASE("Serialization: variant", "[FBE]") {
 
         REQUIRE(value_copy.v.index() == 7);
         auto& v_copy = std::get<7>(value_copy.v);
-        REQUIRE(v_copy.size() == 1);
-        REQUIRE(v_copy.at(0).string() == "ABCDE");
+        REQUIRE(v_copy.size() == 2);
+        REQUIRE(v_copy.at(1).name == "simple1");
+        REQUIRE(v_copy.at(2).name == "simple2");
         REQUIRE(value == value_copy);
     }
-    
-    SECTION ("vector of string") {
-        FastVec<FBE::FBEString> string_v {"hello", "world"};
+
+    SECTION ("container of bytes") {
+        FastVec<uint8_t> v {65, 66, 67, 68, 69};
+        FastVec<FBE::buffer_t> bytes_v;
+        bytes_v.emplace_back(FBE::buffer_t(v));
 
         ::variants::Value value;
         REQUIRE(value.v.index() == 0);
-        value.v.emplace<8>(std::move(string_v));
+        value.v.emplace<8>(std::move(bytes_v));
 
         FBE::variants::ValueModel writer;
         size_t serialized = writer.serialize(value);
@@ -1563,20 +1536,17 @@ TEST_CASE("Serialization: variant", "[FBE]") {
 
         REQUIRE(value_copy.v.index() == 8);
         auto& v_copy = std::get<8>(value_copy.v);
-        REQUIRE(v_copy.size() == 2);
-        REQUIRE(v_copy.at(0) == "hello");
-        REQUIRE(v_copy.at(1) == "world");
+        REQUIRE(v_copy.size() == 1);
+        REQUIRE(v_copy.at(0).string() == "ABCDE");
         REQUIRE(value == value_copy);
     }
-
-    SECTION ("hash with primitive and bytes") {
-        std::unordered_map<int32_t, FBE::buffer_t> m;
-        FastVec<uint8_t> v {65, 66, 67, 68, 69};
-        m.emplace(42, FBE::buffer_t(v));
+    
+    SECTION ("vector of string") {
+        FastVec<FBE::FBEString> string_v {"hello", "world"};
 
         ::variants::Value value;
         REQUIRE(value.v.index() == 0);
-        value.v.emplace<9>(std::move(m));
+        value.v.emplace<9>(std::move(string_v));
 
         FBE::variants::ValueModel writer;
         size_t serialized = writer.serialize(value);
@@ -1593,15 +1563,16 @@ TEST_CASE("Serialization: variant", "[FBE]") {
 
         REQUIRE(value_copy.v.index() == 9);
         auto& v_copy = std::get<9>(value_copy.v);
-        REQUIRE(v_copy.size() == 1);
-        REQUIRE(v_copy.at(42).string() == "ABCDE");
+        REQUIRE(v_copy.size() == 2);
+        REQUIRE(v_copy.at(0) == "hello");
+        REQUIRE(v_copy.at(1) == "world");
         REQUIRE(value == value_copy);
     }
 
-    SECTION ("hash with string and bytes") {
-        std::unordered_map<FBE::FBEString, FBE::buffer_t> m;
+    SECTION ("hash with primitive and bytes") {
+        std::unordered_map<int32_t, FBE::buffer_t> m;
         FastVec<uint8_t> v {65, 66, 67, 68, 69};
-        m.emplace("hello world", FBE::buffer_t(v));
+        m.emplace(42, FBE::buffer_t(v));
 
         ::variants::Value value;
         REQUIRE(value.v.index() == 0);
@@ -1622,6 +1593,35 @@ TEST_CASE("Serialization: variant", "[FBE]") {
 
         REQUIRE(value_copy.v.index() == 10);
         auto& v_copy = std::get<10>(value_copy.v);
+        REQUIRE(v_copy.size() == 1);
+        REQUIRE(v_copy.at(42).string() == "ABCDE");
+        REQUIRE(value == value_copy);
+    }
+
+    SECTION ("hash with string and bytes") {
+        std::unordered_map<FBE::FBEString, FBE::buffer_t> m;
+        FastVec<uint8_t> v {65, 66, 67, 68, 69};
+        m.emplace("hello world", FBE::buffer_t(v));
+
+        ::variants::Value value;
+        REQUIRE(value.v.index() == 0);
+        value.v.emplace<11>(std::move(m));
+
+        FBE::variants::ValueModel writer;
+        size_t serialized = writer.serialize(value);
+        REQUIRE(serialized == writer.buffer().size());
+        REQUIRE(writer.verify());
+
+        FBE::variants::ValueModel reader;
+        reader.attach(writer.buffer());
+        REQUIRE(reader.verify());
+
+        ::variants::Value value_copy;
+        size_t deserialized = reader.deserialize(value_copy);
+        REQUIRE(deserialized == reader.buffer().size());
+
+        REQUIRE(value_copy.v.index() == 11);
+        auto& v_copy = std::get<11>(value_copy.v);
         REQUIRE(v_copy.size() == 1);
         REQUIRE(v_copy.at("hello world").string() == "ABCDE");
         REQUIRE(value == value_copy);
@@ -1646,10 +1646,10 @@ TEST_CASE("Serialization: variant", "[FBE]") {
         size_t deserialized = reader.deserialize(value_copy);
         REQUIRE(deserialized == reader.buffer().size());
 
-        REQUIRE(value_copy.v.index() == 11);
+        REQUIRE(value_copy.v.index() == 12);
         auto& v_copy_expr = std::get<::variants::Expr>(value_copy.v);
-        REQUIRE(v_copy_expr.index() == 2);
-        REQUIRE(std::get<2>(v_copy_expr) == "42");
+        REQUIRE(v_copy_expr.index() == 3);
+        REQUIRE(std::get<3>(v_copy_expr) == "42");
         REQUIRE(value == value_copy);
     }
 }

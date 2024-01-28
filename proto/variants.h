@@ -34,10 +34,10 @@ namespace variants {
 struct Simple;
 struct Value;
 
-using Expr = std::variant<bool, int32_t, FBEString>;
+using Expr = std::variant<std::monostate, bool, int32_t, FBEString>;
 std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const Expr& value);
 
-using V = std::variant<FBEString, int32_t, double, ::variants::Simple, FastVec<::variants::Simple>, FastVec<int32_t>, std::unordered_map<int32_t, ::variants::Simple>, FastVec<FBE::buffer_t>, FastVec<FBEString>, std::unordered_map<int32_t, FBE::buffer_t>, std::unordered_map<FBEString, FBE::buffer_t>, ::variants::Expr>;
+using V = std::variant<std::monostate, FBEString, int32_t, double, ::variants::Simple, FastVec<::variants::Simple>, FastVec<int32_t>, std::unordered_map<int32_t, ::variants::Simple>, FastVec<FBE::buffer_t>, FastVec<FBEString>, std::unordered_map<int32_t, FBE::buffer_t>, std::unordered_map<FBEString, FBE::buffer_t>, ::variants::Expr>;
 std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const V& value);
 
 struct Simple

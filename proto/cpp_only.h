@@ -33,7 +33,7 @@ namespace cpp_only {
 // forward declaration
 struct Struct128;
 
-using LargeNum = std::variant<int64_t, __int128_t, __uint128_t, FastVec<__int128_t>, std::unordered_map<__uint128_t, __int128_t>>;
+using LargeNum = std::variant<std::monostate, int64_t, __int128_t, __uint128_t, FastVec<__int128_t>, std::unordered_map<__uint128_t, __int128_t>>;
 std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const LargeNum& value);
 
 struct Struct128
