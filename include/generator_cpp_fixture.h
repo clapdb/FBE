@@ -3179,7 +3179,7 @@ inline void FieldModelVector<T>::get(pmr::vector<T>& values) const noexcept
     auto fbe_model = (*this)[0];
     for (size_t i = fbe_vector_size; i-- > 0;)
     {
-        if constexpr (std::is_constructible_v<T, std::polymorphic_allocator>) {
+        if constexpr (std::is_constructible_v<T, pmr::polymorphic_allocator<char>>) {
             T value{values.get_allocator()};
             fbe_model.get(value);
             values.emplace_back(std::move(value));
@@ -3205,7 +3205,7 @@ inline void FieldModelVector<T>::get(pmr::list<T>& values) const noexcept
     auto fbe_model = (*this)[0];
     for (size_t i = fbe_vector_size; i-- > 0;)
     {
-        if constexpr (std::is_constructible_v<T, std::polymorphic_allocator>) {
+        if constexpr (std::is_constructible_v<T, pmr::polymorphic_allocator<char>>) {
             T value{values.get_allocator()};
             fbe_model.get(value);
             values.emplace_back(std::move(value));
@@ -3232,7 +3232,7 @@ inline void FieldModelVector<T>::get(pmr::set<T>& values) const noexcept
     for (size_t i = fbe_vector_size; i-- > 0;)
     {
 
-        if constexpr (std::is_constructible_v<T, std::polymorphic_allocator>) {
+        if constexpr (std::is_constructible_v<T, pmr::polymorphic_allocator<char>>) {
             T value{values.get_allocator()};
             fbe_model.get(value);
             values.emplace(std::move(value));
@@ -3576,12 +3576,12 @@ inline void FieldModelMap<TKey, TValue>::get(pmr::map<TKey, TValue>& values) con
     {
         std::unique_ptr<TKey> key_ptr = nullptr;
         std::unique_ptr<TValue> value_ptr = nullptr;
-        if constexpr (std::is_constructible_v<TKey, std::polymorphic_allocator>) {
+        if constexpr (std::is_constructible_v<TKey, pmr::polymorphic_allocator<char>>) {
             key_ptr = std::make_unique<TKey>(values.get_allocator());
         } else {
             key_ptr = std::make_unique<TKey>();
         }
-        if constexpr (std::is_constructible_v<TValue, std::polymorphic_allocator>) {
+        if constexpr (std::is_constructible_v<TValue, pmr::polymorphic_allocator<char>>) {
             value_ptr = std::make_unique<TValue>(values.get_allocator());
         } else {
             value_ptr = std::make_unique<TValue>();
@@ -3608,12 +3608,12 @@ inline void FieldModelMap<TKey, TValue>::get(pmr::unordered_map<TKey, TValue>& v
     {
         std::unique_ptr<TKey> key_ptr = nullptr;
         std::unique_ptr<TValue> value_ptr = nullptr;
-        if constexpr (std::is_constructible_v<TKey, std::polymorphic_allocator>) {
+        if constexpr (std::is_constructible_v<TKey, pmr::polymorphic_allocator<char>>) {
             key_ptr = std::make_unique<TKey>(values.get_allocator());
         } else {
             key_ptr = std::make_unique<TKey>();
         }
-        if constexpr (std::is_constructible_v<TValue, std::polymorphic_allocator>) {
+        if constexpr (std::is_constructible_v<TValue, pmr::polymorphic_allocator<char>>) {
             value_ptr = std::make_unique<TValue>(values.get_allocator());
         } else {
             value_ptr = std::make_unique<TValue>();
