@@ -6,8 +6,6 @@
 //------------------------------------------------------------------------------
 
 #include "fbe_final_models.h"
-#include "fbe.h"
-#include <cstdint>
 
 namespace FBE {
 
@@ -383,9 +381,11 @@ size_t FinalModel<FBEString>::get(char* data, size_t size) const noexcept
     return 4 + fbe_string_size;
 }
 
-size_t FinalModel<FBEString>::get(std::string& value) const noexcept
+size_t FinalModel<FBEString>::get(FBEString& value) const noexcept
 {
+    #if !defined(USING_SEASTAR_STRING)
     value.clear();
+    #endif
 
     assert(((_buffer.offset() + fbe_offset() + 4) <= _buffer.size()) && "Model is broken!");
     if ((_buffer.offset() + fbe_offset() + 4) > _buffer.size())
@@ -395,8 +395,12 @@ size_t FinalModel<FBEString>::get(std::string& value) const noexcept
     assert(((_buffer.offset() + fbe_offset() + 4 + fbe_string_size) <= _buffer.size()) && "Model is broken!");
     if ((_buffer.offset() + fbe_offset() + 4 + fbe_string_size) > _buffer.size())
         return 4;
-
+    #if !defined(USING_SEASTAR_STRING)
     value.assign((const char*)(_buffer.data() + _buffer.offset() + fbe_offset() + 4), fbe_string_size);
+    #else
+    value.resize(fbe_string_size);
+    memcpy(value.data(), (const char*)(_buffer.data() + _buffer.offset() + fbe_offset() + 4), fbe_string_size);
+    #endif
     return 4 + fbe_string_size;
 }
 
@@ -415,14 +419,14 @@ size_t FinalModel<FBEString>::set(const char* data, size_t size)
     if ((_buffer.offset() + fbe_offset() + 4 + fbe_string_size) > _buffer.size())
         return 4;
 
-    *((uint32_t*)(_buffer.data() + _buffer.offset() + fbe_offset())) = fbe_string_size;
+    unaligned_store<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset(), fbe_string_size);
 
     if (fbe_string_size > 0)
         memcpy((char*)(_buffer.data() + _buffer.offset() + fbe_offset() + 4), data, fbe_string_size);
     return 4 + fbe_string_size;
 }
 
-size_t FinalModel<FBEString>::set(const std::string& value)
+size_t FinalModel<FBEString>::set(const FBEString& value)
 {
     assert(((_buffer.offset() + fbe_offset() + 4) <= _buffer.size()) && "Model is broken!");
     if ((_buffer.offset() + fbe_offset() + 4) > _buffer.size())

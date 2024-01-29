@@ -47,30 +47,36 @@ bool FieldModel<::variants_ptr_pmr::Expr>::verify() const noexcept
         return false;
 
     uint32_t fbe_variant_type = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_variant_offset);
-    if (fbe_variant_type < 0 || fbe_variant_type >= 4)
+    if (fbe_variant_type < 0 || fbe_variant_type > 4)
         return false;
 
     _buffer.shift(fbe_variant_offset);
     switch(fbe_variant_type) {
         case 0: {
-            FieldModel<bool> fbe_model(_buffer, 4);
+            FieldModel<std::monostate> fbe_model(_buffer, 4);
             if (!fbe_model.verify())
                 return false;
             break;
         }
         case 1: {
-            FieldModel<ArenaString> fbe_model(_buffer, 4);
+            FieldModel<bool> fbe_model(_buffer, 4);
             if (!fbe_model.verify())
                 return false;
             break;
         }
         case 2: {
-            FieldModel<int32_t> fbe_model(_buffer, 4);
+            FieldModel<ArenaString> fbe_model(_buffer, 4);
             if (!fbe_model.verify())
                 return false;
             break;
         }
         case 3: {
+            FieldModel<int32_t> fbe_model(_buffer, 4);
+            if (!fbe_model.verify())
+                return false;
+            break;
+        }
+        case 4: {
             FieldModelVector<uint8_t> fbe_model(_buffer, 4);
             if (!fbe_model.verify())
                 return false;
@@ -91,37 +97,42 @@ void FieldModel<::variants_ptr_pmr::Expr>::get(::variants_ptr_pmr::Expr& fbe_val
     assert(((fbe_variant_offset > 0) && ((_buffer.offset() + fbe_variant_offset + 4) <= _buffer.size())) && "Model is broken!");
     if ((fbe_variant_offset == 0) || ((_buffer.offset() + fbe_variant_offset + 4) > _buffer.size()))
         return;
-    uint32_t vairant_type_index = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_variant_offset);
-    assert(vairant_type_index >= 0 && vairant_type_index < 4 && "Model is broken!");
+    uint32_t variant_type_index = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_variant_offset);
+    assert(variant_type_index >= 0 && variant_type_index <= 4 && "Model is broken!");
 
     _buffer.shift(fbe_variant_offset);
 
-    switch(vairant_type_index) {
+    switch(variant_type_index) {
         case 0: {
-            FieldModel<bool> fbe_model(_buffer, 4);
-            fbe_value.emplace<bool>();
-            auto& value = std::get<0>(fbe_value);
-            fbe_model.get(value);
+            FieldModel<std::monostate> fbe_model(_buffer, 4);
+            fbe_value.emplace<std::monostate>();
             break;
         }
         case 1: {
-            FieldModel<ArenaString> fbe_model(_buffer, 4);
-            fbe_value.emplace<ArenaString>();
+            FieldModel<bool> fbe_model(_buffer, 4);
+            fbe_value.emplace<bool>();
             auto& value = std::get<1>(fbe_value);
             fbe_model.get(value);
             break;
         }
         case 2: {
-            FieldModel<int32_t> fbe_model(_buffer, 4);
-            fbe_value.emplace<int32_t>();
+            FieldModel<ArenaString> fbe_model(_buffer, 4);
+            fbe_value.emplace<ArenaString>();
             auto& value = std::get<2>(fbe_value);
             fbe_model.get(value);
             break;
         }
         case 3: {
+            FieldModel<int32_t> fbe_model(_buffer, 4);
+            fbe_value.emplace<int32_t>();
+            auto& value = std::get<3>(fbe_value);
+            fbe_model.get(value);
+            break;
+        }
+        case 4: {
             FieldModelVector<uint8_t> fbe_model(_buffer, 4);
             fbe_value.emplace<pmr::vector<uint8_t>>();
-            auto& value = std::get<3>(fbe_value);
+            auto& value = std::get<4>(fbe_value);
             fbe_model.get(value);
             break;
         }
@@ -164,7 +175,15 @@ void FieldModel<::variants_ptr_pmr::Expr>::set(const ::variants_ptr_pmr::Expr& f
     std::visit(
         overloaded
         {
-            [this, fbe_variant_index = fbe_value.index()](bool v) {
+            [this, fbe_variant_index = fbe_value.index()](std::monostate v) {
+                FieldModel<std::monostate> fbe_model(_buffer, 4);
+                size_t fbe_begin = set_begin(fbe_model.fbe_size(), fbe_variant_index);
+                if (fbe_begin == 0)
+                    return;
+                fbe_model.set(v);
+                set_end(fbe_begin);
+            }
+            , [this, fbe_variant_index = fbe_value.index()](bool v) {
                 FieldModel<bool> fbe_model(_buffer, 4);
                 size_t fbe_begin = set_begin(fbe_model.fbe_size(), fbe_variant_index);
                 if (fbe_begin == 0)
@@ -240,90 +259,96 @@ bool FieldModel<::variants_ptr_pmr::V>::verify() const noexcept
         return false;
 
     uint32_t fbe_variant_type = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_variant_offset);
-    if (fbe_variant_type < 0 || fbe_variant_type >= 14)
+    if (fbe_variant_type < 0 || fbe_variant_type > 14)
         return false;
 
     _buffer.shift(fbe_variant_offset);
     switch(fbe_variant_type) {
         case 0: {
-            FieldModel<int32_t> fbe_model(_buffer, 4);
+            FieldModel<std::monostate> fbe_model(_buffer, 4);
             if (!fbe_model.verify())
                 return false;
             break;
         }
         case 1: {
-            FieldModel<ArenaString> fbe_model(_buffer, 4);
+            FieldModel<int32_t> fbe_model(_buffer, 4);
             if (!fbe_model.verify())
                 return false;
             break;
         }
         case 2: {
-            FieldModel<double> fbe_model(_buffer, 4);
+            FieldModel<ArenaString> fbe_model(_buffer, 4);
             if (!fbe_model.verify())
                 return false;
             break;
         }
         case 3: {
-            FieldModelPMR_variants_ptr_Simple fbe_model(_buffer, 4);
+            FieldModel<double> fbe_model(_buffer, 4);
             if (!fbe_model.verify())
                 return false;
             break;
         }
         case 4: {
-            FieldModelPMRPtr_variants_ptr_Simple fbe_model(_buffer, 4);
+            FieldModelPMR_variants_ptr_Simple fbe_model(_buffer, 4);
             if (!fbe_model.verify())
                 return false;
             break;
         }
         case 5: {
-            FieldModelCustomVector<FieldModelPMR_variants_ptr_Simple, ::variants_ptr_pmr::Simple> fbe_model(_buffer, 4);
+            FieldModelPMRPtr_variants_ptr_Simple fbe_model(_buffer, 4);
             if (!fbe_model.verify())
                 return false;
             break;
         }
         case 6: {
-            FieldModelVector<int32_t> fbe_model(_buffer, 4);
+            FieldModelCustomVector<FieldModelPMR_variants_ptr_Simple, ::variants_ptr_pmr::Simple> fbe_model(_buffer, 4);
             if (!fbe_model.verify())
                 return false;
             break;
         }
         case 7: {
-            FieldModelCustomMap<FieldModel<int32_t>, FieldModelPMR_variants_ptr_Simple, int32_t, ::variants_ptr_pmr::Simple> fbe_model(_buffer, 4);
+            FieldModelVector<int32_t> fbe_model(_buffer, 4);
             if (!fbe_model.verify())
                 return false;
             break;
         }
         case 8: {
-            FieldModelVector<FBE::pmr_buffer_t> fbe_model(_buffer, 4);
+            FieldModelCustomMap<FieldModel<int32_t>, FieldModelPMR_variants_ptr_Simple, int32_t, ::variants_ptr_pmr::Simple> fbe_model(_buffer, 4);
             if (!fbe_model.verify())
                 return false;
             break;
         }
         case 9: {
-            FieldModelVector<ArenaString> fbe_model(_buffer, 4);
+            FieldModelVector<FBE::pmr_buffer_t> fbe_model(_buffer, 4);
             if (!fbe_model.verify())
                 return false;
             break;
         }
         case 10: {
-            FieldModelMap<int32_t, FBE::pmr_buffer_t> fbe_model(_buffer, 4);
+            FieldModelVector<ArenaString> fbe_model(_buffer, 4);
             if (!fbe_model.verify())
                 return false;
             break;
         }
         case 11: {
-            FieldModelMap<ArenaString, FBE::pmr_buffer_t> fbe_model(_buffer, 4);
+            FieldModelMap<int32_t, FBE::pmr_buffer_t> fbe_model(_buffer, 4);
             if (!fbe_model.verify())
                 return false;
             break;
         }
         case 12: {
-            FieldModelCustomVector<FieldModelPMRPtr_variants_ptr_Simple, ::variants_ptr_pmr::Simple> fbe_model(_buffer, 4);
+            FieldModelMap<ArenaString, FBE::pmr_buffer_t> fbe_model(_buffer, 4);
             if (!fbe_model.verify())
                 return false;
             break;
         }
         case 13: {
+            FieldModelCustomVector<FieldModelPMRPtr_variants_ptr_Simple, ::variants_ptr_pmr::Simple> fbe_model(_buffer, 4);
+            if (!fbe_model.verify())
+                return false;
+            break;
+        }
+        case 14: {
             FieldModel<::variants_ptr_pmr::Expr> fbe_model(_buffer, 4);
             if (!fbe_model.verify())
                 return false;
@@ -344,107 +369,112 @@ void FieldModel<::variants_ptr_pmr::V>::get(::variants_ptr_pmr::V& fbe_value) co
     assert(((fbe_variant_offset > 0) && ((_buffer.offset() + fbe_variant_offset + 4) <= _buffer.size())) && "Model is broken!");
     if ((fbe_variant_offset == 0) || ((_buffer.offset() + fbe_variant_offset + 4) > _buffer.size()))
         return;
-    uint32_t vairant_type_index = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_variant_offset);
-    assert(vairant_type_index >= 0 && vairant_type_index < 14 && "Model is broken!");
+    uint32_t variant_type_index = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_variant_offset);
+    assert(variant_type_index >= 0 && variant_type_index <= 14 && "Model is broken!");
 
     _buffer.shift(fbe_variant_offset);
 
-    switch(vairant_type_index) {
+    switch(variant_type_index) {
         case 0: {
-            FieldModel<int32_t> fbe_model(_buffer, 4);
-            fbe_value.emplace<int32_t>();
-            auto& value = std::get<0>(fbe_value);
-            fbe_model.get(value);
+            FieldModel<std::monostate> fbe_model(_buffer, 4);
+            fbe_value.emplace<std::monostate>();
             break;
         }
         case 1: {
-            FieldModel<ArenaString> fbe_model(_buffer, 4);
-            fbe_value.emplace<ArenaString>();
+            FieldModel<int32_t> fbe_model(_buffer, 4);
+            fbe_value.emplace<int32_t>();
             auto& value = std::get<1>(fbe_value);
             fbe_model.get(value);
             break;
         }
         case 2: {
-            FieldModel<double> fbe_model(_buffer, 4);
-            fbe_value.emplace<double>();
+            FieldModel<ArenaString> fbe_model(_buffer, 4);
+            fbe_value.emplace<ArenaString>();
             auto& value = std::get<2>(fbe_value);
             fbe_model.get(value);
             break;
         }
         case 3: {
-            FieldModelPMR_variants_ptr_Simple fbe_model(_buffer, 4);
-            fbe_value.emplace<::variants_ptr_pmr::Simple>();
+            FieldModel<double> fbe_model(_buffer, 4);
+            fbe_value.emplace<double>();
             auto& value = std::get<3>(fbe_value);
             fbe_model.get(value);
             break;
         }
         case 4: {
-            FieldModelPMRPtr_variants_ptr_Simple fbe_model(_buffer, 4);
-            fbe_value.emplace<::variants_ptr_pmr::Simple*>();
+            FieldModelPMR_variants_ptr_Simple fbe_model(_buffer, 4);
+            fbe_value.emplace<::variants_ptr_pmr::Simple>();
             auto& value = std::get<4>(fbe_value);
-            fbe_model.get(&value);
-            break;
-        }
-        case 5: {
-            FieldModelCustomVector<FieldModelPMR_variants_ptr_Simple, ::variants_ptr_pmr::Simple> fbe_model(_buffer, 4);
-            fbe_value.emplace<pmr::vector<::variants_ptr_pmr::Simple>>();
-            auto& value = std::get<5>(fbe_value);
             fbe_model.get(value);
             break;
         }
+        case 5: {
+            FieldModelPMRPtr_variants_ptr_Simple fbe_model(_buffer, 4);
+            fbe_value.emplace<::variants_ptr_pmr::Simple*>();
+            auto& value = std::get<5>(fbe_value);
+            fbe_model.get(&value);
+            break;
+        }
         case 6: {
-            FieldModelVector<int32_t> fbe_model(_buffer, 4);
-            fbe_value.emplace<pmr::vector<int32_t>>();
+            FieldModelCustomVector<FieldModelPMR_variants_ptr_Simple, ::variants_ptr_pmr::Simple> fbe_model(_buffer, 4);
+            fbe_value.emplace<pmr::vector<::variants_ptr_pmr::Simple>>();
             auto& value = std::get<6>(fbe_value);
             fbe_model.get(value);
             break;
         }
         case 7: {
-            FieldModelCustomMap<FieldModel<int32_t>, FieldModelPMR_variants_ptr_Simple, int32_t, ::variants_ptr_pmr::Simple> fbe_model(_buffer, 4);
-            fbe_value.emplace<pmr::unordered_map<int32_t, ::variants_ptr_pmr::Simple>>();
+            FieldModelVector<int32_t> fbe_model(_buffer, 4);
+            fbe_value.emplace<pmr::vector<int32_t>>();
             auto& value = std::get<7>(fbe_value);
             fbe_model.get(value);
             break;
         }
         case 8: {
-            FieldModelVector<FBE::pmr_buffer_t> fbe_model(_buffer, 4);
-            fbe_value.emplace<pmr::vector<FBE::pmr_buffer_t>>();
+            FieldModelCustomMap<FieldModel<int32_t>, FieldModelPMR_variants_ptr_Simple, int32_t, ::variants_ptr_pmr::Simple> fbe_model(_buffer, 4);
+            fbe_value.emplace<pmr::unordered_map<int32_t, ::variants_ptr_pmr::Simple>>();
             auto& value = std::get<8>(fbe_value);
             fbe_model.get(value);
             break;
         }
         case 9: {
-            FieldModelVector<ArenaString> fbe_model(_buffer, 4);
-            fbe_value.emplace<pmr::vector<ArenaString>>();
+            FieldModelVector<FBE::pmr_buffer_t> fbe_model(_buffer, 4);
+            fbe_value.emplace<pmr::vector<FBE::pmr_buffer_t>>();
             auto& value = std::get<9>(fbe_value);
             fbe_model.get(value);
             break;
         }
         case 10: {
-            FieldModelMap<int32_t, FBE::pmr_buffer_t> fbe_model(_buffer, 4);
-            fbe_value.emplace<pmr::unordered_map<int32_t, FBE::pmr_buffer_t>>();
+            FieldModelVector<ArenaString> fbe_model(_buffer, 4);
+            fbe_value.emplace<pmr::vector<ArenaString>>();
             auto& value = std::get<10>(fbe_value);
             fbe_model.get(value);
             break;
         }
         case 11: {
-            FieldModelMap<ArenaString, FBE::pmr_buffer_t> fbe_model(_buffer, 4);
-            fbe_value.emplace<pmr::unordered_map<ArenaString, FBE::pmr_buffer_t>>();
+            FieldModelMap<int32_t, FBE::pmr_buffer_t> fbe_model(_buffer, 4);
+            fbe_value.emplace<pmr::unordered_map<int32_t, FBE::pmr_buffer_t>>();
             auto& value = std::get<11>(fbe_value);
             fbe_model.get(value);
             break;
         }
         case 12: {
-            FieldModelCustomVector<FieldModelPMRPtr_variants_ptr_Simple, ::variants_ptr_pmr::Simple> fbe_model(_buffer, 4);
-            fbe_value.emplace<pmr::vector<::variants_ptr_pmr::Simple*>>();
+            FieldModelMap<ArenaString, FBE::pmr_buffer_t> fbe_model(_buffer, 4);
+            fbe_value.emplace<pmr::unordered_map<ArenaString, FBE::pmr_buffer_t>>();
             auto& value = std::get<12>(fbe_value);
             fbe_model.get(value);
             break;
         }
         case 13: {
+            FieldModelCustomVector<FieldModelPMRPtr_variants_ptr_Simple, ::variants_ptr_pmr::Simple> fbe_model(_buffer, 4);
+            fbe_value.emplace<pmr::vector<::variants_ptr_pmr::Simple*>>();
+            auto& value = std::get<13>(fbe_value);
+            fbe_model.get(value);
+            break;
+        }
+        case 14: {
             FieldModel<::variants_ptr_pmr::Expr> fbe_model(_buffer, 4);
             fbe_value.emplace<::variants_ptr_pmr::Expr>();
-            auto& value = std::get<13>(fbe_value);
+            auto& value = std::get<14>(fbe_value);
             fbe_model.get(value);
             break;
         }
@@ -487,7 +517,15 @@ void FieldModel<::variants_ptr_pmr::V>::set(const ::variants_ptr_pmr::V& fbe_val
     std::visit(
         overloaded
         {
-            [this, fbe_variant_index = fbe_value.index()](int32_t v) {
+            [this, fbe_variant_index = fbe_value.index()](std::monostate v) {
+                FieldModel<std::monostate> fbe_model(_buffer, 4);
+                size_t fbe_begin = set_begin(fbe_model.fbe_size(), fbe_variant_index);
+                if (fbe_begin == 0)
+                    return;
+                fbe_model.set(v);
+                set_end(fbe_begin);
+            }
+            , [this, fbe_variant_index = fbe_value.index()](int32_t v) {
                 FieldModel<int32_t> fbe_model(_buffer, 4);
                 size_t fbe_begin = set_begin(fbe_model.fbe_size(), fbe_variant_index);
                 if (fbe_begin == 0)
@@ -643,30 +681,36 @@ bool FieldModel<::variants_ptr_pmr::Scalar1>::verify() const noexcept
         return false;
 
     uint32_t fbe_variant_type = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_variant_offset);
-    if (fbe_variant_type < 0 || fbe_variant_type >= 4)
+    if (fbe_variant_type < 0 || fbe_variant_type > 4)
         return false;
 
     _buffer.shift(fbe_variant_offset);
     switch(fbe_variant_type) {
         case 0: {
-            FieldModel<bool> fbe_model(_buffer, 4);
+            FieldModel<std::monostate> fbe_model(_buffer, 4);
             if (!fbe_model.verify())
                 return false;
             break;
         }
         case 1: {
-            FieldModel<int32_t> fbe_model(_buffer, 4);
+            FieldModel<bool> fbe_model(_buffer, 4);
             if (!fbe_model.verify())
                 return false;
             break;
         }
         case 2: {
-            FieldModel<int64_t> fbe_model(_buffer, 4);
+            FieldModel<int32_t> fbe_model(_buffer, 4);
             if (!fbe_model.verify())
                 return false;
             break;
         }
         case 3: {
+            FieldModel<int64_t> fbe_model(_buffer, 4);
+            if (!fbe_model.verify())
+                return false;
+            break;
+        }
+        case 4: {
             FieldModel<ArenaString> fbe_model(_buffer, 4);
             if (!fbe_model.verify())
                 return false;
@@ -687,37 +731,42 @@ void FieldModel<::variants_ptr_pmr::Scalar1>::get(::variants_ptr_pmr::Scalar1& f
     assert(((fbe_variant_offset > 0) && ((_buffer.offset() + fbe_variant_offset + 4) <= _buffer.size())) && "Model is broken!");
     if ((fbe_variant_offset == 0) || ((_buffer.offset() + fbe_variant_offset + 4) > _buffer.size()))
         return;
-    uint32_t vairant_type_index = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_variant_offset);
-    assert(vairant_type_index >= 0 && vairant_type_index < 4 && "Model is broken!");
+    uint32_t variant_type_index = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_variant_offset);
+    assert(variant_type_index >= 0 && variant_type_index <= 4 && "Model is broken!");
 
     _buffer.shift(fbe_variant_offset);
 
-    switch(vairant_type_index) {
+    switch(variant_type_index) {
         case 0: {
-            FieldModel<bool> fbe_model(_buffer, 4);
-            fbe_value.emplace<bool>();
-            auto& value = std::get<0>(fbe_value);
-            fbe_model.get(value);
+            FieldModel<std::monostate> fbe_model(_buffer, 4);
+            fbe_value.emplace<std::monostate>();
             break;
         }
         case 1: {
-            FieldModel<int32_t> fbe_model(_buffer, 4);
-            fbe_value.emplace<int32_t>();
+            FieldModel<bool> fbe_model(_buffer, 4);
+            fbe_value.emplace<bool>();
             auto& value = std::get<1>(fbe_value);
             fbe_model.get(value);
             break;
         }
         case 2: {
-            FieldModel<int64_t> fbe_model(_buffer, 4);
-            fbe_value.emplace<int64_t>();
+            FieldModel<int32_t> fbe_model(_buffer, 4);
+            fbe_value.emplace<int32_t>();
             auto& value = std::get<2>(fbe_value);
             fbe_model.get(value);
             break;
         }
         case 3: {
+            FieldModel<int64_t> fbe_model(_buffer, 4);
+            fbe_value.emplace<int64_t>();
+            auto& value = std::get<3>(fbe_value);
+            fbe_model.get(value);
+            break;
+        }
+        case 4: {
             FieldModel<ArenaString> fbe_model(_buffer, 4);
             fbe_value.emplace<ArenaString>();
-            auto& value = std::get<3>(fbe_value);
+            auto& value = std::get<4>(fbe_value);
             fbe_model.get(value);
             break;
         }
@@ -760,7 +809,15 @@ void FieldModel<::variants_ptr_pmr::Scalar1>::set(const ::variants_ptr_pmr::Scal
     std::visit(
         overloaded
         {
-            [this, fbe_variant_index = fbe_value.index()](bool v) {
+            [this, fbe_variant_index = fbe_value.index()](std::monostate v) {
+                FieldModel<std::monostate> fbe_model(_buffer, 4);
+                size_t fbe_begin = set_begin(fbe_model.fbe_size(), fbe_variant_index);
+                if (fbe_begin == 0)
+                    return;
+                fbe_model.set(v);
+                set_end(fbe_begin);
+            }
+            , [this, fbe_variant_index = fbe_value.index()](bool v) {
                 FieldModel<bool> fbe_model(_buffer, 4);
                 size_t fbe_begin = set_begin(fbe_model.fbe_size(), fbe_variant_index);
                 if (fbe_begin == 0)

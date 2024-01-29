@@ -41,15 +41,15 @@ struct Value;
 struct ValueContainer;
 struct Scalar1Container;
 
-using Expr = std::variant<bool, ArenaString, int32_t, pmr::vector<uint8_t>>;
+using Expr = std::variant<std::monostate, bool, ArenaString, int32_t, pmr::vector<uint8_t>>;
 std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const Expr& value);
 auto is_equal(const Expr& lhs, const Expr& rhs) -> bool;
 
-using V = std::variant<int32_t, ArenaString, double, ::variants_ptr_pmr::Simple, ::variants_ptr_pmr::Simple*, pmr::vector<::variants_ptr_pmr::Simple>, pmr::vector<int32_t>, pmr::unordered_map<int32_t, ::variants_ptr_pmr::Simple>, pmr::vector<FBE::pmr_buffer_t>, pmr::vector<ArenaString>, pmr::unordered_map<int32_t, FBE::pmr_buffer_t>, pmr::unordered_map<ArenaString, FBE::pmr_buffer_t>, pmr::vector<::variants_ptr_pmr::Simple*>, ::variants_ptr_pmr::Expr>;
+using V = std::variant<std::monostate, int32_t, ArenaString, double, ::variants_ptr_pmr::Simple, ::variants_ptr_pmr::Simple*, pmr::vector<::variants_ptr_pmr::Simple>, pmr::vector<int32_t>, pmr::unordered_map<int32_t, ::variants_ptr_pmr::Simple>, pmr::vector<FBE::pmr_buffer_t>, pmr::vector<ArenaString>, pmr::unordered_map<int32_t, FBE::pmr_buffer_t>, pmr::unordered_map<ArenaString, FBE::pmr_buffer_t>, pmr::vector<::variants_ptr_pmr::Simple*>, ::variants_ptr_pmr::Expr>;
 std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const V& value);
 auto is_equal(const V& lhs, const V& rhs) -> bool;
 
-using Scalar1 = std::variant<bool, int32_t, int64_t, ArenaString>;
+using Scalar1 = std::variant<std::monostate, bool, int32_t, int64_t, ArenaString>;
 std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const Scalar1& value);
 auto is_equal(const Scalar1& lhs, const Scalar1& rhs) -> bool;
 

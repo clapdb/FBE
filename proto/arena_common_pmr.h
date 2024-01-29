@@ -51,7 +51,7 @@ CppLogging::Record& operator<<(CppLogging::Record& record, Optr value);
 struct Alias;
 struct Expression;
 
-using Expr = std::variant<bool, int32_t, ArenaString>;
+using Expr = std::variant<std::monostate, bool, int32_t, ArenaString>;
 std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const Expr& value);
 
 struct Alias

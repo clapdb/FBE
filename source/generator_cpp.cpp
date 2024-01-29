@@ -13,6 +13,7 @@
 */
 #include "generator_cpp.h"
 #include "generator_cpp_fixture.h"
+#include <variant>
 
 namespace FBE {
 
@@ -2275,11 +2276,9 @@ public:
 void GeneratorCpp::GenerateVariantAlias(const std::shared_ptr<Package>& p, const std::shared_ptr<VariantType>& v)
 {
     WriteLine();
-    std::string code = "using " + *v->name + " = std::variant<";
-    bool first = true;
+    std::string code = "using " + *v->name + " = std::variant<std::monostate";
     for (auto value : v->body->values) {
-        code += (!first ? ", " : "") + ConvertVariantTypeName(*p->name, *value);
-        first = false;
+        code += ", " + ConvertVariantTypeName(*p->name, *value);
     }
     code += ">;";
     WriteLineIndent(code);
@@ -2301,11 +2300,16 @@ void GeneratorCpp::GenerateVariantOutputStream(const std::shared_ptr<Package>& p
     WriteLineIndent("[[maybe_unused]] bool first = true;");
     WriteLineIndent("switch (value.index()) {");
     Indent(1);
+    WriteLineIndent("case 0:");
+    Indent(1);
+    WriteLineIndent("stream << \"{empty}\";");
+    WriteLineIndent("break;");
+    Indent(-1);
     for (int i = 0; i < v->body->values.size(); i++) {
-        WriteLineIndent("case " + std::to_string(i) + ":");
+        WriteLineIndent("case " + std::to_string(i + 1) + ":");
         Indent(1);
         auto& value = v->body->values.at(i);
-        auto get_value = "std::get<" + std::to_string(i) + ">(value)";
+        auto get_value = "std::get<" + std::to_string(i + 1) + ">(value)";
         auto fbe_value_type = *value->type + (value->ptr ? "*" : "");
         if (value->vector || value->list) {
             WriteLineIndent(std::string("stream << \"{") + fbe_value_type + "}=[\" << " + get_value + ".size()" + " << \"][\"" + ";");
@@ -6323,13 +6327,18 @@ void GeneratorCpp::GenerateVariantIsEqualFunc(const std::shared_ptr<Package>& p,
     Indent(-1);
     WriteLineIndent("switch (lhs.index()) {");
     Indent(1);
+    WriteLineIndent("case 0 : {");
+    Indent(1);
+    WriteLineIndent("return true;");
+    Indent(-1);
+    WriteLineIndent("}");
     for (size_t index = 0; index < v->body->values.size(); index++) {
-        WriteLineIndent("case " + std::to_string(index) + ": {");
+        WriteLineIndent("case " + std::to_string(index + 1) + ": {");
         Indent(1);
         auto v_value = v->body->values[index];
         auto is_v_value_variant = IsVariantType(p, *v_value->type);
-        auto get_lhs_code = "std::get<" + std::to_string(index) + ">(lhs)";
-        auto get_rhs_code = "std::get<" + std::to_string(index) + ">(rhs)";
+        auto get_lhs_code = "std::get<" + std::to_string(index + 1) + ">(lhs)";
+        auto get_rhs_code = "std::get<" + std::to_string(index + 1) + ">(rhs)";
         if (v_value-> vector) {
             WriteLineIndent("auto& lhs_value = " + get_lhs_code + ";");
             WriteLineIndent("auto& rhs_value = " + get_rhs_code + ";");
@@ -6548,7 +6557,7 @@ void GeneratorCpp::GenerateVariantFieldModel_Source(const std::shared_ptr<Packag
     WriteLine();
     // type
     WriteLineIndent("uint32_t fbe_variant_type = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_variant_offset);");
-    WriteLineIndent("if (fbe_variant_type < 0 || fbe_variant_type >= " + std::to_string(v->body->values.size()) + ")"); 
+    WriteLineIndent("if (fbe_variant_type < 0 || fbe_variant_type > " + std::to_string(v->body->values.size()) + ")");
     Indent(1);
     WriteLineIndent("return false;");
     Indent(-1);
@@ -6556,8 +6565,19 @@ void GeneratorCpp::GenerateVariantFieldModel_Source(const std::shared_ptr<Packag
     WriteLineIndent("_buffer.shift(fbe_variant_offset);");
     WriteLineIndent("switch(fbe_variant_type) {");
     Indent(1);
+    // for the std::monostate
+    WriteLineIndent("case 0: {");
+    Indent(1);
+    WriteLineIndent("FieldModel<std::monostate> fbe_model(_buffer, 4);"); 
+    WriteLineIndent("if (!fbe_model.verify())");
+    Indent(1);
+    WriteLineIndent("return false;");
+    Indent(-1);
+    WriteLineIndent("break;");
+    Indent(-1);
+    WriteLineIndent("}");
     for(auto index = 0; index < v->body->values.size(); index ++) {
-        WriteLineIndent("case " + std::to_string(index) + ": {");
+        WriteLineIndent("case " + std::to_string(index + 1) + ": {");
         Indent(1);
         auto& value = v->body->values[index];
         WriteLineIndent(ConvertPtrVariantFieldModelType(p, value) + " fbe_model(_buffer, 4);");
@@ -6593,22 +6613,29 @@ void GeneratorCpp::GenerateVariantFieldModel_Source(const std::shared_ptr<Packag
     Indent(1);
     WriteLineIndent("return;");
     Indent(-1);
-    WriteLineIndent("uint32_t vairant_type_index = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_variant_offset);");
-    WriteLineIndent("assert(vairant_type_index >= 0 && vairant_type_index < " + std::to_string(v->body->values.size()) + " && \"Model is broken!\");"); 
+    WriteLineIndent("uint32_t variant_type_index = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_variant_offset);");
+    WriteLineIndent("assert(variant_type_index >= 0 && variant_type_index <= " + std::to_string(v->body->values.size()) + " && \"Model is broken!\");");
     WriteLine();
     WriteLineIndent("_buffer.shift(fbe_variant_offset);");
     WriteLine();
-    WriteLineIndent("switch(vairant_type_index) {");
+    WriteLineIndent("switch(variant_type_index) {");
     Indent(1);
+    WriteLineIndent("case 0: {");
+    Indent(1);
+    WriteLineIndent("FieldModel<std::monostate> fbe_model(_buffer, 4);");
+    WriteLineIndent("fbe_value.emplace<std::monostate>();");
+    WriteLineIndent("break;");
+    Indent(-1);
+    WriteLineIndent("}");
     for(auto index = 0; index < v->body->values.size(); index ++) {
-        WriteLineIndent("case " + std::to_string(index) + ": {");
+        WriteLineIndent("case " + std::to_string(index + 1) + ": {");
         Indent(1);
         auto& value = v->body->values[index];
         WriteLineIndent(ConvertPtrVariantFieldModelType(p, value) + " fbe_model(_buffer, 4);");
         // initialize variant
         auto variant_type = ConvertVariantTypeName(*p->name, *value);
         WriteLineIndent("fbe_value.emplace<" + variant_type + ">();");
-        WriteLineIndent("auto& value = std::get<" +  std::to_string(index) + ">(fbe_value);");
+        WriteLineIndent("auto& value = std::get<" +  std::to_string(index + 1) + ">(fbe_value);");
         WriteLineIndent(std::string("fbe_model.get(") + ((!IsContainerType(*value) && value->ptr) ? "&" : "") + "value);");
         WriteLineIndent("break;");
         Indent(-1);
@@ -6675,9 +6702,21 @@ void GeneratorCpp::GenerateVariantFieldModel_Source(const std::shared_ptr<Packag
     WriteLineIndent("overloaded");
     WriteLineIndent("{");
     Indent(1);
-    bool first = true;
+    WriteLineIndent("[this, fbe_variant_index = fbe_value.index()](std::monostate v) {");
+    Indent(1);
+    WriteLineIndent("FieldModel<std::monostate> fbe_model(_buffer, 4);");
+    WriteLineIndent("size_t fbe_begin = set_begin(fbe_model.fbe_size(), fbe_variant_index);");
+    WriteLineIndent("if (fbe_begin == 0)");
+    Indent(1);
+    WriteLineIndent("return;");
+    Indent(-1);
+    WriteLineIndent("fbe_model.set(v);");
+    WriteLineIndent("set_end(fbe_begin);");
+    Indent(-1);
+    WriteLineIndent("}");
+
     for(auto index = 0; index < v->body->values.size(); index ++) {
-        WriteIndent(first ? "" : ", ");
+        WriteIndent(", ");
         auto& value = v->body->values[index];
         Write("[this, fbe_variant_index = fbe_value.index()](");
         Write(ConvertVariantTypeNameAsArgument(*p->name, *value));
@@ -6693,7 +6732,6 @@ void GeneratorCpp::GenerateVariantFieldModel_Source(const std::shared_ptr<Packag
         WriteLineIndent("set_end(fbe_begin);");
         Indent(-1);
         WriteLineIndent("}");
-        first = false;
     }
     Indent(-1);
     WriteLineIndent("},");

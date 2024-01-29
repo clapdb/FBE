@@ -264,7 +264,7 @@ public:
     template <size_t N>
     size_t get(std::array<char, N>& data) const noexcept { return get(data.data(), data.size()); }
     // Get the string value
-    size_t get(std::string& value) const noexcept;
+    size_t get(FBEString& value) const noexcept;
 
     // Set the string value
     size_t set(const char* data, size_t size);
@@ -275,7 +275,7 @@ public:
     template <size_t N>
     size_t set(const std::array<char, N>& data) { return set(data.data(), data.size()); }
     // Set the string value
-    size_t set(const std::string& value);
+    size_t set(const FBEString& value);
 
 private:
     FBEBuffer& _buffer;

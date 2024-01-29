@@ -13,8 +13,8 @@ auto is_equal(const Expr& lhs, const Expr& rhs) -> bool {
     if (lhs.index() != rhs.index())
         return false;
     switch (lhs.index()) {
-        case 0: {
-            return std::get<0>(lhs) == std::get<0>(rhs);
+        case 0 : {
+            return true;
         }
         case 1: {
             return std::get<1>(lhs) == std::get<1>(rhs);
@@ -23,8 +23,11 @@ auto is_equal(const Expr& lhs, const Expr& rhs) -> bool {
             return std::get<2>(lhs) == std::get<2>(rhs);
         }
         case 3: {
-            auto& lhs_value = std::get<3>(lhs);
-            auto& rhs_value = std::get<3>(rhs);
+            return std::get<3>(lhs) == std::get<3>(rhs);
+        }
+        case 4: {
+            auto& lhs_value = std::get<4>(lhs);
+            auto& rhs_value = std::get<4>(rhs);
             if (lhs_value.size() != rhs_value.size())
                 return false;
             for (size_t i = 0; i < lhs_value.size(); i++)
@@ -45,20 +48,23 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const Expr& valu
     [[maybe_unused]] bool first = true;
     switch (value.index()) {
         case 0:
-            stream<< "{bool}";
-            stream << std::get<0>(value);
+            stream << "{empty}";
             break;
         case 1:
-            stream<< "{string}";
+            stream<< "{bool}";
             stream << std::get<1>(value);
             break;
         case 2:
-            stream<< "{int32}";
+            stream<< "{string}";
             stream << std::get<2>(value);
             break;
         case 3:
-            stream << "{byte}=[" << std::get<3>(value).size() << "][";
-            for ([[maybe_unused]] const auto& it : std::get<3>(value))
+            stream<< "{int32}";
+            stream << std::get<3>(value);
+            break;
+        case 4:
+            stream << "{byte}=[" << std::get<4>(value).size() << "][";
+            for ([[maybe_unused]] const auto& it : std::get<4>(value))
             {
                 stream << std::string(first ? "" : ",") << (int)it;
                 first = false;
@@ -76,8 +82,8 @@ auto is_equal(const V& lhs, const V& rhs) -> bool {
     if (lhs.index() != rhs.index())
         return false;
     switch (lhs.index()) {
-        case 0: {
-            return std::get<0>(lhs) == std::get<0>(rhs);
+        case 0 : {
+            return true;
         }
         case 1: {
             return std::get<1>(lhs) == std::get<1>(rhs);
@@ -89,19 +95,10 @@ auto is_equal(const V& lhs, const V& rhs) -> bool {
             return std::get<3>(lhs) == std::get<3>(rhs);
         }
         case 4: {
-            return *std::get<4>(lhs) == *std::get<4>(rhs);
+            return std::get<4>(lhs) == std::get<4>(rhs);
         }
         case 5: {
-            auto& lhs_value = std::get<5>(lhs);
-            auto& rhs_value = std::get<5>(rhs);
-            if (lhs_value.size() != rhs_value.size())
-                return false;
-            for (size_t i = 0; i < lhs_value.size(); i++)
-            {
-                if (lhs_value[i] != rhs_value[i])
-                    return false;
-            }
-            return true;
+            return *std::get<5>(lhs) == *std::get<5>(rhs);
         }
         case 6: {
             auto& lhs_value = std::get<6>(lhs);
@@ -120,12 +117,9 @@ auto is_equal(const V& lhs, const V& rhs) -> bool {
             auto& rhs_value = std::get<7>(rhs);
             if (lhs_value.size() != rhs_value.size())
                 return false;
-            for (auto & [k, v]: lhs_value)
+            for (size_t i = 0; i < lhs_value.size(); i++)
             {
-                auto pos = rhs_value.find(k);
-                if (pos == rhs_value.end())
-                    return false;
-                if (pos->second != v)
+                if (lhs_value[i] != rhs_value[i])
                     return false;
             }
             return true;
@@ -135,9 +129,12 @@ auto is_equal(const V& lhs, const V& rhs) -> bool {
             auto& rhs_value = std::get<8>(rhs);
             if (lhs_value.size() != rhs_value.size())
                 return false;
-            for (size_t i = 0; i < lhs_value.size(); i++)
+            for (auto & [k, v]: lhs_value)
             {
-                if (lhs_value[i] != rhs_value[i])
+                auto pos = rhs_value.find(k);
+                if (pos == rhs_value.end())
+                    return false;
+                if (pos->second != v)
                     return false;
             }
             return true;
@@ -159,12 +156,9 @@ auto is_equal(const V& lhs, const V& rhs) -> bool {
             auto& rhs_value = std::get<10>(rhs);
             if (lhs_value.size() != rhs_value.size())
                 return false;
-            for (auto & [k, v]: lhs_value)
+            for (size_t i = 0; i < lhs_value.size(); i++)
             {
-                auto pos = rhs_value.find(k);
-                if (pos == rhs_value.end())
-                    return false;
-                if (pos->second != v)
+                if (lhs_value[i] != rhs_value[i])
                     return false;
             }
             return true;
@@ -189,6 +183,21 @@ auto is_equal(const V& lhs, const V& rhs) -> bool {
             auto& rhs_value = std::get<12>(rhs);
             if (lhs_value.size() != rhs_value.size())
                 return false;
+            for (auto & [k, v]: lhs_value)
+            {
+                auto pos = rhs_value.find(k);
+                if (pos == rhs_value.end())
+                    return false;
+                if (pos->second != v)
+                    return false;
+            }
+            return true;
+        }
+        case 13: {
+            auto& lhs_value = std::get<13>(lhs);
+            auto& rhs_value = std::get<13>(rhs);
+            if (lhs_value.size() != rhs_value.size())
+                return false;
             for (size_t i = 0; i < lhs_value.size(); i++)
             {
                 if (*lhs_value[i] != *rhs_value[i])
@@ -196,8 +205,8 @@ auto is_equal(const V& lhs, const V& rhs) -> bool {
             }
             return true;
         }
-        case 13: {
-            return is_equal(std::get<13>(lhs), std::get<13>(rhs));
+        case 14: {
+            return is_equal(std::get<14>(lhs), std::get<14>(rhs));
         }
         default: 
             return true;
@@ -210,40 +219,34 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const V& value)
     [[maybe_unused]] bool first = true;
     switch (value.index()) {
         case 0:
-            stream<< "{int32}";
-            stream << std::get<0>(value);
+            stream << "{empty}";
             break;
         case 1:
-            stream<< "{string}";
+            stream<< "{int32}";
             stream << std::get<1>(value);
             break;
         case 2:
-            stream<< "{double}";
+            stream<< "{string}";
             stream << std::get<2>(value);
             break;
         case 3:
-            stream<< "{Simple}";
+            stream<< "{double}";
             stream << std::get<3>(value);
             break;
         case 4:
-            stream<< "{Simple*}";
-            stream << "ptr of other struct: " << (std::get<4>(value) == nullptr ? "nullptr" : "true");
-            if (std::get<4>(value) != nullptr)
-            {
-                stream << "->" << *std::get<4>(value);
-            }
+            stream<< "{Simple}";
+            stream << std::get<4>(value);
             break;
         case 5:
-            stream << "{Simple}=[" << std::get<5>(value).size() << "][";
-            for ([[maybe_unused]] const auto& it : std::get<5>(value))
+            stream<< "{Simple*}";
+            stream << "ptr of other struct: " << (std::get<5>(value) == nullptr ? "nullptr" : "true");
+            if (std::get<5>(value) != nullptr)
             {
-                stream << std::string(first ? "" : ",") << it;
-                first = false;
+                stream << "->" << *std::get<5>(value);
             }
-            stream << "]";
             break;
         case 6:
-            stream << "{int32}=[" << std::get<6>(value).size() << "][";
+            stream << "{Simple}=[" << std::get<6>(value).size() << "][";
             for ([[maybe_unused]] const auto& it : std::get<6>(value))
             {
                 stream << std::string(first ? "" : ",") << it;
@@ -252,8 +255,17 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const V& value)
             stream << "]";
             break;
         case 7:
-            stream << "{int32->Simple}=[" << std::get<7>(value).size() << "][";
+            stream << "{int32}=[" << std::get<7>(value).size() << "][";
             for ([[maybe_unused]] const auto& it : std::get<7>(value))
+            {
+                stream << std::string(first ? "" : ",") << it;
+                first = false;
+            }
+            stream << "]";
+            break;
+        case 8:
+            stream << "{int32->Simple}=[" << std::get<8>(value).size() << "][";
+            for ([[maybe_unused]] const auto& it : std::get<8>(value))
             {
                 stream << std::string(first ? "" : ",") << it.first;
                 stream << "->";
@@ -262,27 +274,27 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const V& value)
             }
             stream << "]";
             break;
-        case 8:
-            stream << "{bytes}=[" << std::get<8>(value).size() << "][";
-            for ([[maybe_unused]] const auto& it : std::get<8>(value))
+        case 9:
+            stream << "{bytes}=[" << std::get<9>(value).size() << "][";
+            for ([[maybe_unused]] const auto& it : std::get<9>(value))
             {
                 stream << std::string(first ? "" : ",") << "bytes[" << it.size() << "]";
                 first = false;
             }
             stream << "]";
             break;
-        case 9:
-            stream << "{string}=[" << std::get<9>(value).size() << "][";
-            for ([[maybe_unused]] const auto& it : std::get<9>(value))
+        case 10:
+            stream << "{string}=[" << std::get<10>(value).size() << "][";
+            for ([[maybe_unused]] const auto& it : std::get<10>(value))
             {
                 stream << std::string(first ? "" : ",") << "\"" << it << "\"";
                 first = false;
             }
             stream << "]";
             break;
-        case 10:
-            stream << "{int32->bytes}=[" << std::get<10>(value).size() << "][";
-            for ([[maybe_unused]] const auto& it : std::get<10>(value))
+        case 11:
+            stream << "{int32->bytes}=[" << std::get<11>(value).size() << "][";
+            for ([[maybe_unused]] const auto& it : std::get<11>(value))
             {
                 stream << std::string(first ? "" : ",") << it.first;
                 stream << "->";
@@ -291,9 +303,9 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const V& value)
             }
             stream << "]";
             break;
-        case 11:
-            stream << "{string->bytes}=[" << std::get<11>(value).size() << "][";
-            for ([[maybe_unused]] const auto& it : std::get<11>(value))
+        case 12:
+            stream << "{string->bytes}=[" << std::get<12>(value).size() << "][";
+            for ([[maybe_unused]] const auto& it : std::get<12>(value))
             {
                 stream << std::string(first ? "" : ",") << "\"" << it.first << "\"";
                 stream << "->";
@@ -302,9 +314,9 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const V& value)
             }
             stream << "]";
             break;
-        case 12:
-            stream << "{Simple*}=[" << std::get<12>(value).size() << "][";
-            for ([[maybe_unused]] const auto& it : std::get<12>(value))
+        case 13:
+            stream << "{Simple*}=[" << std::get<13>(value).size() << "][";
+            for ([[maybe_unused]] const auto& it : std::get<13>(value))
             {
                 stream << std::string(first ? "" : ",") << "ptr of other struct: " << (it == nullptr ? "nullptr" : "true");
                 if (it != nullptr)
@@ -315,9 +327,9 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const V& value)
             }
             stream << "]";
             break;
-        case 13:
+        case 14:
             stream<< "{Expr}";
-            stream << std::get<13>(value);
+            stream << std::get<14>(value);
             break;
         default:
             static_assert("unreachable branch");
@@ -330,8 +342,8 @@ auto is_equal(const Scalar1& lhs, const Scalar1& rhs) -> bool {
     if (lhs.index() != rhs.index())
         return false;
     switch (lhs.index()) {
-        case 0: {
-            return std::get<0>(lhs) == std::get<0>(rhs);
+        case 0 : {
+            return true;
         }
         case 1: {
             return std::get<1>(lhs) == std::get<1>(rhs);
@@ -341,6 +353,9 @@ auto is_equal(const Scalar1& lhs, const Scalar1& rhs) -> bool {
         }
         case 3: {
             return std::get<3>(lhs) == std::get<3>(rhs);
+        }
+        case 4: {
+            return std::get<4>(lhs) == std::get<4>(rhs);
         }
         default: 
             return true;
@@ -353,20 +368,23 @@ std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const Scalar1& v
     [[maybe_unused]] bool first = true;
     switch (value.index()) {
         case 0:
-            stream<< "{bool}";
-            stream << std::get<0>(value);
+            stream << "{empty}";
             break;
         case 1:
-            stream<< "{int32}";
+            stream<< "{bool}";
             stream << std::get<1>(value);
             break;
         case 2:
-            stream<< "{int64}";
+            stream<< "{int32}";
             stream << std::get<2>(value);
             break;
         case 3:
-            stream<< "{string}";
+            stream<< "{int64}";
             stream << std::get<3>(value);
+            break;
+        case 4:
+            stream<< "{string}";
+            stream << std::get<4>(value);
             break;
         default:
             static_assert("unreachable branch");
