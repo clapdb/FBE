@@ -397,13 +397,13 @@ public:
     decimal_t(uint64_t value) noexcept { _value = (double)value; }
     decimal_t(float value) noexcept { _value = (double)value; }
     decimal_t(double value) noexcept { _value = value; }
-    template <typename T>
+    template <typename T> requires (!std::same_as<T, pmr::memory_resource*>)
     explicit decimal_t(const T& value) noexcept { _value = (double)value; }
     decimal_t(const decimal_t& value) noexcept = default;
     decimal_t(decimal_t&& value) noexcept = default;
     ~decimal_t() noexcept = default;
 
-    template <typename T>
+    template <typename T> requires (!std::same_as<T, pmr::memory_resource*>)
     decimal_t& operator=(const T& value) noexcept { _value = (double)value; return *this; }
     decimal_t& operator=(const decimal_t& value) noexcept = default;
     decimal_t& operator=(decimal_t&& value) noexcept = default;

@@ -37,7 +37,7 @@ TEST_CASE("Serialization: domain", "[FBE]")
     // Serialize the account to the FBE stream
     FBE::proto::AccountModel writer;
     REQUIRE(writer.model.fbe_offset() == 4);
-    size_t serialized = writer.serialize(account1);
+    size_t serialized = writer.serialize(account1, nullptr);
     REQUIRE(serialized == writer.buffer().size());
     REQUIRE(writer.verify());
     writer.next(serialized);
@@ -52,7 +52,7 @@ TEST_CASE("Serialization: domain", "[FBE]")
     REQUIRE(reader.model.fbe_offset() == 4);
     reader.attach(writer.buffer());
     REQUIRE(reader.verify());
-    size_t deserialized = reader.deserialize(account2);
+    size_t deserialized = reader.deserialize(account2, nullptr);
     REQUIRE(deserialized == reader.buffer().size());
     reader.next(deserialized);
     REQUIRE(reader.model.fbe_offset() == (4 + reader.buffer().size()));
@@ -96,7 +96,7 @@ TEST_CASE("Serialization: struct simple", "[FBE]")
     FBE::test::StructSimpleModel writer;
     REQUIRE(writer.model.fbe_type() == 110);
     REQUIRE(writer.model.fbe_offset() == 4);
-    size_t serialized = writer.serialize(struct1);
+    size_t serialized = writer.serialize(struct1, nullptr);
     REQUIRE(serialized == writer.buffer().size());
     REQUIRE(writer.verify());
     writer.next(serialized);
@@ -112,7 +112,7 @@ TEST_CASE("Serialization: struct simple", "[FBE]")
     REQUIRE(reader.model.fbe_offset() == 4);
     reader.attach(writer.buffer());
     REQUIRE(reader.verify());
-    size_t deserialized = reader.deserialize(struct2);
+    size_t deserialized = reader.deserialize(struct2, nullptr);
     REQUIRE(deserialized == reader.buffer().size());
     reader.next(deserialized);
     REQUIRE(reader.model.fbe_offset() == (4 + reader.buffer().size()));
@@ -208,7 +208,7 @@ TEST_CASE("Serialization: struct optional", "[FBE]")
     FBE::test::StructOptionalModel writer;
     REQUIRE(writer.model.fbe_type() == 111);
     REQUIRE(writer.model.fbe_offset() == 4);
-    size_t serialized = writer.serialize(struct1);
+    size_t serialized = writer.serialize(struct1, nullptr);
     REQUIRE(serialized == writer.buffer().size());
     REQUIRE(writer.verify());
     writer.next(serialized);
@@ -224,7 +224,7 @@ TEST_CASE("Serialization: struct optional", "[FBE]")
     REQUIRE(reader.model.fbe_offset() == 4);
     reader.attach(writer.buffer());
     REQUIRE(reader.verify());
-    size_t deserialized = reader.deserialize(struct2);
+    size_t deserialized = reader.deserialize(struct2, nullptr);
     REQUIRE(deserialized == reader.buffer().size());
     reader.next(deserialized);
     REQUIRE(reader.model.fbe_offset() == (4 + reader.buffer().size()));
@@ -464,7 +464,7 @@ TEST_CASE("Serialization: struct nested", "[FBE]")
     FBE::test::StructNestedModel writer;
     REQUIRE(writer.model.fbe_type() == 112);
     REQUIRE(writer.model.fbe_offset() == 4);
-    size_t serialized = writer.serialize(struct1);
+    size_t serialized = writer.serialize(struct1, nullptr);
     REQUIRE(serialized == writer.buffer().size());
     REQUIRE(writer.verify());
     writer.next(serialized);
@@ -480,7 +480,7 @@ TEST_CASE("Serialization: struct nested", "[FBE]")
     REQUIRE(reader.model.fbe_offset() == 4);
     reader.attach(writer.buffer());
     REQUIRE(reader.verify());
-    size_t deserialized = reader.deserialize(struct2);
+    size_t deserialized = reader.deserialize(struct2, nullptr);
     REQUIRE(deserialized == reader.buffer().size());
     reader.next(deserialized);
     REQUIRE(reader.model.fbe_offset() == (4 + reader.buffer().size()));
@@ -746,7 +746,7 @@ TEST_CASE("Serialization: struct bytes", "[FBE]")
     FBE::test::StructBytesModel writer;
     REQUIRE(writer.model.fbe_type() == 120);
     REQUIRE(writer.model.fbe_offset() == 4);
-    size_t serialized = writer.serialize(struct1);
+    size_t serialized = writer.serialize(struct1, nullptr);
     REQUIRE(serialized == writer.buffer().size());
     REQUIRE(writer.verify());
     writer.next(serialized);
@@ -762,7 +762,7 @@ TEST_CASE("Serialization: struct bytes", "[FBE]")
     REQUIRE(reader.model.fbe_offset() == 4);
     reader.attach(writer.buffer());
     REQUIRE(reader.verify());
-    size_t deserialized = reader.deserialize(struct2);
+    size_t deserialized = reader.deserialize(struct2, nullptr);
     REQUIRE(deserialized == reader.buffer().size());
     reader.next(deserialized);
     REQUIRE(reader.model.fbe_offset() == (4 + reader.buffer().size()));
@@ -805,7 +805,7 @@ TEST_CASE("Serialization: struct array", "[FBE]")
     FBE::test::StructArrayModel writer;
     REQUIRE(writer.model.fbe_type() == 125);
     REQUIRE(writer.model.fbe_offset() == 4);
-    size_t serialized = writer.serialize(struct1);
+    size_t serialized = writer.serialize(struct1, nullptr);
     REQUIRE(serialized == writer.buffer().size());
     REQUIRE(writer.verify());
     writer.next(serialized);
@@ -821,7 +821,7 @@ TEST_CASE("Serialization: struct array", "[FBE]")
     REQUIRE(reader.model.fbe_offset() == 4);
     reader.attach(writer.buffer());
     REQUIRE(reader.verify());
-    size_t deserialized = reader.deserialize(struct2);
+    size_t deserialized = reader.deserialize(struct2, nullptr);
     REQUIRE(deserialized == reader.buffer().size());
     reader.next(deserialized);
     REQUIRE(reader.model.fbe_offset() == (4 + reader.buffer().size()));
@@ -905,7 +905,7 @@ TEST_CASE("Serialization: struct vector", "[FBE]")
     FBE::test::StructVectorModel writer;
     REQUIRE(writer.model.fbe_type() == 130);
     REQUIRE(writer.model.fbe_offset() == 4);
-    size_t serialized = writer.serialize(struct1);
+    size_t serialized = writer.serialize(struct1, nullptr);
     REQUIRE(serialized == writer.buffer().size());
     REQUIRE(writer.verify());
     writer.next(serialized);
@@ -921,7 +921,7 @@ TEST_CASE("Serialization: struct vector", "[FBE]")
     REQUIRE(reader.model.fbe_offset() == 4);
     reader.attach(writer.buffer());
     REQUIRE(reader.verify());
-    size_t deserialized = reader.deserialize(struct2);
+    size_t deserialized = reader.deserialize(struct2, nullptr);
     REQUIRE(deserialized == reader.buffer().size());
     reader.next(deserialized);
     REQUIRE(reader.model.fbe_offset() == (4 + reader.buffer().size()));
@@ -1005,7 +1005,7 @@ TEST_CASE("Serialization: struct list", "[FBE]")
     FBE::test::StructListModel writer;
     REQUIRE(writer.model.fbe_type() == 131);
     REQUIRE(writer.model.fbe_offset() == 4);
-    size_t serialized = writer.serialize(struct1);
+    size_t serialized = writer.serialize(struct1, nullptr);
     REQUIRE(serialized == writer.buffer().size());
     REQUIRE(writer.verify());
     writer.next(serialized);
@@ -1021,7 +1021,7 @@ TEST_CASE("Serialization: struct list", "[FBE]")
     REQUIRE(reader.model.fbe_offset() == 4);
     reader.attach(writer.buffer());
     REQUIRE(reader.verify());
-    size_t deserialized = reader.deserialize(struct2);
+    size_t deserialized = reader.deserialize(struct2, nullptr);
     REQUIRE(deserialized == reader.buffer().size());
     reader.next(deserialized);
     REQUIRE(reader.model.fbe_offset() == (4 + reader.buffer().size()));
@@ -1098,7 +1098,7 @@ TEST_CASE("Serialization: struct set", "[FBE]")
     FBE::test::StructSetModel writer;
     REQUIRE(writer.model.fbe_type() == 132);
     REQUIRE(writer.model.fbe_offset() == 4);
-    size_t serialized = writer.serialize(struct1);
+    size_t serialized = writer.serialize(struct1, nullptr);
     REQUIRE(serialized == writer.buffer().size());
     REQUIRE(writer.verify());
     writer.next(serialized);
@@ -1114,7 +1114,7 @@ TEST_CASE("Serialization: struct set", "[FBE]")
     REQUIRE(reader.model.fbe_offset() == 4);
     reader.attach(writer.buffer());
     REQUIRE(reader.verify());
-    size_t deserialized = reader.deserialize(struct2);
+    size_t deserialized = reader.deserialize(struct2, nullptr);
     REQUIRE(deserialized == reader.buffer().size());
     reader.next(deserialized);
     REQUIRE(reader.model.fbe_offset() == (4 + reader.buffer().size()));
@@ -1168,7 +1168,7 @@ TEST_CASE("Serialization: struct map", "[FBE]")
     FBE::test::StructMapModel writer;
     REQUIRE(writer.model.fbe_type() == 140);
     REQUIRE(writer.model.fbe_offset() == 4);
-    size_t serialized = writer.serialize(struct1);
+    size_t serialized = writer.serialize(struct1, nullptr);
     REQUIRE(serialized == writer.buffer().size());
     REQUIRE(writer.verify());
     writer.next(serialized);
@@ -1184,7 +1184,7 @@ TEST_CASE("Serialization: struct map", "[FBE]")
     REQUIRE(reader.model.fbe_offset() == 4);
     reader.attach(writer.buffer());
     REQUIRE(reader.verify());
-    size_t deserialized = reader.deserialize(struct2);
+    size_t deserialized = reader.deserialize(struct2, nullptr);
     REQUIRE(deserialized == reader.buffer().size());
     reader.next(deserialized);
     REQUIRE(reader.model.fbe_offset() == (4 + reader.buffer().size()));
@@ -1255,7 +1255,7 @@ TEST_CASE("Serialization: struct hash", "[FBE]")
     FBE::test::StructHashModel writer;
     REQUIRE(writer.model.fbe_type() == 141);
     REQUIRE(writer.model.fbe_offset() == 4);
-    size_t serialized = writer.serialize(struct1);
+    size_t serialized = writer.serialize(struct1, nullptr);
     REQUIRE(serialized == writer.buffer().size());
     REQUIRE(writer.verify());
     writer.next(serialized);
@@ -1271,7 +1271,7 @@ TEST_CASE("Serialization: struct hash", "[FBE]")
     REQUIRE(reader.model.fbe_offset() == 4);
     reader.attach(writer.buffer());
     REQUIRE(reader.verify());
-    size_t deserialized = reader.deserialize(struct2);
+    size_t deserialized = reader.deserialize(struct2, nullptr);
     REQUIRE(deserialized == reader.buffer().size());
     reader.next(deserialized);
     REQUIRE(reader.model.fbe_offset() == (4 + reader.buffer().size()));
@@ -1326,7 +1326,7 @@ TEST_CASE("Serialization: struct hash extended", "[FBE]")
     FBE::test::StructHashExModel writer;
     REQUIRE(writer.model.fbe_type() == 142);
     REQUIRE(writer.model.fbe_offset() == 4);
-    size_t serialized = writer.serialize(struct1);
+    size_t serialized = writer.serialize(struct1, nullptr);
     REQUIRE(serialized == writer.buffer().size());
     REQUIRE(writer.verify());
     writer.next(serialized);
@@ -1342,7 +1342,7 @@ TEST_CASE("Serialization: struct hash extended", "[FBE]")
     REQUIRE(reader.model.fbe_offset() == 4);
     reader.attach(writer.buffer());
     REQUIRE(reader.verify());
-    size_t deserialized = reader.deserialize(struct2);
+    size_t deserialized = reader.deserialize(struct2, nullptr);
     REQUIRE(deserialized == reader.buffer().size());
     reader.next(deserialized);
     REQUIRE(reader.model.fbe_offset() == (4 + reader.buffer().size()));
@@ -1362,7 +1362,7 @@ TEST_CASE("Serialization: variant", "[FBE]") {
         ::variants::Value value{FBE::FBEString("variant v")};
 
         FBE::variants::ValueModel writer;
-        size_t serialized = writer.serialize(value);
+        size_t serialized = writer.serialize(value, nullptr);
         REQUIRE(serialized == writer.buffer().size());
         REQUIRE(writer.verify());
 
@@ -1371,7 +1371,7 @@ TEST_CASE("Serialization: variant", "[FBE]") {
         REQUIRE(reader.verify());
 
         ::variants::Value value_copy;
-        size_t deserialized = reader.deserialize(value_copy);
+        size_t deserialized = reader.deserialize(value_copy, nullptr);
         REQUIRE(deserialized == reader.buffer().size());
 
         REQUIRE(value_copy.v.index() == 1);
@@ -1384,7 +1384,7 @@ TEST_CASE("Serialization: variant", "[FBE]") {
         value.v.emplace<int32_t>(42);
 
         FBE::variants::ValueModel writer;
-        size_t serialized = writer.serialize(value);
+        size_t serialized = writer.serialize(value, nullptr);
         REQUIRE(serialized == writer.buffer().size());
         REQUIRE(writer.verify());
 
@@ -1393,7 +1393,7 @@ TEST_CASE("Serialization: variant", "[FBE]") {
         REQUIRE(reader.verify());
 
         ::variants::Value value_copy;
-        size_t deserialized = reader.deserialize(value_copy);
+        size_t deserialized = reader.deserialize(value_copy, nullptr);
         REQUIRE(deserialized == reader.buffer().size());
 
         REQUIRE(value_copy.v.index() == 2);
@@ -1406,7 +1406,7 @@ TEST_CASE("Serialization: variant", "[FBE]") {
         ::variants::Value value(simple);
 
         FBE::variants::ValueModel writer;
-        size_t serialized = writer.serialize(value);
+        size_t serialized = writer.serialize(value, nullptr);
         REQUIRE(serialized == writer.buffer().size());
         REQUIRE(writer.verify());
 
@@ -1415,7 +1415,7 @@ TEST_CASE("Serialization: variant", "[FBE]") {
         REQUIRE(reader.verify());
 
         ::variants::Value value_copy;
-        size_t deserialized = reader.deserialize(value_copy);
+        size_t deserialized = reader.deserialize(value_copy, nullptr);
         REQUIRE(deserialized == reader.buffer().size());
 
         REQUIRE(value_copy.v.index() == 4);
@@ -1433,7 +1433,7 @@ TEST_CASE("Serialization: variant", "[FBE]") {
         value.v.emplace<5>(std::move(v));
 
         FBE::variants::ValueModel writer;
-        size_t serialized = writer.serialize(value);
+        size_t serialized = writer.serialize(value, nullptr);
         REQUIRE(serialized == writer.buffer().size());
         REQUIRE(writer.verify());
 
@@ -1442,7 +1442,7 @@ TEST_CASE("Serialization: variant", "[FBE]") {
         REQUIRE(reader.verify());
 
         ::variants::Value value_copy;
-        size_t deserialized = reader.deserialize(value_copy);
+        size_t deserialized = reader.deserialize(value_copy, nullptr);
         REQUIRE(deserialized == reader.buffer().size());
 
         REQUIRE(value_copy.v.index() == 5);
@@ -1461,7 +1461,7 @@ TEST_CASE("Serialization: variant", "[FBE]") {
         value.v.emplace<6>(std::move(v));
 
         FBE::variants::ValueModel writer;
-        size_t serialized = writer.serialize(value);
+        size_t serialized = writer.serialize(value, nullptr);
         REQUIRE(serialized == writer.buffer().size());
         REQUIRE(writer.verify());
 
@@ -1470,7 +1470,7 @@ TEST_CASE("Serialization: variant", "[FBE]") {
         REQUIRE(reader.verify());
 
         ::variants::Value value_copy;
-        size_t deserialized = reader.deserialize(value_copy);
+        size_t deserialized = reader.deserialize(value_copy, nullptr);
         REQUIRE(deserialized == reader.buffer().size());
 
         REQUIRE(value_copy.v.index() == 6);
@@ -1492,7 +1492,7 @@ TEST_CASE("Serialization: variant", "[FBE]") {
         value.v.emplace<7>(std::move(m));
 
         FBE::variants::ValueModel writer;
-        size_t serialized = writer.serialize(value);
+        size_t serialized = writer.serialize(value, nullptr);
         REQUIRE(serialized == writer.buffer().size());
         REQUIRE(writer.verify());
 
@@ -1501,7 +1501,7 @@ TEST_CASE("Serialization: variant", "[FBE]") {
         REQUIRE(reader.verify());
 
         ::variants::Value value_copy;
-        size_t deserialized = reader.deserialize(value_copy);
+        size_t deserialized = reader.deserialize(value_copy, nullptr);
         REQUIRE(deserialized == reader.buffer().size());
 
         REQUIRE(value_copy.v.index() == 7);
@@ -1522,7 +1522,7 @@ TEST_CASE("Serialization: variant", "[FBE]") {
         value.v.emplace<8>(std::move(bytes_v));
 
         FBE::variants::ValueModel writer;
-        size_t serialized = writer.serialize(value);
+        size_t serialized = writer.serialize(value, nullptr);
         REQUIRE(serialized == writer.buffer().size());
         REQUIRE(writer.verify());
 
@@ -1531,7 +1531,7 @@ TEST_CASE("Serialization: variant", "[FBE]") {
         REQUIRE(reader.verify());
 
         ::variants::Value value_copy;
-        size_t deserialized = reader.deserialize(value_copy);
+        size_t deserialized = reader.deserialize(value_copy, nullptr);
         REQUIRE(deserialized == reader.buffer().size());
 
         REQUIRE(value_copy.v.index() == 8);
@@ -1549,7 +1549,7 @@ TEST_CASE("Serialization: variant", "[FBE]") {
         value.v.emplace<9>(std::move(string_v));
 
         FBE::variants::ValueModel writer;
-        size_t serialized = writer.serialize(value);
+        size_t serialized = writer.serialize(value, nullptr);
         REQUIRE(serialized == writer.buffer().size());
         REQUIRE(writer.verify());
 
@@ -1558,7 +1558,7 @@ TEST_CASE("Serialization: variant", "[FBE]") {
         REQUIRE(reader.verify());
 
         ::variants::Value value_copy;
-        size_t deserialized = reader.deserialize(value_copy);
+        size_t deserialized = reader.deserialize(value_copy, nullptr);
         REQUIRE(deserialized == reader.buffer().size());
 
         REQUIRE(value_copy.v.index() == 9);
@@ -1579,7 +1579,7 @@ TEST_CASE("Serialization: variant", "[FBE]") {
         value.v.emplace<10>(std::move(m));
 
         FBE::variants::ValueModel writer;
-        size_t serialized = writer.serialize(value);
+        size_t serialized = writer.serialize(value, nullptr);
         REQUIRE(serialized == writer.buffer().size());
         REQUIRE(writer.verify());
 
@@ -1588,7 +1588,7 @@ TEST_CASE("Serialization: variant", "[FBE]") {
         REQUIRE(reader.verify());
 
         ::variants::Value value_copy;
-        size_t deserialized = reader.deserialize(value_copy);
+        size_t deserialized = reader.deserialize(value_copy, nullptr);
         REQUIRE(deserialized == reader.buffer().size());
 
         REQUIRE(value_copy.v.index() == 10);
@@ -1608,7 +1608,7 @@ TEST_CASE("Serialization: variant", "[FBE]") {
         value.v.emplace<11>(std::move(m));
 
         FBE::variants::ValueModel writer;
-        size_t serialized = writer.serialize(value);
+        size_t serialized = writer.serialize(value, nullptr);
         REQUIRE(serialized == writer.buffer().size());
         REQUIRE(writer.verify());
 
@@ -1617,7 +1617,7 @@ TEST_CASE("Serialization: variant", "[FBE]") {
         REQUIRE(reader.verify());
 
         ::variants::Value value_copy;
-        size_t deserialized = reader.deserialize(value_copy);
+        size_t deserialized = reader.deserialize(value_copy, nullptr);
         REQUIRE(deserialized == reader.buffer().size());
 
         REQUIRE(value_copy.v.index() == 11);
@@ -1634,7 +1634,7 @@ TEST_CASE("Serialization: variant", "[FBE]") {
         value.v.emplace<::variants::Expr>(std::move(expr));
 
         FBE::variants::ValueModel writer;
-        size_t serialized = writer.serialize(value);
+        size_t serialized = writer.serialize(value, nullptr);
         REQUIRE(serialized == writer.buffer().size());
         REQUIRE(writer.verify());
 
@@ -1643,7 +1643,7 @@ TEST_CASE("Serialization: variant", "[FBE]") {
         REQUIRE(reader.verify());
 
         ::variants::Value value_copy;
-        size_t deserialized = reader.deserialize(value_copy);
+        size_t deserialized = reader.deserialize(value_copy, nullptr);
         REQUIRE(deserialized == reader.buffer().size());
 
         REQUIRE(value_copy.v.index() == 12);
@@ -1665,7 +1665,7 @@ TEST_CASE("Serialization: int128 and uint128", "[FBE]")
 
     // Serialize the struct to the FBE stream
     FBE::cpp_only::Struct128Model writer;
-    size_t serialized = writer.serialize(struct1);
+    size_t serialized = writer.serialize(struct1, nullptr);
     REQUIRE(serialized == writer.buffer().size());
     REQUIRE(writer.verify());
     writer.next(serialized);
@@ -1678,7 +1678,7 @@ TEST_CASE("Serialization: int128 and uint128", "[FBE]")
     REQUIRE(reader.model.fbe_offset() == 4);
     reader.attach(writer.buffer());
     REQUIRE(reader.verify());
-    size_t deserialized = reader.deserialize(struct2);
+    size_t deserialized = reader.deserialize(struct2, nullptr);
     REQUIRE(deserialized == reader.buffer().size());
     reader.next(deserialized);
     REQUIRE(reader.model.fbe_offset() == (4 + reader.buffer().size()));

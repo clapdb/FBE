@@ -686,413 +686,413 @@ void FieldModel<::enums::Enums>::get_end(size_t fbe_begin) const noexcept
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModel<::enums::Enums>::get(::enums::Enums& fbe_value) const noexcept
+void FieldModel<::enums::Enums>::get(::enums::Enums& fbe_value, pmr::memory_resource* resource) const noexcept
 {
     size_t fbe_begin = get_begin();
     if (fbe_begin == 0)
         return;
 
     uint32_t fbe_struct_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset());
-    get_fields(fbe_value, fbe_struct_size);
+    get_fields(fbe_value, fbe_struct_size, resource);
     get_end(fbe_begin);
 }
 
-void FieldModel<::enums::Enums>::get_fields([[maybe_unused]] ::enums::Enums& fbe_value, [[maybe_unused]] size_t fbe_struct_size) const noexcept
+void FieldModel<::enums::Enums>::get_fields([[maybe_unused]] ::enums::Enums& fbe_value, [[maybe_unused]] size_t fbe_struct_size, pmr::memory_resource* resource) const noexcept
 {
     size_t fbe_current_size = 4 + 4;
 
     if ((fbe_current_size + byte0.fbe_size()) <= fbe_struct_size)
-        byte0.get(fbe_value.byte0, EnumByte::ENUM_VALUE_0);
+        byte0.get(fbe_value.byte0, resource, EnumByte::ENUM_VALUE_0);
     else
         fbe_value.byte0 = EnumByte::ENUM_VALUE_0;
     fbe_current_size += byte0.fbe_size();
 
     if ((fbe_current_size + byte1.fbe_size()) <= fbe_struct_size)
-        byte1.get(fbe_value.byte1, EnumByte::ENUM_VALUE_1);
+        byte1.get(fbe_value.byte1, resource, EnumByte::ENUM_VALUE_1);
     else
         fbe_value.byte1 = EnumByte::ENUM_VALUE_1;
     fbe_current_size += byte1.fbe_size();
 
     if ((fbe_current_size + byte2.fbe_size()) <= fbe_struct_size)
-        byte2.get(fbe_value.byte2, EnumByte::ENUM_VALUE_2);
+        byte2.get(fbe_value.byte2, resource, EnumByte::ENUM_VALUE_2);
     else
         fbe_value.byte2 = EnumByte::ENUM_VALUE_2;
     fbe_current_size += byte2.fbe_size();
 
     if ((fbe_current_size + byte3.fbe_size()) <= fbe_struct_size)
-        byte3.get(fbe_value.byte3, EnumByte::ENUM_VALUE_3);
+        byte3.get(fbe_value.byte3, resource, EnumByte::ENUM_VALUE_3);
     else
         fbe_value.byte3 = EnumByte::ENUM_VALUE_3;
     fbe_current_size += byte3.fbe_size();
 
     if ((fbe_current_size + byte4.fbe_size()) <= fbe_struct_size)
-        byte4.get(fbe_value.byte4, EnumByte::ENUM_VALUE_4);
+        byte4.get(fbe_value.byte4, resource, EnumByte::ENUM_VALUE_4);
     else
         fbe_value.byte4 = EnumByte::ENUM_VALUE_4;
     fbe_current_size += byte4.fbe_size();
 
     if ((fbe_current_size + byte5.fbe_size()) <= fbe_struct_size)
-        byte5.get(fbe_value.byte5, EnumByte::ENUM_VALUE_5);
+        byte5.get(fbe_value.byte5, resource, EnumByte::ENUM_VALUE_5);
     else
         fbe_value.byte5 = EnumByte::ENUM_VALUE_5;
     fbe_current_size += byte5.fbe_size();
 
     if ((fbe_current_size + char0.fbe_size()) <= fbe_struct_size)
-        char0.get(fbe_value.char0, EnumChar::ENUM_VALUE_0);
+        char0.get(fbe_value.char0, resource, EnumChar::ENUM_VALUE_0);
     else
         fbe_value.char0 = EnumChar::ENUM_VALUE_0;
     fbe_current_size += char0.fbe_size();
 
     if ((fbe_current_size + char1.fbe_size()) <= fbe_struct_size)
-        char1.get(fbe_value.char1, EnumChar::ENUM_VALUE_1);
+        char1.get(fbe_value.char1, resource, EnumChar::ENUM_VALUE_1);
     else
         fbe_value.char1 = EnumChar::ENUM_VALUE_1;
     fbe_current_size += char1.fbe_size();
 
     if ((fbe_current_size + char2.fbe_size()) <= fbe_struct_size)
-        char2.get(fbe_value.char2, EnumChar::ENUM_VALUE_2);
+        char2.get(fbe_value.char2, resource, EnumChar::ENUM_VALUE_2);
     else
         fbe_value.char2 = EnumChar::ENUM_VALUE_2;
     fbe_current_size += char2.fbe_size();
 
     if ((fbe_current_size + char3.fbe_size()) <= fbe_struct_size)
-        char3.get(fbe_value.char3, EnumChar::ENUM_VALUE_3);
+        char3.get(fbe_value.char3, resource, EnumChar::ENUM_VALUE_3);
     else
         fbe_value.char3 = EnumChar::ENUM_VALUE_3;
     fbe_current_size += char3.fbe_size();
 
     if ((fbe_current_size + char4.fbe_size()) <= fbe_struct_size)
-        char4.get(fbe_value.char4, EnumChar::ENUM_VALUE_4);
+        char4.get(fbe_value.char4, resource, EnumChar::ENUM_VALUE_4);
     else
         fbe_value.char4 = EnumChar::ENUM_VALUE_4;
     fbe_current_size += char4.fbe_size();
 
     if ((fbe_current_size + char5.fbe_size()) <= fbe_struct_size)
-        char5.get(fbe_value.char5, EnumChar::ENUM_VALUE_5);
+        char5.get(fbe_value.char5, resource, EnumChar::ENUM_VALUE_5);
     else
         fbe_value.char5 = EnumChar::ENUM_VALUE_5;
     fbe_current_size += char5.fbe_size();
 
     if ((fbe_current_size + wchar0.fbe_size()) <= fbe_struct_size)
-        wchar0.get(fbe_value.wchar0, EnumWChar::ENUM_VALUE_0);
+        wchar0.get(fbe_value.wchar0, resource, EnumWChar::ENUM_VALUE_0);
     else
         fbe_value.wchar0 = EnumWChar::ENUM_VALUE_0;
     fbe_current_size += wchar0.fbe_size();
 
     if ((fbe_current_size + wchar1.fbe_size()) <= fbe_struct_size)
-        wchar1.get(fbe_value.wchar1, EnumWChar::ENUM_VALUE_1);
+        wchar1.get(fbe_value.wchar1, resource, EnumWChar::ENUM_VALUE_1);
     else
         fbe_value.wchar1 = EnumWChar::ENUM_VALUE_1;
     fbe_current_size += wchar1.fbe_size();
 
     if ((fbe_current_size + wchar2.fbe_size()) <= fbe_struct_size)
-        wchar2.get(fbe_value.wchar2, EnumWChar::ENUM_VALUE_2);
+        wchar2.get(fbe_value.wchar2, resource, EnumWChar::ENUM_VALUE_2);
     else
         fbe_value.wchar2 = EnumWChar::ENUM_VALUE_2;
     fbe_current_size += wchar2.fbe_size();
 
     if ((fbe_current_size + wchar3.fbe_size()) <= fbe_struct_size)
-        wchar3.get(fbe_value.wchar3, EnumWChar::ENUM_VALUE_3);
+        wchar3.get(fbe_value.wchar3, resource, EnumWChar::ENUM_VALUE_3);
     else
         fbe_value.wchar3 = EnumWChar::ENUM_VALUE_3;
     fbe_current_size += wchar3.fbe_size();
 
     if ((fbe_current_size + wchar4.fbe_size()) <= fbe_struct_size)
-        wchar4.get(fbe_value.wchar4, EnumWChar::ENUM_VALUE_4);
+        wchar4.get(fbe_value.wchar4, resource, EnumWChar::ENUM_VALUE_4);
     else
         fbe_value.wchar4 = EnumWChar::ENUM_VALUE_4;
     fbe_current_size += wchar4.fbe_size();
 
     if ((fbe_current_size + wchar5.fbe_size()) <= fbe_struct_size)
-        wchar5.get(fbe_value.wchar5, EnumWChar::ENUM_VALUE_5);
+        wchar5.get(fbe_value.wchar5, resource, EnumWChar::ENUM_VALUE_5);
     else
         fbe_value.wchar5 = EnumWChar::ENUM_VALUE_5;
     fbe_current_size += wchar5.fbe_size();
 
     if ((fbe_current_size + int8b0.fbe_size()) <= fbe_struct_size)
-        int8b0.get(fbe_value.int8b0, EnumInt8::ENUM_VALUE_0);
+        int8b0.get(fbe_value.int8b0, resource, EnumInt8::ENUM_VALUE_0);
     else
         fbe_value.int8b0 = EnumInt8::ENUM_VALUE_0;
     fbe_current_size += int8b0.fbe_size();
 
     if ((fbe_current_size + int8b1.fbe_size()) <= fbe_struct_size)
-        int8b1.get(fbe_value.int8b1, EnumInt8::ENUM_VALUE_1);
+        int8b1.get(fbe_value.int8b1, resource, EnumInt8::ENUM_VALUE_1);
     else
         fbe_value.int8b1 = EnumInt8::ENUM_VALUE_1;
     fbe_current_size += int8b1.fbe_size();
 
     if ((fbe_current_size + int8b2.fbe_size()) <= fbe_struct_size)
-        int8b2.get(fbe_value.int8b2, EnumInt8::ENUM_VALUE_2);
+        int8b2.get(fbe_value.int8b2, resource, EnumInt8::ENUM_VALUE_2);
     else
         fbe_value.int8b2 = EnumInt8::ENUM_VALUE_2;
     fbe_current_size += int8b2.fbe_size();
 
     if ((fbe_current_size + int8b3.fbe_size()) <= fbe_struct_size)
-        int8b3.get(fbe_value.int8b3, EnumInt8::ENUM_VALUE_3);
+        int8b3.get(fbe_value.int8b3, resource, EnumInt8::ENUM_VALUE_3);
     else
         fbe_value.int8b3 = EnumInt8::ENUM_VALUE_3;
     fbe_current_size += int8b3.fbe_size();
 
     if ((fbe_current_size + int8b4.fbe_size()) <= fbe_struct_size)
-        int8b4.get(fbe_value.int8b4, EnumInt8::ENUM_VALUE_4);
+        int8b4.get(fbe_value.int8b4, resource, EnumInt8::ENUM_VALUE_4);
     else
         fbe_value.int8b4 = EnumInt8::ENUM_VALUE_4;
     fbe_current_size += int8b4.fbe_size();
 
     if ((fbe_current_size + int8b5.fbe_size()) <= fbe_struct_size)
-        int8b5.get(fbe_value.int8b5, EnumInt8::ENUM_VALUE_5);
+        int8b5.get(fbe_value.int8b5, resource, EnumInt8::ENUM_VALUE_5);
     else
         fbe_value.int8b5 = EnumInt8::ENUM_VALUE_5;
     fbe_current_size += int8b5.fbe_size();
 
     if ((fbe_current_size + uint8b0.fbe_size()) <= fbe_struct_size)
-        uint8b0.get(fbe_value.uint8b0, EnumUInt8::ENUM_VALUE_0);
+        uint8b0.get(fbe_value.uint8b0, resource, EnumUInt8::ENUM_VALUE_0);
     else
         fbe_value.uint8b0 = EnumUInt8::ENUM_VALUE_0;
     fbe_current_size += uint8b0.fbe_size();
 
     if ((fbe_current_size + uint8b1.fbe_size()) <= fbe_struct_size)
-        uint8b1.get(fbe_value.uint8b1, EnumUInt8::ENUM_VALUE_1);
+        uint8b1.get(fbe_value.uint8b1, resource, EnumUInt8::ENUM_VALUE_1);
     else
         fbe_value.uint8b1 = EnumUInt8::ENUM_VALUE_1;
     fbe_current_size += uint8b1.fbe_size();
 
     if ((fbe_current_size + uint8b2.fbe_size()) <= fbe_struct_size)
-        uint8b2.get(fbe_value.uint8b2, EnumUInt8::ENUM_VALUE_2);
+        uint8b2.get(fbe_value.uint8b2, resource, EnumUInt8::ENUM_VALUE_2);
     else
         fbe_value.uint8b2 = EnumUInt8::ENUM_VALUE_2;
     fbe_current_size += uint8b2.fbe_size();
 
     if ((fbe_current_size + uint8b3.fbe_size()) <= fbe_struct_size)
-        uint8b3.get(fbe_value.uint8b3, EnumUInt8::ENUM_VALUE_3);
+        uint8b3.get(fbe_value.uint8b3, resource, EnumUInt8::ENUM_VALUE_3);
     else
         fbe_value.uint8b3 = EnumUInt8::ENUM_VALUE_3;
     fbe_current_size += uint8b3.fbe_size();
 
     if ((fbe_current_size + uint8b4.fbe_size()) <= fbe_struct_size)
-        uint8b4.get(fbe_value.uint8b4, EnumUInt8::ENUM_VALUE_4);
+        uint8b4.get(fbe_value.uint8b4, resource, EnumUInt8::ENUM_VALUE_4);
     else
         fbe_value.uint8b4 = EnumUInt8::ENUM_VALUE_4;
     fbe_current_size += uint8b4.fbe_size();
 
     if ((fbe_current_size + uint8b5.fbe_size()) <= fbe_struct_size)
-        uint8b5.get(fbe_value.uint8b5, EnumUInt8::ENUM_VALUE_5);
+        uint8b5.get(fbe_value.uint8b5, resource, EnumUInt8::ENUM_VALUE_5);
     else
         fbe_value.uint8b5 = EnumUInt8::ENUM_VALUE_5;
     fbe_current_size += uint8b5.fbe_size();
 
     if ((fbe_current_size + int16b0.fbe_size()) <= fbe_struct_size)
-        int16b0.get(fbe_value.int16b0, EnumInt16::ENUM_VALUE_0);
+        int16b0.get(fbe_value.int16b0, resource, EnumInt16::ENUM_VALUE_0);
     else
         fbe_value.int16b0 = EnumInt16::ENUM_VALUE_0;
     fbe_current_size += int16b0.fbe_size();
 
     if ((fbe_current_size + int16b1.fbe_size()) <= fbe_struct_size)
-        int16b1.get(fbe_value.int16b1, EnumInt16::ENUM_VALUE_1);
+        int16b1.get(fbe_value.int16b1, resource, EnumInt16::ENUM_VALUE_1);
     else
         fbe_value.int16b1 = EnumInt16::ENUM_VALUE_1;
     fbe_current_size += int16b1.fbe_size();
 
     if ((fbe_current_size + int16b2.fbe_size()) <= fbe_struct_size)
-        int16b2.get(fbe_value.int16b2, EnumInt16::ENUM_VALUE_2);
+        int16b2.get(fbe_value.int16b2, resource, EnumInt16::ENUM_VALUE_2);
     else
         fbe_value.int16b2 = EnumInt16::ENUM_VALUE_2;
     fbe_current_size += int16b2.fbe_size();
 
     if ((fbe_current_size + int16b3.fbe_size()) <= fbe_struct_size)
-        int16b3.get(fbe_value.int16b3, EnumInt16::ENUM_VALUE_3);
+        int16b3.get(fbe_value.int16b3, resource, EnumInt16::ENUM_VALUE_3);
     else
         fbe_value.int16b3 = EnumInt16::ENUM_VALUE_3;
     fbe_current_size += int16b3.fbe_size();
 
     if ((fbe_current_size + int16b4.fbe_size()) <= fbe_struct_size)
-        int16b4.get(fbe_value.int16b4, EnumInt16::ENUM_VALUE_4);
+        int16b4.get(fbe_value.int16b4, resource, EnumInt16::ENUM_VALUE_4);
     else
         fbe_value.int16b4 = EnumInt16::ENUM_VALUE_4;
     fbe_current_size += int16b4.fbe_size();
 
     if ((fbe_current_size + int16b5.fbe_size()) <= fbe_struct_size)
-        int16b5.get(fbe_value.int16b5, EnumInt16::ENUM_VALUE_5);
+        int16b5.get(fbe_value.int16b5, resource, EnumInt16::ENUM_VALUE_5);
     else
         fbe_value.int16b5 = EnumInt16::ENUM_VALUE_5;
     fbe_current_size += int16b5.fbe_size();
 
     if ((fbe_current_size + uint16b0.fbe_size()) <= fbe_struct_size)
-        uint16b0.get(fbe_value.uint16b0, EnumUInt16::ENUM_VALUE_0);
+        uint16b0.get(fbe_value.uint16b0, resource, EnumUInt16::ENUM_VALUE_0);
     else
         fbe_value.uint16b0 = EnumUInt16::ENUM_VALUE_0;
     fbe_current_size += uint16b0.fbe_size();
 
     if ((fbe_current_size + uint16b1.fbe_size()) <= fbe_struct_size)
-        uint16b1.get(fbe_value.uint16b1, EnumUInt16::ENUM_VALUE_1);
+        uint16b1.get(fbe_value.uint16b1, resource, EnumUInt16::ENUM_VALUE_1);
     else
         fbe_value.uint16b1 = EnumUInt16::ENUM_VALUE_1;
     fbe_current_size += uint16b1.fbe_size();
 
     if ((fbe_current_size + uint16b2.fbe_size()) <= fbe_struct_size)
-        uint16b2.get(fbe_value.uint16b2, EnumUInt16::ENUM_VALUE_2);
+        uint16b2.get(fbe_value.uint16b2, resource, EnumUInt16::ENUM_VALUE_2);
     else
         fbe_value.uint16b2 = EnumUInt16::ENUM_VALUE_2;
     fbe_current_size += uint16b2.fbe_size();
 
     if ((fbe_current_size + uint16b3.fbe_size()) <= fbe_struct_size)
-        uint16b3.get(fbe_value.uint16b3, EnumUInt16::ENUM_VALUE_3);
+        uint16b3.get(fbe_value.uint16b3, resource, EnumUInt16::ENUM_VALUE_3);
     else
         fbe_value.uint16b3 = EnumUInt16::ENUM_VALUE_3;
     fbe_current_size += uint16b3.fbe_size();
 
     if ((fbe_current_size + uint16b4.fbe_size()) <= fbe_struct_size)
-        uint16b4.get(fbe_value.uint16b4, EnumUInt16::ENUM_VALUE_4);
+        uint16b4.get(fbe_value.uint16b4, resource, EnumUInt16::ENUM_VALUE_4);
     else
         fbe_value.uint16b4 = EnumUInt16::ENUM_VALUE_4;
     fbe_current_size += uint16b4.fbe_size();
 
     if ((fbe_current_size + uint16b5.fbe_size()) <= fbe_struct_size)
-        uint16b5.get(fbe_value.uint16b5, EnumUInt16::ENUM_VALUE_5);
+        uint16b5.get(fbe_value.uint16b5, resource, EnumUInt16::ENUM_VALUE_5);
     else
         fbe_value.uint16b5 = EnumUInt16::ENUM_VALUE_5;
     fbe_current_size += uint16b5.fbe_size();
 
     if ((fbe_current_size + int32b0.fbe_size()) <= fbe_struct_size)
-        int32b0.get(fbe_value.int32b0, EnumInt32::ENUM_VALUE_0);
+        int32b0.get(fbe_value.int32b0, resource, EnumInt32::ENUM_VALUE_0);
     else
         fbe_value.int32b0 = EnumInt32::ENUM_VALUE_0;
     fbe_current_size += int32b0.fbe_size();
 
     if ((fbe_current_size + int32b1.fbe_size()) <= fbe_struct_size)
-        int32b1.get(fbe_value.int32b1, EnumInt32::ENUM_VALUE_1);
+        int32b1.get(fbe_value.int32b1, resource, EnumInt32::ENUM_VALUE_1);
     else
         fbe_value.int32b1 = EnumInt32::ENUM_VALUE_1;
     fbe_current_size += int32b1.fbe_size();
 
     if ((fbe_current_size + int32b2.fbe_size()) <= fbe_struct_size)
-        int32b2.get(fbe_value.int32b2, EnumInt32::ENUM_VALUE_2);
+        int32b2.get(fbe_value.int32b2, resource, EnumInt32::ENUM_VALUE_2);
     else
         fbe_value.int32b2 = EnumInt32::ENUM_VALUE_2;
     fbe_current_size += int32b2.fbe_size();
 
     if ((fbe_current_size + int32b3.fbe_size()) <= fbe_struct_size)
-        int32b3.get(fbe_value.int32b3, EnumInt32::ENUM_VALUE_3);
+        int32b3.get(fbe_value.int32b3, resource, EnumInt32::ENUM_VALUE_3);
     else
         fbe_value.int32b3 = EnumInt32::ENUM_VALUE_3;
     fbe_current_size += int32b3.fbe_size();
 
     if ((fbe_current_size + int32b4.fbe_size()) <= fbe_struct_size)
-        int32b4.get(fbe_value.int32b4, EnumInt32::ENUM_VALUE_4);
+        int32b4.get(fbe_value.int32b4, resource, EnumInt32::ENUM_VALUE_4);
     else
         fbe_value.int32b4 = EnumInt32::ENUM_VALUE_4;
     fbe_current_size += int32b4.fbe_size();
 
     if ((fbe_current_size + int32b5.fbe_size()) <= fbe_struct_size)
-        int32b5.get(fbe_value.int32b5, EnumInt32::ENUM_VALUE_5);
+        int32b5.get(fbe_value.int32b5, resource, EnumInt32::ENUM_VALUE_5);
     else
         fbe_value.int32b5 = EnumInt32::ENUM_VALUE_5;
     fbe_current_size += int32b5.fbe_size();
 
     if ((fbe_current_size + uint32b0.fbe_size()) <= fbe_struct_size)
-        uint32b0.get(fbe_value.uint32b0, EnumUInt32::ENUM_VALUE_0);
+        uint32b0.get(fbe_value.uint32b0, resource, EnumUInt32::ENUM_VALUE_0);
     else
         fbe_value.uint32b0 = EnumUInt32::ENUM_VALUE_0;
     fbe_current_size += uint32b0.fbe_size();
 
     if ((fbe_current_size + uint32b1.fbe_size()) <= fbe_struct_size)
-        uint32b1.get(fbe_value.uint32b1, EnumUInt32::ENUM_VALUE_1);
+        uint32b1.get(fbe_value.uint32b1, resource, EnumUInt32::ENUM_VALUE_1);
     else
         fbe_value.uint32b1 = EnumUInt32::ENUM_VALUE_1;
     fbe_current_size += uint32b1.fbe_size();
 
     if ((fbe_current_size + uint32b2.fbe_size()) <= fbe_struct_size)
-        uint32b2.get(fbe_value.uint32b2, EnumUInt32::ENUM_VALUE_2);
+        uint32b2.get(fbe_value.uint32b2, resource, EnumUInt32::ENUM_VALUE_2);
     else
         fbe_value.uint32b2 = EnumUInt32::ENUM_VALUE_2;
     fbe_current_size += uint32b2.fbe_size();
 
     if ((fbe_current_size + uint32b3.fbe_size()) <= fbe_struct_size)
-        uint32b3.get(fbe_value.uint32b3, EnumUInt32::ENUM_VALUE_3);
+        uint32b3.get(fbe_value.uint32b3, resource, EnumUInt32::ENUM_VALUE_3);
     else
         fbe_value.uint32b3 = EnumUInt32::ENUM_VALUE_3;
     fbe_current_size += uint32b3.fbe_size();
 
     if ((fbe_current_size + uint32b4.fbe_size()) <= fbe_struct_size)
-        uint32b4.get(fbe_value.uint32b4, EnumUInt32::ENUM_VALUE_4);
+        uint32b4.get(fbe_value.uint32b4, resource, EnumUInt32::ENUM_VALUE_4);
     else
         fbe_value.uint32b4 = EnumUInt32::ENUM_VALUE_4;
     fbe_current_size += uint32b4.fbe_size();
 
     if ((fbe_current_size + uint32b5.fbe_size()) <= fbe_struct_size)
-        uint32b5.get(fbe_value.uint32b5, EnumUInt32::ENUM_VALUE_5);
+        uint32b5.get(fbe_value.uint32b5, resource, EnumUInt32::ENUM_VALUE_5);
     else
         fbe_value.uint32b5 = EnumUInt32::ENUM_VALUE_5;
     fbe_current_size += uint32b5.fbe_size();
 
     if ((fbe_current_size + int64b0.fbe_size()) <= fbe_struct_size)
-        int64b0.get(fbe_value.int64b0, EnumInt64::ENUM_VALUE_0);
+        int64b0.get(fbe_value.int64b0, resource, EnumInt64::ENUM_VALUE_0);
     else
         fbe_value.int64b0 = EnumInt64::ENUM_VALUE_0;
     fbe_current_size += int64b0.fbe_size();
 
     if ((fbe_current_size + int64b1.fbe_size()) <= fbe_struct_size)
-        int64b1.get(fbe_value.int64b1, EnumInt64::ENUM_VALUE_1);
+        int64b1.get(fbe_value.int64b1, resource, EnumInt64::ENUM_VALUE_1);
     else
         fbe_value.int64b1 = EnumInt64::ENUM_VALUE_1;
     fbe_current_size += int64b1.fbe_size();
 
     if ((fbe_current_size + int64b2.fbe_size()) <= fbe_struct_size)
-        int64b2.get(fbe_value.int64b2, EnumInt64::ENUM_VALUE_2);
+        int64b2.get(fbe_value.int64b2, resource, EnumInt64::ENUM_VALUE_2);
     else
         fbe_value.int64b2 = EnumInt64::ENUM_VALUE_2;
     fbe_current_size += int64b2.fbe_size();
 
     if ((fbe_current_size + int64b3.fbe_size()) <= fbe_struct_size)
-        int64b3.get(fbe_value.int64b3, EnumInt64::ENUM_VALUE_3);
+        int64b3.get(fbe_value.int64b3, resource, EnumInt64::ENUM_VALUE_3);
     else
         fbe_value.int64b3 = EnumInt64::ENUM_VALUE_3;
     fbe_current_size += int64b3.fbe_size();
 
     if ((fbe_current_size + int64b4.fbe_size()) <= fbe_struct_size)
-        int64b4.get(fbe_value.int64b4, EnumInt64::ENUM_VALUE_4);
+        int64b4.get(fbe_value.int64b4, resource, EnumInt64::ENUM_VALUE_4);
     else
         fbe_value.int64b4 = EnumInt64::ENUM_VALUE_4;
     fbe_current_size += int64b4.fbe_size();
 
     if ((fbe_current_size + int64b5.fbe_size()) <= fbe_struct_size)
-        int64b5.get(fbe_value.int64b5, EnumInt64::ENUM_VALUE_5);
+        int64b5.get(fbe_value.int64b5, resource, EnumInt64::ENUM_VALUE_5);
     else
         fbe_value.int64b5 = EnumInt64::ENUM_VALUE_5;
     fbe_current_size += int64b5.fbe_size();
 
     if ((fbe_current_size + uint64b0.fbe_size()) <= fbe_struct_size)
-        uint64b0.get(fbe_value.uint64b0, EnumUInt64::ENUM_VALUE_0);
+        uint64b0.get(fbe_value.uint64b0, resource, EnumUInt64::ENUM_VALUE_0);
     else
         fbe_value.uint64b0 = EnumUInt64::ENUM_VALUE_0;
     fbe_current_size += uint64b0.fbe_size();
 
     if ((fbe_current_size + uint64b1.fbe_size()) <= fbe_struct_size)
-        uint64b1.get(fbe_value.uint64b1, EnumUInt64::ENUM_VALUE_1);
+        uint64b1.get(fbe_value.uint64b1, resource, EnumUInt64::ENUM_VALUE_1);
     else
         fbe_value.uint64b1 = EnumUInt64::ENUM_VALUE_1;
     fbe_current_size += uint64b1.fbe_size();
 
     if ((fbe_current_size + uint64b2.fbe_size()) <= fbe_struct_size)
-        uint64b2.get(fbe_value.uint64b2, EnumUInt64::ENUM_VALUE_2);
+        uint64b2.get(fbe_value.uint64b2, resource, EnumUInt64::ENUM_VALUE_2);
     else
         fbe_value.uint64b2 = EnumUInt64::ENUM_VALUE_2;
     fbe_current_size += uint64b2.fbe_size();
 
     if ((fbe_current_size + uint64b3.fbe_size()) <= fbe_struct_size)
-        uint64b3.get(fbe_value.uint64b3, EnumUInt64::ENUM_VALUE_3);
+        uint64b3.get(fbe_value.uint64b3, resource, EnumUInt64::ENUM_VALUE_3);
     else
         fbe_value.uint64b3 = EnumUInt64::ENUM_VALUE_3;
     fbe_current_size += uint64b3.fbe_size();
 
     if ((fbe_current_size + uint64b4.fbe_size()) <= fbe_struct_size)
-        uint64b4.get(fbe_value.uint64b4, EnumUInt64::ENUM_VALUE_4);
+        uint64b4.get(fbe_value.uint64b4, resource, EnumUInt64::ENUM_VALUE_4);
     else
         fbe_value.uint64b4 = EnumUInt64::ENUM_VALUE_4;
     fbe_current_size += uint64b4.fbe_size();
 
     if ((fbe_current_size + uint64b5.fbe_size()) <= fbe_struct_size)
-        uint64b5.get(fbe_value.uint64b5, EnumUInt64::ENUM_VALUE_5);
+        uint64b5.get(fbe_value.uint64b5, resource, EnumUInt64::ENUM_VALUE_5);
     else
         fbe_value.uint64b5 = EnumUInt64::ENUM_VALUE_5;
     fbe_current_size += uint64b5.fbe_size();
@@ -1123,84 +1123,84 @@ void FieldModel<::enums::Enums>::set_end(size_t fbe_begin)
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModel<::enums::Enums>::set(const ::enums::Enums& fbe_value) noexcept
+void FieldModel<::enums::Enums>::set(const ::enums::Enums& fbe_value, pmr::memory_resource* resource) noexcept
 {
     size_t fbe_begin = set_begin();
     if (fbe_begin == 0)
         return;
 
-    set_fields(fbe_value);
+    set_fields(fbe_value, resource);
     set_end(fbe_begin);
 }
 
-void FieldModel<::enums::Enums>::set_fields([[maybe_unused]] const ::enums::Enums& fbe_value) noexcept
+void FieldModel<::enums::Enums>::set_fields([[maybe_unused]] const ::enums::Enums& fbe_value, pmr::memory_resource* resource) noexcept
 {
-    byte0.set(fbe_value.byte0);
-    byte1.set(fbe_value.byte1);
-    byte2.set(fbe_value.byte2);
-    byte3.set(fbe_value.byte3);
-    byte4.set(fbe_value.byte4);
-    byte5.set(fbe_value.byte5);
-    char0.set(fbe_value.char0);
-    char1.set(fbe_value.char1);
-    char2.set(fbe_value.char2);
-    char3.set(fbe_value.char3);
-    char4.set(fbe_value.char4);
-    char5.set(fbe_value.char5);
-    wchar0.set(fbe_value.wchar0);
-    wchar1.set(fbe_value.wchar1);
-    wchar2.set(fbe_value.wchar2);
-    wchar3.set(fbe_value.wchar3);
-    wchar4.set(fbe_value.wchar4);
-    wchar5.set(fbe_value.wchar5);
-    int8b0.set(fbe_value.int8b0);
-    int8b1.set(fbe_value.int8b1);
-    int8b2.set(fbe_value.int8b2);
-    int8b3.set(fbe_value.int8b3);
-    int8b4.set(fbe_value.int8b4);
-    int8b5.set(fbe_value.int8b5);
-    uint8b0.set(fbe_value.uint8b0);
-    uint8b1.set(fbe_value.uint8b1);
-    uint8b2.set(fbe_value.uint8b2);
-    uint8b3.set(fbe_value.uint8b3);
-    uint8b4.set(fbe_value.uint8b4);
-    uint8b5.set(fbe_value.uint8b5);
-    int16b0.set(fbe_value.int16b0);
-    int16b1.set(fbe_value.int16b1);
-    int16b2.set(fbe_value.int16b2);
-    int16b3.set(fbe_value.int16b3);
-    int16b4.set(fbe_value.int16b4);
-    int16b5.set(fbe_value.int16b5);
-    uint16b0.set(fbe_value.uint16b0);
-    uint16b1.set(fbe_value.uint16b1);
-    uint16b2.set(fbe_value.uint16b2);
-    uint16b3.set(fbe_value.uint16b3);
-    uint16b4.set(fbe_value.uint16b4);
-    uint16b5.set(fbe_value.uint16b5);
-    int32b0.set(fbe_value.int32b0);
-    int32b1.set(fbe_value.int32b1);
-    int32b2.set(fbe_value.int32b2);
-    int32b3.set(fbe_value.int32b3);
-    int32b4.set(fbe_value.int32b4);
-    int32b5.set(fbe_value.int32b5);
-    uint32b0.set(fbe_value.uint32b0);
-    uint32b1.set(fbe_value.uint32b1);
-    uint32b2.set(fbe_value.uint32b2);
-    uint32b3.set(fbe_value.uint32b3);
-    uint32b4.set(fbe_value.uint32b4);
-    uint32b5.set(fbe_value.uint32b5);
-    int64b0.set(fbe_value.int64b0);
-    int64b1.set(fbe_value.int64b1);
-    int64b2.set(fbe_value.int64b2);
-    int64b3.set(fbe_value.int64b3);
-    int64b4.set(fbe_value.int64b4);
-    int64b5.set(fbe_value.int64b5);
-    uint64b0.set(fbe_value.uint64b0);
-    uint64b1.set(fbe_value.uint64b1);
-    uint64b2.set(fbe_value.uint64b2);
-    uint64b3.set(fbe_value.uint64b3);
-    uint64b4.set(fbe_value.uint64b4);
-    uint64b5.set(fbe_value.uint64b5);
+    byte0.set(fbe_value.byte0, resource);
+    byte1.set(fbe_value.byte1, resource);
+    byte2.set(fbe_value.byte2, resource);
+    byte3.set(fbe_value.byte3, resource);
+    byte4.set(fbe_value.byte4, resource);
+    byte5.set(fbe_value.byte5, resource);
+    char0.set(fbe_value.char0, resource);
+    char1.set(fbe_value.char1, resource);
+    char2.set(fbe_value.char2, resource);
+    char3.set(fbe_value.char3, resource);
+    char4.set(fbe_value.char4, resource);
+    char5.set(fbe_value.char5, resource);
+    wchar0.set(fbe_value.wchar0, resource);
+    wchar1.set(fbe_value.wchar1, resource);
+    wchar2.set(fbe_value.wchar2, resource);
+    wchar3.set(fbe_value.wchar3, resource);
+    wchar4.set(fbe_value.wchar4, resource);
+    wchar5.set(fbe_value.wchar5, resource);
+    int8b0.set(fbe_value.int8b0, resource);
+    int8b1.set(fbe_value.int8b1, resource);
+    int8b2.set(fbe_value.int8b2, resource);
+    int8b3.set(fbe_value.int8b3, resource);
+    int8b4.set(fbe_value.int8b4, resource);
+    int8b5.set(fbe_value.int8b5, resource);
+    uint8b0.set(fbe_value.uint8b0, resource);
+    uint8b1.set(fbe_value.uint8b1, resource);
+    uint8b2.set(fbe_value.uint8b2, resource);
+    uint8b3.set(fbe_value.uint8b3, resource);
+    uint8b4.set(fbe_value.uint8b4, resource);
+    uint8b5.set(fbe_value.uint8b5, resource);
+    int16b0.set(fbe_value.int16b0, resource);
+    int16b1.set(fbe_value.int16b1, resource);
+    int16b2.set(fbe_value.int16b2, resource);
+    int16b3.set(fbe_value.int16b3, resource);
+    int16b4.set(fbe_value.int16b4, resource);
+    int16b5.set(fbe_value.int16b5, resource);
+    uint16b0.set(fbe_value.uint16b0, resource);
+    uint16b1.set(fbe_value.uint16b1, resource);
+    uint16b2.set(fbe_value.uint16b2, resource);
+    uint16b3.set(fbe_value.uint16b3, resource);
+    uint16b4.set(fbe_value.uint16b4, resource);
+    uint16b5.set(fbe_value.uint16b5, resource);
+    int32b0.set(fbe_value.int32b0, resource);
+    int32b1.set(fbe_value.int32b1, resource);
+    int32b2.set(fbe_value.int32b2, resource);
+    int32b3.set(fbe_value.int32b3, resource);
+    int32b4.set(fbe_value.int32b4, resource);
+    int32b5.set(fbe_value.int32b5, resource);
+    uint32b0.set(fbe_value.uint32b0, resource);
+    uint32b1.set(fbe_value.uint32b1, resource);
+    uint32b2.set(fbe_value.uint32b2, resource);
+    uint32b3.set(fbe_value.uint32b3, resource);
+    uint32b4.set(fbe_value.uint32b4, resource);
+    uint32b5.set(fbe_value.uint32b5, resource);
+    int64b0.set(fbe_value.int64b0, resource);
+    int64b1.set(fbe_value.int64b1, resource);
+    int64b2.set(fbe_value.int64b2, resource);
+    int64b3.set(fbe_value.int64b3, resource);
+    int64b4.set(fbe_value.int64b4, resource);
+    int64b5.set(fbe_value.int64b5, resource);
+    uint64b0.set(fbe_value.uint64b0, resource);
+    uint64b1.set(fbe_value.uint64b1, resource);
+    uint64b2.set(fbe_value.uint64b2, resource);
+    uint64b3.set(fbe_value.uint64b3, resource);
+    uint64b4.set(fbe_value.uint64b4, resource);
+    uint64b5.set(fbe_value.uint64b5, resource);
 }
 
 namespace enums {
@@ -1231,15 +1231,15 @@ size_t EnumsModel::create_end(size_t fbe_begin)
     return fbe_full_size;
 }
 
-size_t EnumsModel::serialize(const ::enums::Enums& value)
+size_t EnumsModel::serialize(const ::enums::Enums& value, pmr::memory_resource* resource)
 {
     size_t fbe_begin = create_begin();
-    model.set(value);
+    model.set(value, resource);
     size_t fbe_full_size = create_end(fbe_begin);
     return fbe_full_size;
 }
 
-size_t EnumsModel::deserialize(::enums::Enums& value) const noexcept
+size_t EnumsModel::deserialize(::enums::Enums& value, pmr::memory_resource* resource) const noexcept
 {
     if ((this->buffer().offset() + model.fbe_offset() - 4) > this->buffer().size())
         return 0;
@@ -1249,7 +1249,7 @@ size_t EnumsModel::deserialize(::enums::Enums& value) const noexcept
     if (fbe_full_size < model.fbe_size())
         return 0;
 
-    model.get(value);
+    model.get(value, resource);
     return fbe_full_size;
 }
 

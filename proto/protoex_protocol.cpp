@@ -19,7 +19,7 @@ namespace protoex {
 size_t Sender::send(const ::protoex::OrderMessage& value)
 {
     // Serialize the value into the FBE stream
-    size_t serialized = OrderMessageModel.serialize(value);
+    size_t serialized = OrderMessageModel.serialize(value, nullptr);
     assert((serialized > 0) && "protoex::OrderMessage serialization failed!");
     assert(OrderMessageModel.verify() && "protoex::OrderMessage validation failed!");
 
@@ -37,7 +37,7 @@ size_t Sender::send(const ::protoex::OrderMessage& value)
 size_t Sender::send(const ::protoex::BalanceMessage& value)
 {
     // Serialize the value into the FBE stream
-    size_t serialized = BalanceMessageModel.serialize(value);
+    size_t serialized = BalanceMessageModel.serialize(value, nullptr);
     assert((serialized > 0) && "protoex::BalanceMessage serialization failed!");
     assert(BalanceMessageModel.verify() && "protoex::BalanceMessage validation failed!");
 
@@ -55,7 +55,7 @@ size_t Sender::send(const ::protoex::BalanceMessage& value)
 size_t Sender::send(const ::protoex::AccountMessage& value)
 {
     // Serialize the value into the FBE stream
-    size_t serialized = AccountMessageModel.serialize(value);
+    size_t serialized = AccountMessageModel.serialize(value, nullptr);
     assert((serialized > 0) && "protoex::AccountMessage serialization failed!");
     assert(AccountMessageModel.verify() && "protoex::AccountMessage validation failed!");
 
@@ -79,7 +79,7 @@ bool Receiver::onReceive(size_t type, const void* data, size_t size)
             // Deserialize the value from the FBE stream
             OrderMessageModel.attach(data, size);
             assert(OrderMessageModel.verify() && "protoex::OrderMessage validation failed!");
-            [[maybe_unused]] size_t deserialized = OrderMessageModel.deserialize(OrderMessageValue);
+            [[maybe_unused]] size_t deserialized = OrderMessageModel.deserialize(OrderMessageValue, nullptr);
             assert((deserialized > 0) && "protoex::OrderMessage deserialization failed!");
 
             // Log the value
@@ -98,7 +98,7 @@ bool Receiver::onReceive(size_t type, const void* data, size_t size)
             // Deserialize the value from the FBE stream
             BalanceMessageModel.attach(data, size);
             assert(BalanceMessageModel.verify() && "protoex::BalanceMessage validation failed!");
-            [[maybe_unused]] size_t deserialized = BalanceMessageModel.deserialize(BalanceMessageValue);
+            [[maybe_unused]] size_t deserialized = BalanceMessageModel.deserialize(BalanceMessageValue, nullptr);
             assert((deserialized > 0) && "protoex::BalanceMessage deserialization failed!");
 
             // Log the value
@@ -117,7 +117,7 @@ bool Receiver::onReceive(size_t type, const void* data, size_t size)
             // Deserialize the value from the FBE stream
             AccountMessageModel.attach(data, size);
             assert(AccountMessageModel.verify() && "protoex::AccountMessage validation failed!");
-            [[maybe_unused]] size_t deserialized = AccountMessageModel.deserialize(AccountMessageValue);
+            [[maybe_unused]] size_t deserialized = AccountMessageModel.deserialize(AccountMessageValue, nullptr);
             assert((deserialized > 0) && "protoex::AccountMessage deserialization failed!");
 
             // Log the value

@@ -145,7 +145,7 @@ TEST_CASE_METHOD(ArenaTest, "Arena (template import template)", "[template-based
     item->aliases_int.emplace(42, std::move(alias4));
 
     FBE::arena_pmr::ItemModel item_writer;
-    size_t serialized_info = item_writer.serialize(*item);
+    size_t serialized_info = item_writer.serialize(*item, arena.get_memory_resource());
     REQUIRE(serialized_info == item_writer.buffer().size());
     REQUIRE(item_writer.verify());
 
@@ -154,7 +154,7 @@ TEST_CASE_METHOD(ArenaTest, "Arena (template import template)", "[template-based
     REQUIRE(item_reader.verify());
 
     ::arena_pmr::Item copy;
-    size_t deserialized_info = item_reader.deserialize(copy);
+    size_t deserialized_info = item_reader.deserialize(copy, arena.get_memory_resource());
     REQUIRE(deserialized_info == item_reader.buffer().size());
 
     REQUIRE(copy.optr == ::arena_common_pmr::Optr::LE);
@@ -216,7 +216,7 @@ TEST_CASE_METHOD(ArenaTest, "Arena (ptr import template)", "[ptr-based FBE]") {
         REQUIRE(arena.check(reinterpret_cast<char*>(&line_expr.alias_int.at(42).optr)) == ArenaContainStatus::BlockUsed);
 
         FBE::arena_ptr_pmr::LineModel line_writer;
-        size_t serialized_info = line_writer.serialize(*line);
+        size_t serialized_info = line_writer.serialize(*line, arena.get_memory_resource());
         REQUIRE(serialized_info == line_writer.buffer().size());
         REQUIRE(line_writer.verify());
 
@@ -225,7 +225,7 @@ TEST_CASE_METHOD(ArenaTest, "Arena (ptr import template)", "[ptr-based FBE]") {
         REQUIRE(line_reader.verify());
 
         ::arena_ptr_pmr::Line line_copy;
-        size_t deserialized_info = line_reader.deserialize(line_copy);
+        size_t deserialized_info = line_reader.deserialize(line_copy, arena.get_memory_resource());
         REQUIRE(deserialized_info == line_reader.buffer().size());
 
         auto& expression = line_copy.expression;
@@ -255,7 +255,7 @@ TEST_CASE_METHOD(ArenaTest, "Arena (pmr::bytes)", "[ptr-based FBE]") {
         REQUIRE(arena.check(reinterpret_cast<char*>(line2->bytes_v.data())) == ArenaContainStatus::BlockUsed);
 
         FBE::arena_ptr_pmr::Line2Model line_writer;
-        size_t serialized_info = line_writer.serialize(*line2);
+        size_t serialized_info = line_writer.serialize(*line2, arena.get_memory_resource());
         REQUIRE(serialized_info == line_writer.buffer().size());
         CHECK(line_writer.verify());
 
@@ -264,7 +264,7 @@ TEST_CASE_METHOD(ArenaTest, "Arena (pmr::bytes)", "[ptr-based FBE]") {
         CHECK(line_reader.verify());
 
         ::arena_ptr_pmr::Line2 copy_line;
-        size_t deserialized_info = line_reader.deserialize(copy_line);
+        size_t deserialized_info = line_reader.deserialize(copy_line, arena.get_memory_resource());
         REQUIRE(deserialized_info == line_reader.buffer().size());
 
         REQUIRE(line2->bytes_v.string() == "ABCDE");

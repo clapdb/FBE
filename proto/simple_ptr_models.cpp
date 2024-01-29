@@ -84,7 +84,7 @@ void FieldModelPtr_simple_Simple::get_end(size_t fbe_begin) const noexcept
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModelPtr_simple_Simple::get(::simple::Simple** fbe_value) noexcept
+void FieldModelPtr_simple_Simple::get(::simple::Simple** fbe_value, pmr::memory_resource* resource) noexcept
 {
     size_t fbe_begin = get_begin();
     if (fbe_begin == 0)
@@ -94,7 +94,7 @@ void FieldModelPtr_simple_Simple::get(::simple::Simple** fbe_value) noexcept
     ptr = new FieldModel_simple_Simple(_buffer, 0);
 
     ::simple::Simple *tempModel = new ::simple::Simple();
-    ptr->get(*tempModel);
+    ptr->get(*tempModel, resource);
     *fbe_value = tempModel;
 
     get_end(fbe_begin);
@@ -128,7 +128,7 @@ void FieldModelPtr_simple_Simple::set_end(size_t fbe_begin)
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModelPtr_simple_Simple::set(const ::simple::Simple* fbe_value) noexcept
+void FieldModelPtr_simple_Simple::set(const ::simple::Simple* fbe_value, pmr::memory_resource* resource) noexcept
 {
     size_t fbe_begin = set_begin(fbe_value != nullptr);
     if (fbe_begin == 0)
@@ -138,7 +138,7 @@ void FieldModelPtr_simple_Simple::set(const ::simple::Simple* fbe_value) noexcep
         BaseFieldModel* temp = new FieldModel_simple_Simple(_buffer, 0);
         if (ptr) delete ptr;
         ptr = temp;
-        ptr->set(*fbe_value);
+        ptr->set(*fbe_value, nullptr);
     }
 
     set_end(fbe_begin);
@@ -290,25 +290,25 @@ void FieldModel_simple_Simple::get_end(size_t fbe_begin) const noexcept
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModel_simple_Simple::get(::FBE::Base& fbe_value) noexcept
+void FieldModel_simple_Simple::get(::FBE::Base& fbe_value, pmr::memory_resource* resource) noexcept
 {
     size_t fbe_begin = get_begin();
     if (fbe_begin == 0)
         return;
 
     uint32_t fbe_struct_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset());
-    get_fields(fbe_value, fbe_struct_size);
+    get_fields(fbe_value, fbe_struct_size, resource);
     get_end(fbe_begin);
 }
 
-void FieldModel_simple_Simple::get_fields([[maybe_unused]] ::FBE::Base& base_fbe_value, [[maybe_unused]] size_t fbe_struct_size) noexcept
+void FieldModel_simple_Simple::get_fields([[maybe_unused]] ::FBE::Base& base_fbe_value, [[maybe_unused]] size_t fbe_struct_size, pmr::memory_resource* resource) noexcept
 {
     ::simple::Simple& fbe_value = static_cast<::simple::Simple&>(base_fbe_value);
     size_t fbe_current_size = 4 + 4;
 
     if ((fbe_current_size + info.fbe_size()) <= fbe_struct_size)
         {
-            info.get(fbe_value.info);
+            info.get(fbe_value.info, nullptr);
         }
     else
         fbe_value.info = "";
@@ -316,7 +316,7 @@ void FieldModel_simple_Simple::get_fields([[maybe_unused]] ::FBE::Base& base_fbe
 
     if ((fbe_current_size + simple.fbe_size()) <= fbe_struct_size)
         {
-            simple.get(&fbe_value.simple);
+            simple.get(&fbe_value.simple, nullptr);
         }
     else
         fbe_value.simple = nullptr;
@@ -324,7 +324,7 @@ void FieldModel_simple_Simple::get_fields([[maybe_unused]] ::FBE::Base& base_fbe
 
     if ((fbe_current_size + depth.fbe_size()) <= fbe_struct_size)
         {
-            depth.get(fbe_value.depth);
+            depth.get(fbe_value.depth, nullptr);
         }
     else
         fbe_value.depth = (int32_t)0ll;
@@ -332,7 +332,7 @@ void FieldModel_simple_Simple::get_fields([[maybe_unused]] ::FBE::Base& base_fbe
 
     if ((fbe_current_size + spv.fbe_size()) <= fbe_struct_size)
         {
-            spv.get(fbe_value.spv);
+            spv.get(fbe_value.spv, nullptr);
         }
     else
         fbe_value.spv.clear();
@@ -340,7 +340,7 @@ void FieldModel_simple_Simple::get_fields([[maybe_unused]] ::FBE::Base& base_fbe
 
     if ((fbe_current_size + sv.fbe_size()) <= fbe_struct_size)
         {
-            sv.get(fbe_value.sv);
+            sv.get(fbe_value.sv, nullptr);
         }
     else
         fbe_value.sv.clear();
@@ -348,7 +348,7 @@ void FieldModel_simple_Simple::get_fields([[maybe_unused]] ::FBE::Base& base_fbe
 
     if ((fbe_current_size + spm.fbe_size()) <= fbe_struct_size)
         {
-            spm.get(fbe_value.spm);
+            spm.get(fbe_value.spm, nullptr);
         }
     else
         fbe_value.spm.clear();
@@ -356,7 +356,7 @@ void FieldModel_simple_Simple::get_fields([[maybe_unused]] ::FBE::Base& base_fbe
 
     if ((fbe_current_size + sm.fbe_size()) <= fbe_struct_size)
         {
-            sm.get(fbe_value.sm);
+            sm.get(fbe_value.sm, nullptr);
         }
     else
         fbe_value.sm.clear();
@@ -388,26 +388,26 @@ void FieldModel_simple_Simple::set_end(size_t fbe_begin)
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModel_simple_Simple::set(const ::FBE::Base& fbe_value) noexcept
+void FieldModel_simple_Simple::set(const ::FBE::Base& fbe_value, pmr::memory_resource* resource) noexcept
 {
     size_t fbe_begin = set_begin();
     if (fbe_begin == 0)
         return;
 
-    set_fields(fbe_value);
+    set_fields(fbe_value, resource);
     set_end(fbe_begin);
 }
 
-void FieldModel_simple_Simple::set_fields([[maybe_unused]] const ::FBE::Base& base_fbe_value) noexcept
+void FieldModel_simple_Simple::set_fields([[maybe_unused]] const ::FBE::Base& base_fbe_value, pmr::memory_resource* resource) noexcept
 {
     [[maybe_unused]] const ::simple::Simple& fbe_value = static_cast<const ::simple::Simple&>(base_fbe_value);
-    info.set(fbe_value.info);
-    simple.set(fbe_value.simple);
-    depth.set(fbe_value.depth);
-    spv.set(fbe_value.spv);
-    sv.set(fbe_value.sv);
-    spm.set(fbe_value.spm);
-    sm.set(fbe_value.sm);
+    info.set(fbe_value.info, resource);
+    simple.set(fbe_value.simple, resource);
+    depth.set(fbe_value.depth, resource);
+    spv.set(fbe_value.spv, resource);
+    sv.set(fbe_value.sv, resource);
+    spm.set(fbe_value.spm, resource);
+    sm.set(fbe_value.sm, resource);
 }
 
 namespace simple {
@@ -438,15 +438,15 @@ size_t SimpleModel::create_end(size_t fbe_begin)
     return fbe_full_size;
 }
 
-size_t SimpleModel::serialize(const ::simple::Simple& value)
+size_t SimpleModel::serialize(const ::simple::Simple& value, pmr::memory_resource* resource)
 {
     size_t fbe_begin = create_begin();
-    model.set(value);
+    model.set(value, resource);
     size_t fbe_full_size = create_end(fbe_begin);
     return fbe_full_size;
 }
 
-size_t SimpleModel::deserialize(::simple::Simple& value) noexcept
+size_t SimpleModel::deserialize(::simple::Simple& value, pmr::memory_resource* resource) noexcept
 {
     if ((this->buffer().offset() + model.fbe_offset() - 4) > this->buffer().size())
         return 0;
@@ -456,7 +456,7 @@ size_t SimpleModel::deserialize(::simple::Simple& value) noexcept
     if (fbe_full_size < model.fbe_size())
         return 0;
 
-    model.get(value);
+    model.get(value, resource);
     return fbe_full_size;
 }
 

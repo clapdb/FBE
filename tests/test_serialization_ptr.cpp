@@ -98,7 +98,7 @@ TEST_CASE("Serialization (simple self-reference)", "[Ptr-based FBE]")
     REQUIRE(original.simple == nullptr);
 
     FBE::simple::SimpleModel writer; 
-    size_t serialized = writer.serialize(simple);
+    size_t serialized = writer.serialize(simple, nullptr);
     REQUIRE(serialized == writer.buffer().size());
     REQUIRE(writer.verify());
     
@@ -107,7 +107,7 @@ TEST_CASE("Serialization (simple self-reference)", "[Ptr-based FBE]")
     REQUIRE(reader.verify());
 
     simple::Simple copy;
-    size_t deserialized = reader.deserialize(copy);
+    size_t deserialized = reader.deserialize(copy, nullptr);
     REQUIRE(deserialized == reader.buffer().size());
 
     REQUIRE(copy.info =="info");
@@ -214,7 +214,7 @@ TEST_CASE("Serialization (extra circular-dependency)", "[Ptr-based FBE]")
     };
 
     ::FBE::extra::ExtraModel writer;
-    size_t serialized = writer.serialize(extra);
+    size_t serialized = writer.serialize(extra, nullptr);
     REQUIRE(serialized == writer.buffer().size());
     REQUIRE(writer.verify());
 
@@ -224,7 +224,7 @@ TEST_CASE("Serialization (extra circular-dependency)", "[Ptr-based FBE]")
     REQUIRE(reader.verify());
 
     extra::Extra copy;
-    size_t deserialized = reader.deserialize(copy);
+    size_t deserialized = reader.deserialize(copy, nullptr);
     REQUIRE(deserialized == reader.buffer().size());
     assert(reader.verify());
 
@@ -298,7 +298,7 @@ TEST_CASE("Serilization (identical with templated-based code without ptr)", "[Pt
     };
 
     FBE::osa::SimpleModel osa_writer;
-    size_t serialized_osa = osa_writer.serialize(osa);
+    size_t serialized_osa = osa_writer.serialize(osa, nullptr);
     REQUIRE(serialized_osa == osa_writer.buffer().size());
     REQUIRE(osa_writer.verify());
 
@@ -311,7 +311,7 @@ TEST_CASE("Serilization (identical with templated-based code without ptr)", "[Pt
     };
 
     FBE::sa::SimpleModel sa_writer;
-    size_t serialized_sa = sa_writer.serialize(sa);
+    size_t serialized_sa = sa_writer.serialize(sa, nullptr);
     REQUIRE(serialized_sa == sa_writer.buffer().size());
     REQUIRE(sa_writer.verify());
 
@@ -322,7 +322,7 @@ TEST_CASE("Serilization (identical with templated-based code without ptr)", "[Pt
     REQUIRE(sa_reader.verify());
 
     ::sa::Simple sa_copy;
-    size_t deserialized_sa = sa_reader.deserialize(sa_copy);
+    size_t deserialized_sa = sa_reader.deserialize(sa_copy, nullptr);
     REQUIRE(deserialized_sa == sa_reader.buffer().size());
     assert(sa_reader.verify());
 
@@ -331,7 +331,7 @@ TEST_CASE("Serilization (identical with templated-based code without ptr)", "[Pt
     REQUIRE(osa_reader.verify());
 
     ::osa::Simple osa_copy;
-    size_t deserialized_osa = osa_reader.deserialize(osa_copy);
+    size_t deserialized_osa = osa_reader.deserialize(osa_copy, nullptr);
     REQUIRE(deserialized_osa == osa_reader.buffer().size());
     assert(osa_reader.verify());
 
@@ -363,7 +363,7 @@ TEST_CASE("Serialization (optional)", "[Ptr-based FBE]") {
     };
 
     FBE::sa::ComplexModel c_writer;
-    size_t serialized_c = c_writer.serialize(c1);
+    size_t serialized_c = c_writer.serialize(c1, nullptr);
     REQUIRE(serialized_c == c_writer.buffer().size());
     REQUIRE(c_writer.verify());
 
@@ -372,7 +372,7 @@ TEST_CASE("Serialization (optional)", "[Ptr-based FBE]") {
     REQUIRE(c_reader.verify());
 
     ::sa::Complex copy;
-    size_t deserialized_c = c_reader.deserialize(copy);
+    size_t deserialized_c = c_reader.deserialize(copy, nullptr);
     REQUIRE(deserialized_c == c_reader.buffer().size());
     assert(c_reader.verify());
 
@@ -387,7 +387,7 @@ TEST_CASE("Serialization (optional)", "[Ptr-based FBE]") {
 
     c_writer.reset();
     c_reader.reset();
-    size_t serialized_c1 = c_writer.serialize(c1);
+    size_t serialized_c1 = c_writer.serialize(c1, nullptr);
     REQUIRE(serialized_c1 == c_writer.buffer().size());
     REQUIRE(c_writer.verify());
     REQUIRE(serialized_c1 > serialized_c);
@@ -395,7 +395,7 @@ TEST_CASE("Serialization (optional)", "[Ptr-based FBE]") {
     c_reader.attach(c_writer.buffer());
 
     ::sa::Complex c1_copy;
-    size_t deserialized_c1 = c_reader.deserialize(c1_copy);
+    size_t deserialized_c1 = c_reader.deserialize(c1_copy, nullptr);
     REQUIRE(deserialized_c1 == c_reader.buffer().size());
     assert(c_reader.verify());
 
@@ -423,7 +423,7 @@ TEST_CASE("Serialization (ptr-based import templated-based fbe)", "[Ptr-based FB
     };
 
     FBE::pkg::InfoModel info_writer;
-    size_t serialized_info = info_writer.serialize(pkg_info);
+    size_t serialized_info = info_writer.serialize(pkg_info, nullptr);
     REQUIRE(serialized_info == info_writer.buffer().size());
     REQUIRE(info_writer.verify());
 
@@ -432,7 +432,7 @@ TEST_CASE("Serialization (ptr-based import templated-based fbe)", "[Ptr-based FB
     REQUIRE(info_reader.verify());
 
     ::pkg::Info pkg_info_copy;
-    size_t deserialized_info = info_reader.deserialize(pkg_info_copy);
+    size_t deserialized_info = info_reader.deserialize(pkg_info_copy, nullptr);
     REQUIRE(deserialized_info == info_reader.buffer().size());
     assert(info_reader.verify());
 
@@ -451,7 +451,7 @@ TEST_CASE("Serialization (ptr-based import templated-based fbe)", "[Ptr-based FB
     detail.extrav.emplace_back(std::move(pkg_info_copy.extra));
 
     FBE::pkg::DetailModel detail_writer;
-    size_t serialized_detail = detail_writer.serialize(detail);
+    size_t serialized_detail = detail_writer.serialize(detail, nullptr);
     REQUIRE(serialized_detail == detail_writer.buffer().size());
     REQUIRE(detail_writer.verify());
 
@@ -460,7 +460,7 @@ TEST_CASE("Serialization (ptr-based import templated-based fbe)", "[Ptr-based FB
     REQUIRE(detail_reader.verify());
 
     ::pkg::Detail detail_copy;
-    size_t deserialized_detail = detail_reader.deserialize(detail_copy);
+    size_t deserialized_detail = detail_reader.deserialize(detail_copy, nullptr);
     REQUIRE(deserialized_detail == detail_reader.buffer().size());
     assert(detail_reader.verify());
 
@@ -484,7 +484,7 @@ TEST_CASE("Serialization (variant)", "[Ptr-based FBE]") {
         value.v.emplace<FBE::FBEString>("variant v");
 
         FBE::variants_ptr::ValueModel writer;
-        size_t serialized = writer.serialize(value);
+        size_t serialized = writer.serialize(value, nullptr);
         REQUIRE(serialized == writer.buffer().size());
         REQUIRE(writer.verify());
 
@@ -493,7 +493,7 @@ TEST_CASE("Serialization (variant)", "[Ptr-based FBE]") {
         REQUIRE(reader.verify());
 
         ::variants_ptr::Value value_copy;
-        size_t deserialized = reader.deserialize(value_copy);
+        size_t deserialized = reader.deserialize(value_copy, nullptr);
         REQUIRE(deserialized == reader.buffer().size());
 
         REQUIRE(value_copy.v.index() == 2);
@@ -506,7 +506,7 @@ TEST_CASE("Serialization (variant)", "[Ptr-based FBE]") {
         value.v.emplace<int32_t>(42);
 
         FBE::variants_ptr::ValueModel writer;
-        size_t serialized = writer.serialize(value);
+        size_t serialized = writer.serialize(value, nullptr);
         REQUIRE(serialized == writer.buffer().size());
         REQUIRE(writer.verify());
 
@@ -515,7 +515,7 @@ TEST_CASE("Serialization (variant)", "[Ptr-based FBE]") {
         REQUIRE(reader.verify());
 
         ::variants_ptr::Value value_copy;
-        size_t deserialized = reader.deserialize(value_copy);
+        size_t deserialized = reader.deserialize(value_copy, nullptr);
         REQUIRE(deserialized == reader.buffer().size());
 
         REQUIRE(value_copy.v.index() == 1);
@@ -528,7 +528,7 @@ TEST_CASE("Serialization (variant)", "[Ptr-based FBE]") {
         value.v.emplace<::variants_ptr::Simple>(::variants_ptr::Simple{"simple"});
 
         FBE::variants_ptr::ValueModel writer;
-        size_t serialized = writer.serialize(value);
+        size_t serialized = writer.serialize(value, nullptr);
         REQUIRE(serialized == writer.buffer().size());
         REQUIRE(writer.verify());
 
@@ -537,7 +537,7 @@ TEST_CASE("Serialization (variant)", "[Ptr-based FBE]") {
         REQUIRE(reader.verify());
 
         ::variants_ptr::Value value_copy;
-        size_t deserialized = reader.deserialize(value_copy);
+        size_t deserialized = reader.deserialize(value_copy, nullptr);
         REQUIRE(deserialized == reader.buffer().size());
 
         REQUIRE(value_copy.v.index() == 4);
@@ -551,7 +551,7 @@ TEST_CASE("Serialization (variant)", "[Ptr-based FBE]") {
         value.v.emplace<::variants_ptr::Simple*>(simple.get());
 
         FBE::variants_ptr::ValueModel writer;
-        size_t serialized = writer.serialize(value);
+        size_t serialized = writer.serialize(value, nullptr);
         REQUIRE(serialized == writer.buffer().size());
         REQUIRE(writer.verify());
 
@@ -560,7 +560,7 @@ TEST_CASE("Serialization (variant)", "[Ptr-based FBE]") {
         REQUIRE(reader.verify());
 
         ::variants_ptr::Value value_copy;
-        size_t deserialized = reader.deserialize(value_copy);
+        size_t deserialized = reader.deserialize(value_copy, nullptr);
         REQUIRE(deserialized == reader.buffer().size());
 
         REQUIRE(value_copy.v.index() == 5);
@@ -580,7 +580,7 @@ TEST_CASE("Serialization (variant)", "[Ptr-based FBE]") {
         value.v.emplace<6>(std::move(v));
 
         FBE::variants_ptr::ValueModel writer;
-        size_t serialized = writer.serialize(value);
+        size_t serialized = writer.serialize(value, nullptr);
         REQUIRE(serialized == writer.buffer().size());
         REQUIRE(writer.verify());
 
@@ -589,7 +589,7 @@ TEST_CASE("Serialization (variant)", "[Ptr-based FBE]") {
         REQUIRE(reader.verify());
 
         ::variants_ptr::Value value_copy;
-        size_t deserialized = reader.deserialize(value_copy);
+        size_t deserialized = reader.deserialize(value_copy, nullptr);
         REQUIRE(deserialized == reader.buffer().size());
 
         REQUIRE(value_copy.v.index() == 6);
@@ -608,7 +608,7 @@ TEST_CASE("Serialization (variant)", "[Ptr-based FBE]") {
         value.v.emplace<7>(std::move(v));
 
         FBE::variants_ptr::ValueModel writer;
-        size_t serialized = writer.serialize(value);
+        size_t serialized = writer.serialize(value, nullptr);
         REQUIRE(serialized == writer.buffer().size());
         REQUIRE(writer.verify());
 
@@ -617,7 +617,7 @@ TEST_CASE("Serialization (variant)", "[Ptr-based FBE]") {
         REQUIRE(reader.verify());
 
         ::variants_ptr::Value value_copy;
-        size_t deserialized = reader.deserialize(value_copy);
+        size_t deserialized = reader.deserialize(value_copy, nullptr);
         REQUIRE(deserialized == reader.buffer().size());
 
         REQUIRE(value_copy.v.index() == 7);
@@ -639,7 +639,7 @@ TEST_CASE("Serialization (variant)", "[Ptr-based FBE]") {
         value.v.emplace<8>(std::move(m));
 
         FBE::variants_ptr::ValueModel writer;
-        size_t serialized = writer.serialize(value);
+        size_t serialized = writer.serialize(value, nullptr);
         REQUIRE(serialized == writer.buffer().size());
         REQUIRE(writer.verify());
 
@@ -648,7 +648,7 @@ TEST_CASE("Serialization (variant)", "[Ptr-based FBE]") {
         REQUIRE(reader.verify());
 
         ::variants_ptr::Value value_copy;
-        size_t deserialized = reader.deserialize(value_copy);
+        size_t deserialized = reader.deserialize(value_copy, nullptr);
         REQUIRE(deserialized == reader.buffer().size());
 
         REQUIRE(value_copy.v.index() == 8);
@@ -669,7 +669,7 @@ TEST_CASE("Serialization (variant)", "[Ptr-based FBE]") {
         value.v.emplace<9>(std::move(bytes_v));
 
         FBE::variants_ptr::ValueModel writer;
-        size_t serialized = writer.serialize(value);
+        size_t serialized = writer.serialize(value, nullptr);
         REQUIRE(serialized == writer.buffer().size());
         REQUIRE(writer.verify());
 
@@ -678,7 +678,7 @@ TEST_CASE("Serialization (variant)", "[Ptr-based FBE]") {
         REQUIRE(reader.verify());
 
         ::variants_ptr::Value value_copy;
-        size_t deserialized = reader.deserialize(value_copy);
+        size_t deserialized = reader.deserialize(value_copy, nullptr);
         REQUIRE(deserialized == reader.buffer().size());
 
         REQUIRE(value_copy.v.index() == 9);
@@ -696,7 +696,7 @@ TEST_CASE("Serialization (variant)", "[Ptr-based FBE]") {
         value.v.emplace<10>(std::move(string_v));
 
         FBE::variants_ptr::ValueModel writer;
-        size_t serialized = writer.serialize(value);
+        size_t serialized = writer.serialize(value, nullptr);
         REQUIRE(serialized == writer.buffer().size());
         REQUIRE(writer.verify());
 
@@ -705,7 +705,7 @@ TEST_CASE("Serialization (variant)", "[Ptr-based FBE]") {
         REQUIRE(reader.verify());
 
         ::variants_ptr::Value value_copy;
-        size_t deserialized = reader.deserialize(value_copy);
+        size_t deserialized = reader.deserialize(value_copy, nullptr);
         REQUIRE(deserialized == reader.buffer().size());
 
         REQUIRE(value_copy.v.index() == 10);
@@ -726,7 +726,7 @@ TEST_CASE("Serialization (variant)", "[Ptr-based FBE]") {
         value.v.emplace<11>(std::move(m));
 
         FBE::variants_ptr::ValueModel writer;
-        size_t serialized = writer.serialize(value);
+        size_t serialized = writer.serialize(value, nullptr);
         REQUIRE(serialized == writer.buffer().size());
         REQUIRE(writer.verify());
 
@@ -735,7 +735,7 @@ TEST_CASE("Serialization (variant)", "[Ptr-based FBE]") {
         REQUIRE(reader.verify());
 
         ::variants_ptr::Value value_copy;
-        size_t deserialized = reader.deserialize(value_copy);
+        size_t deserialized = reader.deserialize(value_copy, nullptr);
         REQUIRE(deserialized == reader.buffer().size());
 
         REQUIRE(value_copy.v.index() == 11);
@@ -755,7 +755,7 @@ TEST_CASE("Serialization (variant)", "[Ptr-based FBE]") {
         value.v.emplace<12>(std::move(m));
 
         FBE::variants_ptr::ValueModel writer;
-        size_t serialized = writer.serialize(value);
+        size_t serialized = writer.serialize(value, nullptr);
         REQUIRE(serialized == writer.buffer().size());
         REQUIRE(writer.verify());
 
@@ -764,7 +764,7 @@ TEST_CASE("Serialization (variant)", "[Ptr-based FBE]") {
         REQUIRE(reader.verify());
 
         ::variants_ptr::Value value_copy;
-        size_t deserialized = reader.deserialize(value_copy);
+        size_t deserialized = reader.deserialize(value_copy, nullptr);
         REQUIRE(deserialized == reader.buffer().size());
 
         REQUIRE(value_copy.v.index() == 12);
@@ -786,7 +786,7 @@ TEST_CASE("Serialization (variant)", "[Ptr-based FBE]") {
         value.v.emplace<13>(std::move(v));
 
         FBE::variants_ptr::ValueModel writer;
-        size_t serialized = writer.serialize(value);
+        size_t serialized = writer.serialize(value, nullptr);
         REQUIRE(serialized == writer.buffer().size());
         REQUIRE(writer.verify());
 
@@ -795,7 +795,7 @@ TEST_CASE("Serialization (variant)", "[Ptr-based FBE]") {
         REQUIRE(reader.verify());
 
         ::variants_ptr::Value value_copy;
-        size_t deserialized = reader.deserialize(value_copy);
+        size_t deserialized = reader.deserialize(value_copy, nullptr);
         REQUIRE(deserialized == reader.buffer().size());
 
         REQUIRE(value_copy.v.index() == 13);
@@ -818,7 +818,7 @@ TEST_CASE("Serialization (variant)", "[Ptr-based FBE]") {
         value_container.vm.emplace(2, ::variants_ptr::V{FBE::FBEString("42")});
 
         FBE::variants_ptr::ValueContainerModel writer;
-        size_t serialized = writer.serialize(value_container);
+        size_t serialized = writer.serialize(value_container, nullptr);
         REQUIRE(serialized == writer.buffer().size());
         REQUIRE(writer.verify());
 
@@ -827,7 +827,7 @@ TEST_CASE("Serialization (variant)", "[Ptr-based FBE]") {
         REQUIRE(reader.verify());
 
         ::variants_ptr::ValueContainer value_container_copy;
-        size_t deserialized = reader.deserialize(value_container_copy);
+        size_t deserialized = reader.deserialize(value_container_copy, nullptr);
         REQUIRE(deserialized == reader.buffer().size());
 
         REQUIRE(value_container_copy.vv.size() == 2);
@@ -856,7 +856,7 @@ TEST_CASE("Serialization (variant)", "[Ptr-based FBE]") {
 
 
         FBE::variants_ptr::ValueModel writer;
-        size_t serialized = writer.serialize(value);
+        size_t serialized = writer.serialize(value, nullptr);
         REQUIRE(serialized == writer.buffer().size());
         REQUIRE(writer.verify());
 
@@ -865,7 +865,7 @@ TEST_CASE("Serialization (variant)", "[Ptr-based FBE]") {
         REQUIRE(reader.verify());
 
         ::variants_ptr::Value value_copy;
-        size_t deserialized = reader.deserialize(value_copy);
+        size_t deserialized = reader.deserialize(value_copy, nullptr);
         REQUIRE(deserialized == reader.buffer().size());
 
         REQUIRE(value_copy.v.index() == 14);
@@ -907,7 +907,7 @@ TEST_CASE("Serialization (import template)", "[Ptr-based FBE]") {
         line.vo.emplace(::variants::V{::variants::Simple{"optional simple"}});
 
         FBE::template_variant::LineModel writer;
-        size_t serialized = writer.serialize(line);
+        size_t serialized = writer.serialize(line, nullptr);
         REQUIRE(serialized == writer.buffer().size());
         REQUIRE(writer.verify());
 
@@ -916,7 +916,7 @@ TEST_CASE("Serialization (import template)", "[Ptr-based FBE]") {
         REQUIRE(reader.verify());
 
         ::variants::Line line_copy;
-        size_t deserialized = reader.deserialize(line_copy);
+        size_t deserialized = reader.deserialize(line_copy, nullptr);
         REQUIRE(deserialized == reader.buffer().size());
 
         REQUIRE(std::holds_alternative<::variants::Expr>(line_copy.v));
@@ -948,7 +948,7 @@ TEST_CASE("Serialization (import template)", "[Ptr-based FBE]") {
         line.vm.emplace(::enums::EnumInt8::ENUM_VALUE_2, std::move(v4));
 
         FBE::template_variant::Line2Model writer;
-        size_t serialized = writer.serialize(line);
+        size_t serialized = writer.serialize(line, nullptr);
         REQUIRE(serialized == writer.buffer().size());
         REQUIRE(writer.verify());
 
@@ -957,7 +957,7 @@ TEST_CASE("Serialization (import template)", "[Ptr-based FBE]") {
         REQUIRE(reader.verify());
 
         ::variants::Line2 line_copy;
-        size_t deserialized = reader.deserialize(line_copy);
+        size_t deserialized = reader.deserialize(line_copy, nullptr);
         REQUIRE(deserialized == reader.buffer().size());
 
         REQUIRE(line_copy.vm.size() == 2);
@@ -978,7 +978,7 @@ TEST_CASE("Serialization (import template)", "[Ptr-based FBE]") {
         line.value.v.emplace<8>(std::move(bytes_v));
 
         FBE::template_variant::Line3Model writer;
-        size_t serialized = writer.serialize(line);
+        size_t serialized = writer.serialize(line, nullptr);
         REQUIRE(serialized == writer.buffer().size());
         REQUIRE(writer.verify());
 
@@ -987,7 +987,7 @@ TEST_CASE("Serialization (import template)", "[Ptr-based FBE]") {
         REQUIRE(reader.verify());
 
         ::variants::Line3 line_copy;
-        size_t deserialized = reader.deserialize(line_copy);
+        size_t deserialized = reader.deserialize(line_copy, nullptr);
         REQUIRE(deserialized == reader.buffer().size());
 
         REQUIRE(line_copy.value.v.index() == 8);

@@ -497,287 +497,287 @@ void FieldModel<::test::StructSimple>::get_end(size_t fbe_begin) const noexcept
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModel<::test::StructSimple>::get(::test::StructSimple& fbe_value) const noexcept
+void FieldModel<::test::StructSimple>::get(::test::StructSimple& fbe_value, pmr::memory_resource* resource) const noexcept
 {
     size_t fbe_begin = get_begin();
     if (fbe_begin == 0)
         return;
 
     uint32_t fbe_struct_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset());
-    get_fields(fbe_value, fbe_struct_size);
+    get_fields(fbe_value, fbe_struct_size, resource);
     get_end(fbe_begin);
 }
 
-void FieldModel<::test::StructSimple>::get_fields([[maybe_unused]] ::test::StructSimple& fbe_value, [[maybe_unused]] size_t fbe_struct_size) const noexcept
+void FieldModel<::test::StructSimple>::get_fields([[maybe_unused]] ::test::StructSimple& fbe_value, [[maybe_unused]] size_t fbe_struct_size, pmr::memory_resource* resource) const noexcept
 {
     size_t fbe_current_size = 4 + 4;
 
     if ((fbe_current_size + id.fbe_size()) <= fbe_struct_size)
-        id.get(fbe_value.id);
+        id.get(fbe_value.id, resource);
     else
         fbe_value.id = (int32_t)0ll;
     fbe_current_size += id.fbe_size();
 
     if ((fbe_current_size + f1.fbe_size()) <= fbe_struct_size)
-        f1.get(fbe_value.f1);
+        f1.get(fbe_value.f1, resource);
     else
         fbe_value.f1 = false;
     fbe_current_size += f1.fbe_size();
 
     if ((fbe_current_size + f2.fbe_size()) <= fbe_struct_size)
-        f2.get(fbe_value.f2, true);
+        f2.get(fbe_value.f2, resource, true);
     else
         fbe_value.f2 = true;
     fbe_current_size += f2.fbe_size();
 
     if ((fbe_current_size + f3.fbe_size()) <= fbe_struct_size)
-        f3.get(fbe_value.f3);
+        f3.get(fbe_value.f3, resource);
     else
         fbe_value.f3 = (uint8_t)0u;
     fbe_current_size += f3.fbe_size();
 
     if ((fbe_current_size + f4.fbe_size()) <= fbe_struct_size)
-        f4.get(fbe_value.f4, (uint8_t)255u);
+        f4.get(fbe_value.f4, resource, (uint8_t)255u);
     else
         fbe_value.f4 = (uint8_t)255u;
     fbe_current_size += f4.fbe_size();
 
     if ((fbe_current_size + f5.fbe_size()) <= fbe_struct_size)
-        f5.get(fbe_value.f5);
+        f5.get(fbe_value.f5, resource);
     else
         fbe_value.f5 = '\0';
     fbe_current_size += f5.fbe_size();
 
     if ((fbe_current_size + f6.fbe_size()) <= fbe_struct_size)
-        f6.get(fbe_value.f6, (char)'!');
+        f6.get(fbe_value.f6, resource, (char)'!');
     else
         fbe_value.f6 = (char)'!';
     fbe_current_size += f6.fbe_size();
 
     if ((fbe_current_size + f7.fbe_size()) <= fbe_struct_size)
-        f7.get(fbe_value.f7);
+        f7.get(fbe_value.f7, resource);
     else
         fbe_value.f7 = L'\0';
     fbe_current_size += f7.fbe_size();
 
     if ((fbe_current_size + f8.fbe_size()) <= fbe_struct_size)
-        f8.get(fbe_value.f8, (wchar_t)0x0444);
+        f8.get(fbe_value.f8, resource, (wchar_t)0x0444);
     else
         fbe_value.f8 = (wchar_t)0x0444;
     fbe_current_size += f8.fbe_size();
 
     if ((fbe_current_size + f9.fbe_size()) <= fbe_struct_size)
-        f9.get(fbe_value.f9);
+        f9.get(fbe_value.f9, resource);
     else
         fbe_value.f9 = (int8_t)0;
     fbe_current_size += f9.fbe_size();
 
     if ((fbe_current_size + f10.fbe_size()) <= fbe_struct_size)
-        f10.get(fbe_value.f10, (int8_t)127);
+        f10.get(fbe_value.f10, resource, (int8_t)127);
     else
         fbe_value.f10 = (int8_t)127;
     fbe_current_size += f10.fbe_size();
 
     if ((fbe_current_size + f11.fbe_size()) <= fbe_struct_size)
-        f11.get(fbe_value.f11, (uint8_t)0u);
+        f11.get(fbe_value.f11, resource, (uint8_t)0u);
     else
         fbe_value.f11 = (uint8_t)0u;
     fbe_current_size += f11.fbe_size();
 
     if ((fbe_current_size + f12.fbe_size()) <= fbe_struct_size)
-        f12.get(fbe_value.f12, (uint8_t)255u);
+        f12.get(fbe_value.f12, resource, (uint8_t)255u);
     else
         fbe_value.f12 = (uint8_t)255u;
     fbe_current_size += f12.fbe_size();
 
     if ((fbe_current_size + f13.fbe_size()) <= fbe_struct_size)
-        f13.get(fbe_value.f13);
+        f13.get(fbe_value.f13, resource);
     else
         fbe_value.f13 = (int16_t)0;
     fbe_current_size += f13.fbe_size();
 
     if ((fbe_current_size + f14.fbe_size()) <= fbe_struct_size)
-        f14.get(fbe_value.f14, (int16_t)32767);
+        f14.get(fbe_value.f14, resource, (int16_t)32767);
     else
         fbe_value.f14 = (int16_t)32767;
     fbe_current_size += f14.fbe_size();
 
     if ((fbe_current_size + f15.fbe_size()) <= fbe_struct_size)
-        f15.get(fbe_value.f15, (uint16_t)0u);
+        f15.get(fbe_value.f15, resource, (uint16_t)0u);
     else
         fbe_value.f15 = (uint16_t)0u;
     fbe_current_size += f15.fbe_size();
 
     if ((fbe_current_size + f16.fbe_size()) <= fbe_struct_size)
-        f16.get(fbe_value.f16, (uint16_t)65535u);
+        f16.get(fbe_value.f16, resource, (uint16_t)65535u);
     else
         fbe_value.f16 = (uint16_t)65535u;
     fbe_current_size += f16.fbe_size();
 
     if ((fbe_current_size + f17.fbe_size()) <= fbe_struct_size)
-        f17.get(fbe_value.f17);
+        f17.get(fbe_value.f17, resource);
     else
         fbe_value.f17 = (int32_t)0ll;
     fbe_current_size += f17.fbe_size();
 
     if ((fbe_current_size + f18.fbe_size()) <= fbe_struct_size)
-        f18.get(fbe_value.f18, (int32_t)2147483647ll);
+        f18.get(fbe_value.f18, resource, (int32_t)2147483647ll);
     else
         fbe_value.f18 = (int32_t)2147483647ll;
     fbe_current_size += f18.fbe_size();
 
     if ((fbe_current_size + f19.fbe_size()) <= fbe_struct_size)
-        f19.get(fbe_value.f19, (uint32_t)0ull);
+        f19.get(fbe_value.f19, resource, (uint32_t)0ull);
     else
         fbe_value.f19 = (uint32_t)0ull;
     fbe_current_size += f19.fbe_size();
 
     if ((fbe_current_size + f20.fbe_size()) <= fbe_struct_size)
-        f20.get(fbe_value.f20, (uint32_t)4294967295ull);
+        f20.get(fbe_value.f20, resource, (uint32_t)4294967295ull);
     else
         fbe_value.f20 = (uint32_t)4294967295ull;
     fbe_current_size += f20.fbe_size();
 
     if ((fbe_current_size + f21.fbe_size()) <= fbe_struct_size)
-        f21.get(fbe_value.f21);
+        f21.get(fbe_value.f21, resource);
     else
         fbe_value.f21 = (int64_t)0ll;
     fbe_current_size += f21.fbe_size();
 
     if ((fbe_current_size + f22.fbe_size()) <= fbe_struct_size)
-        f22.get(fbe_value.f22, (int64_t)9223372036854775807ll);
+        f22.get(fbe_value.f22, resource, (int64_t)9223372036854775807ll);
     else
         fbe_value.f22 = (int64_t)9223372036854775807ll;
     fbe_current_size += f22.fbe_size();
 
     if ((fbe_current_size + f23.fbe_size()) <= fbe_struct_size)
-        f23.get(fbe_value.f23, (uint64_t)0ull);
+        f23.get(fbe_value.f23, resource, (uint64_t)0ull);
     else
         fbe_value.f23 = (uint64_t)0ull;
     fbe_current_size += f23.fbe_size();
 
     if ((fbe_current_size + f24.fbe_size()) <= fbe_struct_size)
-        f24.get(fbe_value.f24, (uint64_t)18446744073709551615ull);
+        f24.get(fbe_value.f24, resource, (uint64_t)18446744073709551615ull);
     else
         fbe_value.f24 = (uint64_t)18446744073709551615ull;
     fbe_current_size += f24.fbe_size();
 
     if ((fbe_current_size + f25.fbe_size()) <= fbe_struct_size)
-        f25.get(fbe_value.f25);
+        f25.get(fbe_value.f25, resource);
     else
         fbe_value.f25 = 0.0f;
     fbe_current_size += f25.fbe_size();
 
     if ((fbe_current_size + f26.fbe_size()) <= fbe_struct_size)
-        f26.get(fbe_value.f26, (float)123.456f);
+        f26.get(fbe_value.f26, resource, (float)123.456f);
     else
         fbe_value.f26 = (float)123.456f;
     fbe_current_size += f26.fbe_size();
 
     if ((fbe_current_size + f27.fbe_size()) <= fbe_struct_size)
-        f27.get(fbe_value.f27);
+        f27.get(fbe_value.f27, resource);
     else
         fbe_value.f27 = 0.0;
     fbe_current_size += f27.fbe_size();
 
     if ((fbe_current_size + f28.fbe_size()) <= fbe_struct_size)
-        f28.get(fbe_value.f28, (double)-123.456e+123);
+        f28.get(fbe_value.f28, resource, (double)-123.456e+123);
     else
         fbe_value.f28 = (double)-123.456e+123;
     fbe_current_size += f28.fbe_size();
 
     if ((fbe_current_size + f29.fbe_size()) <= fbe_struct_size)
-        f29.get(fbe_value.f29);
+        f29.get(fbe_value.f29, resource);
     else
         fbe_value.f29 = FBE::decimal_t();
     fbe_current_size += f29.fbe_size();
 
     if ((fbe_current_size + f30.fbe_size()) <= fbe_struct_size)
-        f30.get(fbe_value.f30, FBE::decimal_t(123456.123456));
+        f30.get(fbe_value.f30, resource, FBE::decimal_t(123456.123456));
     else
         fbe_value.f30 = FBE::decimal_t(123456.123456);
     fbe_current_size += f30.fbe_size();
 
     if ((fbe_current_size + f31.fbe_size()) <= fbe_struct_size)
-        f31.get(fbe_value.f31);
+        f31.get(fbe_value.f31, resource);
     else
         fbe_value.f31 = "";
     fbe_current_size += f31.fbe_size();
 
     if ((fbe_current_size + f32.fbe_size()) <= fbe_struct_size)
-        f32.get(fbe_value.f32, "Initial string!");
+        f32.get(fbe_value.f32, resource, "Initial string!");
     else
         fbe_value.f32 = "Initial string!";
     fbe_current_size += f32.fbe_size();
 
     if ((fbe_current_size + f33.fbe_size()) <= fbe_struct_size)
-        f33.get(fbe_value.f33);
+        f33.get(fbe_value.f33, resource);
     else
         fbe_value.f33 = (uint64_t)0ull;
     fbe_current_size += f33.fbe_size();
 
     if ((fbe_current_size + f34.fbe_size()) <= fbe_struct_size)
-        f34.get(fbe_value.f34, FBE::epoch());
+        f34.get(fbe_value.f34, resource, FBE::epoch());
     else
         fbe_value.f34 = FBE::epoch();
     fbe_current_size += f34.fbe_size();
 
     if ((fbe_current_size + f35.fbe_size()) <= fbe_struct_size)
-        f35.get(fbe_value.f35, FBE::utc());
+        f35.get(fbe_value.f35, resource, FBE::utc());
     else
         fbe_value.f35 = FBE::utc();
     fbe_current_size += f35.fbe_size();
 
     if ((fbe_current_size + f36.fbe_size()) <= fbe_struct_size)
-        f36.get(fbe_value.f36);
+        f36.get(fbe_value.f36, resource);
     else
         fbe_value.f36 = FBE::uuid_t::nil();
     fbe_current_size += f36.fbe_size();
 
     if ((fbe_current_size + f37.fbe_size()) <= fbe_struct_size)
-        f37.get(fbe_value.f37, FBE::uuid_t::sequential());
+        f37.get(fbe_value.f37, resource, FBE::uuid_t::sequential());
     else
         fbe_value.f37 = FBE::uuid_t::sequential();
     fbe_current_size += f37.fbe_size();
 
     if ((fbe_current_size + f38.fbe_size()) <= fbe_struct_size)
-        f38.get(fbe_value.f38, FBE::uuid_t("123e4567-e89b-12d3-a456-426655440000"));
+        f38.get(fbe_value.f38, resource, FBE::uuid_t("123e4567-e89b-12d3-a456-426655440000"));
     else
         fbe_value.f38 = FBE::uuid_t("123e4567-e89b-12d3-a456-426655440000");
     fbe_current_size += f38.fbe_size();
 
     if ((fbe_current_size + f39.fbe_size()) <= fbe_struct_size)
-        f39.get(fbe_value.f39);
+        f39.get(fbe_value.f39, resource);
     else
         fbe_value.f39 = ::proto::OrderSide();
     fbe_current_size += f39.fbe_size();
 
     if ((fbe_current_size + f40.fbe_size()) <= fbe_struct_size)
-        f40.get(fbe_value.f40);
+        f40.get(fbe_value.f40, resource);
     else
         fbe_value.f40 = ::proto::OrderType();
     fbe_current_size += f40.fbe_size();
 
     if ((fbe_current_size + f41.fbe_size()) <= fbe_struct_size)
-        f41.get(fbe_value.f41);
+        f41.get(fbe_value.f41, resource);
     else
         fbe_value.f41 = ::proto::Order();
     fbe_current_size += f41.fbe_size();
 
     if ((fbe_current_size + f42.fbe_size()) <= fbe_struct_size)
-        f42.get(fbe_value.f42);
+        f42.get(fbe_value.f42, resource);
     else
         fbe_value.f42 = ::proto::Balance();
     fbe_current_size += f42.fbe_size();
 
     if ((fbe_current_size + f43.fbe_size()) <= fbe_struct_size)
-        f43.get(fbe_value.f43);
+        f43.get(fbe_value.f43, resource);
     else
         fbe_value.f43 = ::proto::State();
     fbe_current_size += f43.fbe_size();
 
     if ((fbe_current_size + f44.fbe_size()) <= fbe_struct_size)
-        f44.get(fbe_value.f44);
+        f44.get(fbe_value.f44, resource);
     else
         fbe_value.f44 = ::proto::Account();
     fbe_current_size += f44.fbe_size();
@@ -808,63 +808,63 @@ void FieldModel<::test::StructSimple>::set_end(size_t fbe_begin)
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModel<::test::StructSimple>::set(const ::test::StructSimple& fbe_value) noexcept
+void FieldModel<::test::StructSimple>::set(const ::test::StructSimple& fbe_value, pmr::memory_resource* resource) noexcept
 {
     size_t fbe_begin = set_begin();
     if (fbe_begin == 0)
         return;
 
-    set_fields(fbe_value);
+    set_fields(fbe_value, resource);
     set_end(fbe_begin);
 }
 
-void FieldModel<::test::StructSimple>::set_fields([[maybe_unused]] const ::test::StructSimple& fbe_value) noexcept
+void FieldModel<::test::StructSimple>::set_fields([[maybe_unused]] const ::test::StructSimple& fbe_value, pmr::memory_resource* resource) noexcept
 {
-    id.set(fbe_value.id);
-    f1.set(fbe_value.f1);
-    f2.set(fbe_value.f2);
-    f3.set(fbe_value.f3);
-    f4.set(fbe_value.f4);
-    f5.set(fbe_value.f5);
-    f6.set(fbe_value.f6);
-    f7.set(fbe_value.f7);
-    f8.set(fbe_value.f8);
-    f9.set(fbe_value.f9);
-    f10.set(fbe_value.f10);
-    f11.set(fbe_value.f11);
-    f12.set(fbe_value.f12);
-    f13.set(fbe_value.f13);
-    f14.set(fbe_value.f14);
-    f15.set(fbe_value.f15);
-    f16.set(fbe_value.f16);
-    f17.set(fbe_value.f17);
-    f18.set(fbe_value.f18);
-    f19.set(fbe_value.f19);
-    f20.set(fbe_value.f20);
-    f21.set(fbe_value.f21);
-    f22.set(fbe_value.f22);
-    f23.set(fbe_value.f23);
-    f24.set(fbe_value.f24);
-    f25.set(fbe_value.f25);
-    f26.set(fbe_value.f26);
-    f27.set(fbe_value.f27);
-    f28.set(fbe_value.f28);
-    f29.set(fbe_value.f29);
-    f30.set(fbe_value.f30);
-    f31.set(fbe_value.f31);
-    f32.set(fbe_value.f32);
-    f33.set(fbe_value.f33);
-    f34.set(fbe_value.f34);
-    f35.set(fbe_value.f35);
-    f36.set(fbe_value.f36);
-    f37.set(fbe_value.f37);
-    f38.set(fbe_value.f38);
-    f39.set(fbe_value.f39);
-    f40.set(fbe_value.f40);
-    f41.set(fbe_value.f41);
-    f42.set(fbe_value.f42);
-    f43.set(fbe_value.f43);
-    f44.set(fbe_value.f44);
+    id.set(fbe_value.id, resource);
+    f1.set(fbe_value.f1, resource);
+    f2.set(fbe_value.f2, resource);
+    f3.set(fbe_value.f3, resource);
+    f4.set(fbe_value.f4, resource);
+    f5.set(fbe_value.f5, resource);
+    f6.set(fbe_value.f6, resource);
+    f7.set(fbe_value.f7, resource);
+    f8.set(fbe_value.f8, resource);
+    f9.set(fbe_value.f9, resource);
+    f10.set(fbe_value.f10, resource);
+    f11.set(fbe_value.f11, resource);
+    f12.set(fbe_value.f12, resource);
+    f13.set(fbe_value.f13, resource);
+    f14.set(fbe_value.f14, resource);
+    f15.set(fbe_value.f15, resource);
+    f16.set(fbe_value.f16, resource);
+    f17.set(fbe_value.f17, resource);
+    f18.set(fbe_value.f18, resource);
+    f19.set(fbe_value.f19, resource);
+    f20.set(fbe_value.f20, resource);
+    f21.set(fbe_value.f21, resource);
+    f22.set(fbe_value.f22, resource);
+    f23.set(fbe_value.f23, resource);
+    f24.set(fbe_value.f24, resource);
+    f25.set(fbe_value.f25, resource);
+    f26.set(fbe_value.f26, resource);
+    f27.set(fbe_value.f27, resource);
+    f28.set(fbe_value.f28, resource);
+    f29.set(fbe_value.f29, resource);
+    f30.set(fbe_value.f30, resource);
+    f31.set(fbe_value.f31, resource);
+    f32.set(fbe_value.f32, resource);
+    f33.set(fbe_value.f33, resource);
+    f34.set(fbe_value.f34, resource);
+    f35.set(fbe_value.f35, resource);
+    f36.set(fbe_value.f36, resource);
+    f37.set(fbe_value.f37, resource);
+    f38.set(fbe_value.f38, resource);
+    f39.set(fbe_value.f39, resource);
+    f40.set(fbe_value.f40, resource);
+    f41.set(fbe_value.f41, resource);
+    f42.set(fbe_value.f42, resource);
+    f43.set(fbe_value.f43, resource);
+    f44.set(fbe_value.f44, resource);
 }
 
 namespace test {
@@ -895,15 +895,15 @@ size_t StructSimpleModel::create_end(size_t fbe_begin)
     return fbe_full_size;
 }
 
-size_t StructSimpleModel::serialize(const ::test::StructSimple& value)
+size_t StructSimpleModel::serialize(const ::test::StructSimple& value, pmr::memory_resource* resource)
 {
     size_t fbe_begin = create_begin();
-    model.set(value);
+    model.set(value, resource);
     size_t fbe_full_size = create_end(fbe_begin);
     return fbe_full_size;
 }
 
-size_t StructSimpleModel::deserialize(::test::StructSimple& value) const noexcept
+size_t StructSimpleModel::deserialize(::test::StructSimple& value, pmr::memory_resource* resource) const noexcept
 {
     if ((this->buffer().offset() + model.fbe_offset() - 4) > this->buffer().size())
         return 0;
@@ -913,7 +913,7 @@ size_t StructSimpleModel::deserialize(::test::StructSimple& value) const noexcep
     if (fbe_full_size < model.fbe_size())
         return 0;
 
-    model.get(value);
+    model.get(value, resource);
     return fbe_full_size;
 }
 
@@ -1605,417 +1605,417 @@ void FieldModel<::test::StructOptional>::get_end(size_t fbe_begin) const noexcep
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModel<::test::StructOptional>::get(::test::StructOptional& fbe_value) const noexcept
+void FieldModel<::test::StructOptional>::get(::test::StructOptional& fbe_value, pmr::memory_resource* resource) const noexcept
 {
     size_t fbe_begin = get_begin();
     if (fbe_begin == 0)
         return;
 
     uint32_t fbe_struct_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset());
-    get_fields(fbe_value, fbe_struct_size);
+    get_fields(fbe_value, fbe_struct_size, resource);
     get_end(fbe_begin);
 }
 
-void FieldModel<::test::StructOptional>::get_fields([[maybe_unused]] ::test::StructOptional& fbe_value, [[maybe_unused]] size_t fbe_struct_size) const noexcept
+void FieldModel<::test::StructOptional>::get_fields([[maybe_unused]] ::test::StructOptional& fbe_value, [[maybe_unused]] size_t fbe_struct_size, pmr::memory_resource* resource) const noexcept
 {
     size_t fbe_current_size = 4 + 4;
 
     if ((fbe_current_size + parent.fbe_body() - 4 - 4) <= fbe_struct_size)
-        parent.get_fields(fbe_value, fbe_struct_size);
+        parent.get_fields(fbe_value, fbe_struct_size, resource);
     fbe_current_size += parent.fbe_body() - 4 - 4;
 
     if ((fbe_current_size + f100.fbe_size()) <= fbe_struct_size)
-        f100.get(fbe_value.f100);
+        f100.get(fbe_value.f100, resource);
     else
         fbe_value.f100 = std::nullopt;
     fbe_current_size += f100.fbe_size();
 
     if ((fbe_current_size + f101.fbe_size()) <= fbe_struct_size)
-        f101.get(fbe_value.f101, true);
+        f101.get(fbe_value.f101, resource, true);
     else
         fbe_value.f101 = true;
     fbe_current_size += f101.fbe_size();
 
     if ((fbe_current_size + f102.fbe_size()) <= fbe_struct_size)
-        f102.get(fbe_value.f102, std::nullopt);
+        f102.get(fbe_value.f102, resource, std::nullopt);
     else
         fbe_value.f102 = std::nullopt;
     fbe_current_size += f102.fbe_size();
 
     if ((fbe_current_size + f103.fbe_size()) <= fbe_struct_size)
-        f103.get(fbe_value.f103);
+        f103.get(fbe_value.f103, resource);
     else
         fbe_value.f103 = std::nullopt;
     fbe_current_size += f103.fbe_size();
 
     if ((fbe_current_size + f104.fbe_size()) <= fbe_struct_size)
-        f104.get(fbe_value.f104, (uint8_t)255u);
+        f104.get(fbe_value.f104, resource, (uint8_t)255u);
     else
         fbe_value.f104 = (uint8_t)255u;
     fbe_current_size += f104.fbe_size();
 
     if ((fbe_current_size + f105.fbe_size()) <= fbe_struct_size)
-        f105.get(fbe_value.f105, std::nullopt);
+        f105.get(fbe_value.f105, resource, std::nullopt);
     else
         fbe_value.f105 = std::nullopt;
     fbe_current_size += f105.fbe_size();
 
     if ((fbe_current_size + f106.fbe_size()) <= fbe_struct_size)
-        f106.get(fbe_value.f106);
+        f106.get(fbe_value.f106, resource);
     else
         fbe_value.f106 = std::nullopt;
     fbe_current_size += f106.fbe_size();
 
     if ((fbe_current_size + f107.fbe_size()) <= fbe_struct_size)
-        f107.get(fbe_value.f107, (char)'!');
+        f107.get(fbe_value.f107, resource, (char)'!');
     else
         fbe_value.f107 = (char)'!';
     fbe_current_size += f107.fbe_size();
 
     if ((fbe_current_size + f108.fbe_size()) <= fbe_struct_size)
-        f108.get(fbe_value.f108, std::nullopt);
+        f108.get(fbe_value.f108, resource, std::nullopt);
     else
         fbe_value.f108 = std::nullopt;
     fbe_current_size += f108.fbe_size();
 
     if ((fbe_current_size + f109.fbe_size()) <= fbe_struct_size)
-        f109.get(fbe_value.f109);
+        f109.get(fbe_value.f109, resource);
     else
         fbe_value.f109 = std::nullopt;
     fbe_current_size += f109.fbe_size();
 
     if ((fbe_current_size + f110.fbe_size()) <= fbe_struct_size)
-        f110.get(fbe_value.f110, (wchar_t)0x0444);
+        f110.get(fbe_value.f110, resource, (wchar_t)0x0444);
     else
         fbe_value.f110 = (wchar_t)0x0444;
     fbe_current_size += f110.fbe_size();
 
     if ((fbe_current_size + f111.fbe_size()) <= fbe_struct_size)
-        f111.get(fbe_value.f111, std::nullopt);
+        f111.get(fbe_value.f111, resource, std::nullopt);
     else
         fbe_value.f111 = std::nullopt;
     fbe_current_size += f111.fbe_size();
 
     if ((fbe_current_size + f112.fbe_size()) <= fbe_struct_size)
-        f112.get(fbe_value.f112);
+        f112.get(fbe_value.f112, resource);
     else
         fbe_value.f112 = std::nullopt;
     fbe_current_size += f112.fbe_size();
 
     if ((fbe_current_size + f113.fbe_size()) <= fbe_struct_size)
-        f113.get(fbe_value.f113, (int8_t)127);
+        f113.get(fbe_value.f113, resource, (int8_t)127);
     else
         fbe_value.f113 = (int8_t)127;
     fbe_current_size += f113.fbe_size();
 
     if ((fbe_current_size + f114.fbe_size()) <= fbe_struct_size)
-        f114.get(fbe_value.f114, std::nullopt);
+        f114.get(fbe_value.f114, resource, std::nullopt);
     else
         fbe_value.f114 = std::nullopt;
     fbe_current_size += f114.fbe_size();
 
     if ((fbe_current_size + f115.fbe_size()) <= fbe_struct_size)
-        f115.get(fbe_value.f115);
+        f115.get(fbe_value.f115, resource);
     else
         fbe_value.f115 = std::nullopt;
     fbe_current_size += f115.fbe_size();
 
     if ((fbe_current_size + f116.fbe_size()) <= fbe_struct_size)
-        f116.get(fbe_value.f116, (uint8_t)255u);
+        f116.get(fbe_value.f116, resource, (uint8_t)255u);
     else
         fbe_value.f116 = (uint8_t)255u;
     fbe_current_size += f116.fbe_size();
 
     if ((fbe_current_size + f117.fbe_size()) <= fbe_struct_size)
-        f117.get(fbe_value.f117, std::nullopt);
+        f117.get(fbe_value.f117, resource, std::nullopt);
     else
         fbe_value.f117 = std::nullopt;
     fbe_current_size += f117.fbe_size();
 
     if ((fbe_current_size + f118.fbe_size()) <= fbe_struct_size)
-        f118.get(fbe_value.f118);
+        f118.get(fbe_value.f118, resource);
     else
         fbe_value.f118 = std::nullopt;
     fbe_current_size += f118.fbe_size();
 
     if ((fbe_current_size + f119.fbe_size()) <= fbe_struct_size)
-        f119.get(fbe_value.f119, (int16_t)32767);
+        f119.get(fbe_value.f119, resource, (int16_t)32767);
     else
         fbe_value.f119 = (int16_t)32767;
     fbe_current_size += f119.fbe_size();
 
     if ((fbe_current_size + f120.fbe_size()) <= fbe_struct_size)
-        f120.get(fbe_value.f120, std::nullopt);
+        f120.get(fbe_value.f120, resource, std::nullopt);
     else
         fbe_value.f120 = std::nullopt;
     fbe_current_size += f120.fbe_size();
 
     if ((fbe_current_size + f121.fbe_size()) <= fbe_struct_size)
-        f121.get(fbe_value.f121);
+        f121.get(fbe_value.f121, resource);
     else
         fbe_value.f121 = std::nullopt;
     fbe_current_size += f121.fbe_size();
 
     if ((fbe_current_size + f122.fbe_size()) <= fbe_struct_size)
-        f122.get(fbe_value.f122, (uint16_t)65535u);
+        f122.get(fbe_value.f122, resource, (uint16_t)65535u);
     else
         fbe_value.f122 = (uint16_t)65535u;
     fbe_current_size += f122.fbe_size();
 
     if ((fbe_current_size + f123.fbe_size()) <= fbe_struct_size)
-        f123.get(fbe_value.f123, std::nullopt);
+        f123.get(fbe_value.f123, resource, std::nullopt);
     else
         fbe_value.f123 = std::nullopt;
     fbe_current_size += f123.fbe_size();
 
     if ((fbe_current_size + f124.fbe_size()) <= fbe_struct_size)
-        f124.get(fbe_value.f124);
+        f124.get(fbe_value.f124, resource);
     else
         fbe_value.f124 = std::nullopt;
     fbe_current_size += f124.fbe_size();
 
     if ((fbe_current_size + f125.fbe_size()) <= fbe_struct_size)
-        f125.get(fbe_value.f125, (int32_t)2147483647ll);
+        f125.get(fbe_value.f125, resource, (int32_t)2147483647ll);
     else
         fbe_value.f125 = (int32_t)2147483647ll;
     fbe_current_size += f125.fbe_size();
 
     if ((fbe_current_size + f126.fbe_size()) <= fbe_struct_size)
-        f126.get(fbe_value.f126, std::nullopt);
+        f126.get(fbe_value.f126, resource, std::nullopt);
     else
         fbe_value.f126 = std::nullopt;
     fbe_current_size += f126.fbe_size();
 
     if ((fbe_current_size + f127.fbe_size()) <= fbe_struct_size)
-        f127.get(fbe_value.f127);
+        f127.get(fbe_value.f127, resource);
     else
         fbe_value.f127 = std::nullopt;
     fbe_current_size += f127.fbe_size();
 
     if ((fbe_current_size + f128.fbe_size()) <= fbe_struct_size)
-        f128.get(fbe_value.f128, (uint32_t)4294967295ull);
+        f128.get(fbe_value.f128, resource, (uint32_t)4294967295ull);
     else
         fbe_value.f128 = (uint32_t)4294967295ull;
     fbe_current_size += f128.fbe_size();
 
     if ((fbe_current_size + f129.fbe_size()) <= fbe_struct_size)
-        f129.get(fbe_value.f129, std::nullopt);
+        f129.get(fbe_value.f129, resource, std::nullopt);
     else
         fbe_value.f129 = std::nullopt;
     fbe_current_size += f129.fbe_size();
 
     if ((fbe_current_size + f130.fbe_size()) <= fbe_struct_size)
-        f130.get(fbe_value.f130);
+        f130.get(fbe_value.f130, resource);
     else
         fbe_value.f130 = std::nullopt;
     fbe_current_size += f130.fbe_size();
 
     if ((fbe_current_size + f131.fbe_size()) <= fbe_struct_size)
-        f131.get(fbe_value.f131, (int64_t)9223372036854775807ll);
+        f131.get(fbe_value.f131, resource, (int64_t)9223372036854775807ll);
     else
         fbe_value.f131 = (int64_t)9223372036854775807ll;
     fbe_current_size += f131.fbe_size();
 
     if ((fbe_current_size + f132.fbe_size()) <= fbe_struct_size)
-        f132.get(fbe_value.f132, std::nullopt);
+        f132.get(fbe_value.f132, resource, std::nullopt);
     else
         fbe_value.f132 = std::nullopt;
     fbe_current_size += f132.fbe_size();
 
     if ((fbe_current_size + f133.fbe_size()) <= fbe_struct_size)
-        f133.get(fbe_value.f133);
+        f133.get(fbe_value.f133, resource);
     else
         fbe_value.f133 = std::nullopt;
     fbe_current_size += f133.fbe_size();
 
     if ((fbe_current_size + f134.fbe_size()) <= fbe_struct_size)
-        f134.get(fbe_value.f134, (uint64_t)18446744073709551615ull);
+        f134.get(fbe_value.f134, resource, (uint64_t)18446744073709551615ull);
     else
         fbe_value.f134 = (uint64_t)18446744073709551615ull;
     fbe_current_size += f134.fbe_size();
 
     if ((fbe_current_size + f135.fbe_size()) <= fbe_struct_size)
-        f135.get(fbe_value.f135, std::nullopt);
+        f135.get(fbe_value.f135, resource, std::nullopt);
     else
         fbe_value.f135 = std::nullopt;
     fbe_current_size += f135.fbe_size();
 
     if ((fbe_current_size + f136.fbe_size()) <= fbe_struct_size)
-        f136.get(fbe_value.f136);
+        f136.get(fbe_value.f136, resource);
     else
         fbe_value.f136 = std::nullopt;
     fbe_current_size += f136.fbe_size();
 
     if ((fbe_current_size + f137.fbe_size()) <= fbe_struct_size)
-        f137.get(fbe_value.f137, (float)123.456f);
+        f137.get(fbe_value.f137, resource, (float)123.456f);
     else
         fbe_value.f137 = (float)123.456f;
     fbe_current_size += f137.fbe_size();
 
     if ((fbe_current_size + f138.fbe_size()) <= fbe_struct_size)
-        f138.get(fbe_value.f138, std::nullopt);
+        f138.get(fbe_value.f138, resource, std::nullopt);
     else
         fbe_value.f138 = std::nullopt;
     fbe_current_size += f138.fbe_size();
 
     if ((fbe_current_size + f139.fbe_size()) <= fbe_struct_size)
-        f139.get(fbe_value.f139);
+        f139.get(fbe_value.f139, resource);
     else
         fbe_value.f139 = std::nullopt;
     fbe_current_size += f139.fbe_size();
 
     if ((fbe_current_size + f140.fbe_size()) <= fbe_struct_size)
-        f140.get(fbe_value.f140, (double)-123.456e+123);
+        f140.get(fbe_value.f140, resource, (double)-123.456e+123);
     else
         fbe_value.f140 = (double)-123.456e+123;
     fbe_current_size += f140.fbe_size();
 
     if ((fbe_current_size + f141.fbe_size()) <= fbe_struct_size)
-        f141.get(fbe_value.f141, std::nullopt);
+        f141.get(fbe_value.f141, resource, std::nullopt);
     else
         fbe_value.f141 = std::nullopt;
     fbe_current_size += f141.fbe_size();
 
     if ((fbe_current_size + f142.fbe_size()) <= fbe_struct_size)
-        f142.get(fbe_value.f142);
+        f142.get(fbe_value.f142, resource);
     else
         fbe_value.f142 = std::nullopt;
     fbe_current_size += f142.fbe_size();
 
     if ((fbe_current_size + f143.fbe_size()) <= fbe_struct_size)
-        f143.get(fbe_value.f143, FBE::decimal_t(123456.123456));
+        f143.get(fbe_value.f143, resource, FBE::decimal_t(123456.123456));
     else
         fbe_value.f143 = FBE::decimal_t(123456.123456);
     fbe_current_size += f143.fbe_size();
 
     if ((fbe_current_size + f144.fbe_size()) <= fbe_struct_size)
-        f144.get(fbe_value.f144, std::nullopt);
+        f144.get(fbe_value.f144, resource, std::nullopt);
     else
         fbe_value.f144 = std::nullopt;
     fbe_current_size += f144.fbe_size();
 
     if ((fbe_current_size + f145.fbe_size()) <= fbe_struct_size)
-        f145.get(fbe_value.f145);
+        f145.get(fbe_value.f145, resource);
     else
         fbe_value.f145 = std::nullopt;
     fbe_current_size += f145.fbe_size();
 
     if ((fbe_current_size + f146.fbe_size()) <= fbe_struct_size)
-        f146.get(fbe_value.f146, "Initial string!");
+        f146.get(fbe_value.f146, resource, "Initial string!");
     else
         fbe_value.f146 = "Initial string!";
     fbe_current_size += f146.fbe_size();
 
     if ((fbe_current_size + f147.fbe_size()) <= fbe_struct_size)
-        f147.get(fbe_value.f147, std::nullopt);
+        f147.get(fbe_value.f147, resource, std::nullopt);
     else
         fbe_value.f147 = std::nullopt;
     fbe_current_size += f147.fbe_size();
 
     if ((fbe_current_size + f148.fbe_size()) <= fbe_struct_size)
-        f148.get(fbe_value.f148);
+        f148.get(fbe_value.f148, resource);
     else
         fbe_value.f148 = std::nullopt;
     fbe_current_size += f148.fbe_size();
 
     if ((fbe_current_size + f149.fbe_size()) <= fbe_struct_size)
-        f149.get(fbe_value.f149, FBE::utc());
+        f149.get(fbe_value.f149, resource, FBE::utc());
     else
         fbe_value.f149 = FBE::utc();
     fbe_current_size += f149.fbe_size();
 
     if ((fbe_current_size + f150.fbe_size()) <= fbe_struct_size)
-        f150.get(fbe_value.f150, std::nullopt);
+        f150.get(fbe_value.f150, resource, std::nullopt);
     else
         fbe_value.f150 = std::nullopt;
     fbe_current_size += f150.fbe_size();
 
     if ((fbe_current_size + f151.fbe_size()) <= fbe_struct_size)
-        f151.get(fbe_value.f151);
+        f151.get(fbe_value.f151, resource);
     else
         fbe_value.f151 = std::nullopt;
     fbe_current_size += f151.fbe_size();
 
     if ((fbe_current_size + f152.fbe_size()) <= fbe_struct_size)
-        f152.get(fbe_value.f152, FBE::uuid_t("123e4567-e89b-12d3-a456-426655440000"));
+        f152.get(fbe_value.f152, resource, FBE::uuid_t("123e4567-e89b-12d3-a456-426655440000"));
     else
         fbe_value.f152 = FBE::uuid_t("123e4567-e89b-12d3-a456-426655440000");
     fbe_current_size += f152.fbe_size();
 
     if ((fbe_current_size + f153.fbe_size()) <= fbe_struct_size)
-        f153.get(fbe_value.f153, std::nullopt);
+        f153.get(fbe_value.f153, resource, std::nullopt);
     else
         fbe_value.f153 = std::nullopt;
     fbe_current_size += f153.fbe_size();
 
     if ((fbe_current_size + f154.fbe_size()) <= fbe_struct_size)
-        f154.get(fbe_value.f154);
+        f154.get(fbe_value.f154, resource);
     else
         fbe_value.f154 = std::nullopt;
     fbe_current_size += f154.fbe_size();
 
     if ((fbe_current_size + f155.fbe_size()) <= fbe_struct_size)
-        f155.get(fbe_value.f155, std::nullopt);
+        f155.get(fbe_value.f155, resource, std::nullopt);
     else
         fbe_value.f155 = std::nullopt;
     fbe_current_size += f155.fbe_size();
 
     if ((fbe_current_size + f156.fbe_size()) <= fbe_struct_size)
-        f156.get(fbe_value.f156);
+        f156.get(fbe_value.f156, resource);
     else
         fbe_value.f156 = std::nullopt;
     fbe_current_size += f156.fbe_size();
 
     if ((fbe_current_size + f157.fbe_size()) <= fbe_struct_size)
-        f157.get(fbe_value.f157, std::nullopt);
+        f157.get(fbe_value.f157, resource, std::nullopt);
     else
         fbe_value.f157 = std::nullopt;
     fbe_current_size += f157.fbe_size();
 
     if ((fbe_current_size + f158.fbe_size()) <= fbe_struct_size)
-        f158.get(fbe_value.f158);
+        f158.get(fbe_value.f158, resource);
     else
         fbe_value.f158 = std::nullopt;
     fbe_current_size += f158.fbe_size();
 
     if ((fbe_current_size + f159.fbe_size()) <= fbe_struct_size)
-        f159.get(fbe_value.f159, std::nullopt);
+        f159.get(fbe_value.f159, resource, std::nullopt);
     else
         fbe_value.f159 = std::nullopt;
     fbe_current_size += f159.fbe_size();
 
     if ((fbe_current_size + f160.fbe_size()) <= fbe_struct_size)
-        f160.get(fbe_value.f160);
+        f160.get(fbe_value.f160, resource);
     else
         fbe_value.f160 = std::nullopt;
     fbe_current_size += f160.fbe_size();
 
     if ((fbe_current_size + f161.fbe_size()) <= fbe_struct_size)
-        f161.get(fbe_value.f161, std::nullopt);
+        f161.get(fbe_value.f161, resource, std::nullopt);
     else
         fbe_value.f161 = std::nullopt;
     fbe_current_size += f161.fbe_size();
 
     if ((fbe_current_size + f162.fbe_size()) <= fbe_struct_size)
-        f162.get(fbe_value.f162);
+        f162.get(fbe_value.f162, resource);
     else
         fbe_value.f162 = std::nullopt;
     fbe_current_size += f162.fbe_size();
 
     if ((fbe_current_size + f163.fbe_size()) <= fbe_struct_size)
-        f163.get(fbe_value.f163, std::nullopt);
+        f163.get(fbe_value.f163, resource, std::nullopt);
     else
         fbe_value.f163 = std::nullopt;
     fbe_current_size += f163.fbe_size();
 
     if ((fbe_current_size + f164.fbe_size()) <= fbe_struct_size)
-        f164.get(fbe_value.f164);
+        f164.get(fbe_value.f164, resource);
     else
         fbe_value.f164 = std::nullopt;
     fbe_current_size += f164.fbe_size();
 
     if ((fbe_current_size + f165.fbe_size()) <= fbe_struct_size)
-        f165.get(fbe_value.f165, std::nullopt);
+        f165.get(fbe_value.f165, resource, std::nullopt);
     else
         fbe_value.f165 = std::nullopt;
     fbe_current_size += f165.fbe_size();
@@ -2046,85 +2046,85 @@ void FieldModel<::test::StructOptional>::set_end(size_t fbe_begin)
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModel<::test::StructOptional>::set(const ::test::StructOptional& fbe_value) noexcept
+void FieldModel<::test::StructOptional>::set(const ::test::StructOptional& fbe_value, pmr::memory_resource* resource) noexcept
 {
     size_t fbe_begin = set_begin();
     if (fbe_begin == 0)
         return;
 
-    set_fields(fbe_value);
+    set_fields(fbe_value, resource);
     set_end(fbe_begin);
 }
 
-void FieldModel<::test::StructOptional>::set_fields([[maybe_unused]] const ::test::StructOptional& fbe_value) noexcept
+void FieldModel<::test::StructOptional>::set_fields([[maybe_unused]] const ::test::StructOptional& fbe_value, pmr::memory_resource* resource) noexcept
 {
-    parent.set_fields(fbe_value);
-    f100.set(fbe_value.f100);
-    f101.set(fbe_value.f101);
-    f102.set(fbe_value.f102);
-    f103.set(fbe_value.f103);
-    f104.set(fbe_value.f104);
-    f105.set(fbe_value.f105);
-    f106.set(fbe_value.f106);
-    f107.set(fbe_value.f107);
-    f108.set(fbe_value.f108);
-    f109.set(fbe_value.f109);
-    f110.set(fbe_value.f110);
-    f111.set(fbe_value.f111);
-    f112.set(fbe_value.f112);
-    f113.set(fbe_value.f113);
-    f114.set(fbe_value.f114);
-    f115.set(fbe_value.f115);
-    f116.set(fbe_value.f116);
-    f117.set(fbe_value.f117);
-    f118.set(fbe_value.f118);
-    f119.set(fbe_value.f119);
-    f120.set(fbe_value.f120);
-    f121.set(fbe_value.f121);
-    f122.set(fbe_value.f122);
-    f123.set(fbe_value.f123);
-    f124.set(fbe_value.f124);
-    f125.set(fbe_value.f125);
-    f126.set(fbe_value.f126);
-    f127.set(fbe_value.f127);
-    f128.set(fbe_value.f128);
-    f129.set(fbe_value.f129);
-    f130.set(fbe_value.f130);
-    f131.set(fbe_value.f131);
-    f132.set(fbe_value.f132);
-    f133.set(fbe_value.f133);
-    f134.set(fbe_value.f134);
-    f135.set(fbe_value.f135);
-    f136.set(fbe_value.f136);
-    f137.set(fbe_value.f137);
-    f138.set(fbe_value.f138);
-    f139.set(fbe_value.f139);
-    f140.set(fbe_value.f140);
-    f141.set(fbe_value.f141);
-    f142.set(fbe_value.f142);
-    f143.set(fbe_value.f143);
-    f144.set(fbe_value.f144);
-    f145.set(fbe_value.f145);
-    f146.set(fbe_value.f146);
-    f147.set(fbe_value.f147);
-    f148.set(fbe_value.f148);
-    f149.set(fbe_value.f149);
-    f150.set(fbe_value.f150);
-    f151.set(fbe_value.f151);
-    f152.set(fbe_value.f152);
-    f153.set(fbe_value.f153);
-    f154.set(fbe_value.f154);
-    f155.set(fbe_value.f155);
-    f156.set(fbe_value.f156);
-    f157.set(fbe_value.f157);
-    f158.set(fbe_value.f158);
-    f159.set(fbe_value.f159);
-    f160.set(fbe_value.f160);
-    f161.set(fbe_value.f161);
-    f162.set(fbe_value.f162);
-    f163.set(fbe_value.f163);
-    f164.set(fbe_value.f164);
-    f165.set(fbe_value.f165);
+    parent.set_fields(fbe_value, resource);
+    f100.set(fbe_value.f100, resource);
+    f101.set(fbe_value.f101, resource);
+    f102.set(fbe_value.f102, resource);
+    f103.set(fbe_value.f103, resource);
+    f104.set(fbe_value.f104, resource);
+    f105.set(fbe_value.f105, resource);
+    f106.set(fbe_value.f106, resource);
+    f107.set(fbe_value.f107, resource);
+    f108.set(fbe_value.f108, resource);
+    f109.set(fbe_value.f109, resource);
+    f110.set(fbe_value.f110, resource);
+    f111.set(fbe_value.f111, resource);
+    f112.set(fbe_value.f112, resource);
+    f113.set(fbe_value.f113, resource);
+    f114.set(fbe_value.f114, resource);
+    f115.set(fbe_value.f115, resource);
+    f116.set(fbe_value.f116, resource);
+    f117.set(fbe_value.f117, resource);
+    f118.set(fbe_value.f118, resource);
+    f119.set(fbe_value.f119, resource);
+    f120.set(fbe_value.f120, resource);
+    f121.set(fbe_value.f121, resource);
+    f122.set(fbe_value.f122, resource);
+    f123.set(fbe_value.f123, resource);
+    f124.set(fbe_value.f124, resource);
+    f125.set(fbe_value.f125, resource);
+    f126.set(fbe_value.f126, resource);
+    f127.set(fbe_value.f127, resource);
+    f128.set(fbe_value.f128, resource);
+    f129.set(fbe_value.f129, resource);
+    f130.set(fbe_value.f130, resource);
+    f131.set(fbe_value.f131, resource);
+    f132.set(fbe_value.f132, resource);
+    f133.set(fbe_value.f133, resource);
+    f134.set(fbe_value.f134, resource);
+    f135.set(fbe_value.f135, resource);
+    f136.set(fbe_value.f136, resource);
+    f137.set(fbe_value.f137, resource);
+    f138.set(fbe_value.f138, resource);
+    f139.set(fbe_value.f139, resource);
+    f140.set(fbe_value.f140, resource);
+    f141.set(fbe_value.f141, resource);
+    f142.set(fbe_value.f142, resource);
+    f143.set(fbe_value.f143, resource);
+    f144.set(fbe_value.f144, resource);
+    f145.set(fbe_value.f145, resource);
+    f146.set(fbe_value.f146, resource);
+    f147.set(fbe_value.f147, resource);
+    f148.set(fbe_value.f148, resource);
+    f149.set(fbe_value.f149, resource);
+    f150.set(fbe_value.f150, resource);
+    f151.set(fbe_value.f151, resource);
+    f152.set(fbe_value.f152, resource);
+    f153.set(fbe_value.f153, resource);
+    f154.set(fbe_value.f154, resource);
+    f155.set(fbe_value.f155, resource);
+    f156.set(fbe_value.f156, resource);
+    f157.set(fbe_value.f157, resource);
+    f158.set(fbe_value.f158, resource);
+    f159.set(fbe_value.f159, resource);
+    f160.set(fbe_value.f160, resource);
+    f161.set(fbe_value.f161, resource);
+    f162.set(fbe_value.f162, resource);
+    f163.set(fbe_value.f163, resource);
+    f164.set(fbe_value.f164, resource);
+    f165.set(fbe_value.f165, resource);
 }
 
 namespace test {
@@ -2155,15 +2155,15 @@ size_t StructOptionalModel::create_end(size_t fbe_begin)
     return fbe_full_size;
 }
 
-size_t StructOptionalModel::serialize(const ::test::StructOptional& value)
+size_t StructOptionalModel::serialize(const ::test::StructOptional& value, pmr::memory_resource* resource)
 {
     size_t fbe_begin = create_begin();
-    model.set(value);
+    model.set(value, resource);
     size_t fbe_full_size = create_end(fbe_begin);
     return fbe_full_size;
 }
 
-size_t StructOptionalModel::deserialize(::test::StructOptional& value) const noexcept
+size_t StructOptionalModel::deserialize(::test::StructOptional& value, pmr::memory_resource* resource) const noexcept
 {
     if ((this->buffer().offset() + model.fbe_offset() - 4) > this->buffer().size())
         return 0;
@@ -2173,7 +2173,7 @@ size_t StructOptionalModel::deserialize(::test::StructOptional& value) const noe
     if (fbe_full_size < model.fbe_size())
         return 0;
 
-    model.get(value);
+    model.get(value, resource);
     return fbe_full_size;
 }
 
@@ -2379,93 +2379,93 @@ void FieldModel<::test::StructNested>::get_end(size_t fbe_begin) const noexcept
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModel<::test::StructNested>::get(::test::StructNested& fbe_value) const noexcept
+void FieldModel<::test::StructNested>::get(::test::StructNested& fbe_value, pmr::memory_resource* resource) const noexcept
 {
     size_t fbe_begin = get_begin();
     if (fbe_begin == 0)
         return;
 
     uint32_t fbe_struct_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset());
-    get_fields(fbe_value, fbe_struct_size);
+    get_fields(fbe_value, fbe_struct_size, resource);
     get_end(fbe_begin);
 }
 
-void FieldModel<::test::StructNested>::get_fields([[maybe_unused]] ::test::StructNested& fbe_value, [[maybe_unused]] size_t fbe_struct_size) const noexcept
+void FieldModel<::test::StructNested>::get_fields([[maybe_unused]] ::test::StructNested& fbe_value, [[maybe_unused]] size_t fbe_struct_size, pmr::memory_resource* resource) const noexcept
 {
     size_t fbe_current_size = 4 + 4;
 
     if ((fbe_current_size + parent.fbe_body() - 4 - 4) <= fbe_struct_size)
-        parent.get_fields(fbe_value, fbe_struct_size);
+        parent.get_fields(fbe_value, fbe_struct_size, resource);
     fbe_current_size += parent.fbe_body() - 4 - 4;
 
     if ((fbe_current_size + f1000.fbe_size()) <= fbe_struct_size)
-        f1000.get(fbe_value.f1000);
+        f1000.get(fbe_value.f1000, resource);
     else
         fbe_value.f1000 = ::test::EnumSimple();
     fbe_current_size += f1000.fbe_size();
 
     if ((fbe_current_size + f1001.fbe_size()) <= fbe_struct_size)
-        f1001.get(fbe_value.f1001);
+        f1001.get(fbe_value.f1001, resource);
     else
         fbe_value.f1001 = std::nullopt;
     fbe_current_size += f1001.fbe_size();
 
     if ((fbe_current_size + f1002.fbe_size()) <= fbe_struct_size)
-        f1002.get(fbe_value.f1002, EnumTyped::ENUM_VALUE_2);
+        f1002.get(fbe_value.f1002, resource, EnumTyped::ENUM_VALUE_2);
     else
         fbe_value.f1002 = EnumTyped::ENUM_VALUE_2;
     fbe_current_size += f1002.fbe_size();
 
     if ((fbe_current_size + f1003.fbe_size()) <= fbe_struct_size)
-        f1003.get(fbe_value.f1003, std::nullopt);
+        f1003.get(fbe_value.f1003, resource, std::nullopt);
     else
         fbe_value.f1003 = std::nullopt;
     fbe_current_size += f1003.fbe_size();
 
     if ((fbe_current_size + f1004.fbe_size()) <= fbe_struct_size)
-        f1004.get(fbe_value.f1004);
+        f1004.get(fbe_value.f1004, resource);
     else
         fbe_value.f1004 = ::test::FlagsSimple();
     fbe_current_size += f1004.fbe_size();
 
     if ((fbe_current_size + f1005.fbe_size()) <= fbe_struct_size)
-        f1005.get(fbe_value.f1005);
+        f1005.get(fbe_value.f1005, resource);
     else
         fbe_value.f1005 = std::nullopt;
     fbe_current_size += f1005.fbe_size();
 
     if ((fbe_current_size + f1006.fbe_size()) <= fbe_struct_size)
-        f1006.get(fbe_value.f1006, FlagsTyped::FLAG_VALUE_2  |  FlagsTyped::FLAG_VALUE_4  |  FlagsTyped::FLAG_VALUE_6);
+        f1006.get(fbe_value.f1006, resource, FlagsTyped::FLAG_VALUE_2  |  FlagsTyped::FLAG_VALUE_4  |  FlagsTyped::FLAG_VALUE_6);
     else
         fbe_value.f1006 = FlagsTyped::FLAG_VALUE_2  |  FlagsTyped::FLAG_VALUE_4  |  FlagsTyped::FLAG_VALUE_6;
     fbe_current_size += f1006.fbe_size();
 
     if ((fbe_current_size + f1007.fbe_size()) <= fbe_struct_size)
-        f1007.get(fbe_value.f1007, std::nullopt);
+        f1007.get(fbe_value.f1007, resource, std::nullopt);
     else
         fbe_value.f1007 = std::nullopt;
     fbe_current_size += f1007.fbe_size();
 
     if ((fbe_current_size + f1008.fbe_size()) <= fbe_struct_size)
-        f1008.get(fbe_value.f1008);
+        f1008.get(fbe_value.f1008, resource);
     else
         fbe_value.f1008 = ::test::StructSimple();
     fbe_current_size += f1008.fbe_size();
 
     if ((fbe_current_size + f1009.fbe_size()) <= fbe_struct_size)
-        f1009.get(fbe_value.f1009);
+        f1009.get(fbe_value.f1009, resource);
     else
         fbe_value.f1009 = std::nullopt;
     fbe_current_size += f1009.fbe_size();
 
     if ((fbe_current_size + f1010.fbe_size()) <= fbe_struct_size)
-        f1010.get(fbe_value.f1010);
+        f1010.get(fbe_value.f1010, resource);
     else
         fbe_value.f1010 = ::test::StructOptional();
     fbe_current_size += f1010.fbe_size();
 
     if ((fbe_current_size + f1011.fbe_size()) <= fbe_struct_size)
-        f1011.get(fbe_value.f1011, std::nullopt);
+        f1011.get(fbe_value.f1011, resource, std::nullopt);
     else
         fbe_value.f1011 = std::nullopt;
     fbe_current_size += f1011.fbe_size();
@@ -2496,31 +2496,31 @@ void FieldModel<::test::StructNested>::set_end(size_t fbe_begin)
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModel<::test::StructNested>::set(const ::test::StructNested& fbe_value) noexcept
+void FieldModel<::test::StructNested>::set(const ::test::StructNested& fbe_value, pmr::memory_resource* resource) noexcept
 {
     size_t fbe_begin = set_begin();
     if (fbe_begin == 0)
         return;
 
-    set_fields(fbe_value);
+    set_fields(fbe_value, resource);
     set_end(fbe_begin);
 }
 
-void FieldModel<::test::StructNested>::set_fields([[maybe_unused]] const ::test::StructNested& fbe_value) noexcept
+void FieldModel<::test::StructNested>::set_fields([[maybe_unused]] const ::test::StructNested& fbe_value, pmr::memory_resource* resource) noexcept
 {
-    parent.set_fields(fbe_value);
-    f1000.set(fbe_value.f1000);
-    f1001.set(fbe_value.f1001);
-    f1002.set(fbe_value.f1002);
-    f1003.set(fbe_value.f1003);
-    f1004.set(fbe_value.f1004);
-    f1005.set(fbe_value.f1005);
-    f1006.set(fbe_value.f1006);
-    f1007.set(fbe_value.f1007);
-    f1008.set(fbe_value.f1008);
-    f1009.set(fbe_value.f1009);
-    f1010.set(fbe_value.f1010);
-    f1011.set(fbe_value.f1011);
+    parent.set_fields(fbe_value, resource);
+    f1000.set(fbe_value.f1000, resource);
+    f1001.set(fbe_value.f1001, resource);
+    f1002.set(fbe_value.f1002, resource);
+    f1003.set(fbe_value.f1003, resource);
+    f1004.set(fbe_value.f1004, resource);
+    f1005.set(fbe_value.f1005, resource);
+    f1006.set(fbe_value.f1006, resource);
+    f1007.set(fbe_value.f1007, resource);
+    f1008.set(fbe_value.f1008, resource);
+    f1009.set(fbe_value.f1009, resource);
+    f1010.set(fbe_value.f1010, resource);
+    f1011.set(fbe_value.f1011, resource);
 }
 
 namespace test {
@@ -2551,15 +2551,15 @@ size_t StructNestedModel::create_end(size_t fbe_begin)
     return fbe_full_size;
 }
 
-size_t StructNestedModel::serialize(const ::test::StructNested& value)
+size_t StructNestedModel::serialize(const ::test::StructNested& value, pmr::memory_resource* resource)
 {
     size_t fbe_begin = create_begin();
-    model.set(value);
+    model.set(value, resource);
     size_t fbe_full_size = create_end(fbe_begin);
     return fbe_full_size;
 }
 
-size_t StructNestedModel::deserialize(::test::StructNested& value) const noexcept
+size_t StructNestedModel::deserialize(::test::StructNested& value, pmr::memory_resource* resource) const noexcept
 {
     if ((this->buffer().offset() + model.fbe_offset() - 4) > this->buffer().size())
         return 0;
@@ -2569,7 +2569,7 @@ size_t StructNestedModel::deserialize(::test::StructNested& value) const noexcep
     if (fbe_full_size < model.fbe_size())
         return 0;
 
-    model.get(value);
+    model.get(value, resource);
     return fbe_full_size;
 }
 
@@ -2685,35 +2685,35 @@ void FieldModel<::test::StructBytes>::get_end(size_t fbe_begin) const noexcept
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModel<::test::StructBytes>::get(::test::StructBytes& fbe_value) const noexcept
+void FieldModel<::test::StructBytes>::get(::test::StructBytes& fbe_value, pmr::memory_resource* resource) const noexcept
 {
     size_t fbe_begin = get_begin();
     if (fbe_begin == 0)
         return;
 
     uint32_t fbe_struct_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset());
-    get_fields(fbe_value, fbe_struct_size);
+    get_fields(fbe_value, fbe_struct_size, resource);
     get_end(fbe_begin);
 }
 
-void FieldModel<::test::StructBytes>::get_fields([[maybe_unused]] ::test::StructBytes& fbe_value, [[maybe_unused]] size_t fbe_struct_size) const noexcept
+void FieldModel<::test::StructBytes>::get_fields([[maybe_unused]] ::test::StructBytes& fbe_value, [[maybe_unused]] size_t fbe_struct_size, pmr::memory_resource* resource) const noexcept
 {
     size_t fbe_current_size = 4 + 4;
 
     if ((fbe_current_size + f1.fbe_size()) <= fbe_struct_size)
-        f1.get(fbe_value.f1);
+        f1.get(fbe_value.f1, resource);
     else
         fbe_value.f1.clear();
     fbe_current_size += f1.fbe_size();
 
     if ((fbe_current_size + f2.fbe_size()) <= fbe_struct_size)
-        f2.get(fbe_value.f2);
+        f2.get(fbe_value.f2, resource);
     else
         fbe_value.f2 = std::nullopt;
     fbe_current_size += f2.fbe_size();
 
     if ((fbe_current_size + f3.fbe_size()) <= fbe_struct_size)
-        f3.get(fbe_value.f3, std::nullopt);
+        f3.get(fbe_value.f3, resource, std::nullopt);
     else
         fbe_value.f3 = std::nullopt;
     fbe_current_size += f3.fbe_size();
@@ -2744,21 +2744,21 @@ void FieldModel<::test::StructBytes>::set_end(size_t fbe_begin)
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModel<::test::StructBytes>::set(const ::test::StructBytes& fbe_value) noexcept
+void FieldModel<::test::StructBytes>::set(const ::test::StructBytes& fbe_value, pmr::memory_resource* resource) noexcept
 {
     size_t fbe_begin = set_begin();
     if (fbe_begin == 0)
         return;
 
-    set_fields(fbe_value);
+    set_fields(fbe_value, resource);
     set_end(fbe_begin);
 }
 
-void FieldModel<::test::StructBytes>::set_fields([[maybe_unused]] const ::test::StructBytes& fbe_value) noexcept
+void FieldModel<::test::StructBytes>::set_fields([[maybe_unused]] const ::test::StructBytes& fbe_value, pmr::memory_resource* resource) noexcept
 {
-    f1.set(fbe_value.f1);
-    f2.set(fbe_value.f2);
-    f3.set(fbe_value.f3);
+    f1.set(fbe_value.f1, resource);
+    f2.set(fbe_value.f2, resource);
+    f3.set(fbe_value.f3, resource);
 }
 
 namespace test {
@@ -2789,15 +2789,15 @@ size_t StructBytesModel::create_end(size_t fbe_begin)
     return fbe_full_size;
 }
 
-size_t StructBytesModel::serialize(const ::test::StructBytes& value)
+size_t StructBytesModel::serialize(const ::test::StructBytes& value, pmr::memory_resource* resource)
 {
     size_t fbe_begin = create_begin();
-    model.set(value);
+    model.set(value, resource);
     size_t fbe_full_size = create_end(fbe_begin);
     return fbe_full_size;
 }
 
-size_t StructBytesModel::deserialize(::test::StructBytes& value) const noexcept
+size_t StructBytesModel::deserialize(::test::StructBytes& value, pmr::memory_resource* resource) const noexcept
 {
     if ((this->buffer().offset() + model.fbe_offset() - 4) > this->buffer().size())
         return 0;
@@ -2807,7 +2807,7 @@ size_t StructBytesModel::deserialize(::test::StructBytes& value) const noexcept
     if (fbe_full_size < model.fbe_size())
         return 0;
 
-    model.get(value);
+    model.get(value, resource);
     return fbe_full_size;
 }
 
@@ -2986,68 +2986,68 @@ void FieldModel<::test::StructArray>::get_end(size_t fbe_begin) const noexcept
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModel<::test::StructArray>::get(::test::StructArray& fbe_value) const noexcept
+void FieldModel<::test::StructArray>::get(::test::StructArray& fbe_value, pmr::memory_resource* resource) const noexcept
 {
     size_t fbe_begin = get_begin();
     if (fbe_begin == 0)
         return;
 
     uint32_t fbe_struct_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset());
-    get_fields(fbe_value, fbe_struct_size);
+    get_fields(fbe_value, fbe_struct_size, resource);
     get_end(fbe_begin);
 }
 
-void FieldModel<::test::StructArray>::get_fields([[maybe_unused]] ::test::StructArray& fbe_value, [[maybe_unused]] size_t fbe_struct_size) const noexcept
+void FieldModel<::test::StructArray>::get_fields([[maybe_unused]] ::test::StructArray& fbe_value, [[maybe_unused]] size_t fbe_struct_size, pmr::memory_resource* resource) const noexcept
 {
     size_t fbe_current_size = 4 + 4;
 
     if ((fbe_current_size + f1.fbe_size()) <= fbe_struct_size)
-        f1.get(fbe_value.f1);
+        f1.get(fbe_value.f1, resource);
     else
     fbe_current_size += f1.fbe_size();
 
     if ((fbe_current_size + f2.fbe_size()) <= fbe_struct_size)
-        f2.get(fbe_value.f2);
+        f2.get(fbe_value.f2, resource);
     else
     fbe_current_size += f2.fbe_size();
 
     if ((fbe_current_size + f3.fbe_size()) <= fbe_struct_size)
-        f3.get(fbe_value.f3);
+        f3.get(fbe_value.f3, resource);
     else
     fbe_current_size += f3.fbe_size();
 
     if ((fbe_current_size + f4.fbe_size()) <= fbe_struct_size)
-        f4.get(fbe_value.f4);
+        f4.get(fbe_value.f4, resource);
     else
     fbe_current_size += f4.fbe_size();
 
     if ((fbe_current_size + f5.fbe_size()) <= fbe_struct_size)
-        f5.get(fbe_value.f5);
+        f5.get(fbe_value.f5, resource);
     else
     fbe_current_size += f5.fbe_size();
 
     if ((fbe_current_size + f6.fbe_size()) <= fbe_struct_size)
-        f6.get(fbe_value.f6);
+        f6.get(fbe_value.f6, resource);
     else
     fbe_current_size += f6.fbe_size();
 
     if ((fbe_current_size + f7.fbe_size()) <= fbe_struct_size)
-        f7.get(fbe_value.f7);
+        f7.get(fbe_value.f7, resource);
     else
     fbe_current_size += f7.fbe_size();
 
     if ((fbe_current_size + f8.fbe_size()) <= fbe_struct_size)
-        f8.get(fbe_value.f8);
+        f8.get(fbe_value.f8, resource);
     else
     fbe_current_size += f8.fbe_size();
 
     if ((fbe_current_size + f9.fbe_size()) <= fbe_struct_size)
-        f9.get(fbe_value.f9);
+        f9.get(fbe_value.f9, resource);
     else
     fbe_current_size += f9.fbe_size();
 
     if ((fbe_current_size + f10.fbe_size()) <= fbe_struct_size)
-        f10.get(fbe_value.f10);
+        f10.get(fbe_value.f10, resource);
     else
     fbe_current_size += f10.fbe_size();
 }
@@ -3077,28 +3077,28 @@ void FieldModel<::test::StructArray>::set_end(size_t fbe_begin)
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModel<::test::StructArray>::set(const ::test::StructArray& fbe_value) noexcept
+void FieldModel<::test::StructArray>::set(const ::test::StructArray& fbe_value, pmr::memory_resource* resource) noexcept
 {
     size_t fbe_begin = set_begin();
     if (fbe_begin == 0)
         return;
 
-    set_fields(fbe_value);
+    set_fields(fbe_value, resource);
     set_end(fbe_begin);
 }
 
-void FieldModel<::test::StructArray>::set_fields([[maybe_unused]] const ::test::StructArray& fbe_value) noexcept
+void FieldModel<::test::StructArray>::set_fields([[maybe_unused]] const ::test::StructArray& fbe_value, pmr::memory_resource* resource) noexcept
 {
-    f1.set(fbe_value.f1);
-    f2.set(fbe_value.f2);
-    f3.set(fbe_value.f3);
-    f4.set(fbe_value.f4);
-    f5.set(fbe_value.f5);
-    f6.set(fbe_value.f6);
-    f7.set(fbe_value.f7);
-    f8.set(fbe_value.f8);
-    f9.set(fbe_value.f9);
-    f10.set(fbe_value.f10);
+    f1.set(fbe_value.f1, resource);
+    f2.set(fbe_value.f2, resource);
+    f3.set(fbe_value.f3, resource);
+    f4.set(fbe_value.f4, resource);
+    f5.set(fbe_value.f5, resource);
+    f6.set(fbe_value.f6, resource);
+    f7.set(fbe_value.f7, resource);
+    f8.set(fbe_value.f8, resource);
+    f9.set(fbe_value.f9, resource);
+    f10.set(fbe_value.f10, resource);
 }
 
 namespace test {
@@ -3129,15 +3129,15 @@ size_t StructArrayModel::create_end(size_t fbe_begin)
     return fbe_full_size;
 }
 
-size_t StructArrayModel::serialize(const ::test::StructArray& value)
+size_t StructArrayModel::serialize(const ::test::StructArray& value, pmr::memory_resource* resource)
 {
     size_t fbe_begin = create_begin();
-    model.set(value);
+    model.set(value, resource);
     size_t fbe_full_size = create_end(fbe_begin);
     return fbe_full_size;
 }
 
-size_t StructArrayModel::deserialize(::test::StructArray& value) const noexcept
+size_t StructArrayModel::deserialize(::test::StructArray& value, pmr::memory_resource* resource) const noexcept
 {
     if ((this->buffer().offset() + model.fbe_offset() - 4) > this->buffer().size())
         return 0;
@@ -3147,7 +3147,7 @@ size_t StructArrayModel::deserialize(::test::StructArray& value) const noexcept
     if (fbe_full_size < model.fbe_size())
         return 0;
 
-    model.get(value);
+    model.get(value, resource);
     return fbe_full_size;
 }
 
@@ -3326,77 +3326,77 @@ void FieldModel<::test::StructVector>::get_end(size_t fbe_begin) const noexcept
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModel<::test::StructVector>::get(::test::StructVector& fbe_value) const noexcept
+void FieldModel<::test::StructVector>::get(::test::StructVector& fbe_value, pmr::memory_resource* resource) const noexcept
 {
     size_t fbe_begin = get_begin();
     if (fbe_begin == 0)
         return;
 
     uint32_t fbe_struct_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset());
-    get_fields(fbe_value, fbe_struct_size);
+    get_fields(fbe_value, fbe_struct_size, resource);
     get_end(fbe_begin);
 }
 
-void FieldModel<::test::StructVector>::get_fields([[maybe_unused]] ::test::StructVector& fbe_value, [[maybe_unused]] size_t fbe_struct_size) const noexcept
+void FieldModel<::test::StructVector>::get_fields([[maybe_unused]] ::test::StructVector& fbe_value, [[maybe_unused]] size_t fbe_struct_size, pmr::memory_resource* resource) const noexcept
 {
     size_t fbe_current_size = 4 + 4;
 
     if ((fbe_current_size + f1.fbe_size()) <= fbe_struct_size)
-        f1.get(fbe_value.f1);
+        f1.get(fbe_value.f1, resource);
     else
         fbe_value.f1.clear();
     fbe_current_size += f1.fbe_size();
 
     if ((fbe_current_size + f2.fbe_size()) <= fbe_struct_size)
-        f2.get(fbe_value.f2);
+        f2.get(fbe_value.f2, resource);
     else
         fbe_value.f2.clear();
     fbe_current_size += f2.fbe_size();
 
     if ((fbe_current_size + f3.fbe_size()) <= fbe_struct_size)
-        f3.get(fbe_value.f3);
+        f3.get(fbe_value.f3, resource);
     else
         fbe_value.f3.clear();
     fbe_current_size += f3.fbe_size();
 
     if ((fbe_current_size + f4.fbe_size()) <= fbe_struct_size)
-        f4.get(fbe_value.f4);
+        f4.get(fbe_value.f4, resource);
     else
         fbe_value.f4.clear();
     fbe_current_size += f4.fbe_size();
 
     if ((fbe_current_size + f5.fbe_size()) <= fbe_struct_size)
-        f5.get(fbe_value.f5);
+        f5.get(fbe_value.f5, resource);
     else
         fbe_value.f5.clear();
     fbe_current_size += f5.fbe_size();
 
     if ((fbe_current_size + f6.fbe_size()) <= fbe_struct_size)
-        f6.get(fbe_value.f6);
+        f6.get(fbe_value.f6, resource);
     else
         fbe_value.f6.clear();
     fbe_current_size += f6.fbe_size();
 
     if ((fbe_current_size + f7.fbe_size()) <= fbe_struct_size)
-        f7.get(fbe_value.f7);
+        f7.get(fbe_value.f7, resource);
     else
         fbe_value.f7.clear();
     fbe_current_size += f7.fbe_size();
 
     if ((fbe_current_size + f8.fbe_size()) <= fbe_struct_size)
-        f8.get(fbe_value.f8);
+        f8.get(fbe_value.f8, resource);
     else
         fbe_value.f8.clear();
     fbe_current_size += f8.fbe_size();
 
     if ((fbe_current_size + f9.fbe_size()) <= fbe_struct_size)
-        f9.get(fbe_value.f9);
+        f9.get(fbe_value.f9, resource);
     else
         fbe_value.f9.clear();
     fbe_current_size += f9.fbe_size();
 
     if ((fbe_current_size + f10.fbe_size()) <= fbe_struct_size)
-        f10.get(fbe_value.f10);
+        f10.get(fbe_value.f10, resource);
     else
         fbe_value.f10.clear();
     fbe_current_size += f10.fbe_size();
@@ -3427,28 +3427,28 @@ void FieldModel<::test::StructVector>::set_end(size_t fbe_begin)
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModel<::test::StructVector>::set(const ::test::StructVector& fbe_value) noexcept
+void FieldModel<::test::StructVector>::set(const ::test::StructVector& fbe_value, pmr::memory_resource* resource) noexcept
 {
     size_t fbe_begin = set_begin();
     if (fbe_begin == 0)
         return;
 
-    set_fields(fbe_value);
+    set_fields(fbe_value, resource);
     set_end(fbe_begin);
 }
 
-void FieldModel<::test::StructVector>::set_fields([[maybe_unused]] const ::test::StructVector& fbe_value) noexcept
+void FieldModel<::test::StructVector>::set_fields([[maybe_unused]] const ::test::StructVector& fbe_value, pmr::memory_resource* resource) noexcept
 {
-    f1.set(fbe_value.f1);
-    f2.set(fbe_value.f2);
-    f3.set(fbe_value.f3);
-    f4.set(fbe_value.f4);
-    f5.set(fbe_value.f5);
-    f6.set(fbe_value.f6);
-    f7.set(fbe_value.f7);
-    f8.set(fbe_value.f8);
-    f9.set(fbe_value.f9);
-    f10.set(fbe_value.f10);
+    f1.set(fbe_value.f1, resource);
+    f2.set(fbe_value.f2, resource);
+    f3.set(fbe_value.f3, resource);
+    f4.set(fbe_value.f4, resource);
+    f5.set(fbe_value.f5, resource);
+    f6.set(fbe_value.f6, resource);
+    f7.set(fbe_value.f7, resource);
+    f8.set(fbe_value.f8, resource);
+    f9.set(fbe_value.f9, resource);
+    f10.set(fbe_value.f10, resource);
 }
 
 namespace test {
@@ -3479,15 +3479,15 @@ size_t StructVectorModel::create_end(size_t fbe_begin)
     return fbe_full_size;
 }
 
-size_t StructVectorModel::serialize(const ::test::StructVector& value)
+size_t StructVectorModel::serialize(const ::test::StructVector& value, pmr::memory_resource* resource)
 {
     size_t fbe_begin = create_begin();
-    model.set(value);
+    model.set(value, resource);
     size_t fbe_full_size = create_end(fbe_begin);
     return fbe_full_size;
 }
 
-size_t StructVectorModel::deserialize(::test::StructVector& value) const noexcept
+size_t StructVectorModel::deserialize(::test::StructVector& value, pmr::memory_resource* resource) const noexcept
 {
     if ((this->buffer().offset() + model.fbe_offset() - 4) > this->buffer().size())
         return 0;
@@ -3497,7 +3497,7 @@ size_t StructVectorModel::deserialize(::test::StructVector& value) const noexcep
     if (fbe_full_size < model.fbe_size())
         return 0;
 
-    model.get(value);
+    model.get(value, resource);
     return fbe_full_size;
 }
 
@@ -3676,77 +3676,77 @@ void FieldModel<::test::StructList>::get_end(size_t fbe_begin) const noexcept
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModel<::test::StructList>::get(::test::StructList& fbe_value) const noexcept
+void FieldModel<::test::StructList>::get(::test::StructList& fbe_value, pmr::memory_resource* resource) const noexcept
 {
     size_t fbe_begin = get_begin();
     if (fbe_begin == 0)
         return;
 
     uint32_t fbe_struct_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset());
-    get_fields(fbe_value, fbe_struct_size);
+    get_fields(fbe_value, fbe_struct_size, resource);
     get_end(fbe_begin);
 }
 
-void FieldModel<::test::StructList>::get_fields([[maybe_unused]] ::test::StructList& fbe_value, [[maybe_unused]] size_t fbe_struct_size) const noexcept
+void FieldModel<::test::StructList>::get_fields([[maybe_unused]] ::test::StructList& fbe_value, [[maybe_unused]] size_t fbe_struct_size, pmr::memory_resource* resource) const noexcept
 {
     size_t fbe_current_size = 4 + 4;
 
     if ((fbe_current_size + f1.fbe_size()) <= fbe_struct_size)
-        f1.get(fbe_value.f1);
+        f1.get(fbe_value.f1, resource);
     else
         fbe_value.f1.clear();
     fbe_current_size += f1.fbe_size();
 
     if ((fbe_current_size + f2.fbe_size()) <= fbe_struct_size)
-        f2.get(fbe_value.f2);
+        f2.get(fbe_value.f2, resource);
     else
         fbe_value.f2.clear();
     fbe_current_size += f2.fbe_size();
 
     if ((fbe_current_size + f3.fbe_size()) <= fbe_struct_size)
-        f3.get(fbe_value.f3);
+        f3.get(fbe_value.f3, resource);
     else
         fbe_value.f3.clear();
     fbe_current_size += f3.fbe_size();
 
     if ((fbe_current_size + f4.fbe_size()) <= fbe_struct_size)
-        f4.get(fbe_value.f4);
+        f4.get(fbe_value.f4, resource);
     else
         fbe_value.f4.clear();
     fbe_current_size += f4.fbe_size();
 
     if ((fbe_current_size + f5.fbe_size()) <= fbe_struct_size)
-        f5.get(fbe_value.f5);
+        f5.get(fbe_value.f5, resource);
     else
         fbe_value.f5.clear();
     fbe_current_size += f5.fbe_size();
 
     if ((fbe_current_size + f6.fbe_size()) <= fbe_struct_size)
-        f6.get(fbe_value.f6);
+        f6.get(fbe_value.f6, resource);
     else
         fbe_value.f6.clear();
     fbe_current_size += f6.fbe_size();
 
     if ((fbe_current_size + f7.fbe_size()) <= fbe_struct_size)
-        f7.get(fbe_value.f7);
+        f7.get(fbe_value.f7, resource);
     else
         fbe_value.f7.clear();
     fbe_current_size += f7.fbe_size();
 
     if ((fbe_current_size + f8.fbe_size()) <= fbe_struct_size)
-        f8.get(fbe_value.f8);
+        f8.get(fbe_value.f8, resource);
     else
         fbe_value.f8.clear();
     fbe_current_size += f8.fbe_size();
 
     if ((fbe_current_size + f9.fbe_size()) <= fbe_struct_size)
-        f9.get(fbe_value.f9);
+        f9.get(fbe_value.f9, resource);
     else
         fbe_value.f9.clear();
     fbe_current_size += f9.fbe_size();
 
     if ((fbe_current_size + f10.fbe_size()) <= fbe_struct_size)
-        f10.get(fbe_value.f10);
+        f10.get(fbe_value.f10, resource);
     else
         fbe_value.f10.clear();
     fbe_current_size += f10.fbe_size();
@@ -3777,28 +3777,28 @@ void FieldModel<::test::StructList>::set_end(size_t fbe_begin)
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModel<::test::StructList>::set(const ::test::StructList& fbe_value) noexcept
+void FieldModel<::test::StructList>::set(const ::test::StructList& fbe_value, pmr::memory_resource* resource) noexcept
 {
     size_t fbe_begin = set_begin();
     if (fbe_begin == 0)
         return;
 
-    set_fields(fbe_value);
+    set_fields(fbe_value, resource);
     set_end(fbe_begin);
 }
 
-void FieldModel<::test::StructList>::set_fields([[maybe_unused]] const ::test::StructList& fbe_value) noexcept
+void FieldModel<::test::StructList>::set_fields([[maybe_unused]] const ::test::StructList& fbe_value, pmr::memory_resource* resource) noexcept
 {
-    f1.set(fbe_value.f1);
-    f2.set(fbe_value.f2);
-    f3.set(fbe_value.f3);
-    f4.set(fbe_value.f4);
-    f5.set(fbe_value.f5);
-    f6.set(fbe_value.f6);
-    f7.set(fbe_value.f7);
-    f8.set(fbe_value.f8);
-    f9.set(fbe_value.f9);
-    f10.set(fbe_value.f10);
+    f1.set(fbe_value.f1, resource);
+    f2.set(fbe_value.f2, resource);
+    f3.set(fbe_value.f3, resource);
+    f4.set(fbe_value.f4, resource);
+    f5.set(fbe_value.f5, resource);
+    f6.set(fbe_value.f6, resource);
+    f7.set(fbe_value.f7, resource);
+    f8.set(fbe_value.f8, resource);
+    f9.set(fbe_value.f9, resource);
+    f10.set(fbe_value.f10, resource);
 }
 
 namespace test {
@@ -3829,15 +3829,15 @@ size_t StructListModel::create_end(size_t fbe_begin)
     return fbe_full_size;
 }
 
-size_t StructListModel::serialize(const ::test::StructList& value)
+size_t StructListModel::serialize(const ::test::StructList& value, pmr::memory_resource* resource)
 {
     size_t fbe_begin = create_begin();
-    model.set(value);
+    model.set(value, resource);
     size_t fbe_full_size = create_end(fbe_begin);
     return fbe_full_size;
 }
 
-size_t StructListModel::deserialize(::test::StructList& value) const noexcept
+size_t StructListModel::deserialize(::test::StructList& value, pmr::memory_resource* resource) const noexcept
 {
     if ((this->buffer().offset() + model.fbe_offset() - 4) > this->buffer().size())
         return 0;
@@ -3847,7 +3847,7 @@ size_t StructListModel::deserialize(::test::StructList& value) const noexcept
     if (fbe_full_size < model.fbe_size())
         return 0;
 
-    model.get(value);
+    model.get(value, resource);
     return fbe_full_size;
 }
 
@@ -3972,41 +3972,41 @@ void FieldModel<::test::StructSet>::get_end(size_t fbe_begin) const noexcept
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModel<::test::StructSet>::get(::test::StructSet& fbe_value) const noexcept
+void FieldModel<::test::StructSet>::get(::test::StructSet& fbe_value, pmr::memory_resource* resource) const noexcept
 {
     size_t fbe_begin = get_begin();
     if (fbe_begin == 0)
         return;
 
     uint32_t fbe_struct_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset());
-    get_fields(fbe_value, fbe_struct_size);
+    get_fields(fbe_value, fbe_struct_size, resource);
     get_end(fbe_begin);
 }
 
-void FieldModel<::test::StructSet>::get_fields([[maybe_unused]] ::test::StructSet& fbe_value, [[maybe_unused]] size_t fbe_struct_size) const noexcept
+void FieldModel<::test::StructSet>::get_fields([[maybe_unused]] ::test::StructSet& fbe_value, [[maybe_unused]] size_t fbe_struct_size, pmr::memory_resource* resource) const noexcept
 {
     size_t fbe_current_size = 4 + 4;
 
     if ((fbe_current_size + f1.fbe_size()) <= fbe_struct_size)
-        f1.get(fbe_value.f1);
+        f1.get(fbe_value.f1, resource);
     else
         fbe_value.f1.clear();
     fbe_current_size += f1.fbe_size();
 
     if ((fbe_current_size + f2.fbe_size()) <= fbe_struct_size)
-        f2.get(fbe_value.f2);
+        f2.get(fbe_value.f2, resource);
     else
         fbe_value.f2.clear();
     fbe_current_size += f2.fbe_size();
 
     if ((fbe_current_size + f3.fbe_size()) <= fbe_struct_size)
-        f3.get(fbe_value.f3);
+        f3.get(fbe_value.f3, resource);
     else
         fbe_value.f3.clear();
     fbe_current_size += f3.fbe_size();
 
     if ((fbe_current_size + f4.fbe_size()) <= fbe_struct_size)
-        f4.get(fbe_value.f4);
+        f4.get(fbe_value.f4, resource);
     else
         fbe_value.f4.clear();
     fbe_current_size += f4.fbe_size();
@@ -4037,22 +4037,22 @@ void FieldModel<::test::StructSet>::set_end(size_t fbe_begin)
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModel<::test::StructSet>::set(const ::test::StructSet& fbe_value) noexcept
+void FieldModel<::test::StructSet>::set(const ::test::StructSet& fbe_value, pmr::memory_resource* resource) noexcept
 {
     size_t fbe_begin = set_begin();
     if (fbe_begin == 0)
         return;
 
-    set_fields(fbe_value);
+    set_fields(fbe_value, resource);
     set_end(fbe_begin);
 }
 
-void FieldModel<::test::StructSet>::set_fields([[maybe_unused]] const ::test::StructSet& fbe_value) noexcept
+void FieldModel<::test::StructSet>::set_fields([[maybe_unused]] const ::test::StructSet& fbe_value, pmr::memory_resource* resource) noexcept
 {
-    f1.set(fbe_value.f1);
-    f2.set(fbe_value.f2);
-    f3.set(fbe_value.f3);
-    f4.set(fbe_value.f4);
+    f1.set(fbe_value.f1, resource);
+    f2.set(fbe_value.f2, resource);
+    f3.set(fbe_value.f3, resource);
+    f4.set(fbe_value.f4, resource);
 }
 
 namespace test {
@@ -4083,15 +4083,15 @@ size_t StructSetModel::create_end(size_t fbe_begin)
     return fbe_full_size;
 }
 
-size_t StructSetModel::serialize(const ::test::StructSet& value)
+size_t StructSetModel::serialize(const ::test::StructSet& value, pmr::memory_resource* resource)
 {
     size_t fbe_begin = create_begin();
-    model.set(value);
+    model.set(value, resource);
     size_t fbe_full_size = create_end(fbe_begin);
     return fbe_full_size;
 }
 
-size_t StructSetModel::deserialize(::test::StructSet& value) const noexcept
+size_t StructSetModel::deserialize(::test::StructSet& value, pmr::memory_resource* resource) const noexcept
 {
     if ((this->buffer().offset() + model.fbe_offset() - 4) > this->buffer().size())
         return 0;
@@ -4101,7 +4101,7 @@ size_t StructSetModel::deserialize(::test::StructSet& value) const noexcept
     if (fbe_full_size < model.fbe_size())
         return 0;
 
-    model.get(value);
+    model.get(value, resource);
     return fbe_full_size;
 }
 
@@ -4280,77 +4280,77 @@ void FieldModel<::test::StructMap>::get_end(size_t fbe_begin) const noexcept
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModel<::test::StructMap>::get(::test::StructMap& fbe_value) const noexcept
+void FieldModel<::test::StructMap>::get(::test::StructMap& fbe_value, pmr::memory_resource* resource) const noexcept
 {
     size_t fbe_begin = get_begin();
     if (fbe_begin == 0)
         return;
 
     uint32_t fbe_struct_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset());
-    get_fields(fbe_value, fbe_struct_size);
+    get_fields(fbe_value, fbe_struct_size, resource);
     get_end(fbe_begin);
 }
 
-void FieldModel<::test::StructMap>::get_fields([[maybe_unused]] ::test::StructMap& fbe_value, [[maybe_unused]] size_t fbe_struct_size) const noexcept
+void FieldModel<::test::StructMap>::get_fields([[maybe_unused]] ::test::StructMap& fbe_value, [[maybe_unused]] size_t fbe_struct_size, pmr::memory_resource* resource) const noexcept
 {
     size_t fbe_current_size = 4 + 4;
 
     if ((fbe_current_size + f1.fbe_size()) <= fbe_struct_size)
-        f1.get(fbe_value.f1);
+        f1.get(fbe_value.f1, resource);
     else
         fbe_value.f1.clear();
     fbe_current_size += f1.fbe_size();
 
     if ((fbe_current_size + f2.fbe_size()) <= fbe_struct_size)
-        f2.get(fbe_value.f2);
+        f2.get(fbe_value.f2, resource);
     else
         fbe_value.f2.clear();
     fbe_current_size += f2.fbe_size();
 
     if ((fbe_current_size + f3.fbe_size()) <= fbe_struct_size)
-        f3.get(fbe_value.f3);
+        f3.get(fbe_value.f3, resource);
     else
         fbe_value.f3.clear();
     fbe_current_size += f3.fbe_size();
 
     if ((fbe_current_size + f4.fbe_size()) <= fbe_struct_size)
-        f4.get(fbe_value.f4);
+        f4.get(fbe_value.f4, resource);
     else
         fbe_value.f4.clear();
     fbe_current_size += f4.fbe_size();
 
     if ((fbe_current_size + f5.fbe_size()) <= fbe_struct_size)
-        f5.get(fbe_value.f5);
+        f5.get(fbe_value.f5, resource);
     else
         fbe_value.f5.clear();
     fbe_current_size += f5.fbe_size();
 
     if ((fbe_current_size + f6.fbe_size()) <= fbe_struct_size)
-        f6.get(fbe_value.f6);
+        f6.get(fbe_value.f6, resource);
     else
         fbe_value.f6.clear();
     fbe_current_size += f6.fbe_size();
 
     if ((fbe_current_size + f7.fbe_size()) <= fbe_struct_size)
-        f7.get(fbe_value.f7);
+        f7.get(fbe_value.f7, resource);
     else
         fbe_value.f7.clear();
     fbe_current_size += f7.fbe_size();
 
     if ((fbe_current_size + f8.fbe_size()) <= fbe_struct_size)
-        f8.get(fbe_value.f8);
+        f8.get(fbe_value.f8, resource);
     else
         fbe_value.f8.clear();
     fbe_current_size += f8.fbe_size();
 
     if ((fbe_current_size + f9.fbe_size()) <= fbe_struct_size)
-        f9.get(fbe_value.f9);
+        f9.get(fbe_value.f9, resource);
     else
         fbe_value.f9.clear();
     fbe_current_size += f9.fbe_size();
 
     if ((fbe_current_size + f10.fbe_size()) <= fbe_struct_size)
-        f10.get(fbe_value.f10);
+        f10.get(fbe_value.f10, resource);
     else
         fbe_value.f10.clear();
     fbe_current_size += f10.fbe_size();
@@ -4381,28 +4381,28 @@ void FieldModel<::test::StructMap>::set_end(size_t fbe_begin)
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModel<::test::StructMap>::set(const ::test::StructMap& fbe_value) noexcept
+void FieldModel<::test::StructMap>::set(const ::test::StructMap& fbe_value, pmr::memory_resource* resource) noexcept
 {
     size_t fbe_begin = set_begin();
     if (fbe_begin == 0)
         return;
 
-    set_fields(fbe_value);
+    set_fields(fbe_value, resource);
     set_end(fbe_begin);
 }
 
-void FieldModel<::test::StructMap>::set_fields([[maybe_unused]] const ::test::StructMap& fbe_value) noexcept
+void FieldModel<::test::StructMap>::set_fields([[maybe_unused]] const ::test::StructMap& fbe_value, pmr::memory_resource* resource) noexcept
 {
-    f1.set(fbe_value.f1);
-    f2.set(fbe_value.f2);
-    f3.set(fbe_value.f3);
-    f4.set(fbe_value.f4);
-    f5.set(fbe_value.f5);
-    f6.set(fbe_value.f6);
-    f7.set(fbe_value.f7);
-    f8.set(fbe_value.f8);
-    f9.set(fbe_value.f9);
-    f10.set(fbe_value.f10);
+    f1.set(fbe_value.f1, resource);
+    f2.set(fbe_value.f2, resource);
+    f3.set(fbe_value.f3, resource);
+    f4.set(fbe_value.f4, resource);
+    f5.set(fbe_value.f5, resource);
+    f6.set(fbe_value.f6, resource);
+    f7.set(fbe_value.f7, resource);
+    f8.set(fbe_value.f8, resource);
+    f9.set(fbe_value.f9, resource);
+    f10.set(fbe_value.f10, resource);
 }
 
 namespace test {
@@ -4433,15 +4433,15 @@ size_t StructMapModel::create_end(size_t fbe_begin)
     return fbe_full_size;
 }
 
-size_t StructMapModel::serialize(const ::test::StructMap& value)
+size_t StructMapModel::serialize(const ::test::StructMap& value, pmr::memory_resource* resource)
 {
     size_t fbe_begin = create_begin();
-    model.set(value);
+    model.set(value, resource);
     size_t fbe_full_size = create_end(fbe_begin);
     return fbe_full_size;
 }
 
-size_t StructMapModel::deserialize(::test::StructMap& value) const noexcept
+size_t StructMapModel::deserialize(::test::StructMap& value, pmr::memory_resource* resource) const noexcept
 {
     if ((this->buffer().offset() + model.fbe_offset() - 4) > this->buffer().size())
         return 0;
@@ -4451,7 +4451,7 @@ size_t StructMapModel::deserialize(::test::StructMap& value) const noexcept
     if (fbe_full_size < model.fbe_size())
         return 0;
 
-    model.get(value);
+    model.get(value, resource);
     return fbe_full_size;
 }
 
@@ -4630,77 +4630,77 @@ void FieldModel<::test::StructHash>::get_end(size_t fbe_begin) const noexcept
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModel<::test::StructHash>::get(::test::StructHash& fbe_value) const noexcept
+void FieldModel<::test::StructHash>::get(::test::StructHash& fbe_value, pmr::memory_resource* resource) const noexcept
 {
     size_t fbe_begin = get_begin();
     if (fbe_begin == 0)
         return;
 
     uint32_t fbe_struct_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset());
-    get_fields(fbe_value, fbe_struct_size);
+    get_fields(fbe_value, fbe_struct_size, resource);
     get_end(fbe_begin);
 }
 
-void FieldModel<::test::StructHash>::get_fields([[maybe_unused]] ::test::StructHash& fbe_value, [[maybe_unused]] size_t fbe_struct_size) const noexcept
+void FieldModel<::test::StructHash>::get_fields([[maybe_unused]] ::test::StructHash& fbe_value, [[maybe_unused]] size_t fbe_struct_size, pmr::memory_resource* resource) const noexcept
 {
     size_t fbe_current_size = 4 + 4;
 
     if ((fbe_current_size + f1.fbe_size()) <= fbe_struct_size)
-        f1.get(fbe_value.f1);
+        f1.get(fbe_value.f1, resource);
     else
         fbe_value.f1.clear();
     fbe_current_size += f1.fbe_size();
 
     if ((fbe_current_size + f2.fbe_size()) <= fbe_struct_size)
-        f2.get(fbe_value.f2);
+        f2.get(fbe_value.f2, resource);
     else
         fbe_value.f2.clear();
     fbe_current_size += f2.fbe_size();
 
     if ((fbe_current_size + f3.fbe_size()) <= fbe_struct_size)
-        f3.get(fbe_value.f3);
+        f3.get(fbe_value.f3, resource);
     else
         fbe_value.f3.clear();
     fbe_current_size += f3.fbe_size();
 
     if ((fbe_current_size + f4.fbe_size()) <= fbe_struct_size)
-        f4.get(fbe_value.f4);
+        f4.get(fbe_value.f4, resource);
     else
         fbe_value.f4.clear();
     fbe_current_size += f4.fbe_size();
 
     if ((fbe_current_size + f5.fbe_size()) <= fbe_struct_size)
-        f5.get(fbe_value.f5);
+        f5.get(fbe_value.f5, resource);
     else
         fbe_value.f5.clear();
     fbe_current_size += f5.fbe_size();
 
     if ((fbe_current_size + f6.fbe_size()) <= fbe_struct_size)
-        f6.get(fbe_value.f6);
+        f6.get(fbe_value.f6, resource);
     else
         fbe_value.f6.clear();
     fbe_current_size += f6.fbe_size();
 
     if ((fbe_current_size + f7.fbe_size()) <= fbe_struct_size)
-        f7.get(fbe_value.f7);
+        f7.get(fbe_value.f7, resource);
     else
         fbe_value.f7.clear();
     fbe_current_size += f7.fbe_size();
 
     if ((fbe_current_size + f8.fbe_size()) <= fbe_struct_size)
-        f8.get(fbe_value.f8);
+        f8.get(fbe_value.f8, resource);
     else
         fbe_value.f8.clear();
     fbe_current_size += f8.fbe_size();
 
     if ((fbe_current_size + f9.fbe_size()) <= fbe_struct_size)
-        f9.get(fbe_value.f9);
+        f9.get(fbe_value.f9, resource);
     else
         fbe_value.f9.clear();
     fbe_current_size += f9.fbe_size();
 
     if ((fbe_current_size + f10.fbe_size()) <= fbe_struct_size)
-        f10.get(fbe_value.f10);
+        f10.get(fbe_value.f10, resource);
     else
         fbe_value.f10.clear();
     fbe_current_size += f10.fbe_size();
@@ -4731,28 +4731,28 @@ void FieldModel<::test::StructHash>::set_end(size_t fbe_begin)
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModel<::test::StructHash>::set(const ::test::StructHash& fbe_value) noexcept
+void FieldModel<::test::StructHash>::set(const ::test::StructHash& fbe_value, pmr::memory_resource* resource) noexcept
 {
     size_t fbe_begin = set_begin();
     if (fbe_begin == 0)
         return;
 
-    set_fields(fbe_value);
+    set_fields(fbe_value, resource);
     set_end(fbe_begin);
 }
 
-void FieldModel<::test::StructHash>::set_fields([[maybe_unused]] const ::test::StructHash& fbe_value) noexcept
+void FieldModel<::test::StructHash>::set_fields([[maybe_unused]] const ::test::StructHash& fbe_value, pmr::memory_resource* resource) noexcept
 {
-    f1.set(fbe_value.f1);
-    f2.set(fbe_value.f2);
-    f3.set(fbe_value.f3);
-    f4.set(fbe_value.f4);
-    f5.set(fbe_value.f5);
-    f6.set(fbe_value.f6);
-    f7.set(fbe_value.f7);
-    f8.set(fbe_value.f8);
-    f9.set(fbe_value.f9);
-    f10.set(fbe_value.f10);
+    f1.set(fbe_value.f1, resource);
+    f2.set(fbe_value.f2, resource);
+    f3.set(fbe_value.f3, resource);
+    f4.set(fbe_value.f4, resource);
+    f5.set(fbe_value.f5, resource);
+    f6.set(fbe_value.f6, resource);
+    f7.set(fbe_value.f7, resource);
+    f8.set(fbe_value.f8, resource);
+    f9.set(fbe_value.f9, resource);
+    f10.set(fbe_value.f10, resource);
 }
 
 namespace test {
@@ -4783,15 +4783,15 @@ size_t StructHashModel::create_end(size_t fbe_begin)
     return fbe_full_size;
 }
 
-size_t StructHashModel::serialize(const ::test::StructHash& value)
+size_t StructHashModel::serialize(const ::test::StructHash& value, pmr::memory_resource* resource)
 {
     size_t fbe_begin = create_begin();
-    model.set(value);
+    model.set(value, resource);
     size_t fbe_full_size = create_end(fbe_begin);
     return fbe_full_size;
 }
 
-size_t StructHashModel::deserialize(::test::StructHash& value) const noexcept
+size_t StructHashModel::deserialize(::test::StructHash& value, pmr::memory_resource* resource) const noexcept
 {
     if ((this->buffer().offset() + model.fbe_offset() - 4) > this->buffer().size())
         return 0;
@@ -4801,7 +4801,7 @@ size_t StructHashModel::deserialize(::test::StructHash& value) const noexcept
     if (fbe_full_size < model.fbe_size())
         return 0;
 
-    model.get(value);
+    model.get(value, resource);
     return fbe_full_size;
 }
 
@@ -4908,29 +4908,29 @@ void FieldModel<::test::StructHashEx>::get_end(size_t fbe_begin) const noexcept
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModel<::test::StructHashEx>::get(::test::StructHashEx& fbe_value) const noexcept
+void FieldModel<::test::StructHashEx>::get(::test::StructHashEx& fbe_value, pmr::memory_resource* resource) const noexcept
 {
     size_t fbe_begin = get_begin();
     if (fbe_begin == 0)
         return;
 
     uint32_t fbe_struct_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset());
-    get_fields(fbe_value, fbe_struct_size);
+    get_fields(fbe_value, fbe_struct_size, resource);
     get_end(fbe_begin);
 }
 
-void FieldModel<::test::StructHashEx>::get_fields([[maybe_unused]] ::test::StructHashEx& fbe_value, [[maybe_unused]] size_t fbe_struct_size) const noexcept
+void FieldModel<::test::StructHashEx>::get_fields([[maybe_unused]] ::test::StructHashEx& fbe_value, [[maybe_unused]] size_t fbe_struct_size, pmr::memory_resource* resource) const noexcept
 {
     size_t fbe_current_size = 4 + 4;
 
     if ((fbe_current_size + f1.fbe_size()) <= fbe_struct_size)
-        f1.get(fbe_value.f1);
+        f1.get(fbe_value.f1, resource);
     else
         fbe_value.f1.clear();
     fbe_current_size += f1.fbe_size();
 
     if ((fbe_current_size + f2.fbe_size()) <= fbe_struct_size)
-        f2.get(fbe_value.f2);
+        f2.get(fbe_value.f2, resource);
     else
         fbe_value.f2.clear();
     fbe_current_size += f2.fbe_size();
@@ -4961,20 +4961,20 @@ void FieldModel<::test::StructHashEx>::set_end(size_t fbe_begin)
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModel<::test::StructHashEx>::set(const ::test::StructHashEx& fbe_value) noexcept
+void FieldModel<::test::StructHashEx>::set(const ::test::StructHashEx& fbe_value, pmr::memory_resource* resource) noexcept
 {
     size_t fbe_begin = set_begin();
     if (fbe_begin == 0)
         return;
 
-    set_fields(fbe_value);
+    set_fields(fbe_value, resource);
     set_end(fbe_begin);
 }
 
-void FieldModel<::test::StructHashEx>::set_fields([[maybe_unused]] const ::test::StructHashEx& fbe_value) noexcept
+void FieldModel<::test::StructHashEx>::set_fields([[maybe_unused]] const ::test::StructHashEx& fbe_value, pmr::memory_resource* resource) noexcept
 {
-    f1.set(fbe_value.f1);
-    f2.set(fbe_value.f2);
+    f1.set(fbe_value.f1, resource);
+    f2.set(fbe_value.f2, resource);
 }
 
 namespace test {
@@ -5005,15 +5005,15 @@ size_t StructHashExModel::create_end(size_t fbe_begin)
     return fbe_full_size;
 }
 
-size_t StructHashExModel::serialize(const ::test::StructHashEx& value)
+size_t StructHashExModel::serialize(const ::test::StructHashEx& value, pmr::memory_resource* resource)
 {
     size_t fbe_begin = create_begin();
-    model.set(value);
+    model.set(value, resource);
     size_t fbe_full_size = create_end(fbe_begin);
     return fbe_full_size;
 }
 
-size_t StructHashExModel::deserialize(::test::StructHashEx& value) const noexcept
+size_t StructHashExModel::deserialize(::test::StructHashEx& value, pmr::memory_resource* resource) const noexcept
 {
     if ((this->buffer().offset() + model.fbe_offset() - 4) > this->buffer().size())
         return 0;
@@ -5023,7 +5023,7 @@ size_t StructHashExModel::deserialize(::test::StructHashEx& value) const noexcep
     if (fbe_full_size < model.fbe_size())
         return 0;
 
-    model.get(value);
+    model.get(value, resource);
     return fbe_full_size;
 }
 
@@ -5110,18 +5110,18 @@ void FieldModel<::test::StructEmpty>::get_end(size_t fbe_begin) const noexcept
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModel<::test::StructEmpty>::get(::test::StructEmpty& fbe_value) const noexcept
+void FieldModel<::test::StructEmpty>::get(::test::StructEmpty& fbe_value, pmr::memory_resource* resource) const noexcept
 {
     size_t fbe_begin = get_begin();
     if (fbe_begin == 0)
         return;
 
     uint32_t fbe_struct_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset());
-    get_fields(fbe_value, fbe_struct_size);
+    get_fields(fbe_value, fbe_struct_size, resource);
     get_end(fbe_begin);
 }
 
-void FieldModel<::test::StructEmpty>::get_fields([[maybe_unused]] ::test::StructEmpty& fbe_value, [[maybe_unused]] size_t fbe_struct_size) const noexcept
+void FieldModel<::test::StructEmpty>::get_fields([[maybe_unused]] ::test::StructEmpty& fbe_value, [[maybe_unused]] size_t fbe_struct_size, pmr::memory_resource* resource) const noexcept
 {
 }
 
@@ -5150,17 +5150,17 @@ void FieldModel<::test::StructEmpty>::set_end(size_t fbe_begin)
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModel<::test::StructEmpty>::set(const ::test::StructEmpty& fbe_value) noexcept
+void FieldModel<::test::StructEmpty>::set(const ::test::StructEmpty& fbe_value, pmr::memory_resource* resource) noexcept
 {
     size_t fbe_begin = set_begin();
     if (fbe_begin == 0)
         return;
 
-    set_fields(fbe_value);
+    set_fields(fbe_value, resource);
     set_end(fbe_begin);
 }
 
-void FieldModel<::test::StructEmpty>::set_fields([[maybe_unused]] const ::test::StructEmpty& fbe_value) noexcept
+void FieldModel<::test::StructEmpty>::set_fields([[maybe_unused]] const ::test::StructEmpty& fbe_value, pmr::memory_resource* resource) noexcept
 {
 }
 
@@ -5192,15 +5192,15 @@ size_t StructEmptyModel::create_end(size_t fbe_begin)
     return fbe_full_size;
 }
 
-size_t StructEmptyModel::serialize(const ::test::StructEmpty& value)
+size_t StructEmptyModel::serialize(const ::test::StructEmpty& value, pmr::memory_resource* resource)
 {
     size_t fbe_begin = create_begin();
-    model.set(value);
+    model.set(value, resource);
     size_t fbe_full_size = create_end(fbe_begin);
     return fbe_full_size;
 }
 
-size_t StructEmptyModel::deserialize(::test::StructEmpty& value) const noexcept
+size_t StructEmptyModel::deserialize(::test::StructEmpty& value, pmr::memory_resource* resource) const noexcept
 {
     if ((this->buffer().offset() + model.fbe_offset() - 4) > this->buffer().size())
         return 0;
@@ -5210,7 +5210,7 @@ size_t StructEmptyModel::deserialize(::test::StructEmpty& value) const noexcept
     if (fbe_full_size < model.fbe_size())
         return 0;
 
-    model.get(value);
+    model.get(value, resource);
     return fbe_full_size;
 }
 

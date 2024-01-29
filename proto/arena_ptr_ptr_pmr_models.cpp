@@ -84,17 +84,19 @@ void FieldModelPMRPtr_arena_ptr_Line::get_end(size_t fbe_begin) const noexcept
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModelPMRPtr_arena_ptr_Line::get(::arena_ptr_pmr::Line** fbe_value) noexcept
+void FieldModelPMRPtr_arena_ptr_Line::get(::arena_ptr_pmr::Line** fbe_value, pmr::memory_resource* resource) noexcept
 {
     size_t fbe_begin = get_begin();
     if (fbe_begin == 0)
         return;
 
-    if (ptr) delete ptr;
-    ptr = new FieldModelPMR_arena_ptr_Line(_buffer, 0);
+    pmr::polymorphic_allocator<char> allocator{resource};
+    auto* buffer = allocator.allocate(sizeof(FieldModelPMR_arena_ptr_Line));
+    ptr = new (buffer) FieldModelPMR_arena_ptr_Line(_buffer, 0);
 
-    ::arena_ptr_pmr::Line *tempModel = new ::arena_ptr_pmr::Line();
-    ptr->get(*tempModel);
+    auto * buffer2 = allocator.allocate(sizeof(::arena_ptr_pmr::Line));
+    ::arena_ptr_pmr::Line *tempModel = new (buffer2) ::arena_ptr_pmr::Line(allocator);
+    ptr->get(*tempModel, resource);
     *fbe_value = tempModel;
 
     get_end(fbe_begin);
@@ -128,17 +130,17 @@ void FieldModelPMRPtr_arena_ptr_Line::set_end(size_t fbe_begin)
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModelPMRPtr_arena_ptr_Line::set(const ::arena_ptr_pmr::Line* fbe_value) noexcept
+void FieldModelPMRPtr_arena_ptr_Line::set(const ::arena_ptr_pmr::Line* fbe_value, pmr::memory_resource* resource) noexcept
 {
     size_t fbe_begin = set_begin(fbe_value != nullptr);
     if (fbe_begin == 0)
         return;
 
     if (fbe_value != nullptr) {
-        BaseFieldModel* temp = new FieldModelPMR_arena_ptr_Line(_buffer, 0);
-        if (ptr) delete ptr;
-        ptr = temp;
-        ptr->set(*fbe_value);
+        pmr::polymorphic_allocator<char> allocator{resource};
+        auto* buffer = allocator.allocate(sizeof(FieldModelPMR_arena_ptr_Line));
+        ptr = new (buffer) FieldModelPMR_arena_ptr_Line(_buffer, 0);
+        ptr->set(*fbe_value, nullptr);
     }
 
     set_end(fbe_begin);
@@ -236,25 +238,25 @@ void FieldModelPMR_arena_ptr_Line::get_end(size_t fbe_begin) const noexcept
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModelPMR_arena_ptr_Line::get(::FBE::Base& fbe_value) noexcept
+void FieldModelPMR_arena_ptr_Line::get(::FBE::Base& fbe_value, pmr::memory_resource* resource) noexcept
 {
     size_t fbe_begin = get_begin();
     if (fbe_begin == 0)
         return;
 
     uint32_t fbe_struct_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset());
-    get_fields(fbe_value, fbe_struct_size);
+    get_fields(fbe_value, fbe_struct_size, resource);
     get_end(fbe_begin);
 }
 
-void FieldModelPMR_arena_ptr_Line::get_fields([[maybe_unused]] ::FBE::Base& base_fbe_value, [[maybe_unused]] size_t fbe_struct_size) noexcept
+void FieldModelPMR_arena_ptr_Line::get_fields([[maybe_unused]] ::FBE::Base& base_fbe_value, [[maybe_unused]] size_t fbe_struct_size, pmr::memory_resource* resource) noexcept
 {
     ::arena_ptr_pmr::Line& fbe_value = static_cast<::arena_ptr_pmr::Line&>(base_fbe_value);
     size_t fbe_current_size = 4 + 4;
 
     if ((fbe_current_size + expression.fbe_size()) <= fbe_struct_size)
         {
-            expression.get(fbe_value.expression);
+            expression.get(fbe_value.expression, resource);
         }
     else
         fbe_value.expression = ::arena_common_pmr::Expression();
@@ -286,20 +288,20 @@ void FieldModelPMR_arena_ptr_Line::set_end(size_t fbe_begin)
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModelPMR_arena_ptr_Line::set(const ::FBE::Base& fbe_value) noexcept
+void FieldModelPMR_arena_ptr_Line::set(const ::FBE::Base& fbe_value, pmr::memory_resource* resource) noexcept
 {
     size_t fbe_begin = set_begin();
     if (fbe_begin == 0)
         return;
 
-    set_fields(fbe_value);
+    set_fields(fbe_value, resource);
     set_end(fbe_begin);
 }
 
-void FieldModelPMR_arena_ptr_Line::set_fields([[maybe_unused]] const ::FBE::Base& base_fbe_value) noexcept
+void FieldModelPMR_arena_ptr_Line::set_fields([[maybe_unused]] const ::FBE::Base& base_fbe_value, pmr::memory_resource* resource) noexcept
 {
     [[maybe_unused]] const ::arena_ptr_pmr::Line& fbe_value = static_cast<const ::arena_ptr_pmr::Line&>(base_fbe_value);
-    expression.set(fbe_value.expression);
+    expression.set(fbe_value.expression, resource);
 }
 
 namespace arena_ptr_pmr {
@@ -330,15 +332,15 @@ size_t LineModel::create_end(size_t fbe_begin)
     return fbe_full_size;
 }
 
-size_t LineModel::serialize(const ::arena_ptr_pmr::Line& value)
+size_t LineModel::serialize(const ::arena_ptr_pmr::Line& value, pmr::memory_resource* resource)
 {
     size_t fbe_begin = create_begin();
-    model.set(value);
+    model.set(value, resource);
     size_t fbe_full_size = create_end(fbe_begin);
     return fbe_full_size;
 }
 
-size_t LineModel::deserialize(::arena_ptr_pmr::Line& value) noexcept
+size_t LineModel::deserialize(::arena_ptr_pmr::Line& value, pmr::memory_resource* resource) noexcept
 {
     if ((this->buffer().offset() + model.fbe_offset() - 4) > this->buffer().size())
         return 0;
@@ -348,7 +350,7 @@ size_t LineModel::deserialize(::arena_ptr_pmr::Line& value) noexcept
     if (fbe_full_size < model.fbe_size())
         return 0;
 
-    model.get(value);
+    model.get(value, resource);
     return fbe_full_size;
 }
 
@@ -429,17 +431,19 @@ void FieldModelPMRPtr_arena_ptr_Line2::get_end(size_t fbe_begin) const noexcept
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModelPMRPtr_arena_ptr_Line2::get(::arena_ptr_pmr::Line2** fbe_value) noexcept
+void FieldModelPMRPtr_arena_ptr_Line2::get(::arena_ptr_pmr::Line2** fbe_value, pmr::memory_resource* resource) noexcept
 {
     size_t fbe_begin = get_begin();
     if (fbe_begin == 0)
         return;
 
-    if (ptr) delete ptr;
-    ptr = new FieldModelPMR_arena_ptr_Line2(_buffer, 0);
+    pmr::polymorphic_allocator<char> allocator{resource};
+    auto* buffer = allocator.allocate(sizeof(FieldModelPMR_arena_ptr_Line2));
+    ptr = new (buffer) FieldModelPMR_arena_ptr_Line2(_buffer, 0);
 
-    ::arena_ptr_pmr::Line2 *tempModel = new ::arena_ptr_pmr::Line2();
-    ptr->get(*tempModel);
+    auto * buffer2 = allocator.allocate(sizeof(::arena_ptr_pmr::Line2));
+    ::arena_ptr_pmr::Line2 *tempModel = new (buffer2) ::arena_ptr_pmr::Line2(allocator);
+    ptr->get(*tempModel, resource);
     *fbe_value = tempModel;
 
     get_end(fbe_begin);
@@ -473,17 +477,17 @@ void FieldModelPMRPtr_arena_ptr_Line2::set_end(size_t fbe_begin)
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModelPMRPtr_arena_ptr_Line2::set(const ::arena_ptr_pmr::Line2* fbe_value) noexcept
+void FieldModelPMRPtr_arena_ptr_Line2::set(const ::arena_ptr_pmr::Line2* fbe_value, pmr::memory_resource* resource) noexcept
 {
     size_t fbe_begin = set_begin(fbe_value != nullptr);
     if (fbe_begin == 0)
         return;
 
     if (fbe_value != nullptr) {
-        BaseFieldModel* temp = new FieldModelPMR_arena_ptr_Line2(_buffer, 0);
-        if (ptr) delete ptr;
-        ptr = temp;
-        ptr->set(*fbe_value);
+        pmr::polymorphic_allocator<char> allocator{resource};
+        auto* buffer = allocator.allocate(sizeof(FieldModelPMR_arena_ptr_Line2));
+        ptr = new (buffer) FieldModelPMR_arena_ptr_Line2(_buffer, 0);
+        ptr->set(*fbe_value, nullptr);
     }
 
     set_end(fbe_begin);
@@ -581,25 +585,25 @@ void FieldModelPMR_arena_ptr_Line2::get_end(size_t fbe_begin) const noexcept
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModelPMR_arena_ptr_Line2::get(::FBE::Base& fbe_value) noexcept
+void FieldModelPMR_arena_ptr_Line2::get(::FBE::Base& fbe_value, pmr::memory_resource* resource) noexcept
 {
     size_t fbe_begin = get_begin();
     if (fbe_begin == 0)
         return;
 
     uint32_t fbe_struct_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset());
-    get_fields(fbe_value, fbe_struct_size);
+    get_fields(fbe_value, fbe_struct_size, resource);
     get_end(fbe_begin);
 }
 
-void FieldModelPMR_arena_ptr_Line2::get_fields([[maybe_unused]] ::FBE::Base& base_fbe_value, [[maybe_unused]] size_t fbe_struct_size) noexcept
+void FieldModelPMR_arena_ptr_Line2::get_fields([[maybe_unused]] ::FBE::Base& base_fbe_value, [[maybe_unused]] size_t fbe_struct_size, pmr::memory_resource* resource) noexcept
 {
     ::arena_ptr_pmr::Line2& fbe_value = static_cast<::arena_ptr_pmr::Line2&>(base_fbe_value);
     size_t fbe_current_size = 4 + 4;
 
     if ((fbe_current_size + bytes_v.fbe_size()) <= fbe_struct_size)
         {
-            bytes_v.get(fbe_value.bytes_v);
+            bytes_v.get(fbe_value.bytes_v, resource);
         }
     else
         fbe_value.bytes_v.clear();
@@ -631,20 +635,20 @@ void FieldModelPMR_arena_ptr_Line2::set_end(size_t fbe_begin)
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModelPMR_arena_ptr_Line2::set(const ::FBE::Base& fbe_value) noexcept
+void FieldModelPMR_arena_ptr_Line2::set(const ::FBE::Base& fbe_value, pmr::memory_resource* resource) noexcept
 {
     size_t fbe_begin = set_begin();
     if (fbe_begin == 0)
         return;
 
-    set_fields(fbe_value);
+    set_fields(fbe_value, resource);
     set_end(fbe_begin);
 }
 
-void FieldModelPMR_arena_ptr_Line2::set_fields([[maybe_unused]] const ::FBE::Base& base_fbe_value) noexcept
+void FieldModelPMR_arena_ptr_Line2::set_fields([[maybe_unused]] const ::FBE::Base& base_fbe_value, pmr::memory_resource* resource) noexcept
 {
     [[maybe_unused]] const ::arena_ptr_pmr::Line2& fbe_value = static_cast<const ::arena_ptr_pmr::Line2&>(base_fbe_value);
-    bytes_v.set(fbe_value.bytes_v);
+    bytes_v.set(fbe_value.bytes_v, resource);
 }
 
 namespace arena_ptr_pmr {
@@ -675,15 +679,15 @@ size_t Line2Model::create_end(size_t fbe_begin)
     return fbe_full_size;
 }
 
-size_t Line2Model::serialize(const ::arena_ptr_pmr::Line2& value)
+size_t Line2Model::serialize(const ::arena_ptr_pmr::Line2& value, pmr::memory_resource* resource)
 {
     size_t fbe_begin = create_begin();
-    model.set(value);
+    model.set(value, resource);
     size_t fbe_full_size = create_end(fbe_begin);
     return fbe_full_size;
 }
 
-size_t Line2Model::deserialize(::arena_ptr_pmr::Line2& value) noexcept
+size_t Line2Model::deserialize(::arena_ptr_pmr::Line2& value, pmr::memory_resource* resource) noexcept
 {
     if ((this->buffer().offset() + model.fbe_offset() - 4) > this->buffer().size())
         return 0;
@@ -693,7 +697,7 @@ size_t Line2Model::deserialize(::arena_ptr_pmr::Line2& value) noexcept
     if (fbe_full_size < model.fbe_size())
         return 0;
 
-    model.get(value);
+    model.get(value, resource);
     return fbe_full_size;
 }
 

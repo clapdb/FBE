@@ -82,7 +82,7 @@ bool FieldModel<::variants_pmr::Expr>::verify() const noexcept
     return true;
 }
 
-void FieldModel<::variants_pmr::Expr>::get(::variants_pmr::Expr& fbe_value) const noexcept
+void FieldModel<::variants_pmr::Expr>::get(::variants_pmr::Expr& fbe_value, pmr::memory_resource* resource) const noexcept
 {
     if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
         return;
@@ -106,21 +106,21 @@ void FieldModel<::variants_pmr::Expr>::get(::variants_pmr::Expr& fbe_value) cons
             FieldModel<bool> fbe_model(_buffer, 4);
             fbe_value.emplace<bool>();
             auto& value = std::get<1>(fbe_value);
-            fbe_model.get(value);
+            fbe_model.get(value, nullptr);
             break;
         }
         case 2: {
             FieldModel<int32_t> fbe_model(_buffer, 4);
             fbe_value.emplace<int32_t>();
             auto& value = std::get<2>(fbe_value);
-            fbe_model.get(value);
+            fbe_model.get(value, nullptr);
             break;
         }
         case 3: {
             FieldModel<ArenaString> fbe_model(_buffer, 4);
-            fbe_value.emplace<ArenaString>();
+            fbe_value.emplace<ArenaString>(resource);
             auto& value = std::get<3>(fbe_value);
-            fbe_model.get(value);
+            fbe_model.get(value, resource);
             break;
         }
     }
@@ -153,7 +153,7 @@ void FieldModel<::variants_pmr::Expr>::set_end(size_t fbe_begin)
 }
 
 // Set the variant value
-void FieldModel<::variants_pmr::Expr>::set(const ::variants_pmr::Expr& fbe_value) noexcept
+void FieldModel<::variants_pmr::Expr>::set(const ::variants_pmr::Expr& fbe_value, pmr::memory_resource* resource) noexcept
 {
     assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
     if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
@@ -162,36 +162,36 @@ void FieldModel<::variants_pmr::Expr>::set(const ::variants_pmr::Expr& fbe_value
     std::visit(
         overloaded
         {
-            [this, fbe_variant_index = fbe_value.index()](std::monostate v) {
+            [this, fbe_variant_index = fbe_value.index(), resource](std::monostate v) {
                 FieldModel<std::monostate> fbe_model(_buffer, 4);
                 size_t fbe_begin = set_begin(fbe_model.fbe_size(), fbe_variant_index);
                 if (fbe_begin == 0)
                     return;
-                fbe_model.set(v);
+                fbe_model.set(v, resource);
                 set_end(fbe_begin);
             }
-            , [this, fbe_variant_index = fbe_value.index()](bool v) {
+            , [this, fbe_variant_index = fbe_value.index(), resource](bool v) {
                 FieldModel<bool> fbe_model(_buffer, 4);
                 size_t fbe_begin = set_begin(fbe_model.fbe_size(), fbe_variant_index);
                 if (fbe_begin == 0)
                     return;
-                fbe_model.set(v);
+                fbe_model.set(v, resource);
                 set_end(fbe_begin);
             }
-            , [this, fbe_variant_index = fbe_value.index()](int32_t v) {
+            , [this, fbe_variant_index = fbe_value.index(), resource](int32_t v) {
                 FieldModel<int32_t> fbe_model(_buffer, 4);
                 size_t fbe_begin = set_begin(fbe_model.fbe_size(), fbe_variant_index);
                 if (fbe_begin == 0)
                     return;
-                fbe_model.set(v);
+                fbe_model.set(v, resource);
                 set_end(fbe_begin);
             }
-            , [this, fbe_variant_index = fbe_value.index()](const ArenaString& v) {
+            , [this, fbe_variant_index = fbe_value.index(), resource](const ArenaString& v) {
                 FieldModel<ArenaString> fbe_model(_buffer, 4);
                 size_t fbe_begin = set_begin(fbe_model.fbe_size(), fbe_variant_index);
                 if (fbe_begin == 0)
                     return;
-                fbe_model.set(v);
+                fbe_model.set(v, resource);
                 set_end(fbe_begin);
             }
         },
@@ -327,7 +327,7 @@ bool FieldModel<::variants_pmr::V>::verify() const noexcept
     return true;
 }
 
-void FieldModel<::variants_pmr::V>::get(::variants_pmr::V& fbe_value) const noexcept
+void FieldModel<::variants_pmr::V>::get(::variants_pmr::V& fbe_value, pmr::memory_resource* resource) const noexcept
 {
     if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
         return;
@@ -349,86 +349,86 @@ void FieldModel<::variants_pmr::V>::get(::variants_pmr::V& fbe_value) const noex
         }
         case 1: {
             FieldModel<ArenaString> fbe_model(_buffer, 4);
-            fbe_value.emplace<ArenaString>();
+            fbe_value.emplace<ArenaString>(resource);
             auto& value = std::get<1>(fbe_value);
-            fbe_model.get(value);
+            fbe_model.get(value, resource);
             break;
         }
         case 2: {
             FieldModel<int32_t> fbe_model(_buffer, 4);
             fbe_value.emplace<int32_t>();
             auto& value = std::get<2>(fbe_value);
-            fbe_model.get(value);
+            fbe_model.get(value, nullptr);
             break;
         }
         case 3: {
             FieldModel<double> fbe_model(_buffer, 4);
             fbe_value.emplace<double>();
             auto& value = std::get<3>(fbe_value);
-            fbe_model.get(value);
+            fbe_model.get(value, nullptr);
             break;
         }
         case 4: {
             FieldModel<::variants_pmr::Simple> fbe_model(_buffer, 4);
             fbe_value.emplace<::variants_pmr::Simple>();
             auto& value = std::get<4>(fbe_value);
-            fbe_model.get(value);
+            fbe_model.get(value, nullptr);
             break;
         }
         case 5: {
             FieldModelVector<::variants_pmr::Simple> fbe_model(_buffer, 4);
-            fbe_value.emplace<pmr::vector<::variants_pmr::Simple>>();
+            fbe_value.emplace<pmr::vector<::variants_pmr::Simple>>(resource);
             auto& value = std::get<5>(fbe_value);
-            fbe_model.get(value);
+            fbe_model.get(value, resource);
             break;
         }
         case 6: {
             FieldModelVector<int32_t> fbe_model(_buffer, 4);
-            fbe_value.emplace<pmr::vector<int32_t>>();
+            fbe_value.emplace<pmr::vector<int32_t>>(resource);
             auto& value = std::get<6>(fbe_value);
-            fbe_model.get(value);
+            fbe_model.get(value, resource);
             break;
         }
         case 7: {
             FieldModelMap<int32_t, ::variants_pmr::Simple> fbe_model(_buffer, 4);
-            fbe_value.emplace<pmr::unordered_map<int32_t, ::variants_pmr::Simple>>();
+            fbe_value.emplace<pmr::unordered_map<int32_t, ::variants_pmr::Simple>>(resource);
             auto& value = std::get<7>(fbe_value);
-            fbe_model.get(value);
+            fbe_model.get(value, resource);
             break;
         }
         case 8: {
             FieldModelVector<FBE::pmr_buffer_t> fbe_model(_buffer, 4);
-            fbe_value.emplace<pmr::vector<FBE::pmr_buffer_t>>();
+            fbe_value.emplace<pmr::vector<FBE::pmr_buffer_t>>(resource);
             auto& value = std::get<8>(fbe_value);
-            fbe_model.get(value);
+            fbe_model.get(value, resource);
             break;
         }
         case 9: {
             FieldModelVector<ArenaString> fbe_model(_buffer, 4);
-            fbe_value.emplace<pmr::vector<ArenaString>>();
+            fbe_value.emplace<pmr::vector<ArenaString>>(resource);
             auto& value = std::get<9>(fbe_value);
-            fbe_model.get(value);
+            fbe_model.get(value, resource);
             break;
         }
         case 10: {
             FieldModelMap<int32_t, FBE::pmr_buffer_t> fbe_model(_buffer, 4);
-            fbe_value.emplace<pmr::unordered_map<int32_t, FBE::pmr_buffer_t>>();
+            fbe_value.emplace<pmr::unordered_map<int32_t, FBE::pmr_buffer_t>>(resource);
             auto& value = std::get<10>(fbe_value);
-            fbe_model.get(value);
+            fbe_model.get(value, resource);
             break;
         }
         case 11: {
             FieldModelMap<ArenaString, FBE::pmr_buffer_t> fbe_model(_buffer, 4);
-            fbe_value.emplace<pmr::unordered_map<ArenaString, FBE::pmr_buffer_t>>();
+            fbe_value.emplace<pmr::unordered_map<ArenaString, FBE::pmr_buffer_t>>(resource);
             auto& value = std::get<11>(fbe_value);
-            fbe_model.get(value);
+            fbe_model.get(value, resource);
             break;
         }
         case 12: {
             FieldModel<::variants_pmr::Expr> fbe_model(_buffer, 4);
             fbe_value.emplace<::variants_pmr::Expr>();
             auto& value = std::get<12>(fbe_value);
-            fbe_model.get(value);
+            fbe_model.get(value, nullptr);
             break;
         }
     }
@@ -461,7 +461,7 @@ void FieldModel<::variants_pmr::V>::set_end(size_t fbe_begin)
 }
 
 // Set the variant value
-void FieldModel<::variants_pmr::V>::set(const ::variants_pmr::V& fbe_value) noexcept
+void FieldModel<::variants_pmr::V>::set(const ::variants_pmr::V& fbe_value, pmr::memory_resource* resource) noexcept
 {
     assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
     if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
@@ -470,108 +470,108 @@ void FieldModel<::variants_pmr::V>::set(const ::variants_pmr::V& fbe_value) noex
     std::visit(
         overloaded
         {
-            [this, fbe_variant_index = fbe_value.index()](std::monostate v) {
+            [this, fbe_variant_index = fbe_value.index(), resource](std::monostate v) {
                 FieldModel<std::monostate> fbe_model(_buffer, 4);
                 size_t fbe_begin = set_begin(fbe_model.fbe_size(), fbe_variant_index);
                 if (fbe_begin == 0)
                     return;
-                fbe_model.set(v);
+                fbe_model.set(v, resource);
                 set_end(fbe_begin);
             }
-            , [this, fbe_variant_index = fbe_value.index()](const ArenaString& v) {
+            , [this, fbe_variant_index = fbe_value.index(), resource](const ArenaString& v) {
                 FieldModel<ArenaString> fbe_model(_buffer, 4);
                 size_t fbe_begin = set_begin(fbe_model.fbe_size(), fbe_variant_index);
                 if (fbe_begin == 0)
                     return;
-                fbe_model.set(v);
+                fbe_model.set(v, resource);
                 set_end(fbe_begin);
             }
-            , [this, fbe_variant_index = fbe_value.index()](int32_t v) {
+            , [this, fbe_variant_index = fbe_value.index(), resource](int32_t v) {
                 FieldModel<int32_t> fbe_model(_buffer, 4);
                 size_t fbe_begin = set_begin(fbe_model.fbe_size(), fbe_variant_index);
                 if (fbe_begin == 0)
                     return;
-                fbe_model.set(v);
+                fbe_model.set(v, resource);
                 set_end(fbe_begin);
             }
-            , [this, fbe_variant_index = fbe_value.index()](double v) {
+            , [this, fbe_variant_index = fbe_value.index(), resource](double v) {
                 FieldModel<double> fbe_model(_buffer, 4);
                 size_t fbe_begin = set_begin(fbe_model.fbe_size(), fbe_variant_index);
                 if (fbe_begin == 0)
                     return;
-                fbe_model.set(v);
+                fbe_model.set(v, resource);
                 set_end(fbe_begin);
             }
-            , [this, fbe_variant_index = fbe_value.index()](const ::variants_pmr::Simple& v) {
+            , [this, fbe_variant_index = fbe_value.index(), resource](const ::variants_pmr::Simple& v) {
                 FieldModel<::variants_pmr::Simple> fbe_model(_buffer, 4);
                 size_t fbe_begin = set_begin(fbe_model.fbe_size(), fbe_variant_index);
                 if (fbe_begin == 0)
                     return;
-                fbe_model.set(v);
+                fbe_model.set(v, resource);
                 set_end(fbe_begin);
             }
-            , [this, fbe_variant_index = fbe_value.index()](const pmr::vector<::variants_pmr::Simple>& v) {
+            , [this, fbe_variant_index = fbe_value.index(), resource](const pmr::vector<::variants_pmr::Simple>& v) {
                 FieldModelVector<::variants_pmr::Simple> fbe_model(_buffer, 4);
                 size_t fbe_begin = set_begin(fbe_model.fbe_size(), fbe_variant_index);
                 if (fbe_begin == 0)
                     return;
-                fbe_model.set(v);
+                fbe_model.set(v, resource);
                 set_end(fbe_begin);
             }
-            , [this, fbe_variant_index = fbe_value.index()](const pmr::vector<int32_t>& v) {
+            , [this, fbe_variant_index = fbe_value.index(), resource](const pmr::vector<int32_t>& v) {
                 FieldModelVector<int32_t> fbe_model(_buffer, 4);
                 size_t fbe_begin = set_begin(fbe_model.fbe_size(), fbe_variant_index);
                 if (fbe_begin == 0)
                     return;
-                fbe_model.set(v);
+                fbe_model.set(v, resource);
                 set_end(fbe_begin);
             }
-            , [this, fbe_variant_index = fbe_value.index()](const pmr::unordered_map<int32_t, ::variants_pmr::Simple>& v) {
+            , [this, fbe_variant_index = fbe_value.index(), resource](const pmr::unordered_map<int32_t, ::variants_pmr::Simple>& v) {
                 FieldModelMap<int32_t, ::variants_pmr::Simple> fbe_model(_buffer, 4);
                 size_t fbe_begin = set_begin(fbe_model.fbe_size(), fbe_variant_index);
                 if (fbe_begin == 0)
                     return;
-                fbe_model.set(v);
+                fbe_model.set(v, resource);
                 set_end(fbe_begin);
             }
-            , [this, fbe_variant_index = fbe_value.index()](const pmr::vector<FBE::pmr_buffer_t>& v) {
+            , [this, fbe_variant_index = fbe_value.index(), resource](const pmr::vector<FBE::pmr_buffer_t>& v) {
                 FieldModelVector<FBE::pmr_buffer_t> fbe_model(_buffer, 4);
                 size_t fbe_begin = set_begin(fbe_model.fbe_size(), fbe_variant_index);
                 if (fbe_begin == 0)
                     return;
-                fbe_model.set(v);
+                fbe_model.set(v, resource);
                 set_end(fbe_begin);
             }
-            , [this, fbe_variant_index = fbe_value.index()](const pmr::vector<ArenaString>& v) {
+            , [this, fbe_variant_index = fbe_value.index(), resource](const pmr::vector<ArenaString>& v) {
                 FieldModelVector<ArenaString> fbe_model(_buffer, 4);
                 size_t fbe_begin = set_begin(fbe_model.fbe_size(), fbe_variant_index);
                 if (fbe_begin == 0)
                     return;
-                fbe_model.set(v);
+                fbe_model.set(v, resource);
                 set_end(fbe_begin);
             }
-            , [this, fbe_variant_index = fbe_value.index()](const pmr::unordered_map<int32_t, FBE::pmr_buffer_t>& v) {
+            , [this, fbe_variant_index = fbe_value.index(), resource](const pmr::unordered_map<int32_t, FBE::pmr_buffer_t>& v) {
                 FieldModelMap<int32_t, FBE::pmr_buffer_t> fbe_model(_buffer, 4);
                 size_t fbe_begin = set_begin(fbe_model.fbe_size(), fbe_variant_index);
                 if (fbe_begin == 0)
                     return;
-                fbe_model.set(v);
+                fbe_model.set(v, resource);
                 set_end(fbe_begin);
             }
-            , [this, fbe_variant_index = fbe_value.index()](const pmr::unordered_map<ArenaString, FBE::pmr_buffer_t>& v) {
+            , [this, fbe_variant_index = fbe_value.index(), resource](const pmr::unordered_map<ArenaString, FBE::pmr_buffer_t>& v) {
                 FieldModelMap<ArenaString, FBE::pmr_buffer_t> fbe_model(_buffer, 4);
                 size_t fbe_begin = set_begin(fbe_model.fbe_size(), fbe_variant_index);
                 if (fbe_begin == 0)
                     return;
-                fbe_model.set(v);
+                fbe_model.set(v, resource);
                 set_end(fbe_begin);
             }
-            , [this, fbe_variant_index = fbe_value.index()](const ::variants_pmr::Expr& v) {
+            , [this, fbe_variant_index = fbe_value.index(), resource](const ::variants_pmr::Expr& v) {
                 FieldModel<::variants_pmr::Expr> fbe_model(_buffer, 4);
                 size_t fbe_begin = set_begin(fbe_model.fbe_size(), fbe_variant_index);
                 if (fbe_begin == 0)
                     return;
-                fbe_model.set(v);
+                fbe_model.set(v, resource);
                 set_end(fbe_begin);
             }
         },
@@ -672,23 +672,23 @@ void FieldModel<::variants_pmr::Simple>::get_end(size_t fbe_begin) const noexcep
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModel<::variants_pmr::Simple>::get(::variants_pmr::Simple& fbe_value) const noexcept
+void FieldModel<::variants_pmr::Simple>::get(::variants_pmr::Simple& fbe_value, pmr::memory_resource* resource) const noexcept
 {
     size_t fbe_begin = get_begin();
     if (fbe_begin == 0)
         return;
 
     uint32_t fbe_struct_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset());
-    get_fields(fbe_value, fbe_struct_size);
+    get_fields(fbe_value, fbe_struct_size, resource);
     get_end(fbe_begin);
 }
 
-void FieldModel<::variants_pmr::Simple>::get_fields([[maybe_unused]] ::variants_pmr::Simple& fbe_value, [[maybe_unused]] size_t fbe_struct_size) const noexcept
+void FieldModel<::variants_pmr::Simple>::get_fields([[maybe_unused]] ::variants_pmr::Simple& fbe_value, [[maybe_unused]] size_t fbe_struct_size, pmr::memory_resource* resource) const noexcept
 {
     size_t fbe_current_size = 4 + 4;
 
     if ((fbe_current_size + name.fbe_size()) <= fbe_struct_size)
-        name.get(fbe_value.name);
+        name.get(fbe_value.name, resource);
     else
         fbe_value.name = "";
     fbe_current_size += name.fbe_size();
@@ -719,19 +719,19 @@ void FieldModel<::variants_pmr::Simple>::set_end(size_t fbe_begin)
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModel<::variants_pmr::Simple>::set(const ::variants_pmr::Simple& fbe_value) noexcept
+void FieldModel<::variants_pmr::Simple>::set(const ::variants_pmr::Simple& fbe_value, pmr::memory_resource* resource) noexcept
 {
     size_t fbe_begin = set_begin();
     if (fbe_begin == 0)
         return;
 
-    set_fields(fbe_value);
+    set_fields(fbe_value, resource);
     set_end(fbe_begin);
 }
 
-void FieldModel<::variants_pmr::Simple>::set_fields([[maybe_unused]] const ::variants_pmr::Simple& fbe_value) noexcept
+void FieldModel<::variants_pmr::Simple>::set_fields([[maybe_unused]] const ::variants_pmr::Simple& fbe_value, pmr::memory_resource* resource) noexcept
 {
-    name.set(fbe_value.name);
+    name.set(fbe_value.name, resource);
 }
 
 namespace variants_pmr {
@@ -762,15 +762,15 @@ size_t SimpleModel::create_end(size_t fbe_begin)
     return fbe_full_size;
 }
 
-size_t SimpleModel::serialize(const ::variants_pmr::Simple& value)
+size_t SimpleModel::serialize(const ::variants_pmr::Simple& value, pmr::memory_resource* resource)
 {
     size_t fbe_begin = create_begin();
-    model.set(value);
+    model.set(value, resource);
     size_t fbe_full_size = create_end(fbe_begin);
     return fbe_full_size;
 }
 
-size_t SimpleModel::deserialize(::variants_pmr::Simple& value) const noexcept
+size_t SimpleModel::deserialize(::variants_pmr::Simple& value, pmr::memory_resource* resource) const noexcept
 {
     if ((this->buffer().offset() + model.fbe_offset() - 4) > this->buffer().size())
         return 0;
@@ -780,7 +780,7 @@ size_t SimpleModel::deserialize(::variants_pmr::Simple& value) const noexcept
     if (fbe_full_size < model.fbe_size())
         return 0;
 
-    model.get(value);
+    model.get(value, resource);
     return fbe_full_size;
 }
 
@@ -878,23 +878,23 @@ void FieldModel<::variants_pmr::Value>::get_end(size_t fbe_begin) const noexcept
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModel<::variants_pmr::Value>::get(::variants_pmr::Value& fbe_value) const noexcept
+void FieldModel<::variants_pmr::Value>::get(::variants_pmr::Value& fbe_value, pmr::memory_resource* resource) const noexcept
 {
     size_t fbe_begin = get_begin();
     if (fbe_begin == 0)
         return;
 
     uint32_t fbe_struct_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset());
-    get_fields(fbe_value, fbe_struct_size);
+    get_fields(fbe_value, fbe_struct_size, resource);
     get_end(fbe_begin);
 }
 
-void FieldModel<::variants_pmr::Value>::get_fields([[maybe_unused]] ::variants_pmr::Value& fbe_value, [[maybe_unused]] size_t fbe_struct_size) const noexcept
+void FieldModel<::variants_pmr::Value>::get_fields([[maybe_unused]] ::variants_pmr::Value& fbe_value, [[maybe_unused]] size_t fbe_struct_size, pmr::memory_resource* resource) const noexcept
 {
     size_t fbe_current_size = 4 + 4;
 
     if ((fbe_current_size + v.fbe_size()) <= fbe_struct_size)
-        v.get(fbe_value.v);
+        v.get(fbe_value.v, resource);
     else
         fbe_value.v = ::variants_pmr::V();
     fbe_current_size += v.fbe_size();
@@ -925,19 +925,19 @@ void FieldModel<::variants_pmr::Value>::set_end(size_t fbe_begin)
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModel<::variants_pmr::Value>::set(const ::variants_pmr::Value& fbe_value) noexcept
+void FieldModel<::variants_pmr::Value>::set(const ::variants_pmr::Value& fbe_value, pmr::memory_resource* resource) noexcept
 {
     size_t fbe_begin = set_begin();
     if (fbe_begin == 0)
         return;
 
-    set_fields(fbe_value);
+    set_fields(fbe_value, resource);
     set_end(fbe_begin);
 }
 
-void FieldModel<::variants_pmr::Value>::set_fields([[maybe_unused]] const ::variants_pmr::Value& fbe_value) noexcept
+void FieldModel<::variants_pmr::Value>::set_fields([[maybe_unused]] const ::variants_pmr::Value& fbe_value, pmr::memory_resource* resource) noexcept
 {
-    v.set(fbe_value.v);
+    v.set(fbe_value.v, resource);
 }
 
 namespace variants_pmr {
@@ -968,15 +968,15 @@ size_t ValueModel::create_end(size_t fbe_begin)
     return fbe_full_size;
 }
 
-size_t ValueModel::serialize(const ::variants_pmr::Value& value)
+size_t ValueModel::serialize(const ::variants_pmr::Value& value, pmr::memory_resource* resource)
 {
     size_t fbe_begin = create_begin();
-    model.set(value);
+    model.set(value, resource);
     size_t fbe_full_size = create_end(fbe_begin);
     return fbe_full_size;
 }
 
-size_t ValueModel::deserialize(::variants_pmr::Value& value) const noexcept
+size_t ValueModel::deserialize(::variants_pmr::Value& value, pmr::memory_resource* resource) const noexcept
 {
     if ((this->buffer().offset() + model.fbe_offset() - 4) > this->buffer().size())
         return 0;
@@ -986,7 +986,7 @@ size_t ValueModel::deserialize(::variants_pmr::Value& value) const noexcept
     if (fbe_full_size < model.fbe_size())
         return 0;
 
-    model.get(value);
+    model.get(value, resource);
     return fbe_full_size;
 }
 

@@ -21,7 +21,7 @@ TEST_CASE("Serialization: enums", "[FBE]")
     // Serialize enums to the FBE stream
     FBE::enums::EnumsModel writer;
     REQUIRE(writer.model.fbe_offset() == 4);
-    size_t serialized = writer.serialize(enums1);
+    size_t serialized = writer.serialize(enums1, nullptr);
     REQUIRE(serialized == writer.buffer().size());
     REQUIRE(writer.verify());
     writer.next(serialized);
@@ -36,7 +36,7 @@ TEST_CASE("Serialization: enums", "[FBE]")
     REQUIRE(reader.model.fbe_offset() == 4);
     reader.attach(writer.buffer());
     REQUIRE(reader.verify());
-    size_t deserialized = reader.deserialize(enums2);
+    size_t deserialized = reader.deserialize(enums2, nullptr);
     REQUIRE(deserialized == reader.buffer().size());
     reader.next(deserialized);
     REQUIRE(reader.model.fbe_offset() == (4 + reader.buffer().size()));

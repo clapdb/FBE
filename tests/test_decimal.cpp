@@ -33,9 +33,9 @@ FBE::decimal_t VerifyDecimal(uint32_t low, uint32_t mid, uint32_t high, bool neg
     FBE::FieldModel<FBE::decimal_t> model(buffer, 0);
     FBE::decimal_t value1;
     FBE::decimal_t value2;
-    model.get(value1);
-    model.set(value1);
-    model.get(value2);
+    model.get(value1, nullptr);
+    model.set(value1, nullptr);
+    model.get(value2, nullptr);
     if (!Compare(value1, value2))
         throw std::logic_error("Invalid decimal serialization!");
 

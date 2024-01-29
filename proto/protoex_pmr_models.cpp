@@ -164,65 +164,65 @@ void FieldModel<::protoex_pmr::Order>::get_end(size_t fbe_begin) const noexcept
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModel<::protoex_pmr::Order>::get(::protoex_pmr::Order& fbe_value) const noexcept
+void FieldModel<::protoex_pmr::Order>::get(::protoex_pmr::Order& fbe_value, pmr::memory_resource* resource) const noexcept
 {
     size_t fbe_begin = get_begin();
     if (fbe_begin == 0)
         return;
 
     uint32_t fbe_struct_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset());
-    get_fields(fbe_value, fbe_struct_size);
+    get_fields(fbe_value, fbe_struct_size, resource);
     get_end(fbe_begin);
 }
 
-void FieldModel<::protoex_pmr::Order>::get_fields([[maybe_unused]] ::protoex_pmr::Order& fbe_value, [[maybe_unused]] size_t fbe_struct_size) const noexcept
+void FieldModel<::protoex_pmr::Order>::get_fields([[maybe_unused]] ::protoex_pmr::Order& fbe_value, [[maybe_unused]] size_t fbe_struct_size, pmr::memory_resource* resource) const noexcept
 {
     size_t fbe_current_size = 4 + 4;
 
     if ((fbe_current_size + id.fbe_size()) <= fbe_struct_size)
-        id.get(fbe_value.id);
+        id.get(fbe_value.id, resource);
     else
         fbe_value.id = (int32_t)0ll;
     fbe_current_size += id.fbe_size();
 
     if ((fbe_current_size + symbol.fbe_size()) <= fbe_struct_size)
-        symbol.get(fbe_value.symbol);
+        symbol.get(fbe_value.symbol, resource);
     else
         fbe_value.symbol = "";
     fbe_current_size += symbol.fbe_size();
 
     if ((fbe_current_size + side.fbe_size()) <= fbe_struct_size)
-        side.get(fbe_value.side);
+        side.get(fbe_value.side, resource);
     else
         fbe_value.side = ::protoex_pmr::OrderSide();
     fbe_current_size += side.fbe_size();
 
     if ((fbe_current_size + type.fbe_size()) <= fbe_struct_size)
-        type.get(fbe_value.type);
+        type.get(fbe_value.type, resource);
     else
         fbe_value.type = ::protoex_pmr::OrderType();
     fbe_current_size += type.fbe_size();
 
     if ((fbe_current_size + price.fbe_size()) <= fbe_struct_size)
-        price.get(fbe_value.price, (double)0.0);
+        price.get(fbe_value.price, resource, (double)0.0);
     else
         fbe_value.price = (double)0.0;
     fbe_current_size += price.fbe_size();
 
     if ((fbe_current_size + volume.fbe_size()) <= fbe_struct_size)
-        volume.get(fbe_value.volume, (double)0.0);
+        volume.get(fbe_value.volume, resource, (double)0.0);
     else
         fbe_value.volume = (double)0.0;
     fbe_current_size += volume.fbe_size();
 
     if ((fbe_current_size + tp.fbe_size()) <= fbe_struct_size)
-        tp.get(fbe_value.tp, (double)10.0);
+        tp.get(fbe_value.tp, resource, (double)10.0);
     else
         fbe_value.tp = (double)10.0;
     fbe_current_size += tp.fbe_size();
 
     if ((fbe_current_size + sl.fbe_size()) <= fbe_struct_size)
-        sl.get(fbe_value.sl, (double)-10.0);
+        sl.get(fbe_value.sl, resource, (double)-10.0);
     else
         fbe_value.sl = (double)-10.0;
     fbe_current_size += sl.fbe_size();
@@ -253,26 +253,26 @@ void FieldModel<::protoex_pmr::Order>::set_end(size_t fbe_begin)
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModel<::protoex_pmr::Order>::set(const ::protoex_pmr::Order& fbe_value) noexcept
+void FieldModel<::protoex_pmr::Order>::set(const ::protoex_pmr::Order& fbe_value, pmr::memory_resource* resource) noexcept
 {
     size_t fbe_begin = set_begin();
     if (fbe_begin == 0)
         return;
 
-    set_fields(fbe_value);
+    set_fields(fbe_value, resource);
     set_end(fbe_begin);
 }
 
-void FieldModel<::protoex_pmr::Order>::set_fields([[maybe_unused]] const ::protoex_pmr::Order& fbe_value) noexcept
+void FieldModel<::protoex_pmr::Order>::set_fields([[maybe_unused]] const ::protoex_pmr::Order& fbe_value, pmr::memory_resource* resource) noexcept
 {
-    id.set(fbe_value.id);
-    symbol.set(fbe_value.symbol);
-    side.set(fbe_value.side);
-    type.set(fbe_value.type);
-    price.set(fbe_value.price);
-    volume.set(fbe_value.volume);
-    tp.set(fbe_value.tp);
-    sl.set(fbe_value.sl);
+    id.set(fbe_value.id, resource);
+    symbol.set(fbe_value.symbol, resource);
+    side.set(fbe_value.side, resource);
+    type.set(fbe_value.type, resource);
+    price.set(fbe_value.price, resource);
+    volume.set(fbe_value.volume, resource);
+    tp.set(fbe_value.tp, resource);
+    sl.set(fbe_value.sl, resource);
 }
 
 namespace protoex_pmr {
@@ -303,15 +303,15 @@ size_t OrderModel::create_end(size_t fbe_begin)
     return fbe_full_size;
 }
 
-size_t OrderModel::serialize(const ::protoex_pmr::Order& value)
+size_t OrderModel::serialize(const ::protoex_pmr::Order& value, pmr::memory_resource* resource)
 {
     size_t fbe_begin = create_begin();
-    model.set(value);
+    model.set(value, resource);
     size_t fbe_full_size = create_end(fbe_begin);
     return fbe_full_size;
 }
 
-size_t OrderModel::deserialize(::protoex_pmr::Order& value) const noexcept
+size_t OrderModel::deserialize(::protoex_pmr::Order& value, pmr::memory_resource* resource) const noexcept
 {
     if ((this->buffer().offset() + model.fbe_offset() - 4) > this->buffer().size())
         return 0;
@@ -321,7 +321,7 @@ size_t OrderModel::deserialize(::protoex_pmr::Order& value) const noexcept
     if (fbe_full_size < model.fbe_size())
         return 0;
 
-    model.get(value);
+    model.get(value, resource);
     return fbe_full_size;
 }
 
@@ -428,27 +428,27 @@ void FieldModel<::protoex_pmr::Balance>::get_end(size_t fbe_begin) const noexcep
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModel<::protoex_pmr::Balance>::get(::protoex_pmr::Balance& fbe_value) const noexcept
+void FieldModel<::protoex_pmr::Balance>::get(::protoex_pmr::Balance& fbe_value, pmr::memory_resource* resource) const noexcept
 {
     size_t fbe_begin = get_begin();
     if (fbe_begin == 0)
         return;
 
     uint32_t fbe_struct_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset());
-    get_fields(fbe_value, fbe_struct_size);
+    get_fields(fbe_value, fbe_struct_size, resource);
     get_end(fbe_begin);
 }
 
-void FieldModel<::protoex_pmr::Balance>::get_fields([[maybe_unused]] ::protoex_pmr::Balance& fbe_value, [[maybe_unused]] size_t fbe_struct_size) const noexcept
+void FieldModel<::protoex_pmr::Balance>::get_fields([[maybe_unused]] ::protoex_pmr::Balance& fbe_value, [[maybe_unused]] size_t fbe_struct_size, pmr::memory_resource* resource) const noexcept
 {
     size_t fbe_current_size = 4 + 4;
 
     if ((fbe_current_size + parent.fbe_body() - 4 - 4) <= fbe_struct_size)
-        parent.get_fields(fbe_value, fbe_struct_size);
+        parent.get_fields(fbe_value, fbe_struct_size, resource);
     fbe_current_size += parent.fbe_body() - 4 - 4;
 
     if ((fbe_current_size + locked.fbe_size()) <= fbe_struct_size)
-        locked.get(fbe_value.locked, (double)0.0);
+        locked.get(fbe_value.locked, resource, (double)0.0);
     else
         fbe_value.locked = (double)0.0;
     fbe_current_size += locked.fbe_size();
@@ -479,20 +479,20 @@ void FieldModel<::protoex_pmr::Balance>::set_end(size_t fbe_begin)
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModel<::protoex_pmr::Balance>::set(const ::protoex_pmr::Balance& fbe_value) noexcept
+void FieldModel<::protoex_pmr::Balance>::set(const ::protoex_pmr::Balance& fbe_value, pmr::memory_resource* resource) noexcept
 {
     size_t fbe_begin = set_begin();
     if (fbe_begin == 0)
         return;
 
-    set_fields(fbe_value);
+    set_fields(fbe_value, resource);
     set_end(fbe_begin);
 }
 
-void FieldModel<::protoex_pmr::Balance>::set_fields([[maybe_unused]] const ::protoex_pmr::Balance& fbe_value) noexcept
+void FieldModel<::protoex_pmr::Balance>::set_fields([[maybe_unused]] const ::protoex_pmr::Balance& fbe_value, pmr::memory_resource* resource) noexcept
 {
-    parent.set_fields(fbe_value);
-    locked.set(fbe_value.locked);
+    parent.set_fields(fbe_value, resource);
+    locked.set(fbe_value.locked, resource);
 }
 
 namespace protoex_pmr {
@@ -523,15 +523,15 @@ size_t BalanceModel::create_end(size_t fbe_begin)
     return fbe_full_size;
 }
 
-size_t BalanceModel::serialize(const ::protoex_pmr::Balance& value)
+size_t BalanceModel::serialize(const ::protoex_pmr::Balance& value, pmr::memory_resource* resource)
 {
     size_t fbe_begin = create_begin();
-    model.set(value);
+    model.set(value, resource);
     size_t fbe_full_size = create_end(fbe_begin);
     return fbe_full_size;
 }
 
-size_t BalanceModel::deserialize(::protoex_pmr::Balance& value) const noexcept
+size_t BalanceModel::deserialize(::protoex_pmr::Balance& value, pmr::memory_resource* resource) const noexcept
 {
     if ((this->buffer().offset() + model.fbe_offset() - 4) > this->buffer().size())
         return 0;
@@ -541,7 +541,7 @@ size_t BalanceModel::deserialize(::protoex_pmr::Balance& value) const noexcept
     if (fbe_full_size < model.fbe_size())
         return 0;
 
-    model.get(value);
+    model.get(value, resource);
     return fbe_full_size;
 }
 
@@ -684,53 +684,53 @@ void FieldModel<::protoex_pmr::Account>::get_end(size_t fbe_begin) const noexcep
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModel<::protoex_pmr::Account>::get(::protoex_pmr::Account& fbe_value) const noexcept
+void FieldModel<::protoex_pmr::Account>::get(::protoex_pmr::Account& fbe_value, pmr::memory_resource* resource) const noexcept
 {
     size_t fbe_begin = get_begin();
     if (fbe_begin == 0)
         return;
 
     uint32_t fbe_struct_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset());
-    get_fields(fbe_value, fbe_struct_size);
+    get_fields(fbe_value, fbe_struct_size, resource);
     get_end(fbe_begin);
 }
 
-void FieldModel<::protoex_pmr::Account>::get_fields([[maybe_unused]] ::protoex_pmr::Account& fbe_value, [[maybe_unused]] size_t fbe_struct_size) const noexcept
+void FieldModel<::protoex_pmr::Account>::get_fields([[maybe_unused]] ::protoex_pmr::Account& fbe_value, [[maybe_unused]] size_t fbe_struct_size, pmr::memory_resource* resource) const noexcept
 {
     size_t fbe_current_size = 4 + 4;
 
     if ((fbe_current_size + id.fbe_size()) <= fbe_struct_size)
-        id.get(fbe_value.id);
+        id.get(fbe_value.id, resource);
     else
         fbe_value.id = (int32_t)0ll;
     fbe_current_size += id.fbe_size();
 
     if ((fbe_current_size + name.fbe_size()) <= fbe_struct_size)
-        name.get(fbe_value.name);
+        name.get(fbe_value.name, resource);
     else
         fbe_value.name = "";
     fbe_current_size += name.fbe_size();
 
     if ((fbe_current_size + state.fbe_size()) <= fbe_struct_size)
-        state.get(fbe_value.state, StateEx::initialized  |  StateEx::bad  |  StateEx::sad);
+        state.get(fbe_value.state, resource, StateEx::initialized  |  StateEx::bad  |  StateEx::sad);
     else
         fbe_value.state = StateEx::initialized  |  StateEx::bad  |  StateEx::sad;
     fbe_current_size += state.fbe_size();
 
     if ((fbe_current_size + wallet.fbe_size()) <= fbe_struct_size)
-        wallet.get(fbe_value.wallet);
+        wallet.get(fbe_value.wallet, resource);
     else
         fbe_value.wallet = ::protoex_pmr::Balance();
     fbe_current_size += wallet.fbe_size();
 
     if ((fbe_current_size + asset.fbe_size()) <= fbe_struct_size)
-        asset.get(fbe_value.asset);
+        asset.get(fbe_value.asset, resource);
     else
         fbe_value.asset = std::nullopt;
     fbe_current_size += asset.fbe_size();
 
     if ((fbe_current_size + orders.fbe_size()) <= fbe_struct_size)
-        orders.get(fbe_value.orders);
+        orders.get(fbe_value.orders, resource);
     else
         fbe_value.orders.clear();
     fbe_current_size += orders.fbe_size();
@@ -761,24 +761,24 @@ void FieldModel<::protoex_pmr::Account>::set_end(size_t fbe_begin)
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModel<::protoex_pmr::Account>::set(const ::protoex_pmr::Account& fbe_value) noexcept
+void FieldModel<::protoex_pmr::Account>::set(const ::protoex_pmr::Account& fbe_value, pmr::memory_resource* resource) noexcept
 {
     size_t fbe_begin = set_begin();
     if (fbe_begin == 0)
         return;
 
-    set_fields(fbe_value);
+    set_fields(fbe_value, resource);
     set_end(fbe_begin);
 }
 
-void FieldModel<::protoex_pmr::Account>::set_fields([[maybe_unused]] const ::protoex_pmr::Account& fbe_value) noexcept
+void FieldModel<::protoex_pmr::Account>::set_fields([[maybe_unused]] const ::protoex_pmr::Account& fbe_value, pmr::memory_resource* resource) noexcept
 {
-    id.set(fbe_value.id);
-    name.set(fbe_value.name);
-    state.set(fbe_value.state);
-    wallet.set(fbe_value.wallet);
-    asset.set(fbe_value.asset);
-    orders.set(fbe_value.orders);
+    id.set(fbe_value.id, resource);
+    name.set(fbe_value.name, resource);
+    state.set(fbe_value.state, resource);
+    wallet.set(fbe_value.wallet, resource);
+    asset.set(fbe_value.asset, resource);
+    orders.set(fbe_value.orders, resource);
 }
 
 namespace protoex_pmr {
@@ -809,15 +809,15 @@ size_t AccountModel::create_end(size_t fbe_begin)
     return fbe_full_size;
 }
 
-size_t AccountModel::serialize(const ::protoex_pmr::Account& value)
+size_t AccountModel::serialize(const ::protoex_pmr::Account& value, pmr::memory_resource* resource)
 {
     size_t fbe_begin = create_begin();
-    model.set(value);
+    model.set(value, resource);
     size_t fbe_full_size = create_end(fbe_begin);
     return fbe_full_size;
 }
 
-size_t AccountModel::deserialize(::protoex_pmr::Account& value) const noexcept
+size_t AccountModel::deserialize(::protoex_pmr::Account& value, pmr::memory_resource* resource) const noexcept
 {
     if ((this->buffer().offset() + model.fbe_offset() - 4) > this->buffer().size())
         return 0;
@@ -827,7 +827,7 @@ size_t AccountModel::deserialize(::protoex_pmr::Account& value) const noexcept
     if (fbe_full_size < model.fbe_size())
         return 0;
 
-    model.get(value);
+    model.get(value, resource);
     return fbe_full_size;
 }
 
@@ -925,23 +925,23 @@ void FieldModel<::protoex_pmr::OrderMessage>::get_end(size_t fbe_begin) const no
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModel<::protoex_pmr::OrderMessage>::get(::protoex_pmr::OrderMessage& fbe_value) const noexcept
+void FieldModel<::protoex_pmr::OrderMessage>::get(::protoex_pmr::OrderMessage& fbe_value, pmr::memory_resource* resource) const noexcept
 {
     size_t fbe_begin = get_begin();
     if (fbe_begin == 0)
         return;
 
     uint32_t fbe_struct_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset());
-    get_fields(fbe_value, fbe_struct_size);
+    get_fields(fbe_value, fbe_struct_size, resource);
     get_end(fbe_begin);
 }
 
-void FieldModel<::protoex_pmr::OrderMessage>::get_fields([[maybe_unused]] ::protoex_pmr::OrderMessage& fbe_value, [[maybe_unused]] size_t fbe_struct_size) const noexcept
+void FieldModel<::protoex_pmr::OrderMessage>::get_fields([[maybe_unused]] ::protoex_pmr::OrderMessage& fbe_value, [[maybe_unused]] size_t fbe_struct_size, pmr::memory_resource* resource) const noexcept
 {
     size_t fbe_current_size = 4 + 4;
 
     if ((fbe_current_size + body.fbe_size()) <= fbe_struct_size)
-        body.get(fbe_value.body);
+        body.get(fbe_value.body, resource);
     else
         fbe_value.body = ::protoex_pmr::Order();
     fbe_current_size += body.fbe_size();
@@ -972,19 +972,19 @@ void FieldModel<::protoex_pmr::OrderMessage>::set_end(size_t fbe_begin)
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModel<::protoex_pmr::OrderMessage>::set(const ::protoex_pmr::OrderMessage& fbe_value) noexcept
+void FieldModel<::protoex_pmr::OrderMessage>::set(const ::protoex_pmr::OrderMessage& fbe_value, pmr::memory_resource* resource) noexcept
 {
     size_t fbe_begin = set_begin();
     if (fbe_begin == 0)
         return;
 
-    set_fields(fbe_value);
+    set_fields(fbe_value, resource);
     set_end(fbe_begin);
 }
 
-void FieldModel<::protoex_pmr::OrderMessage>::set_fields([[maybe_unused]] const ::protoex_pmr::OrderMessage& fbe_value) noexcept
+void FieldModel<::protoex_pmr::OrderMessage>::set_fields([[maybe_unused]] const ::protoex_pmr::OrderMessage& fbe_value, pmr::memory_resource* resource) noexcept
 {
-    body.set(fbe_value.body);
+    body.set(fbe_value.body, resource);
 }
 
 namespace protoex_pmr {
@@ -1015,15 +1015,15 @@ size_t OrderMessageModel::create_end(size_t fbe_begin)
     return fbe_full_size;
 }
 
-size_t OrderMessageModel::serialize(const ::protoex_pmr::OrderMessage& value)
+size_t OrderMessageModel::serialize(const ::protoex_pmr::OrderMessage& value, pmr::memory_resource* resource)
 {
     size_t fbe_begin = create_begin();
-    model.set(value);
+    model.set(value, resource);
     size_t fbe_full_size = create_end(fbe_begin);
     return fbe_full_size;
 }
 
-size_t OrderMessageModel::deserialize(::protoex_pmr::OrderMessage& value) const noexcept
+size_t OrderMessageModel::deserialize(::protoex_pmr::OrderMessage& value, pmr::memory_resource* resource) const noexcept
 {
     if ((this->buffer().offset() + model.fbe_offset() - 4) > this->buffer().size())
         return 0;
@@ -1033,7 +1033,7 @@ size_t OrderMessageModel::deserialize(::protoex_pmr::OrderMessage& value) const 
     if (fbe_full_size < model.fbe_size())
         return 0;
 
-    model.get(value);
+    model.get(value, resource);
     return fbe_full_size;
 }
 
@@ -1131,23 +1131,23 @@ void FieldModel<::protoex_pmr::BalanceMessage>::get_end(size_t fbe_begin) const 
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModel<::protoex_pmr::BalanceMessage>::get(::protoex_pmr::BalanceMessage& fbe_value) const noexcept
+void FieldModel<::protoex_pmr::BalanceMessage>::get(::protoex_pmr::BalanceMessage& fbe_value, pmr::memory_resource* resource) const noexcept
 {
     size_t fbe_begin = get_begin();
     if (fbe_begin == 0)
         return;
 
     uint32_t fbe_struct_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset());
-    get_fields(fbe_value, fbe_struct_size);
+    get_fields(fbe_value, fbe_struct_size, resource);
     get_end(fbe_begin);
 }
 
-void FieldModel<::protoex_pmr::BalanceMessage>::get_fields([[maybe_unused]] ::protoex_pmr::BalanceMessage& fbe_value, [[maybe_unused]] size_t fbe_struct_size) const noexcept
+void FieldModel<::protoex_pmr::BalanceMessage>::get_fields([[maybe_unused]] ::protoex_pmr::BalanceMessage& fbe_value, [[maybe_unused]] size_t fbe_struct_size, pmr::memory_resource* resource) const noexcept
 {
     size_t fbe_current_size = 4 + 4;
 
     if ((fbe_current_size + body.fbe_size()) <= fbe_struct_size)
-        body.get(fbe_value.body);
+        body.get(fbe_value.body, resource);
     else
         fbe_value.body = ::protoex_pmr::Balance();
     fbe_current_size += body.fbe_size();
@@ -1178,19 +1178,19 @@ void FieldModel<::protoex_pmr::BalanceMessage>::set_end(size_t fbe_begin)
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModel<::protoex_pmr::BalanceMessage>::set(const ::protoex_pmr::BalanceMessage& fbe_value) noexcept
+void FieldModel<::protoex_pmr::BalanceMessage>::set(const ::protoex_pmr::BalanceMessage& fbe_value, pmr::memory_resource* resource) noexcept
 {
     size_t fbe_begin = set_begin();
     if (fbe_begin == 0)
         return;
 
-    set_fields(fbe_value);
+    set_fields(fbe_value, resource);
     set_end(fbe_begin);
 }
 
-void FieldModel<::protoex_pmr::BalanceMessage>::set_fields([[maybe_unused]] const ::protoex_pmr::BalanceMessage& fbe_value) noexcept
+void FieldModel<::protoex_pmr::BalanceMessage>::set_fields([[maybe_unused]] const ::protoex_pmr::BalanceMessage& fbe_value, pmr::memory_resource* resource) noexcept
 {
-    body.set(fbe_value.body);
+    body.set(fbe_value.body, resource);
 }
 
 namespace protoex_pmr {
@@ -1221,15 +1221,15 @@ size_t BalanceMessageModel::create_end(size_t fbe_begin)
     return fbe_full_size;
 }
 
-size_t BalanceMessageModel::serialize(const ::protoex_pmr::BalanceMessage& value)
+size_t BalanceMessageModel::serialize(const ::protoex_pmr::BalanceMessage& value, pmr::memory_resource* resource)
 {
     size_t fbe_begin = create_begin();
-    model.set(value);
+    model.set(value, resource);
     size_t fbe_full_size = create_end(fbe_begin);
     return fbe_full_size;
 }
 
-size_t BalanceMessageModel::deserialize(::protoex_pmr::BalanceMessage& value) const noexcept
+size_t BalanceMessageModel::deserialize(::protoex_pmr::BalanceMessage& value, pmr::memory_resource* resource) const noexcept
 {
     if ((this->buffer().offset() + model.fbe_offset() - 4) > this->buffer().size())
         return 0;
@@ -1239,7 +1239,7 @@ size_t BalanceMessageModel::deserialize(::protoex_pmr::BalanceMessage& value) co
     if (fbe_full_size < model.fbe_size())
         return 0;
 
-    model.get(value);
+    model.get(value, resource);
     return fbe_full_size;
 }
 
@@ -1337,23 +1337,23 @@ void FieldModel<::protoex_pmr::AccountMessage>::get_end(size_t fbe_begin) const 
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModel<::protoex_pmr::AccountMessage>::get(::protoex_pmr::AccountMessage& fbe_value) const noexcept
+void FieldModel<::protoex_pmr::AccountMessage>::get(::protoex_pmr::AccountMessage& fbe_value, pmr::memory_resource* resource) const noexcept
 {
     size_t fbe_begin = get_begin();
     if (fbe_begin == 0)
         return;
 
     uint32_t fbe_struct_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset());
-    get_fields(fbe_value, fbe_struct_size);
+    get_fields(fbe_value, fbe_struct_size, resource);
     get_end(fbe_begin);
 }
 
-void FieldModel<::protoex_pmr::AccountMessage>::get_fields([[maybe_unused]] ::protoex_pmr::AccountMessage& fbe_value, [[maybe_unused]] size_t fbe_struct_size) const noexcept
+void FieldModel<::protoex_pmr::AccountMessage>::get_fields([[maybe_unused]] ::protoex_pmr::AccountMessage& fbe_value, [[maybe_unused]] size_t fbe_struct_size, pmr::memory_resource* resource) const noexcept
 {
     size_t fbe_current_size = 4 + 4;
 
     if ((fbe_current_size + body.fbe_size()) <= fbe_struct_size)
-        body.get(fbe_value.body);
+        body.get(fbe_value.body, resource);
     else
         fbe_value.body = ::protoex_pmr::Account();
     fbe_current_size += body.fbe_size();
@@ -1384,19 +1384,19 @@ void FieldModel<::protoex_pmr::AccountMessage>::set_end(size_t fbe_begin)
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModel<::protoex_pmr::AccountMessage>::set(const ::protoex_pmr::AccountMessage& fbe_value) noexcept
+void FieldModel<::protoex_pmr::AccountMessage>::set(const ::protoex_pmr::AccountMessage& fbe_value, pmr::memory_resource* resource) noexcept
 {
     size_t fbe_begin = set_begin();
     if (fbe_begin == 0)
         return;
 
-    set_fields(fbe_value);
+    set_fields(fbe_value, resource);
     set_end(fbe_begin);
 }
 
-void FieldModel<::protoex_pmr::AccountMessage>::set_fields([[maybe_unused]] const ::protoex_pmr::AccountMessage& fbe_value) noexcept
+void FieldModel<::protoex_pmr::AccountMessage>::set_fields([[maybe_unused]] const ::protoex_pmr::AccountMessage& fbe_value, pmr::memory_resource* resource) noexcept
 {
-    body.set(fbe_value.body);
+    body.set(fbe_value.body, resource);
 }
 
 namespace protoex_pmr {
@@ -1427,15 +1427,15 @@ size_t AccountMessageModel::create_end(size_t fbe_begin)
     return fbe_full_size;
 }
 
-size_t AccountMessageModel::serialize(const ::protoex_pmr::AccountMessage& value)
+size_t AccountMessageModel::serialize(const ::protoex_pmr::AccountMessage& value, pmr::memory_resource* resource)
 {
     size_t fbe_begin = create_begin();
-    model.set(value);
+    model.set(value, resource);
     size_t fbe_full_size = create_end(fbe_begin);
     return fbe_full_size;
 }
 
-size_t AccountMessageModel::deserialize(::protoex_pmr::AccountMessage& value) const noexcept
+size_t AccountMessageModel::deserialize(::protoex_pmr::AccountMessage& value, pmr::memory_resource* resource) const noexcept
 {
     if ((this->buffer().offset() + model.fbe_offset() - 4) > this->buffer().size())
         return 0;
@@ -1445,7 +1445,7 @@ size_t AccountMessageModel::deserialize(::protoex_pmr::AccountMessage& value) co
     if (fbe_full_size < model.fbe_size())
         return 0;
 
-    model.get(value);
+    model.get(value, resource);
     return fbe_full_size;
 }
 

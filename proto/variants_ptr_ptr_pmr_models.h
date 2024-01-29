@@ -49,7 +49,7 @@ public:
     bool verify() const noexcept;
 
     // Get the variant value
-    void get(::variants_ptr_pmr::Expr& fbe_value) const noexcept;
+    void get(::variants_ptr_pmr::Expr& fbe_value, pmr::memory_resource* resource) const noexcept;
 
     // Set the variant value (begin phase)
     size_t set_begin(size_t variant_type_fbe_size, size_t variant_type_index);
@@ -57,7 +57,7 @@ public:
     void set_end(size_t fbe_begin);
 
     // Set the variant value
-    void set(const ::variants_ptr_pmr::Expr& fbe_value) noexcept;
+    void set(const ::variants_ptr_pmr::Expr& fbe_value, pmr::memory_resource* resource) noexcept;
 
 private:
     FBEBuffer& _buffer;
@@ -88,7 +88,7 @@ public:
     bool verify() const noexcept;
 
     // Get the variant value
-    void get(::variants_ptr_pmr::V& fbe_value) const noexcept;
+    void get(::variants_ptr_pmr::V& fbe_value, pmr::memory_resource* resource) const noexcept;
 
     // Set the variant value (begin phase)
     size_t set_begin(size_t variant_type_fbe_size, size_t variant_type_index);
@@ -96,7 +96,7 @@ public:
     void set_end(size_t fbe_begin);
 
     // Set the variant value
-    void set(const ::variants_ptr_pmr::V& fbe_value) noexcept;
+    void set(const ::variants_ptr_pmr::V& fbe_value, pmr::memory_resource* resource) noexcept;
 
 private:
     FBEBuffer& _buffer;
@@ -127,7 +127,7 @@ public:
     bool verify() const noexcept;
 
     // Get the variant value
-    void get(::variants_ptr_pmr::Scalar1& fbe_value) const noexcept;
+    void get(::variants_ptr_pmr::Scalar1& fbe_value, pmr::memory_resource* resource) const noexcept;
 
     // Set the variant value (begin phase)
     size_t set_begin(size_t variant_type_fbe_size, size_t variant_type_index);
@@ -135,7 +135,7 @@ public:
     void set_end(size_t fbe_begin);
 
     // Set the variant value
-    void set(const ::variants_ptr_pmr::Scalar1& fbe_value) noexcept;
+    void set(const ::variants_ptr_pmr::Scalar1& fbe_value, pmr::memory_resource* resource) noexcept;
 
 private:
     FBEBuffer& _buffer;
@@ -173,9 +173,9 @@ public:
     void get_end(size_t fbe_begin) const noexcept;
 
     // Get the struct value
-    void get(::variants_ptr_pmr::Simple** fbe_value) noexcept;
+    void get(::variants_ptr_pmr::Simple** fbe_value, pmr::memory_resource* resource) noexcept;
     // Get the struct fields values
-    void get_fields(::variants_ptr_pmr::Simple& fbe_value, size_t fbe_struct_size) noexcept;
+    void get_fields(::variants_ptr_pmr::Simple& fbe_value, size_t fbe_struct_size, pmr::memory_resource* resource) noexcept;
 
     // Set the struct value (begin phase)
     size_t set_begin(bool has_value);
@@ -183,9 +183,9 @@ public:
     void set_end(size_t fbe_begin);
 
     // Set the struct value
-    void set(const ::variants_ptr_pmr::Simple* fbe_value) noexcept;
+    void set(const ::variants_ptr_pmr::Simple* fbe_value, pmr::memory_resource* resource) noexcept;
     // Set the struct fields values
-    void set_fields(const ::variants_ptr_pmr::Simple* fbe_value) noexcept;
+    void set_fields(const ::variants_ptr_pmr::Simple* fbe_value, pmr::memory_resource* resource) noexcept;
 
 private:
     FBEBuffer& _buffer;
@@ -226,9 +226,9 @@ public:
     void get_end(size_t fbe_begin) const noexcept;
 
     // Get the struct value
-    void get(::variants_ptr_pmr::ExprContainer** fbe_value) noexcept;
+    void get(::variants_ptr_pmr::ExprContainer** fbe_value, pmr::memory_resource* resource) noexcept;
     // Get the struct fields values
-    void get_fields(::variants_ptr_pmr::ExprContainer& fbe_value, size_t fbe_struct_size) noexcept;
+    void get_fields(::variants_ptr_pmr::ExprContainer& fbe_value, size_t fbe_struct_size, pmr::memory_resource* resource) noexcept;
 
     // Set the struct value (begin phase)
     size_t set_begin(bool has_value);
@@ -236,9 +236,9 @@ public:
     void set_end(size_t fbe_begin);
 
     // Set the struct value
-    void set(const ::variants_ptr_pmr::ExprContainer* fbe_value) noexcept;
+    void set(const ::variants_ptr_pmr::ExprContainer* fbe_value, pmr::memory_resource* resource) noexcept;
     // Set the struct fields values
-    void set_fields(const ::variants_ptr_pmr::ExprContainer* fbe_value) noexcept;
+    void set_fields(const ::variants_ptr_pmr::ExprContainer* fbe_value, pmr::memory_resource* resource) noexcept;
 
 private:
     FBEBuffer& _buffer;
@@ -279,9 +279,9 @@ public:
     void get_end(size_t fbe_begin) const noexcept;
 
     // Get the struct value
-    void get(::variants_ptr_pmr::Value** fbe_value) noexcept;
+    void get(::variants_ptr_pmr::Value** fbe_value, pmr::memory_resource* resource) noexcept;
     // Get the struct fields values
-    void get_fields(::variants_ptr_pmr::Value& fbe_value, size_t fbe_struct_size) noexcept;
+    void get_fields(::variants_ptr_pmr::Value& fbe_value, size_t fbe_struct_size, pmr::memory_resource* resource) noexcept;
 
     // Set the struct value (begin phase)
     size_t set_begin(bool has_value);
@@ -289,9 +289,9 @@ public:
     void set_end(size_t fbe_begin);
 
     // Set the struct value
-    void set(const ::variants_ptr_pmr::Value* fbe_value) noexcept;
+    void set(const ::variants_ptr_pmr::Value* fbe_value, pmr::memory_resource* resource) noexcept;
     // Set the struct fields values
-    void set_fields(const ::variants_ptr_pmr::Value* fbe_value) noexcept;
+    void set_fields(const ::variants_ptr_pmr::Value* fbe_value, pmr::memory_resource* resource) noexcept;
 
 private:
     FBEBuffer& _buffer;
@@ -332,9 +332,9 @@ public:
     void get_end(size_t fbe_begin) const noexcept;
 
     // Get the struct value
-    void get(::variants_ptr_pmr::ValueContainer** fbe_value) noexcept;
+    void get(::variants_ptr_pmr::ValueContainer** fbe_value, pmr::memory_resource* resource) noexcept;
     // Get the struct fields values
-    void get_fields(::variants_ptr_pmr::ValueContainer& fbe_value, size_t fbe_struct_size) noexcept;
+    void get_fields(::variants_ptr_pmr::ValueContainer& fbe_value, size_t fbe_struct_size, pmr::memory_resource* resource) noexcept;
 
     // Set the struct value (begin phase)
     size_t set_begin(bool has_value);
@@ -342,9 +342,9 @@ public:
     void set_end(size_t fbe_begin);
 
     // Set the struct value
-    void set(const ::variants_ptr_pmr::ValueContainer* fbe_value) noexcept;
+    void set(const ::variants_ptr_pmr::ValueContainer* fbe_value, pmr::memory_resource* resource) noexcept;
     // Set the struct fields values
-    void set_fields(const ::variants_ptr_pmr::ValueContainer* fbe_value) noexcept;
+    void set_fields(const ::variants_ptr_pmr::ValueContainer* fbe_value, pmr::memory_resource* resource) noexcept;
 
 private:
     FBEBuffer& _buffer;
@@ -385,9 +385,9 @@ public:
     void get_end(size_t fbe_begin) const noexcept;
 
     // Get the struct value
-    void get(::variants_ptr_pmr::Scalar1Container** fbe_value) noexcept;
+    void get(::variants_ptr_pmr::Scalar1Container** fbe_value, pmr::memory_resource* resource) noexcept;
     // Get the struct fields values
-    void get_fields(::variants_ptr_pmr::Scalar1Container& fbe_value, size_t fbe_struct_size) noexcept;
+    void get_fields(::variants_ptr_pmr::Scalar1Container& fbe_value, size_t fbe_struct_size, pmr::memory_resource* resource) noexcept;
 
     // Set the struct value (begin phase)
     size_t set_begin(bool has_value);
@@ -395,9 +395,9 @@ public:
     void set_end(size_t fbe_begin);
 
     // Set the struct value
-    void set(const ::variants_ptr_pmr::Scalar1Container* fbe_value) noexcept;
+    void set(const ::variants_ptr_pmr::Scalar1Container* fbe_value, pmr::memory_resource* resource) noexcept;
     // Set the struct fields values
-    void set_fields(const ::variants_ptr_pmr::Scalar1Container* fbe_value) noexcept;
+    void set_fields(const ::variants_ptr_pmr::Scalar1Container* fbe_value, pmr::memory_resource* resource) noexcept;
 
 private:
     FBEBuffer& _buffer;
@@ -440,9 +440,9 @@ public:
     void get_end(size_t fbe_begin) const noexcept override;
 
     // Get the struct value
-    void get(::FBE::Base& fbe_value) noexcept override;
+    void get(::FBE::Base& fbe_value, pmr::memory_resource* resource) noexcept override;
     // Get the struct fields values
-    void get_fields(::FBE::Base& fbe_value, size_t fbe_struct_size) noexcept override;
+    void get_fields(::FBE::Base& fbe_value, size_t fbe_struct_size, pmr::memory_resource* resource) noexcept override;
 
     // Set the struct value (begin phase)
     size_t set_begin() override;
@@ -450,9 +450,9 @@ public:
     void set_end(size_t fbe_begin) override;
 
     // Set the struct value
-    void set(const ::FBE::Base& fbe_value) noexcept override;
+    void set(const ::FBE::Base& fbe_value, pmr::memory_resource* resource) noexcept override;
     // Set the struct fields values
-    void set_fields(const ::FBE::Base& fbe_value) noexcept override;
+    void set_fields(const ::FBE::Base& fbe_value, pmr::memory_resource* resource) noexcept override;
 
 private:
     FBEBuffer& _buffer;
@@ -485,9 +485,9 @@ public:
     size_t create_end(size_t fbe_begin);
 
     // Serialize the struct value
-    size_t serialize(const ::variants_ptr_pmr::Simple& value);
+    size_t serialize(const ::variants_ptr_pmr::Simple& value, pmr::memory_resource* resource);
     // Deserialize the struct value
-    size_t deserialize(::variants_ptr_pmr::Simple& value) noexcept;
+    size_t deserialize(::variants_ptr_pmr::Simple& value, pmr::memory_resource* resource) noexcept;
 
     // Move to the next struct value
     void next(size_t prev) noexcept { model.fbe_shift(prev); }
@@ -531,9 +531,9 @@ public:
     void get_end(size_t fbe_begin) const noexcept override;
 
     // Get the struct value
-    void get(::FBE::Base& fbe_value) noexcept override;
+    void get(::FBE::Base& fbe_value, pmr::memory_resource* resource) noexcept override;
     // Get the struct fields values
-    void get_fields(::FBE::Base& fbe_value, size_t fbe_struct_size) noexcept override;
+    void get_fields(::FBE::Base& fbe_value, size_t fbe_struct_size, pmr::memory_resource* resource) noexcept override;
 
     // Set the struct value (begin phase)
     size_t set_begin() override;
@@ -541,9 +541,9 @@ public:
     void set_end(size_t fbe_begin) override;
 
     // Set the struct value
-    void set(const ::FBE::Base& fbe_value) noexcept override;
+    void set(const ::FBE::Base& fbe_value, pmr::memory_resource* resource) noexcept override;
     // Set the struct fields values
-    void set_fields(const ::FBE::Base& fbe_value) noexcept override;
+    void set_fields(const ::FBE::Base& fbe_value, pmr::memory_resource* resource) noexcept override;
 
 private:
     FBEBuffer& _buffer;
@@ -578,9 +578,9 @@ public:
     size_t create_end(size_t fbe_begin);
 
     // Serialize the struct value
-    size_t serialize(const ::variants_ptr_pmr::ExprContainer& value);
+    size_t serialize(const ::variants_ptr_pmr::ExprContainer& value, pmr::memory_resource* resource);
     // Deserialize the struct value
-    size_t deserialize(::variants_ptr_pmr::ExprContainer& value) noexcept;
+    size_t deserialize(::variants_ptr_pmr::ExprContainer& value, pmr::memory_resource* resource) noexcept;
 
     // Move to the next struct value
     void next(size_t prev) noexcept { model.fbe_shift(prev); }
@@ -624,9 +624,9 @@ public:
     void get_end(size_t fbe_begin) const noexcept override;
 
     // Get the struct value
-    void get(::FBE::Base& fbe_value) noexcept override;
+    void get(::FBE::Base& fbe_value, pmr::memory_resource* resource) noexcept override;
     // Get the struct fields values
-    void get_fields(::FBE::Base& fbe_value, size_t fbe_struct_size) noexcept override;
+    void get_fields(::FBE::Base& fbe_value, size_t fbe_struct_size, pmr::memory_resource* resource) noexcept override;
 
     // Set the struct value (begin phase)
     size_t set_begin() override;
@@ -634,9 +634,9 @@ public:
     void set_end(size_t fbe_begin) override;
 
     // Set the struct value
-    void set(const ::FBE::Base& fbe_value) noexcept override;
+    void set(const ::FBE::Base& fbe_value, pmr::memory_resource* resource) noexcept override;
     // Set the struct fields values
-    void set_fields(const ::FBE::Base& fbe_value) noexcept override;
+    void set_fields(const ::FBE::Base& fbe_value, pmr::memory_resource* resource) noexcept override;
 
 private:
     FBEBuffer& _buffer;
@@ -671,9 +671,9 @@ public:
     size_t create_end(size_t fbe_begin);
 
     // Serialize the struct value
-    size_t serialize(const ::variants_ptr_pmr::Value& value);
+    size_t serialize(const ::variants_ptr_pmr::Value& value, pmr::memory_resource* resource);
     // Deserialize the struct value
-    size_t deserialize(::variants_ptr_pmr::Value& value) noexcept;
+    size_t deserialize(::variants_ptr_pmr::Value& value, pmr::memory_resource* resource) noexcept;
 
     // Move to the next struct value
     void next(size_t prev) noexcept { model.fbe_shift(prev); }
@@ -717,9 +717,9 @@ public:
     void get_end(size_t fbe_begin) const noexcept override;
 
     // Get the struct value
-    void get(::FBE::Base& fbe_value) noexcept override;
+    void get(::FBE::Base& fbe_value, pmr::memory_resource* resource) noexcept override;
     // Get the struct fields values
-    void get_fields(::FBE::Base& fbe_value, size_t fbe_struct_size) noexcept override;
+    void get_fields(::FBE::Base& fbe_value, size_t fbe_struct_size, pmr::memory_resource* resource) noexcept override;
 
     // Set the struct value (begin phase)
     size_t set_begin() override;
@@ -727,9 +727,9 @@ public:
     void set_end(size_t fbe_begin) override;
 
     // Set the struct value
-    void set(const ::FBE::Base& fbe_value) noexcept override;
+    void set(const ::FBE::Base& fbe_value, pmr::memory_resource* resource) noexcept override;
     // Set the struct fields values
-    void set_fields(const ::FBE::Base& fbe_value) noexcept override;
+    void set_fields(const ::FBE::Base& fbe_value, pmr::memory_resource* resource) noexcept override;
 
 private:
     FBEBuffer& _buffer;
@@ -763,9 +763,9 @@ public:
     size_t create_end(size_t fbe_begin);
 
     // Serialize the struct value
-    size_t serialize(const ::variants_ptr_pmr::ValueContainer& value);
+    size_t serialize(const ::variants_ptr_pmr::ValueContainer& value, pmr::memory_resource* resource);
     // Deserialize the struct value
-    size_t deserialize(::variants_ptr_pmr::ValueContainer& value) noexcept;
+    size_t deserialize(::variants_ptr_pmr::ValueContainer& value, pmr::memory_resource* resource) noexcept;
 
     // Move to the next struct value
     void next(size_t prev) noexcept { model.fbe_shift(prev); }
@@ -809,9 +809,9 @@ public:
     void get_end(size_t fbe_begin) const noexcept override;
 
     // Get the struct value
-    void get(::FBE::Base& fbe_value) noexcept override;
+    void get(::FBE::Base& fbe_value, pmr::memory_resource* resource) noexcept override;
     // Get the struct fields values
-    void get_fields(::FBE::Base& fbe_value, size_t fbe_struct_size) noexcept override;
+    void get_fields(::FBE::Base& fbe_value, size_t fbe_struct_size, pmr::memory_resource* resource) noexcept override;
 
     // Set the struct value (begin phase)
     size_t set_begin() override;
@@ -819,9 +819,9 @@ public:
     void set_end(size_t fbe_begin) override;
 
     // Set the struct value
-    void set(const ::FBE::Base& fbe_value) noexcept override;
+    void set(const ::FBE::Base& fbe_value, pmr::memory_resource* resource) noexcept override;
     // Set the struct fields values
-    void set_fields(const ::FBE::Base& fbe_value) noexcept override;
+    void set_fields(const ::FBE::Base& fbe_value, pmr::memory_resource* resource) noexcept override;
 
 private:
     FBEBuffer& _buffer;
@@ -854,9 +854,9 @@ public:
     size_t create_end(size_t fbe_begin);
 
     // Serialize the struct value
-    size_t serialize(const ::variants_ptr_pmr::Scalar1Container& value);
+    size_t serialize(const ::variants_ptr_pmr::Scalar1Container& value, pmr::memory_resource* resource);
     // Deserialize the struct value
-    size_t deserialize(::variants_ptr_pmr::Scalar1Container& value) noexcept;
+    size_t deserialize(::variants_ptr_pmr::Scalar1Container& value, pmr::memory_resource* resource) noexcept;
 
     // Move to the next struct value
     void next(size_t prev) noexcept { model.fbe_shift(prev); }

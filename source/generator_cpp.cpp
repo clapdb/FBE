@@ -12,7 +12,9 @@
     \copyright MIT License
 */
 #include "generator_cpp.h"
+#include "fbe.h"
 #include "generator_cpp_fixture.h"
+#include <memory>
 #include <variant>
 
 namespace FBE {
@@ -3174,9 +3176,9 @@ void GeneratorCpp::GenerateStructFieldModel_Header(const std::shared_ptr<Package
     // Generate struct field model get(), get_fields() methods
     WriteLine();
     WriteLineIndent("// Get the struct value");
-    WriteLineIndent("void get(" + struct_name + "& fbe_value) const noexcept;");
+    WriteLineIndent("void get(" + struct_name + "& fbe_value, pmr::memory_resource* resource) const noexcept;");
     WriteLineIndent("// Get the struct fields values");
-    WriteLineIndent("void get_fields(" + struct_name + "& fbe_value, size_t fbe_struct_size) const noexcept;");
+    WriteLineIndent("void get_fields(" + struct_name + "& fbe_value, size_t fbe_struct_size, pmr::memory_resource* resource) const noexcept;");
 
     // Generate struct field model set_begin(), set_end() methods
     WriteLine();
@@ -3188,9 +3190,9 @@ void GeneratorCpp::GenerateStructFieldModel_Header(const std::shared_ptr<Package
     // Generate struct field model set(), set_fields() methods
     WriteLine();
     WriteLineIndent("// Set the struct value");
-    WriteLineIndent("void set(const " + struct_name + "& fbe_value) noexcept;");
+    WriteLineIndent("void set(const " + struct_name + "& fbe_value, pmr::memory_resource* resource) noexcept;");
     WriteLineIndent("// Set the struct fields values");
-    WriteLineIndent("void set_fields(const " + struct_name + "& fbe_value) noexcept;");
+    WriteLineIndent("void set_fields(const " + struct_name + "& fbe_value, pmr::memory_resource* resource) noexcept;");
 
     // Generate struct field model buffer & offset
     Indent(-1);
@@ -3424,7 +3426,7 @@ void GeneratorCpp::GenerateStructFieldModel_Source(const std::shared_ptr<Package
     WriteLine();
 
     // Generate struct field model get() method
-    WriteLineIndent("void " + model_name + "::get(" + struct_name + "& fbe_value) const noexcept");
+    WriteLineIndent("void " + model_name + "::get(" + struct_name + "& fbe_value, pmr::memory_resource* resource) const noexcept");
     WriteLineIndent("{");
     Indent(1);
     WriteLineIndent("size_t fbe_begin = get_begin();");
@@ -3434,14 +3436,14 @@ void GeneratorCpp::GenerateStructFieldModel_Source(const std::shared_ptr<Package
     Indent(-1);
     WriteLine();
     WriteLineIndent("uint32_t fbe_struct_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset());");
-    WriteLineIndent("get_fields(fbe_value, fbe_struct_size);");
+    WriteLineIndent("get_fields(fbe_value, fbe_struct_size, resource);");
     WriteLineIndent("get_end(fbe_begin);");
     Indent(-1);
     WriteLineIndent("}");
     WriteLine();
 
     // Generate struct field model get_fields() method
-    WriteLineIndent("void " + model_name + "::get_fields([[maybe_unused]] " + struct_name + "& fbe_value, [[maybe_unused]] size_t fbe_struct_size) const noexcept");
+    WriteLineIndent("void " + model_name + "::get_fields([[maybe_unused]] " + struct_name + "& fbe_value, [[maybe_unused]] size_t fbe_struct_size, pmr::memory_resource* resource) const noexcept");
     WriteLineIndent("{");
     Indent(1);
     if ((s->base && !s->base->empty()) || (s->body && !s->body->fields.empty()))
@@ -3452,7 +3454,7 @@ void GeneratorCpp::GenerateStructFieldModel_Source(const std::shared_ptr<Package
             WriteLine();
             WriteLineIndent("if ((fbe_current_size + parent.fbe_body() - 4 - 4) <= fbe_struct_size)");
             Indent(1);
-            WriteLineIndent("parent.get_fields(fbe_value, fbe_struct_size);");
+            WriteLineIndent("parent.get_fields(fbe_value, fbe_struct_size, resource);");
             Indent(-1);
             WriteLineIndent("fbe_current_size += parent.fbe_body() - 4 - 4;");
         }
@@ -3463,7 +3465,7 @@ void GeneratorCpp::GenerateStructFieldModel_Source(const std::shared_ptr<Package
                 WriteLine();
                 WriteLineIndent("if ((fbe_current_size + " + *field->name + ".fbe_size()) <= fbe_struct_size)");
                 Indent(1);
-                WriteLineIndent(*field->name + ".get(fbe_value." + *field->name + (field->value ? (", " + ConvertConstant(*field->type, *field->value, field->optional)) : "") +");");
+                WriteLineIndent(*field->name + ".get(fbe_value." + *field->name + (field->value ? (", resource, " + ConvertConstant(*field->type, *field->value, field->optional)) : ", resource") +");");
                 Indent(-1);
                 WriteLineIndent("else");
                 Indent(1);
@@ -3522,7 +3524,7 @@ void GeneratorCpp::GenerateStructFieldModel_Source(const std::shared_ptr<Package
     WriteLine();
 
     // Generate struct field model set() method
-    WriteLineIndent("void " + model_name + "::set(const " + struct_name + "& fbe_value) noexcept");
+    WriteLineIndent("void " + model_name + "::set(const " + struct_name + "& fbe_value, pmr::memory_resource* resource) noexcept");
     WriteLineIndent("{");
     Indent(1);
     WriteLineIndent("size_t fbe_begin = set_begin();");
@@ -3531,23 +3533,23 @@ void GeneratorCpp::GenerateStructFieldModel_Source(const std::shared_ptr<Package
     WriteLineIndent("return;");
     Indent(-1);
     WriteLine();
-    WriteLineIndent("set_fields(fbe_value);");
+    WriteLineIndent("set_fields(fbe_value, resource);");
     WriteLineIndent("set_end(fbe_begin);");
     Indent(-1);
     WriteLineIndent("}");
     WriteLine();
 
     // Generate struct field model set_fields() method
-    WriteLineIndent("void " + model_name + "::set_fields([[maybe_unused]] const " + struct_name + "& fbe_value) noexcept");
+    WriteLineIndent("void " + model_name + "::set_fields([[maybe_unused]] const " + struct_name + "& fbe_value, pmr::memory_resource* resource) noexcept");
     WriteLineIndent("{");
     Indent(1);
     if ((s->base && !s->base->empty()) || (s->body && !s->body->fields.empty()))
     {
         if (s->base && !s->base->empty())
-            WriteLineIndent("parent.set_fields(fbe_value);");
+            WriteLineIndent("parent.set_fields(fbe_value, resource);");
         if (s->body)
             for (const auto& field : s->body->fields)
-                WriteLineIndent(*field->name + ".set(fbe_value." + *field->name + ");");
+                WriteLineIndent(*field->name + ".set(fbe_value." + *field->name + ", resource);");
     }
     Indent(-1);
     WriteLineIndent("}");
@@ -3595,9 +3597,9 @@ void GeneratorCpp::GenerateStructModel_Header(const std::shared_ptr<Package>& p,
     // Generate struct model serialize(), deserialize() methods
     WriteLine();
     WriteLineIndent("// Serialize the struct value");
-    WriteLineIndent("size_t serialize(const " + struct_name + "& value);");
+    WriteLineIndent("size_t serialize(const " + struct_name + "& value, pmr::memory_resource* resource);");
     WriteLineIndent("// Deserialize the struct value");
-    WriteLineIndent("size_t deserialize(" + struct_name + "& value) const noexcept;");
+    WriteLineIndent("size_t deserialize(" + struct_name + "& value, pmr::memory_resource* resource) const noexcept;");
 
     // Generate struct model next() method
     WriteLine();
@@ -3673,11 +3675,11 @@ void GeneratorCpp::GenerateStructModel_Source(const std::shared_ptr<Package>& p,
     WriteLine();
 
     // Generate struct model serialize() method
-    WriteLineIndent("size_t " + model_name + "::serialize(const " + struct_name + "& value)");
+    WriteLineIndent("size_t " + model_name + "::serialize(const " + struct_name + "& value, pmr::memory_resource* resource)");
     WriteLineIndent("{");
     Indent(1);
     WriteLineIndent("size_t fbe_begin = create_begin();");
-    WriteLineIndent("model.set(value);");
+    WriteLineIndent("model.set(value, resource);");
     WriteLineIndent("size_t fbe_full_size = create_end(fbe_begin);");
     WriteLineIndent("return fbe_full_size;");
     Indent(-1);
@@ -3685,7 +3687,7 @@ void GeneratorCpp::GenerateStructModel_Source(const std::shared_ptr<Package>& p,
     WriteLine();
 
     // Generate struct model deserialize() method
-    WriteLineIndent("size_t " + model_name + "::deserialize(" + struct_name + "& value) const noexcept");
+    WriteLineIndent("size_t " + model_name + "::deserialize(" + struct_name + "& value, pmr::memory_resource* resource) const noexcept");
     WriteLineIndent("{");
     Indent(1);
     WriteLineIndent("if ((this->buffer().offset() + model.fbe_offset() - 4) > this->buffer().size())");
@@ -3700,7 +3702,7 @@ void GeneratorCpp::GenerateStructModel_Source(const std::shared_ptr<Package>& p,
     WriteLineIndent("return 0;");
     Indent(-1);
     WriteLine();
-    WriteLineIndent("model.get(value);");
+    WriteLineIndent("model.get(value, resource);");
     WriteLineIndent("return fbe_full_size;");
     Indent(-1);
     WriteLineIndent("}");
@@ -4257,7 +4259,11 @@ void GeneratorCpp::GenerateSender_Source(const std::shared_ptr<Package>& p, bool
                 WriteLineIndent("{");
                 Indent(1);
                 WriteLineIndent("// Serialize the value into the FBE stream");
-                WriteLineIndent("size_t serialized = " + *s->name + "Model.serialize(value);");
+                if (not final) {
+                    WriteLineIndent("size_t serialized = " + *s->name + "Model.serialize(value, nullptr);");
+                } else {
+                    WriteLineIndent("size_t serialized = " + *s->name + "Model.serialize(value);");
+                }
                 WriteLineIndent("assert((serialized > 0) && \"" + ConvertNamespace(*p->name) + "::" + *s->name + " serialization failed!\");");
                 WriteLineIndent("assert(" + *s->name + "Model.verify() && \"" + ConvertNamespace(*p->name) + "::" + *s->name + " validation failed!\");");
                 WriteLine();
@@ -4390,7 +4396,11 @@ void GeneratorCpp::GenerateReceiver_Source(const std::shared_ptr<Package>& p, bo
                 WriteLineIndent("// Deserialize the value from the FBE stream");
                 WriteLineIndent(*s->name + "Model.attach(data, size);");
                 WriteLineIndent("assert(" + *s->name + "Model.verify() && \"" + ConvertNamespace(*p->name) + "::" + *s->name + " validation failed!\");");
-                WriteLineIndent("[[maybe_unused]] size_t deserialized = " + *s->name + "Model.deserialize(" + *s->name + "Value);");
+                if (not final) {
+                    WriteLineIndent("[[maybe_unused]] size_t deserialized = " + *s->name + "Model.deserialize(" + *s->name + "Value, nullptr);");
+                } else {
+                    WriteLineIndent("[[maybe_unused]] size_t deserialized = " + *s->name + "Model.deserialize(" + *s->name + "Value);");
+                }
                 WriteLineIndent("assert((deserialized > 0) && \"" + ConvertNamespace(*p->name) + "::" + *s->name + " deserialization failed!\");");
                 WriteLine();
                 WriteLineIndent("// Log the value");
@@ -6467,7 +6477,7 @@ void GeneratorCpp::GenerateVariantFieldModel_Header(const std::shared_ptr<Packag
     // Generate variant field model get(), get_fields() methods
     WriteLine();
     WriteLineIndent("// Get the variant value");
-    WriteLineIndent("void get(" + variant_name + "& fbe_value) const noexcept;");
+    WriteLineIndent("void get(" + variant_name + "& fbe_value, pmr::memory_resource* resource) const noexcept;");
 
     WriteLine();
     WriteLineIndent("// Set the variant value (begin phase)");
@@ -6478,7 +6488,7 @@ void GeneratorCpp::GenerateVariantFieldModel_Header(const std::shared_ptr<Packag
     // Generate variant field model set(), set_fields() methods
     WriteLine();
     WriteLineIndent("// Set the variant value");
-    WriteLineIndent("void set(const " + variant_name + "& fbe_value) noexcept;");
+    WriteLineIndent("void set(const " + variant_name + "& fbe_value, pmr::memory_resource* resource) noexcept;");
 
     // Generate variant field model buffer & offset
     Indent(-1);
@@ -6599,7 +6609,7 @@ void GeneratorCpp::GenerateVariantFieldModel_Source(const std::shared_ptr<Packag
     WriteLine();
 
     // Generate struct field model get() method
-    WriteLineIndent("void " + class_name + "::get(" + variant_name + "& fbe_value) const noexcept");
+    WriteLineIndent("void " + class_name + "::get(" + variant_name + "& fbe_value, pmr::memory_resource* resource) const noexcept");
     WriteLineIndent("{");
     Indent(1);
     WriteLineIndent("if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())");
@@ -6632,11 +6642,20 @@ void GeneratorCpp::GenerateVariantFieldModel_Source(const std::shared_ptr<Packag
         Indent(1);
         auto& value = v->body->values[index];
         WriteLineIndent(ConvertPtrVariantFieldModelType(p, value) + " fbe_model(_buffer, 4);");
-        // initialize variant
         auto variant_type = ConvertVariantTypeName(*p->name, *value);
-        WriteLineIndent("fbe_value.emplace<" + variant_type + ">();");
+        if (Arena() && IsPMRType(p, variant_type)) {
+          WriteLineIndent("fbe_value.emplace<" + variant_type + ">(resource);");
+        } else {
+          WriteLineIndent("fbe_value.emplace<" + variant_type + ">();");
+        }
+        // initialize variant
         WriteLineIndent("auto& value = std::get<" +  std::to_string(index + 1) + ">(fbe_value);");
-        WriteLineIndent(std::string("fbe_model.get(") + ((!IsContainerType(*value) && value->ptr) ? "&" : "") + "value);");
+        if (IsPMRType(p, variant_type)) {
+            WriteLineIndent(std::string("fbe_model.get(") + ((!IsContainerType(*value) && value->ptr) ? "&" : "") + "value, resource);");
+        } else {
+            WriteLineIndent(std::string("fbe_model.get(") + ((!IsContainerType(*value) && value->ptr) ? "&" : "") + "value, nullptr);");
+
+        }
         WriteLineIndent("break;");
         Indent(-1);
         WriteLineIndent("}");
@@ -6688,7 +6707,7 @@ void GeneratorCpp::GenerateVariantFieldModel_Source(const std::shared_ptr<Packag
 
     // Generate variant field model set() method
     WriteLineIndent("// Set the variant value");
-    WriteLineIndent("void " + class_name + "::set(const " + variant_name + "& fbe_value) noexcept");
+    WriteLineIndent("void " + class_name + "::set(const " + variant_name + "& fbe_value, pmr::memory_resource* resource) noexcept");
     WriteLineIndent("{");
     Indent(1);
     WriteLineIndent("assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && \"Model is broken!\");");
@@ -6702,7 +6721,7 @@ void GeneratorCpp::GenerateVariantFieldModel_Source(const std::shared_ptr<Packag
     WriteLineIndent("overloaded");
     WriteLineIndent("{");
     Indent(1);
-    WriteLineIndent("[this, fbe_variant_index = fbe_value.index()](std::monostate v) {");
+    WriteLineIndent("[this, fbe_variant_index = fbe_value.index(), resource](std::monostate v) {");
     Indent(1);
     WriteLineIndent("FieldModel<std::monostate> fbe_model(_buffer, 4);");
     WriteLineIndent("size_t fbe_begin = set_begin(fbe_model.fbe_size(), fbe_variant_index);");
@@ -6710,7 +6729,7 @@ void GeneratorCpp::GenerateVariantFieldModel_Source(const std::shared_ptr<Packag
     Indent(1);
     WriteLineIndent("return;");
     Indent(-1);
-    WriteLineIndent("fbe_model.set(v);");
+    WriteLineIndent("fbe_model.set(v, resource);");
     WriteLineIndent("set_end(fbe_begin);");
     Indent(-1);
     WriteLineIndent("}");
@@ -6718,7 +6737,7 @@ void GeneratorCpp::GenerateVariantFieldModel_Source(const std::shared_ptr<Packag
     for(auto index = 0; index < v->body->values.size(); index ++) {
         WriteIndent(", ");
         auto& value = v->body->values[index];
-        Write("[this, fbe_variant_index = fbe_value.index()](");
+        Write("[this, fbe_variant_index = fbe_value.index(), resource](");
         Write(ConvertVariantTypeNameAsArgument(*p->name, *value));
         WriteLine(" v) {");
         Indent(1);
@@ -6728,7 +6747,7 @@ void GeneratorCpp::GenerateVariantFieldModel_Source(const std::shared_ptr<Packag
         Indent(1);
         WriteLineIndent("return;");
         Indent(-1);
-        WriteLineIndent("fbe_model.set(v);");
+        WriteLineIndent("fbe_model.set(v, resource);");
         WriteLineIndent("set_end(fbe_begin);");
         Indent(-1);
         WriteLineIndent("}");
@@ -6793,9 +6812,9 @@ void GeneratorCpp::GenerateStructFieldPtrModel_Header(const std::shared_ptr<Pack
     // Generate struct field model get(), get_fields() methods
     WriteLine();
     WriteLineIndent("// Get the struct value");
-    WriteLineIndent("void get(" + struct_name + "** fbe_value) noexcept;");
+    WriteLineIndent("void get(" + struct_name + "** fbe_value, pmr::memory_resource* resource) noexcept;");
     WriteLineIndent("// Get the struct fields values");
-    WriteLineIndent("void get_fields(" + struct_name + "& fbe_value, size_t fbe_struct_size) noexcept;");
+    WriteLineIndent("void get_fields(" + struct_name + "& fbe_value, size_t fbe_struct_size, pmr::memory_resource* resource) noexcept;");
 
     // Generate struct field model set_begin(), set_end() methods
     WriteLine();
@@ -6807,9 +6826,9 @@ void GeneratorCpp::GenerateStructFieldPtrModel_Header(const std::shared_ptr<Pack
     // Generate struct field model set(), set_fields() methods
     WriteLine();
     WriteLineIndent("// Set the struct value");
-    WriteLineIndent("void set(const " + struct_name + "* fbe_value) noexcept;");
+    WriteLineIndent("void set(const " + struct_name + "* fbe_value, pmr::memory_resource* resource) noexcept;");
     WriteLineIndent("// Set the struct fields values");
-    WriteLineIndent("void set_fields(const " + struct_name + "* fbe_value) noexcept;");
+    WriteLineIndent("void set_fields(const " + struct_name + "* fbe_value, pmr::memory_resource* resource) noexcept;");
 
     // Generate struct field model buffer & offset
     Indent(-1);
@@ -6885,9 +6904,9 @@ void GeneratorCpp::GeneratePtrStructFieldModel_Header(const std::shared_ptr<Pack
     // Generate struct field model get(), get_fields() methods
     WriteLine();
     WriteLineIndent("// Get the struct value");
-    WriteLineIndent("void get(::FBE::Base& fbe_value) noexcept override;");
+    WriteLineIndent("void get(::FBE::Base& fbe_value, pmr::memory_resource* resource) noexcept override;");
     WriteLineIndent("// Get the struct fields values");
-    WriteLineIndent("void get_fields(::FBE::Base& fbe_value, size_t fbe_struct_size) noexcept override;");
+    WriteLineIndent("void get_fields(::FBE::Base& fbe_value, size_t fbe_struct_size, pmr::memory_resource* resource) noexcept override;");
 
     // Generate struct field model set_begin(), set_end() methods
     WriteLine();
@@ -6899,9 +6918,9 @@ void GeneratorCpp::GeneratePtrStructFieldModel_Header(const std::shared_ptr<Pack
     // Generate struct field model set(), set_fields() methods
     WriteLine();
     WriteLineIndent("// Set the struct value");
-    WriteLineIndent("void set(const ::FBE::Base& fbe_value) noexcept override;");
+    WriteLineIndent("void set(const ::FBE::Base& fbe_value, pmr::memory_resource* resource) noexcept override;");
     WriteLineIndent("// Set the struct fields values");
-    WriteLineIndent("void set_fields(const ::FBE::Base& fbe_value) noexcept override;");
+    WriteLineIndent("void set_fields(const ::FBE::Base& fbe_value, pmr::memory_resource* resource) noexcept override;");
 
     // Generate struct field model buffer & offset
     Indent(-1);
@@ -7129,7 +7148,7 @@ void GeneratorCpp::GeneratePtrStructFieldModel_Source(const std::shared_ptr<Pack
     WriteLine();
 
     // Generate struct field model get() method
-    WriteLineIndent("void " + class_name + "::get(::FBE::Base& fbe_value) noexcept");
+    WriteLineIndent("void "+ class_name + "::get(::FBE::Base& fbe_value, pmr::memory_resource* resource) noexcept");
     WriteLineIndent("{");
     Indent(1);
     WriteLineIndent("size_t fbe_begin = get_begin();");
@@ -7139,14 +7158,14 @@ void GeneratorCpp::GeneratePtrStructFieldModel_Source(const std::shared_ptr<Pack
     Indent(-1);
     WriteLine();
     WriteLineIndent("uint32_t fbe_struct_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset());");
-    WriteLineIndent("get_fields(fbe_value, fbe_struct_size);");
+    WriteLineIndent("get_fields(fbe_value, fbe_struct_size, resource);");
     WriteLineIndent("get_end(fbe_begin);");
     Indent(-1);
     WriteLineIndent("}");
     WriteLine();
 
     // Generate struct field model get_fields() method
-    WriteLineIndent("void " + class_name + "::get_fields([[maybe_unused]] ::FBE::Base& base_fbe_value, [[maybe_unused]] size_t fbe_struct_size) noexcept");
+    WriteLineIndent("void " + class_name + "::get_fields([[maybe_unused]] ::FBE::Base& base_fbe_value, [[maybe_unused]] size_t fbe_struct_size, pmr::memory_resource* resource) noexcept");
     WriteLineIndent("{");
     Indent(1);
     if ((s->base && !s->base->empty()) || (s->body && !s->body->fields.empty()))
@@ -7158,7 +7177,11 @@ void GeneratorCpp::GeneratePtrStructFieldModel_Source(const std::shared_ptr<Pack
             WriteLine();
             WriteLineIndent("if ((fbe_current_size + parent.fbe_body() - 4 - 4) <= fbe_struct_size)");
             Indent(1);
-            WriteLineIndent("parent.get_fields(fbe_value, fbe_struct_size);");
+            if (Arena()) {
+                WriteLineIndent("parent.get_fields(fbe_value, fbe_struct_size, resource);");
+            } else {
+                WriteLineIndent("parent.get_fields(fbe_value, fbe_struct_size);");
+            }
             Indent(-1);
             WriteLineIndent("fbe_current_size += parent.fbe_body() - 4 - 4;");
         }
@@ -7172,13 +7195,21 @@ void GeneratorCpp::GeneratePtrStructFieldModel_Source(const std::shared_ptr<Pack
                 if (!field->ptr || IsContainerType(*field)) {
                     WriteLineIndent("{");
                     Indent(1);
-                    WriteLineIndent(*field->name + ".get(fbe_value." + *field->name + ");");
+                    if (Arena()) {
+                        WriteLineIndent(*field->name + ".get(fbe_value." + *field->name + ", resource);");
+                    } else {
+                        WriteLineIndent(*field->name + ".get(fbe_value." + *field->name + ", nullptr);");
+                    }
                     Indent(-1);
                     WriteLineIndent("}");
                 } else {
                     WriteLineIndent("{");
                     Indent(1);
-                    WriteLineIndent(*field->name + ".get(&fbe_value." + *field->name + ");");
+                    if (Arena()) {
+                        WriteLineIndent(*field->name + ".get(&fbe_value." + *field->name + ", resource);");
+                    } else {
+                        WriteLineIndent(*field->name + ".get(&fbe_value." + *field->name + ", nullptr);");
+                    }
                     Indent(-1);
                     WriteLineIndent("}");
 
@@ -7242,7 +7273,7 @@ void GeneratorCpp::GeneratePtrStructFieldModel_Source(const std::shared_ptr<Pack
     WriteLine();
 
     // Generate struct field model set() method
-    WriteLineIndent("void " + class_name + "::set(const ::FBE::Base& fbe_value) noexcept");
+    WriteLineIndent("void " + class_name + "::set(const ::FBE::Base& fbe_value, pmr::memory_resource* resource) noexcept");
     WriteLineIndent("{");
     Indent(1);
     WriteLineIndent("size_t fbe_begin = set_begin();");
@@ -7251,28 +7282,28 @@ void GeneratorCpp::GeneratePtrStructFieldModel_Source(const std::shared_ptr<Pack
     WriteLineIndent("return;");
     Indent(-1);
     WriteLine();
-    WriteLineIndent("set_fields(fbe_value);");
+    WriteLineIndent("set_fields(fbe_value, resource);");
     WriteLineIndent("set_end(fbe_begin);");
     Indent(-1);
     WriteLineIndent("}");
     WriteLine();
 
     // Generate struct field model set_fields() method
-    WriteLineIndent("void " + class_name + "::set_fields([[maybe_unused]] const ::FBE::Base& base_fbe_value) noexcept");
+    WriteLineIndent("void " + class_name + "::set_fields([[maybe_unused]] const ::FBE::Base& base_fbe_value, pmr::memory_resource* resource) noexcept");
     WriteLineIndent("{");
     Indent(1);
     WriteLineIndent("[[maybe_unused]] const " + struct_name + "& fbe_value = static_cast<const " + struct_name + "&>(base_fbe_value);");
     if ((s->base && !s->base->empty()) || (s->body && !s->body->fields.empty()))
     {
         if (s->base && !s->base->empty())
-            WriteLineIndent("parent.set_fields(fbe_value);");
+            WriteLineIndent("parent.set_fields(fbe_value, resource);");
         if (s->body)
             for (const auto& field : s->body->fields)
             {
                 if (IsStructType(p, *field->type) && !field->ptr && !IsContainerType(*field) && !field->optional)
-                    WriteLineIndent(*field->name + ".set(static_cast<const ::" + ConvertNamespace(*p->name) + "::" + *field->type + "&>(" + "fbe_value." + *field->name + "));");
+                    WriteLineIndent(*field->name + ".set(static_cast<const ::" + ConvertNamespace(*p->name) + "::" + *field->type + "&>(" + "fbe_value." + *field->name + "), resource);");
                 else
-                    WriteLineIndent(*field->name + ".set(fbe_value." + *field->name + ");");
+                    WriteLineIndent(*field->name + ".set(fbe_value." + *field->name + ", resource);");
             }
     }
     Indent(-1);
@@ -7403,7 +7434,7 @@ void GeneratorCpp::GenerateStructFieldPtrModel_Source(const std::shared_ptr<Pack
     WriteLine();
 
     // Generate struct field model get() method
-    WriteLineIndent("void " + class_name + "::get(" + struct_name + "** fbe_value) noexcept");
+    WriteLineIndent("void " + class_name + "::get(" + struct_name + "** fbe_value, pmr::memory_resource* resource) noexcept");
     WriteLineIndent("{");
     Indent(1);
     WriteLineIndent("size_t fbe_begin = get_begin();");
@@ -7412,11 +7443,23 @@ void GeneratorCpp::GenerateStructFieldPtrModel_Source(const std::shared_ptr<Pack
     WriteLineIndent("return;");
     Indent(-1);
     WriteLine();
-    WriteLineIndent("if (ptr) delete ptr;");
-    WriteLineIndent(std::string("ptr = new FieldModel") + (Arena() ? "PMR_" : "_") + *p->name + "_" + *s->name + "(_buffer, 0);");
+    if (not Arena()) {
+      WriteLineIndent("if (ptr) delete ptr;");
+      WriteLineIndent(std::string("ptr = new FieldModel") + "_" + *p->name + "_" + *s->name + "(_buffer, 0);");
+    } else {
+        WriteLineIndent("pmr::polymorphic_allocator<char> allocator{resource};");
+        WriteLineIndent(std::string("auto* buffer = allocator.allocate(sizeof(FieldModelPMR_") + *p->name + "_" + *s->name + "));");
+        WriteLineIndent("ptr = new (buffer) FieldModelPMR_" + *p->name + "_" + *s->name + "(_buffer, 0);");
+        // WriteLineIndent(std::string("ptr = new FieldModel") + (Arena() ? "PMR_" : "_") + *p->name + "_" + *s->name + "(_buffer, 0);");
+    }
     WriteLine();
-    WriteLineIndent(struct_name + " *tempModel = new " + struct_name + "();");
-    WriteLineIndent("ptr->get(*tempModel);");
+    if (not Arena()) {
+        WriteLineIndent(struct_name + " *tempModel = new " + struct_name + "();");
+    } else {
+        WriteLineIndent(std::string("auto * buffer2 = allocator.allocate(sizeof(") + struct_name + "));");
+        WriteLineIndent(struct_name + " *tempModel = new (buffer2) " + struct_name + "(allocator);");
+    }
+    WriteLineIndent("ptr->get(*tempModel, resource);");
     WriteLineIndent("*fbe_value = tempModel;");
     WriteLine();
     WriteLineIndent("get_end(fbe_begin);");
@@ -7468,7 +7511,7 @@ void GeneratorCpp::GenerateStructFieldPtrModel_Source(const std::shared_ptr<Pack
     WriteLine();
 
     // Generate struct field model set() method
-    WriteLineIndent("void " + class_name + "::set(const " + struct_name + "* fbe_value) noexcept");
+    WriteLineIndent("void " + class_name + "::set(const " + struct_name + "* fbe_value, pmr::memory_resource* resource) noexcept");
     WriteLineIndent("{");
     Indent(1);
     WriteLineIndent("size_t fbe_begin = set_begin(fbe_value != nullptr);");
@@ -7479,10 +7522,16 @@ void GeneratorCpp::GenerateStructFieldPtrModel_Source(const std::shared_ptr<Pack
     WriteLine();
     WriteLineIndent("if (fbe_value != nullptr) {");
     Indent(1);
-    WriteLineIndent(std::string("BaseFieldModel* temp = new FieldModel") + (Arena() ? "PMR_" : "_") + *p->name + "_" + *s->name + "(_buffer, 0);");
-    WriteLineIndent("if (ptr) delete ptr;");
-    WriteLineIndent("ptr = temp;");
-    WriteLineIndent("ptr->set(*fbe_value);");
+    if (not Arena()) {
+        WriteLineIndent(std::string("BaseFieldModel* temp = new FieldModel") + (Arena() ? "PMR_" : "_") + *p->name + "_" + *s->name + "(_buffer, 0);");
+        WriteLineIndent("if (ptr) delete ptr;");
+        WriteLineIndent("ptr = temp;");
+    } else {
+        WriteLineIndent(std::string("pmr::polymorphic_allocator<char> allocator{resource};"));
+        WriteLineIndent(std::string("auto* buffer = allocator.allocate(sizeof(FieldModelPMR_") + *p->name + "_" + *s->name + "));");
+        WriteLineIndent("ptr = new (buffer) FieldModelPMR_" + *p->name + "_" + *s->name + "(_buffer, 0);");
+    }
+    WriteLineIndent("ptr->set(*fbe_value, nullptr);");
     Indent(-1);
     WriteLineIndent("}");
     WriteLine();
@@ -7534,9 +7583,9 @@ void GeneratorCpp::GeneratePtrStructModel_Header(const std::shared_ptr<Package>&
     // Generate struct model serialize(), deserialize() methods
     WriteLine();
     WriteLineIndent("// Serialize the struct value");
-    WriteLineIndent("size_t serialize(const " + struct_name + "& value);");
+    WriteLineIndent("size_t serialize(const " + struct_name + "& value, pmr::memory_resource* resource);");
     WriteLineIndent("// Deserialize the struct value");
-    WriteLineIndent("size_t deserialize(" + struct_name + "& value) noexcept;");
+    WriteLineIndent("size_t deserialize(" + struct_name + "& value, pmr::memory_resource* resource) noexcept;");
 
     // Generate struct model next() method
     WriteLine();
@@ -7612,11 +7661,11 @@ void GeneratorCpp::GeneratePtrStructModel_Source(const std::shared_ptr<Package>&
     WriteLine();
 
     // Generate struct model serialize() method
-    WriteLineIndent("size_t " + model_name + "::serialize(const " + struct_name + "& value)");
+    WriteLineIndent("size_t " + model_name + "::serialize(const " + struct_name + "& value, pmr::memory_resource* resource)");
     WriteLineIndent("{");
     Indent(1);
     WriteLineIndent("size_t fbe_begin = create_begin();");
-    WriteLineIndent("model.set(value);");
+    WriteLineIndent("model.set(value, resource);");
     WriteLineIndent("size_t fbe_full_size = create_end(fbe_begin);");
     WriteLineIndent("return fbe_full_size;");
     Indent(-1);
@@ -7624,7 +7673,7 @@ void GeneratorCpp::GeneratePtrStructModel_Source(const std::shared_ptr<Package>&
     WriteLine();
 
     // Generate struct model deserialize() method
-    WriteLineIndent("size_t " + model_name + "::deserialize(" + struct_name + "& value) noexcept");
+    WriteLineIndent("size_t " + model_name + "::deserialize(" + struct_name + "& value, pmr::memory_resource* resource) noexcept");
     WriteLineIndent("{");
     Indent(1);
     WriteLineIndent("if ((this->buffer().offset() + model.fbe_offset() - 4) > this->buffer().size())");
@@ -7639,7 +7688,7 @@ void GeneratorCpp::GeneratePtrStructModel_Source(const std::shared_ptr<Package>&
     WriteLineIndent("return 0;");
     Indent(-1);
     WriteLine();
-    WriteLineIndent("model.get(value);");
+    WriteLineIndent("model.get(value, resource);");
     WriteLineIndent("return fbe_full_size;");
     Indent(-1);
     WriteLineIndent("}");
@@ -8066,6 +8115,11 @@ bool GeneratorCpp::IsStructType(const std::shared_ptr<Package>& p, const std::st
         }
     }
     return false;
+}
+
+bool GeneratorCpp::IsPMRType(const std::shared_ptr<Package>& p, const std::string& field_type) {
+  return IsStructType(p, field_type) || field_type.starts_with("FBE::pmr") ||
+         field_type.starts_with("pmr") || field_type.starts_with("Arena");
 }
 
 std::string GeneratorCpp::ConvertPtrTypeName(const std::string& package, const std::string& type) {
