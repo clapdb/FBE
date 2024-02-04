@@ -128,41 +128,41 @@ void FieldModel<::osa::Extra>::get_end(size_t fbe_begin) const noexcept
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModel<::osa::Extra>::get(::osa::Extra& fbe_value) const noexcept
+void FieldModel<::osa::Extra>::get(::osa::Extra& fbe_value, pmr::memory_resource* resource) const noexcept
 {
     size_t fbe_begin = get_begin();
     if (fbe_begin == 0)
         return;
 
     uint32_t fbe_struct_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset());
-    get_fields(fbe_value, fbe_struct_size);
+    get_fields(fbe_value, fbe_struct_size, resource);
     get_end(fbe_begin);
 }
 
-void FieldModel<::osa::Extra>::get_fields([[maybe_unused]] ::osa::Extra& fbe_value, [[maybe_unused]] size_t fbe_struct_size) const noexcept
+void FieldModel<::osa::Extra>::get_fields([[maybe_unused]] ::osa::Extra& fbe_value, [[maybe_unused]] size_t fbe_struct_size, pmr::memory_resource* resource) const noexcept
 {
     size_t fbe_current_size = 4 + 4;
 
     if ((fbe_current_size + name.fbe_size()) <= fbe_struct_size)
-        name.get(fbe_value.name);
+        name.get(fbe_value.name, resource);
     else
         fbe_value.name = "";
     fbe_current_size += name.fbe_size();
 
     if ((fbe_current_size + detail.fbe_size()) <= fbe_struct_size)
-        detail.get(fbe_value.detail);
+        detail.get(fbe_value.detail, resource);
     else
         fbe_value.detail = "";
     fbe_current_size += detail.fbe_size();
 
     if ((fbe_current_size + sex.fbe_size()) <= fbe_struct_size)
-        sex.get(fbe_value.sex);
+        sex.get(fbe_value.sex, resource);
     else
         fbe_value.sex = ::osa::Sex();
     fbe_current_size += sex.fbe_size();
 
     if ((fbe_current_size + flag.fbe_size()) <= fbe_struct_size)
-        flag.get(fbe_value.flag);
+        flag.get(fbe_value.flag, resource);
     else
         fbe_value.flag = ::osa::MyFLags();
     fbe_current_size += flag.fbe_size();
@@ -193,22 +193,22 @@ void FieldModel<::osa::Extra>::set_end(size_t fbe_begin)
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModel<::osa::Extra>::set(const ::osa::Extra& fbe_value) noexcept
+void FieldModel<::osa::Extra>::set(const ::osa::Extra& fbe_value, pmr::memory_resource* resource) noexcept
 {
     size_t fbe_begin = set_begin();
     if (fbe_begin == 0)
         return;
 
-    set_fields(fbe_value);
+    set_fields(fbe_value, resource);
     set_end(fbe_begin);
 }
 
-void FieldModel<::osa::Extra>::set_fields([[maybe_unused]] const ::osa::Extra& fbe_value) noexcept
+void FieldModel<::osa::Extra>::set_fields([[maybe_unused]] const ::osa::Extra& fbe_value, pmr::memory_resource* resource) noexcept
 {
-    name.set(fbe_value.name);
-    detail.set(fbe_value.detail);
-    sex.set(fbe_value.sex);
-    flag.set(fbe_value.flag);
+    name.set(fbe_value.name, resource);
+    detail.set(fbe_value.detail, resource);
+    sex.set(fbe_value.sex, resource);
+    flag.set(fbe_value.flag, resource);
 }
 
 namespace osa {
@@ -239,15 +239,15 @@ size_t ExtraModel::create_end(size_t fbe_begin)
     return fbe_full_size;
 }
 
-size_t ExtraModel::serialize(const ::osa::Extra& value)
+size_t ExtraModel::serialize(const ::osa::Extra& value, pmr::memory_resource* resource)
 {
     size_t fbe_begin = create_begin();
-    model.set(value);
+    model.set(value, resource);
     size_t fbe_full_size = create_end(fbe_begin);
     return fbe_full_size;
 }
 
-size_t ExtraModel::deserialize(::osa::Extra& value) const noexcept
+size_t ExtraModel::deserialize(::osa::Extra& value, pmr::memory_resource* resource) const noexcept
 {
     if ((this->buffer().offset() + model.fbe_offset() - 4) > this->buffer().size())
         return 0;
@@ -257,7 +257,7 @@ size_t ExtraModel::deserialize(::osa::Extra& value) const noexcept
     if (fbe_full_size < model.fbe_size())
         return 0;
 
-    model.get(value);
+    model.get(value, resource);
     return fbe_full_size;
 }
 
@@ -382,40 +382,40 @@ void FieldModel<::osa::Simple>::get_end(size_t fbe_begin) const noexcept
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModel<::osa::Simple>::get(::osa::Simple& fbe_value) const noexcept
+void FieldModel<::osa::Simple>::get(::osa::Simple& fbe_value, pmr::memory_resource* resource) const noexcept
 {
     size_t fbe_begin = get_begin();
     if (fbe_begin == 0)
         return;
 
     uint32_t fbe_struct_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset());
-    get_fields(fbe_value, fbe_struct_size);
+    get_fields(fbe_value, fbe_struct_size, resource);
     get_end(fbe_begin);
 }
 
-void FieldModel<::osa::Simple>::get_fields([[maybe_unused]] ::osa::Simple& fbe_value, [[maybe_unused]] size_t fbe_struct_size) const noexcept
+void FieldModel<::osa::Simple>::get_fields([[maybe_unused]] ::osa::Simple& fbe_value, [[maybe_unused]] size_t fbe_struct_size, pmr::memory_resource* resource) const noexcept
 {
     size_t fbe_current_size = 4 + 4;
 
     if ((fbe_current_size + name.fbe_size()) <= fbe_struct_size)
-        name.get(fbe_value.name);
+        name.get(fbe_value.name, resource);
     else
         fbe_value.name = "";
     fbe_current_size += name.fbe_size();
 
     if ((fbe_current_size + depth.fbe_size()) <= fbe_struct_size)
-        depth.get(fbe_value.depth);
+        depth.get(fbe_value.depth, resource);
     else
         fbe_value.depth = (int32_t)0ll;
     fbe_current_size += depth.fbe_size();
 
     if ((fbe_current_size + sa.fbe_size()) <= fbe_struct_size)
-        sa.get(fbe_value.sa);
+        sa.get(fbe_value.sa, resource);
     else
     fbe_current_size += sa.fbe_size();
 
     if ((fbe_current_size + sex.fbe_size()) <= fbe_struct_size)
-        sex.get(fbe_value.sex);
+        sex.get(fbe_value.sex, resource);
     else
         fbe_value.sex = ::osa::Sex();
     fbe_current_size += sex.fbe_size();
@@ -446,22 +446,22 @@ void FieldModel<::osa::Simple>::set_end(size_t fbe_begin)
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModel<::osa::Simple>::set(const ::osa::Simple& fbe_value) noexcept
+void FieldModel<::osa::Simple>::set(const ::osa::Simple& fbe_value, pmr::memory_resource* resource) noexcept
 {
     size_t fbe_begin = set_begin();
     if (fbe_begin == 0)
         return;
 
-    set_fields(fbe_value);
+    set_fields(fbe_value, resource);
     set_end(fbe_begin);
 }
 
-void FieldModel<::osa::Simple>::set_fields([[maybe_unused]] const ::osa::Simple& fbe_value) noexcept
+void FieldModel<::osa::Simple>::set_fields([[maybe_unused]] const ::osa::Simple& fbe_value, pmr::memory_resource* resource) noexcept
 {
-    name.set(fbe_value.name);
-    depth.set(fbe_value.depth);
-    sa.set(fbe_value.sa);
-    sex.set(fbe_value.sex);
+    name.set(fbe_value.name, resource);
+    depth.set(fbe_value.depth, resource);
+    sa.set(fbe_value.sa, resource);
+    sex.set(fbe_value.sex, resource);
 }
 
 namespace osa {
@@ -492,15 +492,15 @@ size_t SimpleModel::create_end(size_t fbe_begin)
     return fbe_full_size;
 }
 
-size_t SimpleModel::serialize(const ::osa::Simple& value)
+size_t SimpleModel::serialize(const ::osa::Simple& value, pmr::memory_resource* resource)
 {
     size_t fbe_begin = create_begin();
-    model.set(value);
+    model.set(value, resource);
     size_t fbe_full_size = create_end(fbe_begin);
     return fbe_full_size;
 }
 
-size_t SimpleModel::deserialize(::osa::Simple& value) const noexcept
+size_t SimpleModel::deserialize(::osa::Simple& value, pmr::memory_resource* resource) const noexcept
 {
     if ((this->buffer().offset() + model.fbe_offset() - 4) > this->buffer().size())
         return 0;
@@ -510,7 +510,7 @@ size_t SimpleModel::deserialize(::osa::Simple& value) const noexcept
     if (fbe_full_size < model.fbe_size())
         return 0;
 
-    model.get(value);
+    model.get(value, resource);
     return fbe_full_size;
 }
 

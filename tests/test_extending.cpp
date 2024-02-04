@@ -30,7 +30,7 @@ TEST_CASE("Extending: old -> new", "[FBE]")
     // Serialize the account to the FBE stream
     FBE::proto::AccountModel writer;
     REQUIRE(writer.model.fbe_offset() == 4);
-    size_t serialized = writer.serialize(account1);
+    size_t serialized = writer.serialize(account1, nullptr);
     REQUIRE(serialized == writer.buffer().size());
     REQUIRE(writer.verify());
     writer.next(serialized);
@@ -45,7 +45,7 @@ TEST_CASE("Extending: old -> new", "[FBE]")
     REQUIRE(reader.model.fbe_offset() == 4);
     reader.attach(writer.buffer());
     REQUIRE(reader.verify());
-    size_t deserialized = reader.deserialize(account2);
+    size_t deserialized = reader.deserialize(account2, nullptr);
     REQUIRE(deserialized == reader.buffer().size());
     reader.next(deserialized);
     REQUIRE(reader.model.fbe_offset() == (4 + reader.buffer().size()));
@@ -108,7 +108,7 @@ TEST_CASE("Extending: new -> old", "[FBE]")
     // Serialize the account to the FBE stream
     FBE::protoex::AccountModel writer;
     REQUIRE(writer.model.fbe_offset() == 4);
-    size_t serialized = writer.serialize(account1);
+    size_t serialized = writer.serialize(account1, nullptr);
     REQUIRE(serialized == writer.buffer().size());
     REQUIRE(writer.verify());
     writer.next(serialized);
@@ -123,7 +123,7 @@ TEST_CASE("Extending: new -> old", "[FBE]")
     REQUIRE(reader.model.fbe_offset() == 4);
     reader.attach(writer.buffer());
     REQUIRE(reader.verify());
-    size_t deserialized = reader.deserialize(account2);
+    size_t deserialized = reader.deserialize(account2, nullptr);
     REQUIRE(deserialized == reader.buffer().size());
     reader.next(deserialized);
     REQUIRE(reader.model.fbe_offset() == (4 + reader.buffer().size()));

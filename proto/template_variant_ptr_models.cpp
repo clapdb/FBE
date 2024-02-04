@@ -84,7 +84,7 @@ void FieldModelPtr_template_variant_Line::get_end(size_t fbe_begin) const noexce
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModelPtr_template_variant_Line::get(::template_variant::Line** fbe_value) noexcept
+void FieldModelPtr_template_variant_Line::get(::template_variant::Line** fbe_value, pmr::memory_resource* resource) noexcept
 {
     size_t fbe_begin = get_begin();
     if (fbe_begin == 0)
@@ -94,7 +94,7 @@ void FieldModelPtr_template_variant_Line::get(::template_variant::Line** fbe_val
     ptr = new FieldModel_template_variant_Line(_buffer, 0);
 
     ::template_variant::Line *tempModel = new ::template_variant::Line();
-    ptr->get(*tempModel);
+    ptr->get(*tempModel, resource);
     *fbe_value = tempModel;
 
     get_end(fbe_begin);
@@ -128,7 +128,7 @@ void FieldModelPtr_template_variant_Line::set_end(size_t fbe_begin)
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModelPtr_template_variant_Line::set(const ::template_variant::Line* fbe_value) noexcept
+void FieldModelPtr_template_variant_Line::set(const ::template_variant::Line* fbe_value, pmr::memory_resource* resource) noexcept
 {
     size_t fbe_begin = set_begin(fbe_value != nullptr);
     if (fbe_begin == 0)
@@ -138,7 +138,7 @@ void FieldModelPtr_template_variant_Line::set(const ::template_variant::Line* fb
         BaseFieldModel* temp = new FieldModel_template_variant_Line(_buffer, 0);
         if (ptr) delete ptr;
         ptr = temp;
-        ptr->set(*fbe_value);
+        ptr->set(*fbe_value, nullptr);
     }
 
     set_end(fbe_begin);
@@ -263,25 +263,25 @@ void FieldModel_template_variant_Line::get_end(size_t fbe_begin) const noexcept
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModel_template_variant_Line::get(::FBE::Base& fbe_value) noexcept
+void FieldModel_template_variant_Line::get(::FBE::Base& fbe_value, pmr::memory_resource* resource) noexcept
 {
     size_t fbe_begin = get_begin();
     if (fbe_begin == 0)
         return;
 
     uint32_t fbe_struct_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset());
-    get_fields(fbe_value, fbe_struct_size);
+    get_fields(fbe_value, fbe_struct_size, resource);
     get_end(fbe_begin);
 }
 
-void FieldModel_template_variant_Line::get_fields([[maybe_unused]] ::FBE::Base& base_fbe_value, [[maybe_unused]] size_t fbe_struct_size) noexcept
+void FieldModel_template_variant_Line::get_fields([[maybe_unused]] ::FBE::Base& base_fbe_value, [[maybe_unused]] size_t fbe_struct_size, pmr::memory_resource* resource) noexcept
 {
     ::template_variant::Line& fbe_value = static_cast<::template_variant::Line&>(base_fbe_value);
     size_t fbe_current_size = 4 + 4;
 
     if ((fbe_current_size + v.fbe_size()) <= fbe_struct_size)
         {
-            v.get(fbe_value.v);
+            v.get(fbe_value.v, nullptr);
         }
     else
         fbe_value.v = ::variants::V();
@@ -289,7 +289,7 @@ void FieldModel_template_variant_Line::get_fields([[maybe_unused]] ::FBE::Base& 
 
     if ((fbe_current_size + vv.fbe_size()) <= fbe_struct_size)
         {
-            vv.get(fbe_value.vv);
+            vv.get(fbe_value.vv, nullptr);
         }
     else
         fbe_value.vv.clear();
@@ -297,7 +297,7 @@ void FieldModel_template_variant_Line::get_fields([[maybe_unused]] ::FBE::Base& 
 
     if ((fbe_current_size + vm.fbe_size()) <= fbe_struct_size)
         {
-            vm.get(fbe_value.vm);
+            vm.get(fbe_value.vm, nullptr);
         }
     else
         fbe_value.vm.clear();
@@ -305,7 +305,7 @@ void FieldModel_template_variant_Line::get_fields([[maybe_unused]] ::FBE::Base& 
 
     if ((fbe_current_size + vo.fbe_size()) <= fbe_struct_size)
         {
-            vo.get(fbe_value.vo);
+            vo.get(fbe_value.vo, nullptr);
         }
     else
         fbe_value.vo = std::nullopt;
@@ -337,23 +337,23 @@ void FieldModel_template_variant_Line::set_end(size_t fbe_begin)
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModel_template_variant_Line::set(const ::FBE::Base& fbe_value) noexcept
+void FieldModel_template_variant_Line::set(const ::FBE::Base& fbe_value, pmr::memory_resource* resource) noexcept
 {
     size_t fbe_begin = set_begin();
     if (fbe_begin == 0)
         return;
 
-    set_fields(fbe_value);
+    set_fields(fbe_value, resource);
     set_end(fbe_begin);
 }
 
-void FieldModel_template_variant_Line::set_fields([[maybe_unused]] const ::FBE::Base& base_fbe_value) noexcept
+void FieldModel_template_variant_Line::set_fields([[maybe_unused]] const ::FBE::Base& base_fbe_value, pmr::memory_resource* resource) noexcept
 {
     [[maybe_unused]] const ::template_variant::Line& fbe_value = static_cast<const ::template_variant::Line&>(base_fbe_value);
-    v.set(fbe_value.v);
-    vv.set(fbe_value.vv);
-    vm.set(fbe_value.vm);
-    vo.set(fbe_value.vo);
+    v.set(fbe_value.v, resource);
+    vv.set(fbe_value.vv, resource);
+    vm.set(fbe_value.vm, resource);
+    vo.set(fbe_value.vo, resource);
 }
 
 namespace template_variant {
@@ -384,15 +384,15 @@ size_t LineModel::create_end(size_t fbe_begin)
     return fbe_full_size;
 }
 
-size_t LineModel::serialize(const ::template_variant::Line& value)
+size_t LineModel::serialize(const ::template_variant::Line& value, pmr::memory_resource* resource)
 {
     size_t fbe_begin = create_begin();
-    model.set(value);
+    model.set(value, resource);
     size_t fbe_full_size = create_end(fbe_begin);
     return fbe_full_size;
 }
 
-size_t LineModel::deserialize(::template_variant::Line& value) noexcept
+size_t LineModel::deserialize(::template_variant::Line& value, pmr::memory_resource* resource) noexcept
 {
     if ((this->buffer().offset() + model.fbe_offset() - 4) > this->buffer().size())
         return 0;
@@ -402,7 +402,7 @@ size_t LineModel::deserialize(::template_variant::Line& value) noexcept
     if (fbe_full_size < model.fbe_size())
         return 0;
 
-    model.get(value);
+    model.get(value, resource);
     return fbe_full_size;
 }
 
@@ -483,7 +483,7 @@ void FieldModelPtr_template_variant_Line2::get_end(size_t fbe_begin) const noexc
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModelPtr_template_variant_Line2::get(::template_variant::Line2** fbe_value) noexcept
+void FieldModelPtr_template_variant_Line2::get(::template_variant::Line2** fbe_value, pmr::memory_resource* resource) noexcept
 {
     size_t fbe_begin = get_begin();
     if (fbe_begin == 0)
@@ -493,7 +493,7 @@ void FieldModelPtr_template_variant_Line2::get(::template_variant::Line2** fbe_v
     ptr = new FieldModel_template_variant_Line2(_buffer, 0);
 
     ::template_variant::Line2 *tempModel = new ::template_variant::Line2();
-    ptr->get(*tempModel);
+    ptr->get(*tempModel, resource);
     *fbe_value = tempModel;
 
     get_end(fbe_begin);
@@ -527,7 +527,7 @@ void FieldModelPtr_template_variant_Line2::set_end(size_t fbe_begin)
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModelPtr_template_variant_Line2::set(const ::template_variant::Line2* fbe_value) noexcept
+void FieldModelPtr_template_variant_Line2::set(const ::template_variant::Line2* fbe_value, pmr::memory_resource* resource) noexcept
 {
     size_t fbe_begin = set_begin(fbe_value != nullptr);
     if (fbe_begin == 0)
@@ -537,7 +537,7 @@ void FieldModelPtr_template_variant_Line2::set(const ::template_variant::Line2* 
         BaseFieldModel* temp = new FieldModel_template_variant_Line2(_buffer, 0);
         if (ptr) delete ptr;
         ptr = temp;
-        ptr->set(*fbe_value);
+        ptr->set(*fbe_value, nullptr);
     }
 
     set_end(fbe_begin);
@@ -635,25 +635,25 @@ void FieldModel_template_variant_Line2::get_end(size_t fbe_begin) const noexcept
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModel_template_variant_Line2::get(::FBE::Base& fbe_value) noexcept
+void FieldModel_template_variant_Line2::get(::FBE::Base& fbe_value, pmr::memory_resource* resource) noexcept
 {
     size_t fbe_begin = get_begin();
     if (fbe_begin == 0)
         return;
 
     uint32_t fbe_struct_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset());
-    get_fields(fbe_value, fbe_struct_size);
+    get_fields(fbe_value, fbe_struct_size, resource);
     get_end(fbe_begin);
 }
 
-void FieldModel_template_variant_Line2::get_fields([[maybe_unused]] ::FBE::Base& base_fbe_value, [[maybe_unused]] size_t fbe_struct_size) noexcept
+void FieldModel_template_variant_Line2::get_fields([[maybe_unused]] ::FBE::Base& base_fbe_value, [[maybe_unused]] size_t fbe_struct_size, pmr::memory_resource* resource) noexcept
 {
     ::template_variant::Line2& fbe_value = static_cast<::template_variant::Line2&>(base_fbe_value);
     size_t fbe_current_size = 4 + 4;
 
     if ((fbe_current_size + vm.fbe_size()) <= fbe_struct_size)
         {
-            vm.get(fbe_value.vm);
+            vm.get(fbe_value.vm, nullptr);
         }
     else
         fbe_value.vm.clear();
@@ -685,20 +685,20 @@ void FieldModel_template_variant_Line2::set_end(size_t fbe_begin)
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModel_template_variant_Line2::set(const ::FBE::Base& fbe_value) noexcept
+void FieldModel_template_variant_Line2::set(const ::FBE::Base& fbe_value, pmr::memory_resource* resource) noexcept
 {
     size_t fbe_begin = set_begin();
     if (fbe_begin == 0)
         return;
 
-    set_fields(fbe_value);
+    set_fields(fbe_value, resource);
     set_end(fbe_begin);
 }
 
-void FieldModel_template_variant_Line2::set_fields([[maybe_unused]] const ::FBE::Base& base_fbe_value) noexcept
+void FieldModel_template_variant_Line2::set_fields([[maybe_unused]] const ::FBE::Base& base_fbe_value, pmr::memory_resource* resource) noexcept
 {
     [[maybe_unused]] const ::template_variant::Line2& fbe_value = static_cast<const ::template_variant::Line2&>(base_fbe_value);
-    vm.set(fbe_value.vm);
+    vm.set(fbe_value.vm, resource);
 }
 
 namespace template_variant {
@@ -729,15 +729,15 @@ size_t Line2Model::create_end(size_t fbe_begin)
     return fbe_full_size;
 }
 
-size_t Line2Model::serialize(const ::template_variant::Line2& value)
+size_t Line2Model::serialize(const ::template_variant::Line2& value, pmr::memory_resource* resource)
 {
     size_t fbe_begin = create_begin();
-    model.set(value);
+    model.set(value, resource);
     size_t fbe_full_size = create_end(fbe_begin);
     return fbe_full_size;
 }
 
-size_t Line2Model::deserialize(::template_variant::Line2& value) noexcept
+size_t Line2Model::deserialize(::template_variant::Line2& value, pmr::memory_resource* resource) noexcept
 {
     if ((this->buffer().offset() + model.fbe_offset() - 4) > this->buffer().size())
         return 0;
@@ -747,7 +747,7 @@ size_t Line2Model::deserialize(::template_variant::Line2& value) noexcept
     if (fbe_full_size < model.fbe_size())
         return 0;
 
-    model.get(value);
+    model.get(value, resource);
     return fbe_full_size;
 }
 
@@ -828,7 +828,7 @@ void FieldModelPtr_template_variant_Line3::get_end(size_t fbe_begin) const noexc
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModelPtr_template_variant_Line3::get(::template_variant::Line3** fbe_value) noexcept
+void FieldModelPtr_template_variant_Line3::get(::template_variant::Line3** fbe_value, pmr::memory_resource* resource) noexcept
 {
     size_t fbe_begin = get_begin();
     if (fbe_begin == 0)
@@ -838,7 +838,7 @@ void FieldModelPtr_template_variant_Line3::get(::template_variant::Line3** fbe_v
     ptr = new FieldModel_template_variant_Line3(_buffer, 0);
 
     ::template_variant::Line3 *tempModel = new ::template_variant::Line3();
-    ptr->get(*tempModel);
+    ptr->get(*tempModel, resource);
     *fbe_value = tempModel;
 
     get_end(fbe_begin);
@@ -872,7 +872,7 @@ void FieldModelPtr_template_variant_Line3::set_end(size_t fbe_begin)
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModelPtr_template_variant_Line3::set(const ::template_variant::Line3* fbe_value) noexcept
+void FieldModelPtr_template_variant_Line3::set(const ::template_variant::Line3* fbe_value, pmr::memory_resource* resource) noexcept
 {
     size_t fbe_begin = set_begin(fbe_value != nullptr);
     if (fbe_begin == 0)
@@ -882,7 +882,7 @@ void FieldModelPtr_template_variant_Line3::set(const ::template_variant::Line3* 
         BaseFieldModel* temp = new FieldModel_template_variant_Line3(_buffer, 0);
         if (ptr) delete ptr;
         ptr = temp;
-        ptr->set(*fbe_value);
+        ptr->set(*fbe_value, nullptr);
     }
 
     set_end(fbe_begin);
@@ -980,25 +980,25 @@ void FieldModel_template_variant_Line3::get_end(size_t fbe_begin) const noexcept
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModel_template_variant_Line3::get(::FBE::Base& fbe_value) noexcept
+void FieldModel_template_variant_Line3::get(::FBE::Base& fbe_value, pmr::memory_resource* resource) noexcept
 {
     size_t fbe_begin = get_begin();
     if (fbe_begin == 0)
         return;
 
     uint32_t fbe_struct_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset());
-    get_fields(fbe_value, fbe_struct_size);
+    get_fields(fbe_value, fbe_struct_size, resource);
     get_end(fbe_begin);
 }
 
-void FieldModel_template_variant_Line3::get_fields([[maybe_unused]] ::FBE::Base& base_fbe_value, [[maybe_unused]] size_t fbe_struct_size) noexcept
+void FieldModel_template_variant_Line3::get_fields([[maybe_unused]] ::FBE::Base& base_fbe_value, [[maybe_unused]] size_t fbe_struct_size, pmr::memory_resource* resource) noexcept
 {
     ::template_variant::Line3& fbe_value = static_cast<::template_variant::Line3&>(base_fbe_value);
     size_t fbe_current_size = 4 + 4;
 
     if ((fbe_current_size + value.fbe_size()) <= fbe_struct_size)
         {
-            value.get(fbe_value.value);
+            value.get(fbe_value.value, nullptr);
         }
     else
         fbe_value.value = ::variants::Value();
@@ -1030,20 +1030,20 @@ void FieldModel_template_variant_Line3::set_end(size_t fbe_begin)
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModel_template_variant_Line3::set(const ::FBE::Base& fbe_value) noexcept
+void FieldModel_template_variant_Line3::set(const ::FBE::Base& fbe_value, pmr::memory_resource* resource) noexcept
 {
     size_t fbe_begin = set_begin();
     if (fbe_begin == 0)
         return;
 
-    set_fields(fbe_value);
+    set_fields(fbe_value, resource);
     set_end(fbe_begin);
 }
 
-void FieldModel_template_variant_Line3::set_fields([[maybe_unused]] const ::FBE::Base& base_fbe_value) noexcept
+void FieldModel_template_variant_Line3::set_fields([[maybe_unused]] const ::FBE::Base& base_fbe_value, pmr::memory_resource* resource) noexcept
 {
     [[maybe_unused]] const ::template_variant::Line3& fbe_value = static_cast<const ::template_variant::Line3&>(base_fbe_value);
-    value.set(fbe_value.value);
+    value.set(fbe_value.value, resource);
 }
 
 namespace template_variant {
@@ -1074,15 +1074,15 @@ size_t Line3Model::create_end(size_t fbe_begin)
     return fbe_full_size;
 }
 
-size_t Line3Model::serialize(const ::template_variant::Line3& value)
+size_t Line3Model::serialize(const ::template_variant::Line3& value, pmr::memory_resource* resource)
 {
     size_t fbe_begin = create_begin();
-    model.set(value);
+    model.set(value, resource);
     size_t fbe_full_size = create_end(fbe_begin);
     return fbe_full_size;
 }
 
-size_t Line3Model::deserialize(::template_variant::Line3& value) noexcept
+size_t Line3Model::deserialize(::template_variant::Line3& value, pmr::memory_resource* resource) noexcept
 {
     if ((this->buffer().offset() + model.fbe_offset() - 4) > this->buffer().size())
         return 0;
@@ -1092,7 +1092,7 @@ size_t Line3Model::deserialize(::template_variant::Line3& value) noexcept
     if (fbe_full_size < model.fbe_size())
         return 0;
 
-    model.get(value);
+    model.get(value, resource);
     return fbe_full_size;
 }
 

@@ -84,17 +84,19 @@ void FieldModelPMRPtr_ptrpkg_Line::get_end(size_t fbe_begin) const noexcept
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModelPMRPtr_ptrpkg_Line::get(::ptrpkg_pmr::Line** fbe_value) noexcept
+void FieldModelPMRPtr_ptrpkg_Line::get(::ptrpkg_pmr::Line** fbe_value, pmr::memory_resource* resource) noexcept
 {
     size_t fbe_begin = get_begin();
     if (fbe_begin == 0)
         return;
 
-    if (ptr) delete ptr;
-    ptr = new FieldModelPMR_ptrpkg_Line(_buffer, 0);
+    pmr::polymorphic_allocator<char> allocator{resource};
+    auto* buffer = allocator.allocate(sizeof(FieldModelPMR_ptrpkg_Line));
+    ptr = new (buffer) FieldModelPMR_ptrpkg_Line(_buffer, 0);
 
-    ::ptrpkg_pmr::Line *tempModel = new ::ptrpkg_pmr::Line();
-    ptr->get(*tempModel);
+    auto * buffer2 = allocator.allocate(sizeof(::ptrpkg_pmr::Line));
+    ::ptrpkg_pmr::Line *tempModel = new (buffer2) ::ptrpkg_pmr::Line(allocator);
+    ptr->get(*tempModel, resource);
     *fbe_value = tempModel;
 
     get_end(fbe_begin);
@@ -128,17 +130,17 @@ void FieldModelPMRPtr_ptrpkg_Line::set_end(size_t fbe_begin)
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModelPMRPtr_ptrpkg_Line::set(const ::ptrpkg_pmr::Line* fbe_value) noexcept
+void FieldModelPMRPtr_ptrpkg_Line::set(const ::ptrpkg_pmr::Line* fbe_value, pmr::memory_resource* resource) noexcept
 {
     size_t fbe_begin = set_begin(fbe_value != nullptr);
     if (fbe_begin == 0)
         return;
 
     if (fbe_value != nullptr) {
-        BaseFieldModel* temp = new FieldModelPMR_ptrpkg_Line(_buffer, 0);
-        if (ptr) delete ptr;
-        ptr = temp;
-        ptr->set(*fbe_value);
+        pmr::polymorphic_allocator<char> allocator{resource};
+        auto* buffer = allocator.allocate(sizeof(FieldModelPMR_ptrpkg_Line));
+        ptr = new (buffer) FieldModelPMR_ptrpkg_Line(_buffer, 0);
+        ptr->set(*fbe_value, nullptr);
     }
 
     set_end(fbe_begin);
@@ -245,25 +247,25 @@ void FieldModelPMR_ptrpkg_Line::get_end(size_t fbe_begin) const noexcept
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModelPMR_ptrpkg_Line::get(::FBE::Base& fbe_value) noexcept
+void FieldModelPMR_ptrpkg_Line::get(::FBE::Base& fbe_value, pmr::memory_resource* resource) noexcept
 {
     size_t fbe_begin = get_begin();
     if (fbe_begin == 0)
         return;
 
     uint32_t fbe_struct_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset());
-    get_fields(fbe_value, fbe_struct_size);
+    get_fields(fbe_value, fbe_struct_size, resource);
     get_end(fbe_begin);
 }
 
-void FieldModelPMR_ptrpkg_Line::get_fields([[maybe_unused]] ::FBE::Base& base_fbe_value, [[maybe_unused]] size_t fbe_struct_size) noexcept
+void FieldModelPMR_ptrpkg_Line::get_fields([[maybe_unused]] ::FBE::Base& base_fbe_value, [[maybe_unused]] size_t fbe_struct_size, pmr::memory_resource* resource) noexcept
 {
     ::ptrpkg_pmr::Line& fbe_value = static_cast<::ptrpkg_pmr::Line&>(base_fbe_value);
     size_t fbe_current_size = 4 + 4;
 
     if ((fbe_current_size + value.fbe_size()) <= fbe_struct_size)
         {
-            value.get(fbe_value.value);
+            value.get(fbe_value.value, resource);
         }
     else
         fbe_value.value = ::variants_ptr_pmr::Value();
@@ -271,7 +273,7 @@ void FieldModelPMR_ptrpkg_Line::get_fields([[maybe_unused]] ::FBE::Base& base_fb
 
     if ((fbe_current_size + value_ptr.fbe_size()) <= fbe_struct_size)
         {
-            value_ptr.get(&fbe_value.value_ptr);
+            value_ptr.get(&fbe_value.value_ptr, resource);
         }
     else
         fbe_value.value_ptr = nullptr;
@@ -303,21 +305,21 @@ void FieldModelPMR_ptrpkg_Line::set_end(size_t fbe_begin)
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModelPMR_ptrpkg_Line::set(const ::FBE::Base& fbe_value) noexcept
+void FieldModelPMR_ptrpkg_Line::set(const ::FBE::Base& fbe_value, pmr::memory_resource* resource) noexcept
 {
     size_t fbe_begin = set_begin();
     if (fbe_begin == 0)
         return;
 
-    set_fields(fbe_value);
+    set_fields(fbe_value, resource);
     set_end(fbe_begin);
 }
 
-void FieldModelPMR_ptrpkg_Line::set_fields([[maybe_unused]] const ::FBE::Base& base_fbe_value) noexcept
+void FieldModelPMR_ptrpkg_Line::set_fields([[maybe_unused]] const ::FBE::Base& base_fbe_value, pmr::memory_resource* resource) noexcept
 {
     [[maybe_unused]] const ::ptrpkg_pmr::Line& fbe_value = static_cast<const ::ptrpkg_pmr::Line&>(base_fbe_value);
-    value.set(fbe_value.value);
-    value_ptr.set(fbe_value.value_ptr);
+    value.set(fbe_value.value, resource);
+    value_ptr.set(fbe_value.value_ptr, resource);
 }
 
 namespace ptrpkg_pmr {
@@ -348,15 +350,15 @@ size_t LineModel::create_end(size_t fbe_begin)
     return fbe_full_size;
 }
 
-size_t LineModel::serialize(const ::ptrpkg_pmr::Line& value)
+size_t LineModel::serialize(const ::ptrpkg_pmr::Line& value, pmr::memory_resource* resource)
 {
     size_t fbe_begin = create_begin();
-    model.set(value);
+    model.set(value, resource);
     size_t fbe_full_size = create_end(fbe_begin);
     return fbe_full_size;
 }
 
-size_t LineModel::deserialize(::ptrpkg_pmr::Line& value) noexcept
+size_t LineModel::deserialize(::ptrpkg_pmr::Line& value, pmr::memory_resource* resource) noexcept
 {
     if ((this->buffer().offset() + model.fbe_offset() - 4) > this->buffer().size())
         return 0;
@@ -366,7 +368,7 @@ size_t LineModel::deserialize(::ptrpkg_pmr::Line& value) noexcept
     if (fbe_full_size < model.fbe_size())
         return 0;
 
-    model.get(value);
+    model.get(value, resource);
     return fbe_full_size;
 }
 

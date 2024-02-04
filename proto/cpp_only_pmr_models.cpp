@@ -94,7 +94,7 @@ bool FieldModel<::cpp_only_pmr::LargeNum>::verify() const noexcept
     return true;
 }
 
-void FieldModel<::cpp_only_pmr::LargeNum>::get(::cpp_only_pmr::LargeNum& fbe_value) const noexcept
+void FieldModel<::cpp_only_pmr::LargeNum>::get(::cpp_only_pmr::LargeNum& fbe_value, pmr::memory_resource* resource) const noexcept
 {
     if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
         return;
@@ -118,35 +118,35 @@ void FieldModel<::cpp_only_pmr::LargeNum>::get(::cpp_only_pmr::LargeNum& fbe_val
             FieldModel<int64_t> fbe_model(_buffer, 4);
             fbe_value.emplace<int64_t>();
             auto& value = std::get<1>(fbe_value);
-            fbe_model.get(value);
+            fbe_model.get(value, nullptr);
             break;
         }
         case 2: {
             FieldModel<__int128_t> fbe_model(_buffer, 4);
             fbe_value.emplace<__int128_t>();
             auto& value = std::get<2>(fbe_value);
-            fbe_model.get(value);
+            fbe_model.get(value, nullptr);
             break;
         }
         case 3: {
             FieldModel<__uint128_t> fbe_model(_buffer, 4);
             fbe_value.emplace<__uint128_t>();
             auto& value = std::get<3>(fbe_value);
-            fbe_model.get(value);
+            fbe_model.get(value, nullptr);
             break;
         }
         case 4: {
             FieldModelVector<__int128_t> fbe_model(_buffer, 4);
-            fbe_value.emplace<pmr::vector<__int128_t>>();
+            fbe_value.emplace<pmr::vector<__int128_t>>(resource);
             auto& value = std::get<4>(fbe_value);
-            fbe_model.get(value);
+            fbe_model.get(value, resource);
             break;
         }
         case 5: {
             FieldModelMap<__uint128_t, __int128_t> fbe_model(_buffer, 4);
-            fbe_value.emplace<pmr::unordered_map<__uint128_t, __int128_t>>();
+            fbe_value.emplace<pmr::unordered_map<__uint128_t, __int128_t>>(resource);
             auto& value = std::get<5>(fbe_value);
-            fbe_model.get(value);
+            fbe_model.get(value, resource);
             break;
         }
     }
@@ -179,7 +179,7 @@ void FieldModel<::cpp_only_pmr::LargeNum>::set_end(size_t fbe_begin)
 }
 
 // Set the variant value
-void FieldModel<::cpp_only_pmr::LargeNum>::set(const ::cpp_only_pmr::LargeNum& fbe_value) noexcept
+void FieldModel<::cpp_only_pmr::LargeNum>::set(const ::cpp_only_pmr::LargeNum& fbe_value, pmr::memory_resource* resource) noexcept
 {
     assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
     if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
@@ -188,52 +188,52 @@ void FieldModel<::cpp_only_pmr::LargeNum>::set(const ::cpp_only_pmr::LargeNum& f
     std::visit(
         overloaded
         {
-            [this, fbe_variant_index = fbe_value.index()](std::monostate v) {
+            [this, fbe_variant_index = fbe_value.index(), resource](std::monostate v) {
                 FieldModel<std::monostate> fbe_model(_buffer, 4);
                 size_t fbe_begin = set_begin(fbe_model.fbe_size(), fbe_variant_index);
                 if (fbe_begin == 0)
                     return;
-                fbe_model.set(v);
+                fbe_model.set(v, resource);
                 set_end(fbe_begin);
             }
-            , [this, fbe_variant_index = fbe_value.index()](int64_t v) {
+            , [this, fbe_variant_index = fbe_value.index(), resource](int64_t v) {
                 FieldModel<int64_t> fbe_model(_buffer, 4);
                 size_t fbe_begin = set_begin(fbe_model.fbe_size(), fbe_variant_index);
                 if (fbe_begin == 0)
                     return;
-                fbe_model.set(v);
+                fbe_model.set(v, resource);
                 set_end(fbe_begin);
             }
-            , [this, fbe_variant_index = fbe_value.index()](__int128_t v) {
+            , [this, fbe_variant_index = fbe_value.index(), resource](__int128_t v) {
                 FieldModel<__int128_t> fbe_model(_buffer, 4);
                 size_t fbe_begin = set_begin(fbe_model.fbe_size(), fbe_variant_index);
                 if (fbe_begin == 0)
                     return;
-                fbe_model.set(v);
+                fbe_model.set(v, resource);
                 set_end(fbe_begin);
             }
-            , [this, fbe_variant_index = fbe_value.index()](__uint128_t v) {
+            , [this, fbe_variant_index = fbe_value.index(), resource](__uint128_t v) {
                 FieldModel<__uint128_t> fbe_model(_buffer, 4);
                 size_t fbe_begin = set_begin(fbe_model.fbe_size(), fbe_variant_index);
                 if (fbe_begin == 0)
                     return;
-                fbe_model.set(v);
+                fbe_model.set(v, resource);
                 set_end(fbe_begin);
             }
-            , [this, fbe_variant_index = fbe_value.index()](const pmr::vector<__int128_t>& v) {
+            , [this, fbe_variant_index = fbe_value.index(), resource](const pmr::vector<__int128_t>& v) {
                 FieldModelVector<__int128_t> fbe_model(_buffer, 4);
                 size_t fbe_begin = set_begin(fbe_model.fbe_size(), fbe_variant_index);
                 if (fbe_begin == 0)
                     return;
-                fbe_model.set(v);
+                fbe_model.set(v, resource);
                 set_end(fbe_begin);
             }
-            , [this, fbe_variant_index = fbe_value.index()](const pmr::unordered_map<__uint128_t, __int128_t>& v) {
+            , [this, fbe_variant_index = fbe_value.index(), resource](const pmr::unordered_map<__uint128_t, __int128_t>& v) {
                 FieldModelMap<__uint128_t, __int128_t> fbe_model(_buffer, 4);
                 size_t fbe_begin = set_begin(fbe_model.fbe_size(), fbe_variant_index);
                 if (fbe_begin == 0)
                     return;
-                fbe_model.set(v);
+                fbe_model.set(v, resource);
                 set_end(fbe_begin);
             }
         },
@@ -388,59 +388,59 @@ void FieldModel<::cpp_only_pmr::Struct128>::get_end(size_t fbe_begin) const noex
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModel<::cpp_only_pmr::Struct128>::get(::cpp_only_pmr::Struct128& fbe_value) const noexcept
+void FieldModel<::cpp_only_pmr::Struct128>::get(::cpp_only_pmr::Struct128& fbe_value, pmr::memory_resource* resource) const noexcept
 {
     size_t fbe_begin = get_begin();
     if (fbe_begin == 0)
         return;
 
     uint32_t fbe_struct_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset());
-    get_fields(fbe_value, fbe_struct_size);
+    get_fields(fbe_value, fbe_struct_size, resource);
     get_end(fbe_begin);
 }
 
-void FieldModel<::cpp_only_pmr::Struct128>::get_fields([[maybe_unused]] ::cpp_only_pmr::Struct128& fbe_value, [[maybe_unused]] size_t fbe_struct_size) const noexcept
+void FieldModel<::cpp_only_pmr::Struct128>::get_fields([[maybe_unused]] ::cpp_only_pmr::Struct128& fbe_value, [[maybe_unused]] size_t fbe_struct_size, pmr::memory_resource* resource) const noexcept
 {
     size_t fbe_current_size = 4 + 4;
 
     if ((fbe_current_size + f1.fbe_size()) <= fbe_struct_size)
-        f1.get(fbe_value.f1);
+        f1.get(fbe_value.f1, resource);
     else
         fbe_value.f1 = (__int128_t)0;
     fbe_current_size += f1.fbe_size();
 
     if ((fbe_current_size + f2.fbe_size()) <= fbe_struct_size)
-        f2.get(fbe_value.f2);
+        f2.get(fbe_value.f2, resource);
     else
         fbe_value.f2 = std::nullopt;
     fbe_current_size += f2.fbe_size();
 
     if ((fbe_current_size + f3.fbe_size()) <= fbe_struct_size)
-        f3.get(fbe_value.f3);
+        f3.get(fbe_value.f3, resource);
     else
         fbe_value.f3 = (__uint128_t)0;
     fbe_current_size += f3.fbe_size();
 
     if ((fbe_current_size + f4.fbe_size()) <= fbe_struct_size)
-        f4.get(fbe_value.f4);
+        f4.get(fbe_value.f4, resource);
     else
         fbe_value.f4 = std::nullopt;
     fbe_current_size += f4.fbe_size();
 
     if ((fbe_current_size + f5.fbe_size()) <= fbe_struct_size)
-        f5.get(fbe_value.f5);
+        f5.get(fbe_value.f5, resource);
     else
         fbe_value.f5.clear();
     fbe_current_size += f5.fbe_size();
 
     if ((fbe_current_size + f6.fbe_size()) <= fbe_struct_size)
-        f6.get(fbe_value.f6);
+        f6.get(fbe_value.f6, resource);
     else
         fbe_value.f6.clear();
     fbe_current_size += f6.fbe_size();
 
     if ((fbe_current_size + f7.fbe_size()) <= fbe_struct_size)
-        f7.get(fbe_value.f7);
+        f7.get(fbe_value.f7, resource);
     else
         fbe_value.f7 = ::cpp_only_pmr::LargeNum();
     fbe_current_size += f7.fbe_size();
@@ -471,25 +471,25 @@ void FieldModel<::cpp_only_pmr::Struct128>::set_end(size_t fbe_begin)
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModel<::cpp_only_pmr::Struct128>::set(const ::cpp_only_pmr::Struct128& fbe_value) noexcept
+void FieldModel<::cpp_only_pmr::Struct128>::set(const ::cpp_only_pmr::Struct128& fbe_value, pmr::memory_resource* resource) noexcept
 {
     size_t fbe_begin = set_begin();
     if (fbe_begin == 0)
         return;
 
-    set_fields(fbe_value);
+    set_fields(fbe_value, resource);
     set_end(fbe_begin);
 }
 
-void FieldModel<::cpp_only_pmr::Struct128>::set_fields([[maybe_unused]] const ::cpp_only_pmr::Struct128& fbe_value) noexcept
+void FieldModel<::cpp_only_pmr::Struct128>::set_fields([[maybe_unused]] const ::cpp_only_pmr::Struct128& fbe_value, pmr::memory_resource* resource) noexcept
 {
-    f1.set(fbe_value.f1);
-    f2.set(fbe_value.f2);
-    f3.set(fbe_value.f3);
-    f4.set(fbe_value.f4);
-    f5.set(fbe_value.f5);
-    f6.set(fbe_value.f6);
-    f7.set(fbe_value.f7);
+    f1.set(fbe_value.f1, resource);
+    f2.set(fbe_value.f2, resource);
+    f3.set(fbe_value.f3, resource);
+    f4.set(fbe_value.f4, resource);
+    f5.set(fbe_value.f5, resource);
+    f6.set(fbe_value.f6, resource);
+    f7.set(fbe_value.f7, resource);
 }
 
 namespace cpp_only_pmr {
@@ -520,15 +520,15 @@ size_t Struct128Model::create_end(size_t fbe_begin)
     return fbe_full_size;
 }
 
-size_t Struct128Model::serialize(const ::cpp_only_pmr::Struct128& value)
+size_t Struct128Model::serialize(const ::cpp_only_pmr::Struct128& value, pmr::memory_resource* resource)
 {
     size_t fbe_begin = create_begin();
-    model.set(value);
+    model.set(value, resource);
     size_t fbe_full_size = create_end(fbe_begin);
     return fbe_full_size;
 }
 
-size_t Struct128Model::deserialize(::cpp_only_pmr::Struct128& value) const noexcept
+size_t Struct128Model::deserialize(::cpp_only_pmr::Struct128& value, pmr::memory_resource* resource) const noexcept
 {
     if ((this->buffer().offset() + model.fbe_offset() - 4) > this->buffer().size())
         return 0;
@@ -538,7 +538,7 @@ size_t Struct128Model::deserialize(::cpp_only_pmr::Struct128& value) const noexc
     if (fbe_full_size < model.fbe_size())
         return 0;
 
-    model.get(value);
+    model.get(value, resource);
     return fbe_full_size;
 }
 

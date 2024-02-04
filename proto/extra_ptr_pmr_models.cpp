@@ -84,17 +84,19 @@ void FieldModelPMRPtr_extra_Info::get_end(size_t fbe_begin) const noexcept
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModelPMRPtr_extra_Info::get(::extra_pmr::Info** fbe_value) noexcept
+void FieldModelPMRPtr_extra_Info::get(::extra_pmr::Info** fbe_value, pmr::memory_resource* resource) noexcept
 {
     size_t fbe_begin = get_begin();
     if (fbe_begin == 0)
         return;
 
-    if (ptr) delete ptr;
-    ptr = new FieldModelPMR_extra_Info(_buffer, 0);
+    pmr::polymorphic_allocator<char> allocator{resource};
+    auto* buffer = allocator.allocate(sizeof(FieldModelPMR_extra_Info));
+    ptr = new (buffer) FieldModelPMR_extra_Info(_buffer, 0);
 
-    ::extra_pmr::Info *tempModel = new ::extra_pmr::Info();
-    ptr->get(*tempModel);
+    auto * buffer2 = allocator.allocate(sizeof(::extra_pmr::Info));
+    ::extra_pmr::Info *tempModel = new (buffer2) ::extra_pmr::Info(allocator);
+    ptr->get(*tempModel, resource);
     *fbe_value = tempModel;
 
     get_end(fbe_begin);
@@ -128,17 +130,17 @@ void FieldModelPMRPtr_extra_Info::set_end(size_t fbe_begin)
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModelPMRPtr_extra_Info::set(const ::extra_pmr::Info* fbe_value) noexcept
+void FieldModelPMRPtr_extra_Info::set(const ::extra_pmr::Info* fbe_value, pmr::memory_resource* resource) noexcept
 {
     size_t fbe_begin = set_begin(fbe_value != nullptr);
     if (fbe_begin == 0)
         return;
 
     if (fbe_value != nullptr) {
-        BaseFieldModel* temp = new FieldModelPMR_extra_Info(_buffer, 0);
-        if (ptr) delete ptr;
-        ptr = temp;
-        ptr->set(*fbe_value);
+        pmr::polymorphic_allocator<char> allocator{resource};
+        auto* buffer = allocator.allocate(sizeof(FieldModelPMR_extra_Info));
+        ptr = new (buffer) FieldModelPMR_extra_Info(_buffer, 0);
+        ptr->set(*fbe_value, nullptr);
     }
 
     set_end(fbe_begin);
@@ -263,25 +265,25 @@ void FieldModelPMR_extra_Info::get_end(size_t fbe_begin) const noexcept
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModelPMR_extra_Info::get(::FBE::Base& fbe_value) noexcept
+void FieldModelPMR_extra_Info::get(::FBE::Base& fbe_value, pmr::memory_resource* resource) noexcept
 {
     size_t fbe_begin = get_begin();
     if (fbe_begin == 0)
         return;
 
     uint32_t fbe_struct_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset());
-    get_fields(fbe_value, fbe_struct_size);
+    get_fields(fbe_value, fbe_struct_size, resource);
     get_end(fbe_begin);
 }
 
-void FieldModelPMR_extra_Info::get_fields([[maybe_unused]] ::FBE::Base& base_fbe_value, [[maybe_unused]] size_t fbe_struct_size) noexcept
+void FieldModelPMR_extra_Info::get_fields([[maybe_unused]] ::FBE::Base& base_fbe_value, [[maybe_unused]] size_t fbe_struct_size, pmr::memory_resource* resource) noexcept
 {
     ::extra_pmr::Info& fbe_value = static_cast<::extra_pmr::Info&>(base_fbe_value);
     size_t fbe_current_size = 4 + 4;
 
     if ((fbe_current_size + info.fbe_size()) <= fbe_struct_size)
         {
-            info.get(fbe_value.info);
+            info.get(fbe_value.info, resource);
         }
     else
         fbe_value.info = "";
@@ -289,7 +291,7 @@ void FieldModelPMR_extra_Info::get_fields([[maybe_unused]] ::FBE::Base& base_fbe
 
     if ((fbe_current_size + extra.fbe_size()) <= fbe_struct_size)
         {
-            extra.get(&fbe_value.extra);
+            extra.get(&fbe_value.extra, resource);
         }
     else
         fbe_value.extra = nullptr;
@@ -297,7 +299,7 @@ void FieldModelPMR_extra_Info::get_fields([[maybe_unused]] ::FBE::Base& base_fbe
 
     if ((fbe_current_size + extras.fbe_size()) <= fbe_struct_size)
         {
-            extras.get(fbe_value.extras);
+            extras.get(fbe_value.extras, resource);
         }
     else
         fbe_value.extras.clear();
@@ -305,7 +307,7 @@ void FieldModelPMR_extra_Info::get_fields([[maybe_unused]] ::FBE::Base& base_fbe
 
     if ((fbe_current_size + extras1.fbe_size()) <= fbe_struct_size)
         {
-            extras1.get(fbe_value.extras1);
+            extras1.get(fbe_value.extras1, resource);
         }
     else
         fbe_value.extras1.clear();
@@ -337,23 +339,23 @@ void FieldModelPMR_extra_Info::set_end(size_t fbe_begin)
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModelPMR_extra_Info::set(const ::FBE::Base& fbe_value) noexcept
+void FieldModelPMR_extra_Info::set(const ::FBE::Base& fbe_value, pmr::memory_resource* resource) noexcept
 {
     size_t fbe_begin = set_begin();
     if (fbe_begin == 0)
         return;
 
-    set_fields(fbe_value);
+    set_fields(fbe_value, resource);
     set_end(fbe_begin);
 }
 
-void FieldModelPMR_extra_Info::set_fields([[maybe_unused]] const ::FBE::Base& base_fbe_value) noexcept
+void FieldModelPMR_extra_Info::set_fields([[maybe_unused]] const ::FBE::Base& base_fbe_value, pmr::memory_resource* resource) noexcept
 {
     [[maybe_unused]] const ::extra_pmr::Info& fbe_value = static_cast<const ::extra_pmr::Info&>(base_fbe_value);
-    info.set(fbe_value.info);
-    extra.set(fbe_value.extra);
-    extras.set(fbe_value.extras);
-    extras1.set(fbe_value.extras1);
+    info.set(fbe_value.info, resource);
+    extra.set(fbe_value.extra, resource);
+    extras.set(fbe_value.extras, resource);
+    extras1.set(fbe_value.extras1, resource);
 }
 
 namespace extra_pmr {
@@ -384,15 +386,15 @@ size_t InfoModel::create_end(size_t fbe_begin)
     return fbe_full_size;
 }
 
-size_t InfoModel::serialize(const ::extra_pmr::Info& value)
+size_t InfoModel::serialize(const ::extra_pmr::Info& value, pmr::memory_resource* resource)
 {
     size_t fbe_begin = create_begin();
-    model.set(value);
+    model.set(value, resource);
     size_t fbe_full_size = create_end(fbe_begin);
     return fbe_full_size;
 }
 
-size_t InfoModel::deserialize(::extra_pmr::Info& value) noexcept
+size_t InfoModel::deserialize(::extra_pmr::Info& value, pmr::memory_resource* resource) noexcept
 {
     if ((this->buffer().offset() + model.fbe_offset() - 4) > this->buffer().size())
         return 0;
@@ -402,7 +404,7 @@ size_t InfoModel::deserialize(::extra_pmr::Info& value) noexcept
     if (fbe_full_size < model.fbe_size())
         return 0;
 
-    model.get(value);
+    model.get(value, resource);
     return fbe_full_size;
 }
 
@@ -483,17 +485,19 @@ void FieldModelPMRPtr_extra_Extra::get_end(size_t fbe_begin) const noexcept
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModelPMRPtr_extra_Extra::get(::extra_pmr::Extra** fbe_value) noexcept
+void FieldModelPMRPtr_extra_Extra::get(::extra_pmr::Extra** fbe_value, pmr::memory_resource* resource) noexcept
 {
     size_t fbe_begin = get_begin();
     if (fbe_begin == 0)
         return;
 
-    if (ptr) delete ptr;
-    ptr = new FieldModelPMR_extra_Extra(_buffer, 0);
+    pmr::polymorphic_allocator<char> allocator{resource};
+    auto* buffer = allocator.allocate(sizeof(FieldModelPMR_extra_Extra));
+    ptr = new (buffer) FieldModelPMR_extra_Extra(_buffer, 0);
 
-    ::extra_pmr::Extra *tempModel = new ::extra_pmr::Extra();
-    ptr->get(*tempModel);
+    auto * buffer2 = allocator.allocate(sizeof(::extra_pmr::Extra));
+    ::extra_pmr::Extra *tempModel = new (buffer2) ::extra_pmr::Extra(allocator);
+    ptr->get(*tempModel, resource);
     *fbe_value = tempModel;
 
     get_end(fbe_begin);
@@ -527,17 +531,17 @@ void FieldModelPMRPtr_extra_Extra::set_end(size_t fbe_begin)
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModelPMRPtr_extra_Extra::set(const ::extra_pmr::Extra* fbe_value) noexcept
+void FieldModelPMRPtr_extra_Extra::set(const ::extra_pmr::Extra* fbe_value, pmr::memory_resource* resource) noexcept
 {
     size_t fbe_begin = set_begin(fbe_value != nullptr);
     if (fbe_begin == 0)
         return;
 
     if (fbe_value != nullptr) {
-        BaseFieldModel* temp = new FieldModelPMR_extra_Extra(_buffer, 0);
-        if (ptr) delete ptr;
-        ptr = temp;
-        ptr->set(*fbe_value);
+        pmr::polymorphic_allocator<char> allocator{resource};
+        auto* buffer = allocator.allocate(sizeof(FieldModelPMR_extra_Extra));
+        ptr = new (buffer) FieldModelPMR_extra_Extra(_buffer, 0);
+        ptr->set(*fbe_value, nullptr);
     }
 
     set_end(fbe_begin);
@@ -707,25 +711,25 @@ void FieldModelPMR_extra_Extra::get_end(size_t fbe_begin) const noexcept
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModelPMR_extra_Extra::get(::FBE::Base& fbe_value) noexcept
+void FieldModelPMR_extra_Extra::get(::FBE::Base& fbe_value, pmr::memory_resource* resource) noexcept
 {
     size_t fbe_begin = get_begin();
     if (fbe_begin == 0)
         return;
 
     uint32_t fbe_struct_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset());
-    get_fields(fbe_value, fbe_struct_size);
+    get_fields(fbe_value, fbe_struct_size, resource);
     get_end(fbe_begin);
 }
 
-void FieldModelPMR_extra_Extra::get_fields([[maybe_unused]] ::FBE::Base& base_fbe_value, [[maybe_unused]] size_t fbe_struct_size) noexcept
+void FieldModelPMR_extra_Extra::get_fields([[maybe_unused]] ::FBE::Base& base_fbe_value, [[maybe_unused]] size_t fbe_struct_size, pmr::memory_resource* resource) noexcept
 {
     ::extra_pmr::Extra& fbe_value = static_cast<::extra_pmr::Extra&>(base_fbe_value);
     size_t fbe_current_size = 4 + 4;
 
     if ((fbe_current_size + num.fbe_size()) <= fbe_struct_size)
         {
-            num.get(fbe_value.num);
+            num.get(fbe_value.num, resource);
         }
     else
         fbe_value.num = (int64_t)0ll;
@@ -733,7 +737,7 @@ void FieldModelPMR_extra_Extra::get_fields([[maybe_unused]] ::FBE::Base& base_fb
 
     if ((fbe_current_size + data.fbe_size()) <= fbe_struct_size)
         {
-            data.get(fbe_value.data);
+            data.get(fbe_value.data, resource);
         }
     else
         fbe_value.data = "";
@@ -741,7 +745,7 @@ void FieldModelPMR_extra_Extra::get_fields([[maybe_unused]] ::FBE::Base& base_fb
 
     if ((fbe_current_size + info.fbe_size()) <= fbe_struct_size)
         {
-            info.get(&fbe_value.info);
+            info.get(&fbe_value.info, resource);
         }
     else
         fbe_value.info = nullptr;
@@ -749,7 +753,7 @@ void FieldModelPMR_extra_Extra::get_fields([[maybe_unused]] ::FBE::Base& base_fb
 
     if ((fbe_current_size + info2.fbe_size()) <= fbe_struct_size)
         {
-            info2.get(&fbe_value.info2);
+            info2.get(&fbe_value.info2, resource);
         }
     else
         fbe_value.info2 = nullptr;
@@ -757,7 +761,7 @@ void FieldModelPMR_extra_Extra::get_fields([[maybe_unused]] ::FBE::Base& base_fb
 
     if ((fbe_current_size + info3.fbe_size()) <= fbe_struct_size)
         {
-            info3.get(fbe_value.info3);
+            info3.get(fbe_value.info3, resource);
         }
     else
         fbe_value.info3 = ::extra_pmr::Info();
@@ -765,7 +769,7 @@ void FieldModelPMR_extra_Extra::get_fields([[maybe_unused]] ::FBE::Base& base_fb
 
     if ((fbe_current_size + infov.fbe_size()) <= fbe_struct_size)
         {
-            infov.get(fbe_value.infov);
+            infov.get(fbe_value.infov, resource);
         }
     else
         fbe_value.infov.clear();
@@ -773,7 +777,7 @@ void FieldModelPMR_extra_Extra::get_fields([[maybe_unused]] ::FBE::Base& base_fb
 
     if ((fbe_current_size + infopv.fbe_size()) <= fbe_struct_size)
         {
-            infopv.get(fbe_value.infopv);
+            infopv.get(fbe_value.infopv, resource);
         }
     else
         fbe_value.infopv.clear();
@@ -781,7 +785,7 @@ void FieldModelPMR_extra_Extra::get_fields([[maybe_unused]] ::FBE::Base& base_fb
 
     if ((fbe_current_size + infol.fbe_size()) <= fbe_struct_size)
         {
-            infol.get(fbe_value.infol);
+            infol.get(fbe_value.infol, resource);
         }
     else
         fbe_value.infol.clear();
@@ -789,7 +793,7 @@ void FieldModelPMR_extra_Extra::get_fields([[maybe_unused]] ::FBE::Base& base_fb
 
     if ((fbe_current_size + infopl.fbe_size()) <= fbe_struct_size)
         {
-            infopl.get(fbe_value.infopl);
+            infopl.get(fbe_value.infopl, resource);
         }
     else
         fbe_value.infopl.clear();
@@ -821,28 +825,28 @@ void FieldModelPMR_extra_Extra::set_end(size_t fbe_begin)
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModelPMR_extra_Extra::set(const ::FBE::Base& fbe_value) noexcept
+void FieldModelPMR_extra_Extra::set(const ::FBE::Base& fbe_value, pmr::memory_resource* resource) noexcept
 {
     size_t fbe_begin = set_begin();
     if (fbe_begin == 0)
         return;
 
-    set_fields(fbe_value);
+    set_fields(fbe_value, resource);
     set_end(fbe_begin);
 }
 
-void FieldModelPMR_extra_Extra::set_fields([[maybe_unused]] const ::FBE::Base& base_fbe_value) noexcept
+void FieldModelPMR_extra_Extra::set_fields([[maybe_unused]] const ::FBE::Base& base_fbe_value, pmr::memory_resource* resource) noexcept
 {
     [[maybe_unused]] const ::extra_pmr::Extra& fbe_value = static_cast<const ::extra_pmr::Extra&>(base_fbe_value);
-    num.set(fbe_value.num);
-    data.set(fbe_value.data);
-    info.set(fbe_value.info);
-    info2.set(fbe_value.info2);
-    info3.set(static_cast<const ::extra_pmr::Info&>(fbe_value.info3));
-    infov.set(fbe_value.infov);
-    infopv.set(fbe_value.infopv);
-    infol.set(fbe_value.infol);
-    infopl.set(fbe_value.infopl);
+    num.set(fbe_value.num, resource);
+    data.set(fbe_value.data, resource);
+    info.set(fbe_value.info, resource);
+    info2.set(fbe_value.info2, resource);
+    info3.set(static_cast<const ::extra_pmr::Info&>(fbe_value.info3), resource);
+    infov.set(fbe_value.infov, resource);
+    infopv.set(fbe_value.infopv, resource);
+    infol.set(fbe_value.infol, resource);
+    infopl.set(fbe_value.infopl, resource);
 }
 
 namespace extra_pmr {
@@ -873,15 +877,15 @@ size_t ExtraModel::create_end(size_t fbe_begin)
     return fbe_full_size;
 }
 
-size_t ExtraModel::serialize(const ::extra_pmr::Extra& value)
+size_t ExtraModel::serialize(const ::extra_pmr::Extra& value, pmr::memory_resource* resource)
 {
     size_t fbe_begin = create_begin();
-    model.set(value);
+    model.set(value, resource);
     size_t fbe_full_size = create_end(fbe_begin);
     return fbe_full_size;
 }
 
-size_t ExtraModel::deserialize(::extra_pmr::Extra& value) noexcept
+size_t ExtraModel::deserialize(::extra_pmr::Extra& value, pmr::memory_resource* resource) noexcept
 {
     if ((this->buffer().offset() + model.fbe_offset() - 4) > this->buffer().size())
         return 0;
@@ -891,7 +895,7 @@ size_t ExtraModel::deserialize(::extra_pmr::Extra& value) noexcept
     if (fbe_full_size < model.fbe_size())
         return 0;
 
-    model.get(value);
+    model.get(value, resource);
     return fbe_full_size;
 }
 

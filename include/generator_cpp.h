@@ -15,7 +15,9 @@
 #ifndef GENERATOR_CPP_H
 #define GENERATOR_CPP_H
 
+#include "fbe.h"
 #include "generator.h"
+#include <memory>
 
 namespace FBE {
 
@@ -243,6 +245,7 @@ private:
     bool IsContainerType(const VariantValue& variant);
     bool IsStructType(const std::shared_ptr<Package>& p, const std::string& field_type);
     bool IsCurrentPackageType(const std::string& field_type, const std::string& delimiter = ".");
+    bool IsPMRType(const std::shared_ptr<Package>& p, const std::string& field_type);
 
     std::string ConvertVariantTypeName(const std::string& package, const VariantValue& variant);
     std::string ConvertVariantTypeNameAsArgument(const std::string& package, const VariantValue& variant);
