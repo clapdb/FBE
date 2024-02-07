@@ -6686,11 +6686,11 @@ void GeneratorGo::GenerateStruct(const std::shared_ptr<Package>& p, const std::s
     WriteLineIndent("func (s *" + struct_name + ") Clone() *" + struct_name + " {");
     Indent(1);
     WriteLineIndent("// Serialize the struct to the FBE stream");
-    WriteLineIndent("writer := New" + struct_name + "Model(fbe.NewEmptyBuffer())");
+    WriteLineIndent("writer := New" + struct_name + std::string(Final() ? "Final" : "") + "Model(fbe.NewEmptyBuffer())");
     WriteLineIndent("_, _ = writer.Serialize(s)");
     WriteLine();
     WriteLineIndent("// Deserialize the struct from the FBE stream");
-    WriteLineIndent("reader := New" + struct_name + "Model(writer.Buffer())");
+    WriteLineIndent("reader := New" + struct_name + std::string(Final() ? "Final" : "") + "Model(writer.Buffer())");
     WriteLineIndent("result, _, _ := reader.Deserialize()");
     WriteLineIndent("return result");
     Indent(-1);
