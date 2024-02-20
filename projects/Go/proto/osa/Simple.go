@@ -75,11 +75,11 @@ func (s *Simple) Copy() *Simple {
 // Struct deep clone
 func (s *Simple) Clone() *Simple {
     // Serialize the struct to the FBE stream
-    writer := NewSimpleModel(fbe.NewEmptyBuffer())
+    writer := NewSimpleFinalModel(fbe.NewEmptyBuffer())
     _, _ = writer.Serialize(s)
 
     // Deserialize the struct from the FBE stream
-    reader := NewSimpleModel(writer.Buffer())
+    reader := NewSimpleFinalModel(writer.Buffer())
     result, _, _ := reader.Deserialize()
     return result
 }

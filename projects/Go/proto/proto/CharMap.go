@@ -69,11 +69,11 @@ func (s *CharMap) Copy() *CharMap {
 // Struct deep clone
 func (s *CharMap) Clone() *CharMap {
     // Serialize the struct to the FBE stream
-    writer := NewCharMapModel(fbe.NewEmptyBuffer())
+    writer := NewCharMapFinalModel(fbe.NewEmptyBuffer())
     _, _ = writer.Serialize(s)
 
     // Deserialize the struct from the FBE stream
-    reader := NewCharMapModel(writer.Buffer())
+    reader := NewCharMapFinalModel(writer.Buffer())
     result, _, _ := reader.Deserialize()
     return result
 }

@@ -88,11 +88,11 @@ func (s *Order) Copy() *Order {
 // Struct deep clone
 func (s *Order) Clone() *Order {
     // Serialize the struct to the FBE stream
-    writer := NewOrderModel(fbe.NewEmptyBuffer())
+    writer := NewOrderFinalModel(fbe.NewEmptyBuffer())
     _, _ = writer.Serialize(s)
 
     // Deserialize the struct from the FBE stream
-    reader := NewOrderModel(writer.Buffer())
+    reader := NewOrderFinalModel(writer.Buffer())
     result, _, _ := reader.Deserialize()
     return result
 }

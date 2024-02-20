@@ -82,11 +82,11 @@ func (s *PremiumAccount) Copy() *PremiumAccount {
 // Struct deep clone
 func (s *PremiumAccount) Clone() *PremiumAccount {
     // Serialize the struct to the FBE stream
-    writer := NewPremiumAccountModel(fbe.NewEmptyBuffer())
+    writer := NewPremiumAccountFinalModel(fbe.NewEmptyBuffer())
     _, _ = writer.Serialize(s)
 
     // Deserialize the struct from the FBE stream
-    reader := NewPremiumAccountModel(writer.Buffer())
+    reader := NewPremiumAccountFinalModel(writer.Buffer())
     result, _, _ := reader.Deserialize()
     return result
 }

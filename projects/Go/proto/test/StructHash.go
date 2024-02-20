@@ -89,11 +89,11 @@ func (s *StructHash) Copy() *StructHash {
 // Struct deep clone
 func (s *StructHash) Clone() *StructHash {
     // Serialize the struct to the FBE stream
-    writer := NewStructHashModel(fbe.NewEmptyBuffer())
+    writer := NewStructHashFinalModel(fbe.NewEmptyBuffer())
     _, _ = writer.Serialize(s)
 
     // Deserialize the struct from the FBE stream
-    reader := NewStructHashModel(writer.Buffer())
+    reader := NewStructHashFinalModel(writer.Buffer())
     result, _, _ := reader.Deserialize()
     return result
 }

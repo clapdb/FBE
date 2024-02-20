@@ -97,11 +97,11 @@ func (s *StructNested) Copy() *StructNested {
 // Struct deep clone
 func (s *StructNested) Clone() *StructNested {
     // Serialize the struct to the FBE stream
-    writer := NewStructNestedModel(fbe.NewEmptyBuffer())
+    writer := NewStructNestedFinalModel(fbe.NewEmptyBuffer())
     _, _ = writer.Serialize(s)
 
     // Deserialize the struct from the FBE stream
-    reader := NewStructNestedModel(writer.Buffer())
+    reader := NewStructNestedFinalModel(writer.Buffer())
     result, _, _ := reader.Deserialize()
     return result
 }

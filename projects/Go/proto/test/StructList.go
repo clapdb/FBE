@@ -89,11 +89,11 @@ func (s *StructList) Copy() *StructList {
 // Struct deep clone
 func (s *StructList) Clone() *StructList {
     // Serialize the struct to the FBE stream
-    writer := NewStructListModel(fbe.NewEmptyBuffer())
+    writer := NewStructListFinalModel(fbe.NewEmptyBuffer())
     _, _ = writer.Serialize(s)
 
     // Deserialize the struct from the FBE stream
-    reader := NewStructListModel(writer.Buffer())
+    reader := NewStructListFinalModel(writer.Buffer())
     result, _, _ := reader.Deserialize()
     return result
 }

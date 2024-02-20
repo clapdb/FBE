@@ -89,11 +89,11 @@ func (s *StructVector) Copy() *StructVector {
 // Struct deep clone
 func (s *StructVector) Clone() *StructVector {
     // Serialize the struct to the FBE stream
-    writer := NewStructVectorModel(fbe.NewEmptyBuffer())
+    writer := NewStructVectorFinalModel(fbe.NewEmptyBuffer())
     _, _ = writer.Serialize(s)
 
     // Deserialize the struct from the FBE stream
-    reader := NewStructVectorModel(writer.Buffer())
+    reader := NewStructVectorFinalModel(writer.Buffer())
     result, _, _ := reader.Deserialize()
     return result
 }

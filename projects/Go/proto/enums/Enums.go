@@ -199,11 +199,11 @@ func (s *Enums) Copy() *Enums {
 // Struct deep clone
 func (s *Enums) Clone() *Enums {
     // Serialize the struct to the FBE stream
-    writer := NewEnumsModel(fbe.NewEmptyBuffer())
+    writer := NewEnumsFinalModel(fbe.NewEmptyBuffer())
     _, _ = writer.Serialize(s)
 
     // Deserialize the struct from the FBE stream
-    reader := NewEnumsModel(writer.Buffer())
+    reader := NewEnumsFinalModel(writer.Buffer())
     result, _, _ := reader.Deserialize()
     return result
 }

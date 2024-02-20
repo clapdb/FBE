@@ -71,11 +71,11 @@ func (s *BalanceMessage) Copy() *BalanceMessage {
 // Struct deep clone
 func (s *BalanceMessage) Clone() *BalanceMessage {
     // Serialize the struct to the FBE stream
-    writer := NewBalanceMessageModel(fbe.NewEmptyBuffer())
+    writer := NewBalanceMessageFinalModel(fbe.NewEmptyBuffer())
     _, _ = writer.Serialize(s)
 
     // Deserialize the struct from the FBE stream
-    reader := NewBalanceMessageModel(writer.Buffer())
+    reader := NewBalanceMessageFinalModel(writer.Buffer())
     result, _, _ := reader.Deserialize()
     return result
 }

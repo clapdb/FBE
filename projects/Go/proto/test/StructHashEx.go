@@ -73,11 +73,11 @@ func (s *StructHashEx) Copy() *StructHashEx {
 // Struct deep clone
 func (s *StructHashEx) Clone() *StructHashEx {
     // Serialize the struct to the FBE stream
-    writer := NewStructHashExModel(fbe.NewEmptyBuffer())
+    writer := NewStructHashExFinalModel(fbe.NewEmptyBuffer())
     _, _ = writer.Serialize(s)
 
     // Deserialize the struct from the FBE stream
-    reader := NewStructHashExModel(writer.Buffer())
+    reader := NewStructHashExFinalModel(writer.Buffer())
     result, _, _ := reader.Deserialize()
     return result
 }

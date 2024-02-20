@@ -372,7 +372,7 @@ void FieldModel<::variants::V>::get(::variants::V& fbe_value, pmr::memory_resour
             FieldModel<::variants::Simple> fbe_model(_buffer, 4);
             fbe_value.emplace<::variants::Simple>();
             auto& value = std::get<4>(fbe_value);
-            fbe_model.get(value, nullptr);
+            fbe_model.get(value, resource);
             break;
         }
         case 5: {
