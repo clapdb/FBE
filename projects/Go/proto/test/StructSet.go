@@ -77,11 +77,11 @@ func (s *StructSet) Copy() *StructSet {
 // Struct deep clone
 func (s *StructSet) Clone() *StructSet {
     // Serialize the struct to the FBE stream
-    writer := NewStructSetModel(fbe.NewEmptyBuffer())
+    writer := NewStructSetFinalModel(fbe.NewEmptyBuffer())
     _, _ = writer.Serialize(s)
 
     // Deserialize the struct from the FBE stream
-    reader := NewStructSetModel(writer.Buffer())
+    reader := NewStructSetFinalModel(writer.Buffer())
     result, _, _ := reader.Deserialize()
     return result
 }

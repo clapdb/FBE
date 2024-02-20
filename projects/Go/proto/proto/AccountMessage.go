@@ -69,11 +69,11 @@ func (s *AccountMessage) Copy() *AccountMessage {
 // Struct deep clone
 func (s *AccountMessage) Clone() *AccountMessage {
     // Serialize the struct to the FBE stream
-    writer := NewAccountMessageModel(fbe.NewEmptyBuffer())
+    writer := NewAccountMessageFinalModel(fbe.NewEmptyBuffer())
     _, _ = writer.Serialize(s)
 
     // Deserialize the struct from the FBE stream
-    reader := NewAccountMessageModel(writer.Buffer())
+    reader := NewAccountMessageFinalModel(writer.Buffer())
     result, _, _ := reader.Deserialize()
     return result
 }

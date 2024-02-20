@@ -205,11 +205,11 @@ func (s *StructOptional) Copy() *StructOptional {
 // Struct deep clone
 func (s *StructOptional) Clone() *StructOptional {
     // Serialize the struct to the FBE stream
-    writer := NewStructOptionalModel(fbe.NewEmptyBuffer())
+    writer := NewStructOptionalFinalModel(fbe.NewEmptyBuffer())
     _, _ = writer.Serialize(s)
 
     // Deserialize the struct from the FBE stream
-    reader := NewStructOptionalModel(writer.Buffer())
+    reader := NewStructOptionalFinalModel(writer.Buffer())
     result, _, _ := reader.Deserialize()
     return result
 }

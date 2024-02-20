@@ -8109,8 +8109,15 @@ bool GeneratorCpp::IsContainerType(const VariantValue &variant) {
 }
 
 bool GeneratorCpp::IsStructType(const std::shared_ptr<Package>& p, const std::string& field_type) {
+    std::string field_type_without_namespace = field_type;
+    // extract the last token after ::
+    auto pos = field_type_without_namespace.rfind("::");
+    if (pos != std::string::npos) {
+        field_type_without_namespace = field_type_without_namespace.substr(pos + 2);
+    }
+
     for (const auto &s:  p->body->structs) {
-        if (*s->name == field_type) {
+        if (*s->name == field_type_without_namespace) {
             return true;
         }
     }

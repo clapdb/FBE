@@ -74,11 +74,11 @@ func (s *Balance) Copy() *Balance {
 // Struct deep clone
 func (s *Balance) Clone() *Balance {
     // Serialize the struct to the FBE stream
-    writer := NewBalanceModel(fbe.NewEmptyBuffer())
+    writer := NewBalanceFinalModel(fbe.NewEmptyBuffer())
     _, _ = writer.Serialize(s)
 
     // Deserialize the struct from the FBE stream
-    reader := NewBalanceModel(writer.Buffer())
+    reader := NewBalanceFinalModel(writer.Buffer())
     result, _, _ := reader.Deserialize()
     return result
 }

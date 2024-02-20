@@ -162,11 +162,11 @@ func (s *StructSimple) Copy() *StructSimple {
 // Struct deep clone
 func (s *StructSimple) Clone() *StructSimple {
     // Serialize the struct to the FBE stream
-    writer := NewStructSimpleModel(fbe.NewEmptyBuffer())
+    writer := NewStructSimpleFinalModel(fbe.NewEmptyBuffer())
     _, _ = writer.Serialize(s)
 
     // Deserialize the struct from the FBE stream
-    reader := NewStructSimpleModel(writer.Buffer())
+    reader := NewStructSimpleFinalModel(writer.Buffer())
     result, _, _ := reader.Deserialize()
     return result
 }

@@ -89,11 +89,11 @@ func (s *StructMap) Copy() *StructMap {
 // Struct deep clone
 func (s *StructMap) Clone() *StructMap {
     // Serialize the struct to the FBE stream
-    writer := NewStructMapModel(fbe.NewEmptyBuffer())
+    writer := NewStructMapFinalModel(fbe.NewEmptyBuffer())
     _, _ = writer.Serialize(s)
 
     // Deserialize the struct from the FBE stream
-    reader := NewStructMapModel(writer.Buffer())
+    reader := NewStructMapFinalModel(writer.Buffer())
     result, _, _ := reader.Deserialize()
     return result
 }

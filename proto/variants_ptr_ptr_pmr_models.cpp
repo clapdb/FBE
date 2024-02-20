@@ -403,9 +403,9 @@ void FieldModel<::variants_ptr_pmr::V>::get(::variants_ptr_pmr::V& fbe_value, pm
         }
         case 4: {
             FieldModelPMR_variants_ptr_Simple fbe_model(_buffer, 4);
-            fbe_value.emplace<::variants_ptr_pmr::Simple>();
+            fbe_value.emplace<::variants_ptr_pmr::Simple>(resource);
             auto& value = std::get<4>(fbe_value);
-            fbe_model.get(value, nullptr);
+            fbe_model.get(value, resource);
             break;
         }
         case 5: {
