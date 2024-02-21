@@ -1401,6 +1401,33 @@ class FieldModel<wchar_t> : public FieldModelBase<wchar_t, uint32_t>
 public:
     using FieldModelBase<wchar_t, uint32_t>::FieldModelBase;
 };
+
+template<typename V, typename T>
+auto variant_emplace_value(V& fbe_value, pmr::memory_resource* resource) {
+    if constexpr (std::is_integral_v<T> or std::is_floating_point_v<T> or std::is_enum_v<T> or std::is_same_v<T, std::string> or not std::is_constructible_v<T, pmr::memory_resource*>) {
+        fbe_value.template emplace<T>();
+    } else {
+        fbe_value.template emplace<T>(resource);
+    }
+}
+
+template<typename M, typename T>
+auto variant_get_value(M& model, T& value, pmr::memory_resource* resource) {
+    if constexpr (std::is_integral_v<T> or std::is_floating_point_v<T> or std::is_enum_v<T> or std::is_same_v<T, std::string> or not std::is_constructible_v<T, pmr::memory_resource*>) {
+        model.get(value, nullptr);
+    } else {
+        model.get(value, resource);
+    }
+}
+
+template<typename M, typename T>
+auto variant_get_value(M& model, T** value, pmr::memory_resource* resource) {
+    if constexpr (std::is_integral_v<T> or std::is_floating_point_v<T> or std::is_enum_v<T> or std::is_same_v<T, std::string> or not std::is_constructible_v<T, pmr::memory_resource*>) {
+        model.get(value, nullptr);
+    } else {
+        model.get(value, resource);
+    }
+}
 )CODE";
     }
 

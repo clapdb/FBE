@@ -6643,19 +6643,22 @@ void GeneratorCpp::GenerateVariantFieldModel_Source(const std::shared_ptr<Packag
         auto& value = v->body->values[index];
         WriteLineIndent(ConvertPtrVariantFieldModelType(p, value) + " fbe_model(_buffer, 4);");
         auto variant_type = ConvertVariantTypeName(*p->name, *value);
-        if (Arena() && IsPMRType(p, variant_type)) {
-          WriteLineIndent("fbe_value.emplace<" + variant_type + ">(resource);");
-        } else {
-          WriteLineIndent("fbe_value.emplace<" + variant_type + ">();");
-        }
+        // if (Arena() && IsPMRType(p, variant_type)) {
+        //   WriteLineIndent("fbe_value.emplace<" + variant_type + ">(resource);");
+        // } else {
+        //   WriteLineIndent("fbe_value.emplace<" + variant_type + ">();");
+        // }
+        WriteLineIndent("variant_emplace_value<" + variant_name + ", " + variant_type + ">(fbe_value, resource);");
         // initialize variant
         WriteLineIndent("auto& value = std::get<" +  std::to_string(index + 1) + ">(fbe_value);");
-        if (IsPMRType(p, variant_type)) {
-            WriteLineIndent(std::string("fbe_model.get(") + ((!IsContainerType(*value) && value->ptr) ? "&" : "") + "value, resource);");
-        } else {
-            WriteLineIndent(std::string("fbe_model.get(") + ((!IsContainerType(*value) && value->ptr) ? "&" : "") + "value, nullptr);");
+        // if (IsPMRType(p, variant_type)) {
+        //     WriteLineIndent(std::string("fbe_model.get(") + ((!IsContainerType(*value) && value->ptr) ? "&" : "") + "value, resource);");
+        // } else {
+        //     WriteLineIndent(std::string("fbe_model.get(") + ((!IsContainerType(*value) && value->ptr) ? "&" : "") + "value, nullptr);");
 
-        }
+        // }
+        WriteLineIndent(std::string("variant_get_value(fbe_model, ") +
+                        ((!IsContainerType(*value) && value->ptr) ? "&" : "") + "value, resource);");
         WriteLineIndent("break;");
         Indent(-1);
         WriteLineIndent("}");
