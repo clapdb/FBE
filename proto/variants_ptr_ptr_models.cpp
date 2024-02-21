@@ -110,30 +110,30 @@ void FieldModel<::variants_ptr::Expr>::get(::variants_ptr::Expr& fbe_value, pmr:
         }
         case 1: {
             FieldModel<bool> fbe_model(_buffer, 4);
-            fbe_value.emplace<bool>();
+            variant_emplace_value<::variants_ptr::Expr, bool>(fbe_value, resource);
             auto& value = std::get<1>(fbe_value);
-            fbe_model.get(value, nullptr);
+            variant_get_value(fbe_model, value, resource);
             break;
         }
         case 2: {
             FieldModel<FBEString> fbe_model(_buffer, 4);
-            fbe_value.emplace<FBEString>();
+            variant_emplace_value<::variants_ptr::Expr, FBEString>(fbe_value, resource);
             auto& value = std::get<2>(fbe_value);
-            fbe_model.get(value, nullptr);
+            variant_get_value(fbe_model, value, resource);
             break;
         }
         case 3: {
             FieldModel<int32_t> fbe_model(_buffer, 4);
-            fbe_value.emplace<int32_t>();
+            variant_emplace_value<::variants_ptr::Expr, int32_t>(fbe_value, resource);
             auto& value = std::get<3>(fbe_value);
-            fbe_model.get(value, nullptr);
+            variant_get_value(fbe_model, value, resource);
             break;
         }
         case 4: {
             FieldModelVector<uint8_t> fbe_model(_buffer, 4);
-            fbe_value.emplace<FastVec<uint8_t>>();
+            variant_emplace_value<::variants_ptr::Expr, FastVec<uint8_t>>(fbe_value, resource);
             auto& value = std::get<4>(fbe_value);
-            fbe_model.get(value, nullptr);
+            variant_get_value(fbe_model, value, resource);
             break;
         }
     }
@@ -382,100 +382,100 @@ void FieldModel<::variants_ptr::V>::get(::variants_ptr::V& fbe_value, pmr::memor
         }
         case 1: {
             FieldModel<int32_t> fbe_model(_buffer, 4);
-            fbe_value.emplace<int32_t>();
+            variant_emplace_value<::variants_ptr::V, int32_t>(fbe_value, resource);
             auto& value = std::get<1>(fbe_value);
-            fbe_model.get(value, nullptr);
+            variant_get_value(fbe_model, value, resource);
             break;
         }
         case 2: {
             FieldModel<FBEString> fbe_model(_buffer, 4);
-            fbe_value.emplace<FBEString>();
+            variant_emplace_value<::variants_ptr::V, FBEString>(fbe_value, resource);
             auto& value = std::get<2>(fbe_value);
-            fbe_model.get(value, nullptr);
+            variant_get_value(fbe_model, value, resource);
             break;
         }
         case 3: {
             FieldModel<double> fbe_model(_buffer, 4);
-            fbe_value.emplace<double>();
+            variant_emplace_value<::variants_ptr::V, double>(fbe_value, resource);
             auto& value = std::get<3>(fbe_value);
-            fbe_model.get(value, nullptr);
+            variant_get_value(fbe_model, value, resource);
             break;
         }
         case 4: {
             FieldModel_variants_ptr_Simple fbe_model(_buffer, 4);
-            fbe_value.emplace<::variants_ptr::Simple>();
+            variant_emplace_value<::variants_ptr::V, ::variants_ptr::Simple>(fbe_value, resource);
             auto& value = std::get<4>(fbe_value);
-            fbe_model.get(value, resource);
+            variant_get_value(fbe_model, value, resource);
             break;
         }
         case 5: {
             FieldModelPtr_variants_ptr_Simple fbe_model(_buffer, 4);
-            fbe_value.emplace<::variants_ptr::Simple*>();
+            variant_emplace_value<::variants_ptr::V, ::variants_ptr::Simple*>(fbe_value, resource);
             auto& value = std::get<5>(fbe_value);
-            fbe_model.get(&value, nullptr);
+            variant_get_value(fbe_model, &value, resource);
             break;
         }
         case 6: {
             FieldModelCustomVector<FieldModel_variants_ptr_Simple, ::variants_ptr::Simple> fbe_model(_buffer, 4);
-            fbe_value.emplace<FastVec<::variants_ptr::Simple>>();
+            variant_emplace_value<::variants_ptr::V, FastVec<::variants_ptr::Simple>>(fbe_value, resource);
             auto& value = std::get<6>(fbe_value);
-            fbe_model.get(value, nullptr);
+            variant_get_value(fbe_model, value, resource);
             break;
         }
         case 7: {
             FieldModelVector<int32_t> fbe_model(_buffer, 4);
-            fbe_value.emplace<FastVec<int32_t>>();
+            variant_emplace_value<::variants_ptr::V, FastVec<int32_t>>(fbe_value, resource);
             auto& value = std::get<7>(fbe_value);
-            fbe_model.get(value, nullptr);
+            variant_get_value(fbe_model, value, resource);
             break;
         }
         case 8: {
             FieldModelCustomMap<FieldModel<int32_t>, FieldModel_variants_ptr_Simple, int32_t, ::variants_ptr::Simple> fbe_model(_buffer, 4);
-            fbe_value.emplace<std::unordered_map<int32_t, ::variants_ptr::Simple>>();
+            variant_emplace_value<::variants_ptr::V, std::unordered_map<int32_t, ::variants_ptr::Simple>>(fbe_value, resource);
             auto& value = std::get<8>(fbe_value);
-            fbe_model.get(value, nullptr);
+            variant_get_value(fbe_model, value, resource);
             break;
         }
         case 9: {
             FieldModelVector<FBE::buffer_t> fbe_model(_buffer, 4);
-            fbe_value.emplace<FastVec<FBE::buffer_t>>();
+            variant_emplace_value<::variants_ptr::V, FastVec<FBE::buffer_t>>(fbe_value, resource);
             auto& value = std::get<9>(fbe_value);
-            fbe_model.get(value, nullptr);
+            variant_get_value(fbe_model, value, resource);
             break;
         }
         case 10: {
             FieldModelVector<FBEString> fbe_model(_buffer, 4);
-            fbe_value.emplace<FastVec<FBEString>>();
+            variant_emplace_value<::variants_ptr::V, FastVec<FBEString>>(fbe_value, resource);
             auto& value = std::get<10>(fbe_value);
-            fbe_model.get(value, nullptr);
+            variant_get_value(fbe_model, value, resource);
             break;
         }
         case 11: {
             FieldModelMap<int32_t, FBE::buffer_t> fbe_model(_buffer, 4);
-            fbe_value.emplace<std::unordered_map<int32_t, FBE::buffer_t>>();
+            variant_emplace_value<::variants_ptr::V, std::unordered_map<int32_t, FBE::buffer_t>>(fbe_value, resource);
             auto& value = std::get<11>(fbe_value);
-            fbe_model.get(value, nullptr);
+            variant_get_value(fbe_model, value, resource);
             break;
         }
         case 12: {
             FieldModelMap<FBEString, FBE::buffer_t> fbe_model(_buffer, 4);
-            fbe_value.emplace<std::unordered_map<FBEString, FBE::buffer_t>>();
+            variant_emplace_value<::variants_ptr::V, std::unordered_map<FBEString, FBE::buffer_t>>(fbe_value, resource);
             auto& value = std::get<12>(fbe_value);
-            fbe_model.get(value, nullptr);
+            variant_get_value(fbe_model, value, resource);
             break;
         }
         case 13: {
             FieldModelCustomVector<FieldModelPtr_variants_ptr_Simple, ::variants_ptr::Simple> fbe_model(_buffer, 4);
-            fbe_value.emplace<FastVec<::variants_ptr::Simple*>>();
+            variant_emplace_value<::variants_ptr::V, FastVec<::variants_ptr::Simple*>>(fbe_value, resource);
             auto& value = std::get<13>(fbe_value);
-            fbe_model.get(value, nullptr);
+            variant_get_value(fbe_model, value, resource);
             break;
         }
         case 14: {
             FieldModel<::variants_ptr::Expr> fbe_model(_buffer, 4);
-            fbe_value.emplace<::variants_ptr::Expr>();
+            variant_emplace_value<::variants_ptr::V, ::variants_ptr::Expr>(fbe_value, resource);
             auto& value = std::get<14>(fbe_value);
-            fbe_model.get(value, nullptr);
+            variant_get_value(fbe_model, value, resource);
             break;
         }
     }
@@ -744,30 +744,30 @@ void FieldModel<::variants_ptr::Scalar1>::get(::variants_ptr::Scalar1& fbe_value
         }
         case 1: {
             FieldModel<bool> fbe_model(_buffer, 4);
-            fbe_value.emplace<bool>();
+            variant_emplace_value<::variants_ptr::Scalar1, bool>(fbe_value, resource);
             auto& value = std::get<1>(fbe_value);
-            fbe_model.get(value, nullptr);
+            variant_get_value(fbe_model, value, resource);
             break;
         }
         case 2: {
             FieldModel<int32_t> fbe_model(_buffer, 4);
-            fbe_value.emplace<int32_t>();
+            variant_emplace_value<::variants_ptr::Scalar1, int32_t>(fbe_value, resource);
             auto& value = std::get<2>(fbe_value);
-            fbe_model.get(value, nullptr);
+            variant_get_value(fbe_model, value, resource);
             break;
         }
         case 3: {
             FieldModel<int64_t> fbe_model(_buffer, 4);
-            fbe_value.emplace<int64_t>();
+            variant_emplace_value<::variants_ptr::Scalar1, int64_t>(fbe_value, resource);
             auto& value = std::get<3>(fbe_value);
-            fbe_model.get(value, nullptr);
+            variant_get_value(fbe_model, value, resource);
             break;
         }
         case 4: {
             FieldModel<FBEString> fbe_model(_buffer, 4);
-            fbe_value.emplace<FBEString>();
+            variant_emplace_value<::variants_ptr::Scalar1, FBEString>(fbe_value, resource);
             auto& value = std::get<4>(fbe_value);
-            fbe_model.get(value, nullptr);
+            variant_get_value(fbe_model, value, resource);
             break;
         }
     }
