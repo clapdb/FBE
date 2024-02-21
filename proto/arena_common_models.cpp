@@ -104,23 +104,23 @@ void FieldModel<::arena_common::Expr>::get(::arena_common::Expr& fbe_value, pmr:
         }
         case 1: {
             FieldModel<bool> fbe_model(_buffer, 4);
-            fbe_value.emplace<bool>();
+            variant_emplace_value<::arena_common::Expr, bool>(fbe_value, resource);
             auto& value = std::get<1>(fbe_value);
-            fbe_model.get(value, nullptr);
+            variant_get_value(fbe_model, value, resource);
             break;
         }
         case 2: {
             FieldModel<int32_t> fbe_model(_buffer, 4);
-            fbe_value.emplace<int32_t>();
+            variant_emplace_value<::arena_common::Expr, int32_t>(fbe_value, resource);
             auto& value = std::get<2>(fbe_value);
-            fbe_model.get(value, nullptr);
+            variant_get_value(fbe_model, value, resource);
             break;
         }
         case 3: {
             FieldModel<FBEString> fbe_model(_buffer, 4);
-            fbe_value.emplace<FBEString>();
+            variant_emplace_value<::arena_common::Expr, FBEString>(fbe_value, resource);
             auto& value = std::get<3>(fbe_value);
-            fbe_model.get(value, nullptr);
+            variant_get_value(fbe_model, value, resource);
             break;
         }
     }
