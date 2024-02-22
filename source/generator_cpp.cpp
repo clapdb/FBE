@@ -7326,9 +7326,11 @@ void GeneratorCpp::GenerateStructFieldPtrModel_Source(const std::shared_ptr<Pack
 
     WriteLineIndent(class_name + "::~" + class_name +"()");
     WriteLineIndent("{");
-    Indent(1);
-    WriteLineIndent("if (ptr) delete ptr;");
-    Indent(-1);
+    if (not Arena()) {
+        Indent(1);
+        WriteLineIndent("if (ptr) delete ptr;");
+        Indent(-1);
+    }
     WriteLineIndent("}");
     WriteLine();
 
@@ -7534,7 +7536,7 @@ void GeneratorCpp::GenerateStructFieldPtrModel_Source(const std::shared_ptr<Pack
         WriteLineIndent(std::string("auto* buffer = allocator.allocate(sizeof(FieldModelPMR_") + *p->name + "_" + *s->name + "));");
         WriteLineIndent("ptr = new (buffer) FieldModelPMR_" + *p->name + "_" + *s->name + "(_buffer, 0);");
     }
-    WriteLineIndent("ptr->set(*fbe_value, nullptr);");
+    WriteLineIndent("variant_set_value(ptr, *fbe_value, resource);");
     Indent(-1);
     WriteLineIndent("}");
     WriteLine();
