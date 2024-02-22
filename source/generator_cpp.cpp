@@ -342,6 +342,9 @@ requires std::is_enum_v<T> || is_variant_v<T>
 auto assign_member([[maybe_unused]] Alloc alloc) -> T {
     return T();
 }
+
+template <typename T>
+struct model_of {};
 )CODE";
 
     // Prepare code template
@@ -3620,6 +3623,14 @@ void GeneratorCpp::GenerateStructModel_Header(const std::shared_ptr<Package>& p,
     // Generate namespace end
     WriteLine();
     WriteLineIndent("} // namespace " + ConvertNamespace(*p->name));
+
+    // Generate model_of
+    WriteLine();
+    WriteLine("template<>");
+    WriteLine("struct model_of<" + struct_name + "> {");
+    WriteLineIndent("using type = " + ConvertNamespace(*p->name) + "::" + *s->name + "Model;");
+    WriteLine("};");
+    WriteLine();
 }
 
 void GeneratorCpp::GenerateStructModel_Source(const std::shared_ptr<Package>& p, const std::shared_ptr<StructType>& s)
@@ -7326,9 +7337,11 @@ void GeneratorCpp::GenerateStructFieldPtrModel_Source(const std::shared_ptr<Pack
 
     WriteLineIndent(class_name + "::~" + class_name +"()");
     WriteLineIndent("{");
-    Indent(1);
-    WriteLineIndent("if (ptr) delete ptr;");
-    Indent(-1);
+    if (not Arena()) {
+        Indent(1);
+        WriteLineIndent("if (ptr) delete ptr;");
+        Indent(-1);
+    }
     WriteLineIndent("}");
     WriteLine();
 
@@ -7534,7 +7547,7 @@ void GeneratorCpp::GenerateStructFieldPtrModel_Source(const std::shared_ptr<Pack
         WriteLineIndent(std::string("auto* buffer = allocator.allocate(sizeof(FieldModelPMR_") + *p->name + "_" + *s->name + "));");
         WriteLineIndent("ptr = new (buffer) FieldModelPMR_" + *p->name + "_" + *s->name + "(_buffer, 0);");
     }
-    WriteLineIndent("ptr->set(*fbe_value, nullptr);");
+    WriteLineIndent("variant_set_value(ptr, *fbe_value, resource);");
     Indent(-1);
     WriteLineIndent("}");
     WriteLine();
@@ -7609,6 +7622,14 @@ void GeneratorCpp::GeneratePtrStructModel_Header(const std::shared_ptr<Package>&
     // Generate namespace end
     WriteLine();
     WriteLineIndent("} // namespace " + ConvertNamespace(*p->name));
+
+    // Generate model_of
+    WriteLine();
+    WriteLine("template<>");
+    WriteLine("struct model_of<" + struct_name + "> {");
+    WriteLineIndent("using type = " + ConvertNamespace(*p->name) + "::" + *s->name + "Model;");
+    WriteLine("};");
+    WriteLine();
 }
 
 void GeneratorCpp::GeneratePtrStructModel_Source(const std::shared_ptr<Package>& p, const std::shared_ptr<StructType>& s)
