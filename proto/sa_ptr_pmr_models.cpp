@@ -14,7 +14,6 @@ FieldModelPMRPtr_sa_Extra::FieldModelPMRPtr_sa_Extra(FBEBuffer& buffer, size_t o
 
 FieldModelPMRPtr_sa_Extra::~FieldModelPMRPtr_sa_Extra()
 {
-    if (ptr) delete ptr;
 }
 
 size_t FieldModelPMRPtr_sa_Extra::fbe_extra() const noexcept
@@ -140,7 +139,7 @@ void FieldModelPMRPtr_sa_Extra::set(const ::sa_pmr::Extra* fbe_value, pmr::memor
         pmr::polymorphic_allocator<char> allocator{resource};
         auto* buffer = allocator.allocate(sizeof(FieldModelPMR_sa_Extra));
         ptr = new (buffer) FieldModelPMR_sa_Extra(_buffer, 0);
-        ptr->set(*fbe_value, nullptr);
+        variant_set_value(ptr, *fbe_value, resource);
     }
 
     set_end(fbe_begin);
@@ -415,7 +414,6 @@ FieldModelPMRPtr_sa_Simple::FieldModelPMRPtr_sa_Simple(FBEBuffer& buffer, size_t
 
 FieldModelPMRPtr_sa_Simple::~FieldModelPMRPtr_sa_Simple()
 {
-    if (ptr) delete ptr;
 }
 
 size_t FieldModelPMRPtr_sa_Simple::fbe_extra() const noexcept
@@ -541,7 +539,7 @@ void FieldModelPMRPtr_sa_Simple::set(const ::sa_pmr::Simple* fbe_value, pmr::mem
         pmr::polymorphic_allocator<char> allocator{resource};
         auto* buffer = allocator.allocate(sizeof(FieldModelPMR_sa_Simple));
         ptr = new (buffer) FieldModelPMR_sa_Simple(_buffer, 0);
-        ptr->set(*fbe_value, nullptr);
+        variant_set_value(ptr, *fbe_value, resource);
     }
 
     set_end(fbe_begin);
@@ -815,7 +813,6 @@ FieldModelPMRPtr_sa_Complex::FieldModelPMRPtr_sa_Complex(FBEBuffer& buffer, size
 
 FieldModelPMRPtr_sa_Complex::~FieldModelPMRPtr_sa_Complex()
 {
-    if (ptr) delete ptr;
 }
 
 size_t FieldModelPMRPtr_sa_Complex::fbe_extra() const noexcept
@@ -941,7 +938,7 @@ void FieldModelPMRPtr_sa_Complex::set(const ::sa_pmr::Complex* fbe_value, pmr::m
         pmr::polymorphic_allocator<char> allocator{resource};
         auto* buffer = allocator.allocate(sizeof(FieldModelPMR_sa_Complex));
         ptr = new (buffer) FieldModelPMR_sa_Complex(_buffer, 0);
-        ptr->set(*fbe_value, nullptr);
+        variant_set_value(ptr, *fbe_value, resource);
     }
 
     set_end(fbe_begin);

@@ -14,7 +14,6 @@ FieldModelPMRPtr_simple_Simple::FieldModelPMRPtr_simple_Simple(FBEBuffer& buffer
 
 FieldModelPMRPtr_simple_Simple::~FieldModelPMRPtr_simple_Simple()
 {
-    if (ptr) delete ptr;
 }
 
 size_t FieldModelPMRPtr_simple_Simple::fbe_extra() const noexcept
@@ -140,7 +139,7 @@ void FieldModelPMRPtr_simple_Simple::set(const ::simple_pmr::Simple* fbe_value, 
         pmr::polymorphic_allocator<char> allocator{resource};
         auto* buffer = allocator.allocate(sizeof(FieldModelPMR_simple_Simple));
         ptr = new (buffer) FieldModelPMR_simple_Simple(_buffer, 0);
-        ptr->set(*fbe_value, nullptr);
+        variant_set_value(ptr, *fbe_value, resource);
     }
 
     set_end(fbe_begin);

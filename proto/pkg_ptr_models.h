@@ -227,6 +227,12 @@ public:
 
 } // namespace pkg
 
+template<>
+struct model_of<::pkg::Info> {
+using type = pkg::InfoModel;
+};
+
+
 // Fast Binary Encoding ::pkg::Detail field model
 class FieldModel_pkg_Detail : public BaseFieldModel
 {
@@ -318,5 +324,11 @@ public:
 };
 
 } // namespace pkg
+
+template<>
+struct model_of<::pkg::Detail> {
+using type = pkg::DetailModel;
+};
+
 
 } // namespace FBE

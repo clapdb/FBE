@@ -138,7 +138,7 @@ void FieldModelPtr_template_variant_Line::set(const ::template_variant::Line* fb
         BaseFieldModel* temp = new FieldModel_template_variant_Line(_buffer, 0);
         if (ptr) delete ptr;
         ptr = temp;
-        ptr->set(*fbe_value, nullptr);
+        variant_set_value(ptr, *fbe_value, resource);
     }
 
     set_end(fbe_begin);
@@ -537,7 +537,7 @@ void FieldModelPtr_template_variant_Line2::set(const ::template_variant::Line2* 
         BaseFieldModel* temp = new FieldModel_template_variant_Line2(_buffer, 0);
         if (ptr) delete ptr;
         ptr = temp;
-        ptr->set(*fbe_value, nullptr);
+        variant_set_value(ptr, *fbe_value, resource);
     }
 
     set_end(fbe_begin);
@@ -882,7 +882,7 @@ void FieldModelPtr_template_variant_Line3::set(const ::template_variant::Line3* 
         BaseFieldModel* temp = new FieldModel_template_variant_Line3(_buffer, 0);
         if (ptr) delete ptr;
         ptr = temp;
-        ptr->set(*fbe_value, nullptr);
+        variant_set_value(ptr, *fbe_value, resource);
     }
 
     set_end(fbe_begin);

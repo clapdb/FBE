@@ -98,7 +98,7 @@ auto variant_emplace_value(V& fbe_value, pmr::memory_resource* resource) {
 
 template<typename M, typename T>
 auto variant_get_value(M& model, T& value, pmr::memory_resource* resource) {
-    if constexpr (std::is_integral_v<T> or std::is_floating_point_v<T> or std::is_enum_v<T> or std::is_same_v<T, std::string> or not std::is_constructible_v<T, pmr::memory_resource*>) {
+    if constexpr (std::is_integral_v<T> or std::is_floating_point_v<T> or std::is_enum_v<T> or std::is_same_v<T, std::string> or not (std::is_constructible_v<T, pmr::memory_resource*> or is_variant_v<T>)) {
         model.get(value, nullptr);
     } else {
         model.get(value, resource);
@@ -107,12 +107,23 @@ auto variant_get_value(M& model, T& value, pmr::memory_resource* resource) {
 
 template<typename M, typename T>
 auto variant_get_value(M& model, T** value, pmr::memory_resource* resource) {
-    if constexpr (std::is_integral_v<T> or std::is_floating_point_v<T> or std::is_enum_v<T> or std::is_same_v<T, std::string> or not std::is_constructible_v<T, pmr::memory_resource*>) {
+    if constexpr (std::is_integral_v<T> or std::is_floating_point_v<T> or std::is_enum_v<T> or std::is_same_v<T, std::string> or not (std::is_constructible_v<T, pmr::memory_resource*> or is_variant_v<T>)) {
         model.get(value, nullptr);
     } else {
         model.get(value, resource);
     }
 }
+
+template<typename M, typename T>
+auto variant_set_value(M* model, T& value, pmr::memory_resource* resource) {
+    if constexpr (std::is_integral_v<T> or std::is_floating_point_v<T> or std::is_enum_v<T> or std::is_same_v<T, std::string> or not (std::is_constructible_v<T, pmr::memory_resource*> or is_variant_v<T>)) {
+        model->set(value, nullptr);
+    } else {
+        model->set(value, resource);
+    }
+}
+
+
 
 // Fast Binary Encoding field model decimal specialization
 template <>

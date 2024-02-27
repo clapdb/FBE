@@ -224,6 +224,12 @@ public:
 
 } // namespace arena_ptr
 
+template<>
+struct model_of<::arena_ptr::Line> {
+using type = arena_ptr::LineModel;
+};
+
+
 // Fast Binary Encoding ::arena_ptr::Line2 field model
 class FieldModel_arena_ptr_Line2 : public BaseFieldModel
 {
@@ -314,5 +320,11 @@ public:
 };
 
 } // namespace arena_ptr
+
+template<>
+struct model_of<::arena_ptr::Line2> {
+using type = arena_ptr::Line2Model;
+};
+
 
 } // namespace FBE

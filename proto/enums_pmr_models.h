@@ -270,4 +270,10 @@ public:
 
 } // namespace enums_pmr
 
+template<>
+struct model_of<::enums_pmr::Enums> {
+using type = enums_pmr::EnumsModel;
+};
+
+
 } // namespace FBE

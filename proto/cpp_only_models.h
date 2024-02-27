@@ -162,4 +162,10 @@ public:
 
 } // namespace cpp_only
 
+template<>
+struct model_of<::cpp_only::Struct128> {
+using type = cpp_only::Struct128Model;
+};
+
+
 } // namespace FBE

@@ -146,6 +146,12 @@ public:
 
 } // namespace proto
 
+template<>
+struct model_of<::proto::Order> {
+using type = proto::OrderModel;
+};
+
+
 // Fast Binary Encoding ::proto::Balance field model
 template <>
 class FieldModel<::proto::Balance>
@@ -238,6 +244,12 @@ public:
 };
 
 } // namespace proto
+
+template<>
+struct model_of<::proto::Balance> {
+using type = proto::BalanceModel;
+};
+
 
 // Fast Binary Encoding ::proto::Account field model
 template <>
@@ -336,6 +348,12 @@ public:
 
 } // namespace proto
 
+template<>
+struct model_of<::proto::Account> {
+using type = proto::AccountModel;
+};
+
+
 // Fast Binary Encoding ::proto::CharMap field model
 template <>
 class FieldModel<::proto::CharMap>
@@ -427,6 +445,12 @@ public:
 };
 
 } // namespace proto
+
+template<>
+struct model_of<::proto::CharMap> {
+using type = proto::CharMapModel;
+};
+
 
 // Fast Binary Encoding ::proto::OrderMessage field model
 template <>
@@ -520,6 +544,12 @@ public:
 
 } // namespace proto
 
+template<>
+struct model_of<::proto::OrderMessage> {
+using type = proto::OrderMessageModel;
+};
+
+
 // Fast Binary Encoding ::proto::BalanceMessage field model
 template <>
 class FieldModel<::proto::BalanceMessage>
@@ -612,6 +642,12 @@ public:
 
 } // namespace proto
 
+template<>
+struct model_of<::proto::BalanceMessage> {
+using type = proto::BalanceMessageModel;
+};
+
+
 // Fast Binary Encoding ::proto::AccountMessage field model
 template <>
 class FieldModel<::proto::AccountMessage>
@@ -703,6 +739,12 @@ public:
 };
 
 } // namespace proto
+
+template<>
+struct model_of<::proto::AccountMessage> {
+using type = proto::AccountMessageModel;
+};
+
 
 // Fast Binary Encoding ::proto::PremiumAccount field model
 template <>
@@ -800,5 +842,11 @@ public:
 };
 
 } // namespace proto
+
+template<>
+struct model_of<::proto::PremiumAccount> {
+using type = proto::PremiumAccountModel;
+};
+
 
 } // namespace FBE

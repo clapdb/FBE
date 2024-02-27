@@ -860,7 +860,6 @@ FieldModelPMRPtr_variants_ptr_Simple::FieldModelPMRPtr_variants_ptr_Simple(FBEBu
 
 FieldModelPMRPtr_variants_ptr_Simple::~FieldModelPMRPtr_variants_ptr_Simple()
 {
-    if (ptr) delete ptr;
 }
 
 size_t FieldModelPMRPtr_variants_ptr_Simple::fbe_extra() const noexcept
@@ -986,7 +985,7 @@ void FieldModelPMRPtr_variants_ptr_Simple::set(const ::variants_ptr_pmr::Simple*
         pmr::polymorphic_allocator<char> allocator{resource};
         auto* buffer = allocator.allocate(sizeof(FieldModelPMR_variants_ptr_Simple));
         ptr = new (buffer) FieldModelPMR_variants_ptr_Simple(_buffer, 0);
-        ptr->set(*fbe_value, nullptr);
+        variant_set_value(ptr, *fbe_value, resource);
     }
 
     set_end(fbe_begin);
@@ -1207,7 +1206,6 @@ FieldModelPMRPtr_variants_ptr_ExprContainer::FieldModelPMRPtr_variants_ptr_ExprC
 
 FieldModelPMRPtr_variants_ptr_ExprContainer::~FieldModelPMRPtr_variants_ptr_ExprContainer()
 {
-    if (ptr) delete ptr;
 }
 
 size_t FieldModelPMRPtr_variants_ptr_ExprContainer::fbe_extra() const noexcept
@@ -1333,7 +1331,7 @@ void FieldModelPMRPtr_variants_ptr_ExprContainer::set(const ::variants_ptr_pmr::
         pmr::polymorphic_allocator<char> allocator{resource};
         auto* buffer = allocator.allocate(sizeof(FieldModelPMR_variants_ptr_ExprContainer));
         ptr = new (buffer) FieldModelPMR_variants_ptr_ExprContainer(_buffer, 0);
-        ptr->set(*fbe_value, nullptr);
+        variant_set_value(ptr, *fbe_value, resource);
     }
 
     set_end(fbe_begin);
@@ -1590,7 +1588,6 @@ FieldModelPMRPtr_variants_ptr_Value::FieldModelPMRPtr_variants_ptr_Value(FBEBuff
 
 FieldModelPMRPtr_variants_ptr_Value::~FieldModelPMRPtr_variants_ptr_Value()
 {
-    if (ptr) delete ptr;
 }
 
 size_t FieldModelPMRPtr_variants_ptr_Value::fbe_extra() const noexcept
@@ -1716,7 +1713,7 @@ void FieldModelPMRPtr_variants_ptr_Value::set(const ::variants_ptr_pmr::Value* f
         pmr::polymorphic_allocator<char> allocator{resource};
         auto* buffer = allocator.allocate(sizeof(FieldModelPMR_variants_ptr_Value));
         ptr = new (buffer) FieldModelPMR_variants_ptr_Value(_buffer, 0);
-        ptr->set(*fbe_value, nullptr);
+        variant_set_value(ptr, *fbe_value, resource);
     }
 
     set_end(fbe_begin);
@@ -1973,7 +1970,6 @@ FieldModelPMRPtr_variants_ptr_ValueContainer::FieldModelPMRPtr_variants_ptr_Valu
 
 FieldModelPMRPtr_variants_ptr_ValueContainer::~FieldModelPMRPtr_variants_ptr_ValueContainer()
 {
-    if (ptr) delete ptr;
 }
 
 size_t FieldModelPMRPtr_variants_ptr_ValueContainer::fbe_extra() const noexcept
@@ -2099,7 +2095,7 @@ void FieldModelPMRPtr_variants_ptr_ValueContainer::set(const ::variants_ptr_pmr:
         pmr::polymorphic_allocator<char> allocator{resource};
         auto* buffer = allocator.allocate(sizeof(FieldModelPMR_variants_ptr_ValueContainer));
         ptr = new (buffer) FieldModelPMR_variants_ptr_ValueContainer(_buffer, 0);
-        ptr->set(*fbe_value, nullptr);
+        variant_set_value(ptr, *fbe_value, resource);
     }
 
     set_end(fbe_begin);
@@ -2338,7 +2334,6 @@ FieldModelPMRPtr_variants_ptr_Scalar1Container::FieldModelPMRPtr_variants_ptr_Sc
 
 FieldModelPMRPtr_variants_ptr_Scalar1Container::~FieldModelPMRPtr_variants_ptr_Scalar1Container()
 {
-    if (ptr) delete ptr;
 }
 
 size_t FieldModelPMRPtr_variants_ptr_Scalar1Container::fbe_extra() const noexcept
@@ -2464,7 +2459,7 @@ void FieldModelPMRPtr_variants_ptr_Scalar1Container::set(const ::variants_ptr_pm
         pmr::polymorphic_allocator<char> allocator{resource};
         auto* buffer = allocator.allocate(sizeof(FieldModelPMR_variants_ptr_Scalar1Container));
         ptr = new (buffer) FieldModelPMR_variants_ptr_Scalar1Container(_buffer, 0);
-        ptr->set(*fbe_value, nullptr);
+        variant_set_value(ptr, *fbe_value, resource);
     }
 
     set_end(fbe_begin);

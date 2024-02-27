@@ -984,7 +984,7 @@ void FieldModelPtr_variants_ptr_Simple::set(const ::variants_ptr::Simple* fbe_va
         BaseFieldModel* temp = new FieldModel_variants_ptr_Simple(_buffer, 0);
         if (ptr) delete ptr;
         ptr = temp;
-        ptr->set(*fbe_value, nullptr);
+        variant_set_value(ptr, *fbe_value, resource);
     }
 
     set_end(fbe_begin);
@@ -1329,7 +1329,7 @@ void FieldModelPtr_variants_ptr_ExprContainer::set(const ::variants_ptr::ExprCon
         BaseFieldModel* temp = new FieldModel_variants_ptr_ExprContainer(_buffer, 0);
         if (ptr) delete ptr;
         ptr = temp;
-        ptr->set(*fbe_value, nullptr);
+        variant_set_value(ptr, *fbe_value, resource);
     }
 
     set_end(fbe_begin);
@@ -1710,7 +1710,7 @@ void FieldModelPtr_variants_ptr_Value::set(const ::variants_ptr::Value* fbe_valu
         BaseFieldModel* temp = new FieldModel_variants_ptr_Value(_buffer, 0);
         if (ptr) delete ptr;
         ptr = temp;
-        ptr->set(*fbe_value, nullptr);
+        variant_set_value(ptr, *fbe_value, resource);
     }
 
     set_end(fbe_begin);
@@ -2091,7 +2091,7 @@ void FieldModelPtr_variants_ptr_ValueContainer::set(const ::variants_ptr::ValueC
         BaseFieldModel* temp = new FieldModel_variants_ptr_ValueContainer(_buffer, 0);
         if (ptr) delete ptr;
         ptr = temp;
-        ptr->set(*fbe_value, nullptr);
+        variant_set_value(ptr, *fbe_value, resource);
     }
 
     set_end(fbe_begin);
@@ -2454,7 +2454,7 @@ void FieldModelPtr_variants_ptr_Scalar1Container::set(const ::variants_ptr::Scal
         BaseFieldModel* temp = new FieldModel_variants_ptr_Scalar1Container(_buffer, 0);
         if (ptr) delete ptr;
         ptr = temp;
-        ptr->set(*fbe_value, nullptr);
+        variant_set_value(ptr, *fbe_value, resource);
     }
 
     set_end(fbe_begin);

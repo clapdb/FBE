@@ -138,7 +138,7 @@ void FieldModelPtr_pkg_Info::set(const ::pkg::Info* fbe_value, pmr::memory_resou
         BaseFieldModel* temp = new FieldModel_pkg_Info(_buffer, 0);
         if (ptr) delete ptr;
         ptr = temp;
-        ptr->set(*fbe_value, nullptr);
+        variant_set_value(ptr, *fbe_value, resource);
     }
 
     set_end(fbe_begin);
@@ -537,7 +537,7 @@ void FieldModelPtr_pkg_Detail::set(const ::pkg::Detail* fbe_value, pmr::memory_r
         BaseFieldModel* temp = new FieldModel_pkg_Detail(_buffer, 0);
         if (ptr) delete ptr;
         ptr = temp;
-        ptr->set(*fbe_value, nullptr);
+        variant_set_value(ptr, *fbe_value, resource);
     }
 
     set_end(fbe_begin);

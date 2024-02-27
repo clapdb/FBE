@@ -139,6 +139,9 @@ auto assign_member([[maybe_unused]] Alloc alloc) -> T {
     return T();
 }
 
+template <typename T>
+struct model_of {};
+
 template<class... Ts> struct overloaded : Ts... { using Ts::operator()...; };
 
 template<class... Ts> overloaded(Ts...) -> overloaded<Ts...>;  // deduction guide

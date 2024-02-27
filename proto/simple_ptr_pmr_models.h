@@ -175,4 +175,10 @@ public:
 
 } // namespace simple_pmr
 
+template<>
+struct model_of<::simple_pmr::Simple> {
+using type = simple_pmr::SimpleModel;
+};
+
+
 } // namespace FBE

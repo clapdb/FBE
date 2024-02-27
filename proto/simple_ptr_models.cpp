@@ -138,7 +138,7 @@ void FieldModelPtr_simple_Simple::set(const ::simple::Simple* fbe_value, pmr::me
         BaseFieldModel* temp = new FieldModel_simple_Simple(_buffer, 0);
         if (ptr) delete ptr;
         ptr = temp;
-        ptr->set(*fbe_value, nullptr);
+        variant_set_value(ptr, *fbe_value, resource);
     }
 
     set_end(fbe_begin);

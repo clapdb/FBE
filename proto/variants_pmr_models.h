@@ -195,6 +195,12 @@ public:
 
 } // namespace variants_pmr
 
+template<>
+struct model_of<::variants_pmr::Simple> {
+using type = variants_pmr::SimpleModel;
+};
+
+
 // Fast Binary Encoding ::variants_pmr::Value field model
 template <>
 class FieldModel<::variants_pmr::Value>
@@ -286,5 +292,11 @@ public:
 };
 
 } // namespace variants_pmr
+
+template<>
+struct model_of<::variants_pmr::Value> {
+using type = variants_pmr::ValueModel;
+};
+
 
 } // namespace FBE

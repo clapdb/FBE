@@ -294,6 +294,12 @@ public:
 
 } // namespace sa
 
+template<>
+struct model_of<::sa::Extra> {
+using type = sa::ExtraModel;
+};
+
+
 // Fast Binary Encoding ::sa::Simple field model
 class FieldModel_sa_Simple : public BaseFieldModel
 {
@@ -387,6 +393,12 @@ public:
 };
 
 } // namespace sa
+
+template<>
+struct model_of<::sa::Simple> {
+using type = sa::SimpleModel;
+};
+
 
 // Fast Binary Encoding ::sa::Complex field model
 class FieldModel_sa_Complex : public BaseFieldModel
@@ -482,5 +494,11 @@ public:
 };
 
 } // namespace sa
+
+template<>
+struct model_of<::sa::Complex> {
+using type = sa::ComplexModel;
+};
+
 
 } // namespace FBE

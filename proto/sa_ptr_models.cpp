@@ -138,7 +138,7 @@ void FieldModelPtr_sa_Extra::set(const ::sa::Extra* fbe_value, pmr::memory_resou
         BaseFieldModel* temp = new FieldModel_sa_Extra(_buffer, 0);
         if (ptr) delete ptr;
         ptr = temp;
-        ptr->set(*fbe_value, nullptr);
+        variant_set_value(ptr, *fbe_value, resource);
     }
 
     set_end(fbe_begin);
@@ -537,7 +537,7 @@ void FieldModelPtr_sa_Simple::set(const ::sa::Simple* fbe_value, pmr::memory_res
         BaseFieldModel* temp = new FieldModel_sa_Simple(_buffer, 0);
         if (ptr) delete ptr;
         ptr = temp;
-        ptr->set(*fbe_value, nullptr);
+        variant_set_value(ptr, *fbe_value, resource);
     }
 
     set_end(fbe_begin);
@@ -935,7 +935,7 @@ void FieldModelPtr_sa_Complex::set(const ::sa::Complex* fbe_value, pmr::memory_r
         BaseFieldModel* temp = new FieldModel_sa_Complex(_buffer, 0);
         if (ptr) delete ptr;
         ptr = temp;
-        ptr->set(*fbe_value, nullptr);
+        variant_set_value(ptr, *fbe_value, resource);
     }
 
     set_end(fbe_begin);

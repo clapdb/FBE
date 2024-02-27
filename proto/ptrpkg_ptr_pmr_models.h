@@ -172,4 +172,10 @@ public:
 
 } // namespace ptrpkg_pmr
 
+template<>
+struct model_of<::ptrpkg_pmr::Line> {
+using type = ptrpkg_pmr::LineModel;
+};
+
+
 } // namespace FBE

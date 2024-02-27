@@ -150,6 +150,12 @@ public:
 
 } // namespace protoex_pmr
 
+template<>
+struct model_of<::protoex_pmr::Order> {
+using type = protoex_pmr::OrderModel;
+};
+
+
 // Fast Binary Encoding ::protoex_pmr::Balance field model
 template <>
 class FieldModel<::protoex_pmr::Balance>
@@ -242,6 +248,12 @@ public:
 };
 
 } // namespace protoex_pmr
+
+template<>
+struct model_of<::protoex_pmr::Balance> {
+using type = protoex_pmr::BalanceModel;
+};
+
 
 // Fast Binary Encoding ::protoex_pmr::Account field model
 template <>
@@ -340,6 +352,12 @@ public:
 
 } // namespace protoex_pmr
 
+template<>
+struct model_of<::protoex_pmr::Account> {
+using type = protoex_pmr::AccountModel;
+};
+
+
 // Fast Binary Encoding ::protoex_pmr::OrderMessage field model
 template <>
 class FieldModel<::protoex_pmr::OrderMessage>
@@ -431,6 +449,12 @@ public:
 };
 
 } // namespace protoex_pmr
+
+template<>
+struct model_of<::protoex_pmr::OrderMessage> {
+using type = protoex_pmr::OrderMessageModel;
+};
+
 
 // Fast Binary Encoding ::protoex_pmr::BalanceMessage field model
 template <>
@@ -524,6 +548,12 @@ public:
 
 } // namespace protoex_pmr
 
+template<>
+struct model_of<::protoex_pmr::BalanceMessage> {
+using type = protoex_pmr::BalanceMessageModel;
+};
+
+
 // Fast Binary Encoding ::protoex_pmr::AccountMessage field model
 template <>
 class FieldModel<::protoex_pmr::AccountMessage>
@@ -615,5 +645,11 @@ public:
 };
 
 } // namespace protoex_pmr
+
+template<>
+struct model_of<::protoex_pmr::AccountMessage> {
+using type = protoex_pmr::AccountMessageModel;
+};
+
 
 } // namespace FBE

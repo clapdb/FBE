@@ -14,7 +14,6 @@ FieldModelPMRPtr_arena_ptr_Line::FieldModelPMRPtr_arena_ptr_Line(FBEBuffer& buff
 
 FieldModelPMRPtr_arena_ptr_Line::~FieldModelPMRPtr_arena_ptr_Line()
 {
-    if (ptr) delete ptr;
 }
 
 size_t FieldModelPMRPtr_arena_ptr_Line::fbe_extra() const noexcept
@@ -140,7 +139,7 @@ void FieldModelPMRPtr_arena_ptr_Line::set(const ::arena_ptr_pmr::Line* fbe_value
         pmr::polymorphic_allocator<char> allocator{resource};
         auto* buffer = allocator.allocate(sizeof(FieldModelPMR_arena_ptr_Line));
         ptr = new (buffer) FieldModelPMR_arena_ptr_Line(_buffer, 0);
-        ptr->set(*fbe_value, nullptr);
+        variant_set_value(ptr, *fbe_value, resource);
     }
 
     set_end(fbe_begin);
@@ -361,7 +360,6 @@ FieldModelPMRPtr_arena_ptr_Line2::FieldModelPMRPtr_arena_ptr_Line2(FBEBuffer& bu
 
 FieldModelPMRPtr_arena_ptr_Line2::~FieldModelPMRPtr_arena_ptr_Line2()
 {
-    if (ptr) delete ptr;
 }
 
 size_t FieldModelPMRPtr_arena_ptr_Line2::fbe_extra() const noexcept
@@ -487,7 +485,7 @@ void FieldModelPMRPtr_arena_ptr_Line2::set(const ::arena_ptr_pmr::Line2* fbe_val
         pmr::polymorphic_allocator<char> allocator{resource};
         auto* buffer = allocator.allocate(sizeof(FieldModelPMR_arena_ptr_Line2));
         ptr = new (buffer) FieldModelPMR_arena_ptr_Line2(_buffer, 0);
-        ptr->set(*fbe_value, nullptr);
+        variant_set_value(ptr, *fbe_value, resource);
     }
 
     set_end(fbe_begin);
