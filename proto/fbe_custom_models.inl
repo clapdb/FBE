@@ -425,13 +425,23 @@ inline void FieldModelCustomVector<T, TStruct>::get(FastVec<TStruct>& values, pm
     auto fbe_model = (*this)[0];
     for (size_t i = fbe_vector_size; i-- > 0;)
     {
-        TStruct value = TStruct();
-        fbe_model.get(value, resource);
-        #if defined(USING_STD_VECTOR)
-        values.emplace_back(std::move(value));
-        #else
-        values.template emplace_back<Safety::Unsafe>(std::move(value));
-        #endif
+        if constexpr(std::is_constructible_v<TStruct, pmr::memory_resource*> and not is_variant_v<TStruct>) {
+            TStruct value = TStruct(resource);
+            fbe_model.get(value, resource);
+            #if defined(USING_STD_VECTOR)
+            values.emplace_back(std::move(value));
+            #else
+            values.template emplace_back<Safety::Unsafe>(std::move(value));
+            #endif
+        } else {
+            TStruct value = TStruct();
+            fbe_model.get(value, resource);
+            #if defined(USING_STD_VECTOR)
+            values.emplace_back(std::move(value));
+            #else
+            values.template emplace_back<Safety::Unsafe>(std::move(value));
+            #endif
+        }
         fbe_model.fbe_shift(fbe_model.fbe_size());
     }
 }
@@ -640,13 +650,23 @@ inline void FieldModelCustomVector<T, TStruct>::get(pmr::vector<TStruct>& values
     auto fbe_model = (*this)[0];
     for (size_t i = fbe_vector_size; i-- > 0;)
     {
-        TStruct value = TStruct();
-        fbe_model.get(value, resource);
-        #if defined(USING_STD_VECTOR)
-        values.emplace_back(std::move(value));
-        #else
-        values.emplace_back(std::move(value));
-        #endif
+        if constexpr(std::is_constructible_v<TStruct, pmr::memory_resource*> and not is_variant_v<TStruct>) {
+            TStruct value = TStruct(resource);
+            fbe_model.get(value, resource);
+            #if defined(USING_STD_VECTOR)
+            values.emplace_back(std::move(value));
+            #else
+            values.emplace_back(std::move(value));
+            #endif
+        } else {
+            TStruct value = TStruct();
+            fbe_model.get(value, resource);
+            #if defined(USING_STD_VECTOR)
+            values.emplace_back(std::move(value));
+            #else
+            values.emplace_back(std::move(value));
+            #endif
+        }
         fbe_model.fbe_shift(fbe_model.fbe_size());
     }
 }

@@ -146,6 +146,12 @@ public:
 
 } // namespace proto_pmr
 
+template<>
+struct model_of<::proto_pmr::Order> {
+using type = proto_pmr::OrderModel;
+};
+
+
 // Fast Binary Encoding ::proto_pmr::Balance field model
 template <>
 class FieldModel<::proto_pmr::Balance>
@@ -238,6 +244,12 @@ public:
 };
 
 } // namespace proto_pmr
+
+template<>
+struct model_of<::proto_pmr::Balance> {
+using type = proto_pmr::BalanceModel;
+};
+
 
 // Fast Binary Encoding ::proto_pmr::Account field model
 template <>
@@ -336,6 +348,12 @@ public:
 
 } // namespace proto_pmr
 
+template<>
+struct model_of<::proto_pmr::Account> {
+using type = proto_pmr::AccountModel;
+};
+
+
 // Fast Binary Encoding ::proto_pmr::CharMap field model
 template <>
 class FieldModel<::proto_pmr::CharMap>
@@ -427,6 +445,12 @@ public:
 };
 
 } // namespace proto_pmr
+
+template<>
+struct model_of<::proto_pmr::CharMap> {
+using type = proto_pmr::CharMapModel;
+};
+
 
 // Fast Binary Encoding ::proto_pmr::OrderMessage field model
 template <>
@@ -520,6 +544,12 @@ public:
 
 } // namespace proto_pmr
 
+template<>
+struct model_of<::proto_pmr::OrderMessage> {
+using type = proto_pmr::OrderMessageModel;
+};
+
+
 // Fast Binary Encoding ::proto_pmr::BalanceMessage field model
 template <>
 class FieldModel<::proto_pmr::BalanceMessage>
@@ -612,6 +642,12 @@ public:
 
 } // namespace proto_pmr
 
+template<>
+struct model_of<::proto_pmr::BalanceMessage> {
+using type = proto_pmr::BalanceMessageModel;
+};
+
+
 // Fast Binary Encoding ::proto_pmr::AccountMessage field model
 template <>
 class FieldModel<::proto_pmr::AccountMessage>
@@ -703,6 +739,12 @@ public:
 };
 
 } // namespace proto_pmr
+
+template<>
+struct model_of<::proto_pmr::AccountMessage> {
+using type = proto_pmr::AccountMessageModel;
+};
+
 
 // Fast Binary Encoding ::proto_pmr::PremiumAccount field model
 template <>
@@ -800,5 +842,11 @@ public:
 };
 
 } // namespace proto_pmr
+
+template<>
+struct model_of<::proto_pmr::PremiumAccount> {
+using type = proto_pmr::PremiumAccountModel;
+};
+
 
 } // namespace FBE

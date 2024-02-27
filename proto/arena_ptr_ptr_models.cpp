@@ -138,7 +138,7 @@ void FieldModelPtr_arena_ptr_Line::set(const ::arena_ptr::Line* fbe_value, pmr::
         BaseFieldModel* temp = new FieldModel_arena_ptr_Line(_buffer, 0);
         if (ptr) delete ptr;
         ptr = temp;
-        ptr->set(*fbe_value, nullptr);
+        variant_set_value(ptr, *fbe_value, resource);
     }
 
     set_end(fbe_begin);
@@ -483,7 +483,7 @@ void FieldModelPtr_arena_ptr_Line2::set(const ::arena_ptr::Line2* fbe_value, pmr
         BaseFieldModel* temp = new FieldModel_arena_ptr_Line2(_buffer, 0);
         if (ptr) delete ptr;
         ptr = temp;
-        ptr->set(*fbe_value, nullptr);
+        variant_set_value(ptr, *fbe_value, resource);
     }
 
     set_end(fbe_begin);

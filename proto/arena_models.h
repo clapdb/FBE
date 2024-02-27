@@ -122,6 +122,12 @@ public:
 
 } // namespace arena
 
+template<>
+struct model_of<::arena::Item> {
+using type = arena::ItemModel;
+};
+
+
 // Fast Binary Encoding ::arena::Item2 field model
 template <>
 class FieldModel<::arena::Item2>
@@ -213,5 +219,11 @@ public:
 };
 
 } // namespace arena
+
+template<>
+struct model_of<::arena::Item2> {
+using type = arena::Item2Model;
+};
+
 
 } // namespace FBE

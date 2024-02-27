@@ -211,6 +211,12 @@ public:
 
 } // namespace test_pmr
 
+template<>
+struct model_of<::test_pmr::StructSimple> {
+using type = test_pmr::StructSimpleModel;
+};
+
+
 // Fast Binary Encoding ::test_pmr::StructOptional field model
 template <>
 class FieldModel<::test_pmr::StructOptional>
@@ -369,6 +375,12 @@ public:
 
 } // namespace test_pmr
 
+template<>
+struct model_of<::test_pmr::StructOptional> {
+using type = test_pmr::StructOptionalModel;
+};
+
+
 // Fast Binary Encoding ::test_pmr::StructNested field model
 template <>
 class FieldModel<::test_pmr::StructNested>
@@ -473,6 +485,12 @@ public:
 
 } // namespace test_pmr
 
+template<>
+struct model_of<::test_pmr::StructNested> {
+using type = test_pmr::StructNestedModel;
+};
+
+
 // Fast Binary Encoding ::test_pmr::StructBytes field model
 template <>
 class FieldModel<::test_pmr::StructBytes>
@@ -566,6 +584,12 @@ public:
 };
 
 } // namespace test_pmr
+
+template<>
+struct model_of<::test_pmr::StructBytes> {
+using type = test_pmr::StructBytesModel;
+};
+
 
 // Fast Binary Encoding ::test_pmr::StructArray field model
 template <>
@@ -668,6 +692,12 @@ public:
 
 } // namespace test_pmr
 
+template<>
+struct model_of<::test_pmr::StructArray> {
+using type = test_pmr::StructArrayModel;
+};
+
+
 // Fast Binary Encoding ::test_pmr::StructVector field model
 template <>
 class FieldModel<::test_pmr::StructVector>
@@ -768,6 +798,12 @@ public:
 };
 
 } // namespace test_pmr
+
+template<>
+struct model_of<::test_pmr::StructVector> {
+using type = test_pmr::StructVectorModel;
+};
+
 
 // Fast Binary Encoding ::test_pmr::StructList field model
 template <>
@@ -870,6 +906,12 @@ public:
 
 } // namespace test_pmr
 
+template<>
+struct model_of<::test_pmr::StructList> {
+using type = test_pmr::StructListModel;
+};
+
+
 // Fast Binary Encoding ::test_pmr::StructSet field model
 template <>
 class FieldModel<::test_pmr::StructSet>
@@ -964,6 +1006,12 @@ public:
 };
 
 } // namespace test_pmr
+
+template<>
+struct model_of<::test_pmr::StructSet> {
+using type = test_pmr::StructSetModel;
+};
+
 
 // Fast Binary Encoding ::test_pmr::StructMap field model
 template <>
@@ -1066,6 +1114,12 @@ public:
 
 } // namespace test_pmr
 
+template<>
+struct model_of<::test_pmr::StructMap> {
+using type = test_pmr::StructMapModel;
+};
+
+
 // Fast Binary Encoding ::test_pmr::StructHash field model
 template <>
 class FieldModel<::test_pmr::StructHash>
@@ -1167,6 +1221,12 @@ public:
 
 } // namespace test_pmr
 
+template<>
+struct model_of<::test_pmr::StructHash> {
+using type = test_pmr::StructHashModel;
+};
+
+
 // Fast Binary Encoding ::test_pmr::StructHashEx field model
 template <>
 class FieldModel<::test_pmr::StructHashEx>
@@ -1260,6 +1320,12 @@ public:
 
 } // namespace test_pmr
 
+template<>
+struct model_of<::test_pmr::StructHashEx> {
+using type = test_pmr::StructHashExModel;
+};
+
+
 // Fast Binary Encoding ::test_pmr::StructEmpty field model
 template <>
 class FieldModel<::test_pmr::StructEmpty>
@@ -1350,5 +1416,11 @@ public:
 };
 
 } // namespace test_pmr
+
+template<>
+struct model_of<::test_pmr::StructEmpty> {
+using type = test_pmr::StructEmptyModel;
+};
+
 
 } // namespace FBE

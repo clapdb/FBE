@@ -416,15 +416,19 @@ size_t FBEBuffer::allocate(size_t size)
     }
 
     _capacity = std::max(total, 2 * _capacity);
-    uint8_t* data = (uint8_t*)std::malloc(_capacity);
-    if (_data != nullptr)
+    void* data = nullptr;
+    int err = posix_memalign(&data, 2 * sizeof(uint64_t), _capacity);
+    if (err == 0)
     {
         std::memcpy(data, _data, _size);
         std::free(_data);
+
+        _data = (uint8_t*)data;
+        _size = total;
+        return offset;
+    } else {
+        throw std::bad_alloc();
     }
-    _data = data;
-    _size = total;
-    return offset;
 }
 
 void FBEBuffer::remove(size_t offset, size_t size)
@@ -450,10 +454,15 @@ void FBEBuffer::reserve(size_t capacity)
     if (capacity > _capacity)
     {
         _capacity = std::max(capacity, 2 * _capacity);
-        uint8_t* data = (uint8_t*)std::malloc(_capacity);
-        std::memcpy(data, _data, _size);
-        std::free(_data);
-        _data = data;
+        void* data = nullptr;
+        int err = posix_memalign(&data, 2 * sizeof(uint64_t), _capacity);
+        if (err == 0) {
+            std::memcpy(data, _data, _size);
+            std::free(_data);
+            _data = (uint8_t*)data;
+        } else {
+            throw std::bad_alloc();
+        }
     }
 }
 

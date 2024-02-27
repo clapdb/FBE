@@ -14,7 +14,6 @@ FieldModelPMRPtr_template_variant_Line::FieldModelPMRPtr_template_variant_Line(F
 
 FieldModelPMRPtr_template_variant_Line::~FieldModelPMRPtr_template_variant_Line()
 {
-    if (ptr) delete ptr;
 }
 
 size_t FieldModelPMRPtr_template_variant_Line::fbe_extra() const noexcept
@@ -140,7 +139,7 @@ void FieldModelPMRPtr_template_variant_Line::set(const ::template_variant_pmr::L
         pmr::polymorphic_allocator<char> allocator{resource};
         auto* buffer = allocator.allocate(sizeof(FieldModelPMR_template_variant_Line));
         ptr = new (buffer) FieldModelPMR_template_variant_Line(_buffer, 0);
-        ptr->set(*fbe_value, nullptr);
+        variant_set_value(ptr, *fbe_value, resource);
     }
 
     set_end(fbe_begin);
@@ -415,7 +414,6 @@ FieldModelPMRPtr_template_variant_Line2::FieldModelPMRPtr_template_variant_Line2
 
 FieldModelPMRPtr_template_variant_Line2::~FieldModelPMRPtr_template_variant_Line2()
 {
-    if (ptr) delete ptr;
 }
 
 size_t FieldModelPMRPtr_template_variant_Line2::fbe_extra() const noexcept
@@ -541,7 +539,7 @@ void FieldModelPMRPtr_template_variant_Line2::set(const ::template_variant_pmr::
         pmr::polymorphic_allocator<char> allocator{resource};
         auto* buffer = allocator.allocate(sizeof(FieldModelPMR_template_variant_Line2));
         ptr = new (buffer) FieldModelPMR_template_variant_Line2(_buffer, 0);
-        ptr->set(*fbe_value, nullptr);
+        variant_set_value(ptr, *fbe_value, resource);
     }
 
     set_end(fbe_begin);
@@ -762,7 +760,6 @@ FieldModelPMRPtr_template_variant_Line3::FieldModelPMRPtr_template_variant_Line3
 
 FieldModelPMRPtr_template_variant_Line3::~FieldModelPMRPtr_template_variant_Line3()
 {
-    if (ptr) delete ptr;
 }
 
 size_t FieldModelPMRPtr_template_variant_Line3::fbe_extra() const noexcept
@@ -888,7 +885,7 @@ void FieldModelPMRPtr_template_variant_Line3::set(const ::template_variant_pmr::
         pmr::polymorphic_allocator<char> allocator{resource};
         auto* buffer = allocator.allocate(sizeof(FieldModelPMR_template_variant_Line3));
         ptr = new (buffer) FieldModelPMR_template_variant_Line3(_buffer, 0);
-        ptr->set(*fbe_value, nullptr);
+        variant_set_value(ptr, *fbe_value, resource);
     }
 
     set_end(fbe_begin);

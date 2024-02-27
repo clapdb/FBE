@@ -281,6 +281,12 @@ public:
 
 } // namespace template_variant_pmr
 
+template<>
+struct model_of<::template_variant_pmr::Line> {
+using type = template_variant_pmr::LineModel;
+};
+
+
 // Fast Binary Encoding ::template_variant_pmr::Line2 field model
 class FieldModelPMR_template_variant_Line2 : public BaseFieldModel
 {
@@ -372,6 +378,12 @@ public:
 
 } // namespace template_variant_pmr
 
+template<>
+struct model_of<::template_variant_pmr::Line2> {
+using type = template_variant_pmr::Line2Model;
+};
+
+
 // Fast Binary Encoding ::template_variant_pmr::Line3 field model
 class FieldModelPMR_template_variant_Line3 : public BaseFieldModel
 {
@@ -462,5 +474,11 @@ public:
 };
 
 } // namespace template_variant_pmr
+
+template<>
+struct model_of<::template_variant_pmr::Line3> {
+using type = template_variant_pmr::Line3Model;
+};
+
 
 } // namespace FBE

@@ -498,6 +498,12 @@ public:
 
 } // namespace variants_ptr_pmr
 
+template<>
+struct model_of<::variants_ptr_pmr::Simple> {
+using type = variants_ptr_pmr::SimpleModel;
+};
+
+
 // Fast Binary Encoding ::variants_ptr_pmr::ExprContainer field model
 class FieldModelPMR_variants_ptr_ExprContainer : public BaseFieldModel
 {
@@ -590,6 +596,12 @@ public:
 };
 
 } // namespace variants_ptr_pmr
+
+template<>
+struct model_of<::variants_ptr_pmr::ExprContainer> {
+using type = variants_ptr_pmr::ExprContainerModel;
+};
+
 
 // Fast Binary Encoding ::variants_ptr_pmr::Value field model
 class FieldModelPMR_variants_ptr_Value : public BaseFieldModel
@@ -684,6 +696,12 @@ public:
 
 } // namespace variants_ptr_pmr
 
+template<>
+struct model_of<::variants_ptr_pmr::Value> {
+using type = variants_ptr_pmr::ValueModel;
+};
+
+
 // Fast Binary Encoding ::variants_ptr_pmr::ValueContainer field model
 class FieldModelPMR_variants_ptr_ValueContainer : public BaseFieldModel
 {
@@ -776,6 +794,12 @@ public:
 
 } // namespace variants_ptr_pmr
 
+template<>
+struct model_of<::variants_ptr_pmr::ValueContainer> {
+using type = variants_ptr_pmr::ValueContainerModel;
+};
+
+
 // Fast Binary Encoding ::variants_ptr_pmr::Scalar1Container field model
 class FieldModelPMR_variants_ptr_Scalar1Container : public BaseFieldModel
 {
@@ -866,5 +890,11 @@ public:
 };
 
 } // namespace variants_ptr_pmr
+
+template<>
+struct model_of<::variants_ptr_pmr::Scalar1Container> {
+using type = variants_ptr_pmr::Scalar1ContainerModel;
+};
+
 
 } // namespace FBE

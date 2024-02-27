@@ -162,4 +162,10 @@ public:
 
 } // namespace cpp_only_pmr
 
+template<>
+struct model_of<::cpp_only_pmr::Struct128> {
+using type = cpp_only_pmr::Struct128Model;
+};
+
+
 } // namespace FBE

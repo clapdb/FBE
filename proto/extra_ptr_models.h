@@ -225,6 +225,12 @@ public:
 
 } // namespace extra
 
+template<>
+struct model_of<::extra::Info> {
+using type = extra::InfoModel;
+};
+
+
 // Fast Binary Encoding ::extra::Extra field model
 class FieldModel_extra_Extra : public BaseFieldModel
 {
@@ -323,5 +329,11 @@ public:
 };
 
 } // namespace extra
+
+template<>
+struct model_of<::extra::Extra> {
+using type = extra::ExtraModel;
+};
+
 
 } // namespace FBE

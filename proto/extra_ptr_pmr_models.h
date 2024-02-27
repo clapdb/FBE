@@ -225,6 +225,12 @@ public:
 
 } // namespace extra_pmr
 
+template<>
+struct model_of<::extra_pmr::Info> {
+using type = extra_pmr::InfoModel;
+};
+
+
 // Fast Binary Encoding ::extra_pmr::Extra field model
 class FieldModelPMR_extra_Extra : public BaseFieldModel
 {
@@ -323,5 +329,11 @@ public:
 };
 
 } // namespace extra_pmr
+
+template<>
+struct model_of<::extra_pmr::Extra> {
+using type = extra_pmr::ExtraModel;
+};
+
 
 } // namespace FBE

@@ -14,7 +14,6 @@ FieldModelPMRPtr_ptrpkg_Line::FieldModelPMRPtr_ptrpkg_Line(FBEBuffer& buffer, si
 
 FieldModelPMRPtr_ptrpkg_Line::~FieldModelPMRPtr_ptrpkg_Line()
 {
-    if (ptr) delete ptr;
 }
 
 size_t FieldModelPMRPtr_ptrpkg_Line::fbe_extra() const noexcept
@@ -140,7 +139,7 @@ void FieldModelPMRPtr_ptrpkg_Line::set(const ::ptrpkg_pmr::Line* fbe_value, pmr:
         pmr::polymorphic_allocator<char> allocator{resource};
         auto* buffer = allocator.allocate(sizeof(FieldModelPMR_ptrpkg_Line));
         ptr = new (buffer) FieldModelPMR_ptrpkg_Line(_buffer, 0);
-        ptr->set(*fbe_value, nullptr);
+        variant_set_value(ptr, *fbe_value, resource);
     }
 
     set_end(fbe_begin);

@@ -136,6 +136,12 @@ public:
 
 } // namespace osa
 
+template<>
+struct model_of<::osa::Extra> {
+using type = osa::ExtraModel;
+};
+
+
 // Fast Binary Encoding ::osa::Simple field model
 template <>
 class FieldModel<::osa::Simple>
@@ -230,5 +236,11 @@ public:
 };
 
 } // namespace osa
+
+template<>
+struct model_of<::osa::Simple> {
+using type = osa::SimpleModel;
+};
+
 
 } // namespace FBE

@@ -294,6 +294,12 @@ public:
 
 } // namespace sa_pmr
 
+template<>
+struct model_of<::sa_pmr::Extra> {
+using type = sa_pmr::ExtraModel;
+};
+
+
 // Fast Binary Encoding ::sa_pmr::Simple field model
 class FieldModelPMR_sa_Simple : public BaseFieldModel
 {
@@ -387,6 +393,12 @@ public:
 };
 
 } // namespace sa_pmr
+
+template<>
+struct model_of<::sa_pmr::Simple> {
+using type = sa_pmr::SimpleModel;
+};
+
 
 // Fast Binary Encoding ::sa_pmr::Complex field model
 class FieldModelPMR_sa_Complex : public BaseFieldModel
@@ -482,5 +494,11 @@ public:
 };
 
 } // namespace sa_pmr
+
+template<>
+struct model_of<::sa_pmr::Complex> {
+using type = sa_pmr::ComplexModel;
+};
+
 
 } // namespace FBE

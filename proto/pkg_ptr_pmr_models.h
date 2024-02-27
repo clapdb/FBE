@@ -227,6 +227,12 @@ public:
 
 } // namespace pkg_pmr
 
+template<>
+struct model_of<::pkg_pmr::Info> {
+using type = pkg_pmr::InfoModel;
+};
+
+
 // Fast Binary Encoding ::pkg_pmr::Detail field model
 class FieldModelPMR_pkg_Detail : public BaseFieldModel
 {
@@ -318,5 +324,11 @@ public:
 };
 
 } // namespace pkg_pmr
+
+template<>
+struct model_of<::pkg_pmr::Detail> {
+using type = pkg_pmr::DetailModel;
+};
+
 
 } // namespace FBE

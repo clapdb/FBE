@@ -138,7 +138,7 @@ void FieldModelPtr_ptrpkg_Line::set(const ::ptrpkg::Line* fbe_value, pmr::memory
         BaseFieldModel* temp = new FieldModel_ptrpkg_Line(_buffer, 0);
         if (ptr) delete ptr;
         ptr = temp;
-        ptr->set(*fbe_value, nullptr);
+        variant_set_value(ptr, *fbe_value, resource);
     }
 
     set_end(fbe_begin);

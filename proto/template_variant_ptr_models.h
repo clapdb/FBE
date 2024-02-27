@@ -281,6 +281,12 @@ public:
 
 } // namespace template_variant
 
+template<>
+struct model_of<::template_variant::Line> {
+using type = template_variant::LineModel;
+};
+
+
 // Fast Binary Encoding ::template_variant::Line2 field model
 class FieldModel_template_variant_Line2 : public BaseFieldModel
 {
@@ -372,6 +378,12 @@ public:
 
 } // namespace template_variant
 
+template<>
+struct model_of<::template_variant::Line2> {
+using type = template_variant::Line2Model;
+};
+
+
 // Fast Binary Encoding ::template_variant::Line3 field model
 class FieldModel_template_variant_Line3 : public BaseFieldModel
 {
@@ -462,5 +474,11 @@ public:
 };
 
 } // namespace template_variant
+
+template<>
+struct model_of<::template_variant::Line3> {
+using type = template_variant::Line3Model;
+};
+
 
 } // namespace FBE

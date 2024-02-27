@@ -175,4 +175,10 @@ public:
 
 } // namespace simple
 
+template<>
+struct model_of<::simple::Simple> {
+using type = simple::SimpleModel;
+};
+
+
 } // namespace FBE

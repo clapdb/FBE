@@ -166,6 +166,12 @@ public:
 
 } // namespace arena_common
 
+template<>
+struct model_of<::arena_common::Alias> {
+using type = arena_common::AliasModel;
+};
+
+
 // Fast Binary Encoding ::arena_common::Expression field model
 template <>
 class FieldModel<::arena_common::Expression>
@@ -259,5 +265,11 @@ public:
 };
 
 } // namespace arena_common
+
+template<>
+struct model_of<::arena_common::Expression> {
+using type = arena_common::ExpressionModel;
+};
+
 
 } // namespace FBE

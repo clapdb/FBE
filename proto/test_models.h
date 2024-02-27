@@ -211,6 +211,12 @@ public:
 
 } // namespace test
 
+template<>
+struct model_of<::test::StructSimple> {
+using type = test::StructSimpleModel;
+};
+
+
 // Fast Binary Encoding ::test::StructOptional field model
 template <>
 class FieldModel<::test::StructOptional>
@@ -369,6 +375,12 @@ public:
 
 } // namespace test
 
+template<>
+struct model_of<::test::StructOptional> {
+using type = test::StructOptionalModel;
+};
+
+
 // Fast Binary Encoding ::test::StructNested field model
 template <>
 class FieldModel<::test::StructNested>
@@ -473,6 +485,12 @@ public:
 
 } // namespace test
 
+template<>
+struct model_of<::test::StructNested> {
+using type = test::StructNestedModel;
+};
+
+
 // Fast Binary Encoding ::test::StructBytes field model
 template <>
 class FieldModel<::test::StructBytes>
@@ -566,6 +584,12 @@ public:
 };
 
 } // namespace test
+
+template<>
+struct model_of<::test::StructBytes> {
+using type = test::StructBytesModel;
+};
+
 
 // Fast Binary Encoding ::test::StructArray field model
 template <>
@@ -668,6 +692,12 @@ public:
 
 } // namespace test
 
+template<>
+struct model_of<::test::StructArray> {
+using type = test::StructArrayModel;
+};
+
+
 // Fast Binary Encoding ::test::StructVector field model
 template <>
 class FieldModel<::test::StructVector>
@@ -768,6 +798,12 @@ public:
 };
 
 } // namespace test
+
+template<>
+struct model_of<::test::StructVector> {
+using type = test::StructVectorModel;
+};
+
 
 // Fast Binary Encoding ::test::StructList field model
 template <>
@@ -870,6 +906,12 @@ public:
 
 } // namespace test
 
+template<>
+struct model_of<::test::StructList> {
+using type = test::StructListModel;
+};
+
+
 // Fast Binary Encoding ::test::StructSet field model
 template <>
 class FieldModel<::test::StructSet>
@@ -964,6 +1006,12 @@ public:
 };
 
 } // namespace test
+
+template<>
+struct model_of<::test::StructSet> {
+using type = test::StructSetModel;
+};
+
 
 // Fast Binary Encoding ::test::StructMap field model
 template <>
@@ -1066,6 +1114,12 @@ public:
 
 } // namespace test
 
+template<>
+struct model_of<::test::StructMap> {
+using type = test::StructMapModel;
+};
+
+
 // Fast Binary Encoding ::test::StructHash field model
 template <>
 class FieldModel<::test::StructHash>
@@ -1167,6 +1221,12 @@ public:
 
 } // namespace test
 
+template<>
+struct model_of<::test::StructHash> {
+using type = test::StructHashModel;
+};
+
+
 // Fast Binary Encoding ::test::StructHashEx field model
 template <>
 class FieldModel<::test::StructHashEx>
@@ -1260,6 +1320,12 @@ public:
 
 } // namespace test
 
+template<>
+struct model_of<::test::StructHashEx> {
+using type = test::StructHashExModel;
+};
+
+
 // Fast Binary Encoding ::test::StructEmpty field model
 template <>
 class FieldModel<::test::StructEmpty>
@@ -1350,5 +1416,11 @@ public:
 };
 
 } // namespace test
+
+template<>
+struct model_of<::test::StructEmpty> {
+using type = test::StructEmptyModel;
+};
+
 
 } // namespace FBE
