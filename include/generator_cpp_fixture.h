@@ -1244,8 +1244,10 @@ size_t FBEBuffer::allocate(size_t size)
     int err = posix_memalign(&data, 2 * sizeof(uint64_t), _capacity);
     if (err == 0)
     {
-        std::memcpy(data, _data, _size);
-        std::free(_data);
+        if (_data != nullptr) {
+            std::memcpy(data, _data, _size);
+            std::free(_data);
+        }
 
         _data = (uint8_t*)data;
         _size = total;
@@ -1281,8 +1283,10 @@ void FBEBuffer::reserve(size_t capacity)
         void* data = nullptr;
         int err = posix_memalign(&data, 2 * sizeof(uint64_t), _capacity);
         if (err == 0) {
-            std::memcpy(data, _data, _size);
-            std::free(_data);
+            if (_data != nullptr) {
+                std::memcpy(data, _data, _size);
+                std::free(_data);
+            }
             _data = (uint8_t*)data;
         } else {
             throw std::bad_alloc();
