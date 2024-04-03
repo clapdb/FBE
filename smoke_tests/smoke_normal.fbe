@@ -1,0 +1,96 @@
+package smoke_normal
+
+struct Inner {
+    int8 value;
+}
+
+struct Outer {
+    Inner inner;
+    Inner[] inners;
+    Value[] values;
+    bytes{string} bytes_map;
+    Value{string} value_map;
+}
+
+variant Value {
+    bool;
+    int8;
+    int16;
+    int32;
+    int64;
+    int128;
+    string;
+    bytes;
+    Inner;
+}
+
+struct Bool {
+    bool scalar;
+    bool? opt1;
+    bool? opt2;
+    bool[] vec;
+    bool{bool} map;
+    Value value;
+}
+
+struct Int8 {
+    int8 scalar;
+    int8? opt1;
+    int8? opt2;
+    int8[] vec;
+    int8{int8} map;
+    Value value;
+}
+
+struct Int16 {
+    int16 scalar;
+    int16? opt1;
+    int16? opt2;
+    int16[] vec;
+    int16{int16} map;
+    Value value;
+}
+
+struct Int32 {
+    int32 scalar;
+    int32? opt1;
+    int32? opt2;
+    int32[] vec;
+    int32{int32} map;
+    Value value;
+}
+
+struct Int64 {
+    int64 scalar;
+    int64? opt1;
+    int64? opt2;
+    int64[] vec;
+    int64{int64} map;
+    Value value;
+}
+
+struct Int128 {
+    int128 scalar;
+    int128? opt1;
+    int128? opt2;
+    int128[] vec;
+    int128{int128} map;
+    Value value;
+}
+
+struct Bytes {
+    bytes scalar;
+    bytes? opt1;
+    bytes? opt2;
+    bytes[] vec;
+    Value value;
+}
+
+struct String {
+    string scalar;
+    string? opt1;
+    string? opt2;
+    string[] vec;
+    string{string} map;
+    Value value;
+}

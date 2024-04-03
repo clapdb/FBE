@@ -48,5 +48,5 @@ jobs:
           export ${{matrix.env}}
           mkdir build.debug && cd build.debug
           cmake -GNinja -DCMAKE_BUILD_TYPE=Debug ..
-          ninja fbe-tests
-          ./fbe-tests
+          ninja fbe-tests smoke_tests
+          ./fbe-tests && ./smoke_tests/smoke_tests

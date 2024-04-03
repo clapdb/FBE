@@ -189,7 +189,7 @@ int main(int argc, const char** argv)
     using stdb::optparse::Action;
     using stdb::optparse::Type;
     using stdb::optparse::OptionParser;
-    using stdb::memory::string;
+    using std::string;
 
     parser.add_option("-i", "--input").dest("input").type(Type::String).action(Action::Store).help("Input path");
     parser.add_option("-o", "--output").dest("output").type(Type::String).action(Action::Store).help("Output path");
