@@ -372,6 +372,9 @@ if(NOT FBEC_MODULE)
     endforeach()
   endif()
 
+  # smoke test
+  add_subdirectory(smoke_tests)
+
 endif()
 
 # Install
