@@ -18,8 +18,8 @@ E [Ee][+-]?{D}+
 #include "generator_swift.h"
 
 #include <optparse/optparse.hpp>
-#include <string/string.hpp>
 #include <iostream>
+#include <string>
 
 void yycount();
 int yychar(char c);
