@@ -11,7 +11,7 @@
 # pmr don't work with --final, ptr don't work with --final and --json
 # so the 4,6,8 are not currently supported. 
 
-add_definitions(-DUSING_MEMORY_ARENA_STRING -DCROSS_THREAD_CHECKING)
+add_definitions(-DUSING_SMALL_ARENA_STRING)
 
 SET(FBEC_COMMAND "${CMAKE_BINARY_DIR}/fbec")
 set(FBE_OUTPUT_DIR "${CMAKE_BINARY_DIR}/generated")
