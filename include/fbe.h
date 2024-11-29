@@ -42,8 +42,6 @@
 #include <boost/uuid/uuid_generators.hpp>
 #include <boost/uuid/uuid_io.hpp>
 
-#include "memory/string/string.hpp"
-
 // file and directory section
 namespace fs = std::filesystem;
 
@@ -74,10 +72,10 @@ inline auto read_all(const fs::path& path) -> std::string {
     if (!file.is_open())
         return { };
     // Read contents
-    stdb::memory::string content{std::istreambuf_iterator<char>{file}, std::istreambuf_iterator<char>()};
+    std::string content{std::istreambuf_iterator<char>{file}, std::istreambuf_iterator<char>()};
     // Close the file
     file.close();
-    return content.toStdString();
+    return content;
 }
 
 inline void write_all(const fs::path& path, const std::string& content) {

@@ -58,11 +58,11 @@ namespace pmr = std::pmr;
 #if defined(USING_SEASTAR_STRING)
 #include <seastar/core/sstring.hh>
 #elif defined(USING_SMALL_STRING)
-#include "string/string.hpp"
+#include "string/small_string.hpp"
 #endif
 
 #if defined(USING_SMALL_ARENA_STRING)
-#include "string/arena_string.hpp"
+#include "string/small_string.hpp"
 #endif
 
 namespace FBE {
@@ -5765,9 +5765,9 @@ struct KeyWriter<TWriter, char>
 
 #if defined(USING_SEASTAR_STRING) || defined(USING_SMALL_STRING)
 template <class TWriter>
-struct KeyWriter<TWriter, std::string>
+struct KeyWriter<TWriter, std::string_view>
 {
-    static bool to_json_key(TWriter& writer, const std::string& key)
+    static bool to_json_key(TWriter& writer, const std::string_view& key)
     {
         return writer.Key(key);
     }
@@ -5779,7 +5779,7 @@ struct KeyWriter<TWriter, FBEString>
 {
     static bool to_json_key(TWriter& writer, const FBEString& key)
     {
-        return writer.Key(key.c_str());
+        return writer.Key(key);
     }
 };
 
@@ -5788,7 +5788,7 @@ struct KeyWriter<TWriter, ArenaString>
 {
     static bool to_json_key(TWriter& writer, const ArenaString& key)
     {
-        return writer.Key(key.c_str());
+        return writer.Key(key);
     }
 };
 
@@ -5953,9 +5953,9 @@ struct ValueWriter<TWriter, FBE::uuid_t>
 
 #if defined(USING_SEASTAR_STRING) || defined(USING_SMALL_STRING)
 template <class TWriter>
-struct ValueWriter<TWriter, std::string>
+struct ValueWriter<TWriter, std::string_view>
 {
-    static bool to_json(TWriter& writer, const std::string& value, bool scope = true)
+    static bool to_json(TWriter& writer, const std::string_view& value, bool scope = true)
     {
         return writer.String(value);
     }
@@ -5967,7 +5967,7 @@ struct ValueWriter<TWriter, FBEString>
 {
     static bool to_json(TWriter& writer, const FBEString& value, bool scope = true)
     {
-        return writer.String(value.c_str());
+        return writer.String(value);
     }
 };
 
@@ -5976,7 +5976,7 @@ struct ValueWriter<TWriter, ArenaString>
 {
     static bool to_json(TWriter& writer, const ArenaString& value, bool scope = true)
     {
-        return writer.String(value.c_str());
+        return writer.String(value);
     }
 };
 
