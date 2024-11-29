@@ -66,16 +66,16 @@ if (FBE_USING_STD_VECTOR)
 endif()
 
 option(FBE_USING_SEASTAR_STRING "using seastar string" OFF)
-option(FBE_USING_MEMORY_STRING "using memory string" OFF)
+option(FBE_USING_SMALL_STRING "using memory string" OFF)
 if (FBE_USING_SEASTAR_STRING)
   add_definitions(-DUSING_SEASTAR_STRING)
-elseif(FBE_USING_MEMORY_STRING)
-  add_definitions(-DUSING_MEMORY_STRING)
+elseif(FBE_USING_SMALL_STRING)
+  add_definitions(-DUSING_SMALL_STRING)
 endif()
 
-option(FBE_USING_MEMORY_ARENA_STRING "using memory arena string" OFF)
-if (FBE_USING_MEMORY_ARENA_STRING)
-  add_definitions(-DUSING_MEMORY_ARENA_STRING)
+option(FBE_USING_SMALL_ARENA_STRING "using memory arena string" OFF)
+if (FBE_USING_SMALL_ARENA_STRING)
+  add_definitions(-DUSING_SMALL_ARENA_STRING)
 endif()
 
 # System directories

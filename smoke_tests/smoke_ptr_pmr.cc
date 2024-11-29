@@ -2,6 +2,7 @@
 
 #include "arena/arena.hpp"
 #include "doctest/doctest.h"
+#include "fbe.h"
 #include "smoke_ptr_ptr_pmr.h"
 #include "smoke_ptr_ptr_pmr_models.h"
 
@@ -69,7 +70,7 @@ struct TypeHelper<arena_string>
 {
     using Type = String;
     using Model = StringModel;
-    static auto random_value(Arena& arena) -> arena_string {
+    static auto random_value(Arena& arena) -> ArenaString{
         return {"asdfqwerzxcvasdfqwerzxcvasdfqwerzxcv", arena.get_memory_resource()};
     };
 };
@@ -146,11 +147,11 @@ TEST_CASE("Smoke::serialize::ptr_pmr::nested") {
     // obj_1.inner_ptrs.emplace_back(arena.Create<Inner>(11));
 
     obj_1.values.emplace_back(10);
-    obj_1.values.emplace_back(arena_string{"adsf", arena.get_memory_resource()});
+    obj_1.values.emplace_back(ArenaString{"adsf", arena.get_memory_resource()});
     obj_1.values.emplace_back(Inner{12});
 
-    obj_1.bytes_map.emplace(arena_string{"bytes", arena.get_memory_resource()},
-                            BufferT{arena_string{"qwer", arena.get_memory_resource()}});
+    obj_1.bytes_map.emplace(String{"bytes", arena.get_memory_resource()},
+                            BufferT{ArenaString{"qwer", arena.get_memory_resource()}});
 
     obj_1.value_map.emplace(arena_string{"value", arena.get_memory_resource()},
                             arena_string{"", arena.get_memory_resource()});
