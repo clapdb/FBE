@@ -60,12 +60,12 @@ namespace pmr = std::pmr;
 
 #if defined(USING_SEASTAR_STRING)
 #include <seastar/core/sstring.hh>
-#elif defined(USING_MEMORY_STRING)
-#include "string/string.hpp"
+#elif defined(USING_SMALL_STRING)
+#include "string/small_string.hpp"
 #endif
 
-#if defined(USING_MEMORY_ARENA_STRING)
-#include "string/arena_string.hpp"
+#if defined(USING_SMALL_ARENA_STRING)
+#include "string/small_string.hpp"
 #endif
 
 namespace FBE {
@@ -79,14 +79,14 @@ namespace FBE {
 
     #if defined(USING_SEASTAR_STRING)
     using FBEString = seastar::sstring;
-    #elif defined(USING_MEMORY_STRING)
-    using FBEString = stdb::memory::string;
+    #elif defined(USING_SMALL_STRING)
+    using FBEString = stdb::memory::small_byte_string;
     #else
     using FBEString = std::string;
     #endif
 
-    #if defined(USING_MEMORY_ARENA_STRING)
-    using ArenaString = stdb::memory::arena_string;
+    #if defined(USING_SMALL_ARENA_STRING)
+    using ArenaString = stdb::memory::pmr::small_byte_string;
     #else
     using ArenaString = pmr::string;
     #endif
