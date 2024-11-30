@@ -68,11 +68,11 @@ struct TypeHelper<int128_t>
 };
 
 template <>
-struct TypeHelper<std::string>
+struct TypeHelper<FBEString>
 {
     using Type = String;
     using Model = StringModel;
-    static auto random_value() -> std::string { return "asdf"; }
+    static auto random_value() -> FBEString { return "asdf"; }
 };
 
 template <>
@@ -83,7 +83,7 @@ struct TypeHelper<BufferT>
     static auto random_value() -> BufferT { return BufferT{"asdfqwer"}; }
 };
 
-TEST_CASE_TEMPLATE("Smoke::serialize::normal", T, bool, int8_t, int16_t, int32_t, int64_t, int128_t, std::string,
+TEST_CASE_TEMPLATE("Smoke::serialize::normal", T, bool, int8_t, int16_t, int32_t, int64_t, int128_t, FBEString,
                    BufferT) {
     using Helper = TypeHelper<T>;
     using Model = Helper::Model;

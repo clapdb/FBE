@@ -4388,7 +4388,7 @@ public:
     size_t fbe_allocation_size(const char (&data)[N]) const noexcept { return 4 + N; }
     template <size_t N>
     size_t fbe_allocation_size(const std::array<char, N>& data) const noexcept { return 4 + N; }
-    size_t fbe_allocation_size(const std::string& value) const noexcept { return 4 + value.size(); }
+    size_t fbe_allocation_size(const FBEString& value) const noexcept { return 4 + value.size(); }
 
     // Get the field offset
     size_t fbe_offset() const noexcept { return _offset; }
