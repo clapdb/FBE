@@ -4,8 +4,10 @@
 
 #include "arena/arena.hpp"
 #include "doctest/doctest.h"
+#include "fbe.h"
 #include "smoke_normal_pmr_models.h"
 #include "string/arena_string.hpp"
+#include "string/small_string.hpp"
 
 using int128_t = __int128;
 using stdb::memory::Arena;
@@ -67,11 +69,11 @@ struct TypeHelper<int128_t>
 };
 
 template <>
-struct TypeHelper<arena_string>
+struct TypeHelper<stdb::memory::pmr::small_byte_string>
 {
     using Type = String;
     using Model = StringModel;
-    static auto random_value(Arena& arena) -> arena_string {
+    static auto random_value(Arena& arena) -> ArenaString{
         return {"asdfqwerzxcvasdfqwerzxcvasdfqwerzxcv", arena.get_memory_resource()};
     };
 };
@@ -82,11 +84,11 @@ struct TypeHelper<BufferT>
     using Type = Bytes;
     using Model = BytesModel;
     static auto random_value(Arena& arena) -> BufferT {
-        return BufferT{arena_string{"asdfqwer", arena.get_memory_resource()}};
+        return BufferT{ArenaString{"asdfqwer", arena.get_memory_resource()}};
     }
 };
 
-TEST_CASE_TEMPLATE("Smoke::serialize::normal_pmr", T, bool, int8_t, int16_t, int32_t, int64_t, int128_t, arena_string,
+TEST_CASE_TEMPLATE("Smoke::serialize::normal_pmr", T, bool, int8_t, int16_t, int32_t, int64_t, int128_t, stdb::memory::pmr::small_byte_string,
                    BufferT) {
     using Helper = TypeHelper<T>;
     using Model = Helper::Model;
@@ -135,14 +137,14 @@ TEST_CASE("Smoke::serialize::normal_pmr::nested") {
     obj_1.inners.emplace_back(100);
 
     obj_1.values.emplace_back(10);
-    obj_1.values.emplace_back(arena_string{"adsf", arena.get_memory_resource()});
+    obj_1.values.emplace_back(ArenaString{"adsf", arena.get_memory_resource()});
     obj_1.values.emplace_back(Inner{12});
 
-    obj_1.bytes_map.emplace(arena_string{"bytes", arena.get_memory_resource()},
-                            BufferT{arena_string{"qwer", arena.get_memory_resource()}});
+    obj_1.bytes_map.emplace(ArenaString{"bytes", arena.get_memory_resource()},
+                            BufferT{ArenaString{"qwer", arena.get_memory_resource()}});
 
-    obj_1.value_map.emplace(arena_string{"value", arena.get_memory_resource()},
-                            arena_string{"", arena.get_memory_resource()});
+    obj_1.value_map.emplace(ArenaString{"value", arena.get_memory_resource()},
+                            ArenaString{"", arena.get_memory_resource()});
 
     OuterModel model_1{};
     model_1.serialize(obj_1, arena.get_memory_resource());

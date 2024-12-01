@@ -57,12 +57,12 @@ namespace pmr = std::pmr;
 
 #if defined(USING_SEASTAR_STRING)
 #include <seastar/core/sstring.hh>
-#elif defined(USING_MEMORY_STRING)
-#include "string/string.hpp"
+#elif defined(USING_SMALL_STRING)
+#include "string/small_string.hpp"
 #endif
 
-#if defined(USING_MEMORY_ARENA_STRING)
-#include "string/arena_string.hpp"
+#if defined(USING_SMALL_ARENA_STRING)
+#include "string/small_string.hpp"
 #endif
 
 namespace FBE {
@@ -76,14 +76,14 @@ namespace FBE {
 
     #if defined(USING_SEASTAR_STRING)
     using FBEString = seastar::sstring;
-    #elif defined(USING_MEMORY_STRING)
-    using FBEString = stdb::memory::string;
+    #elif defined(USING_SMALL_STRING)
+    using FBEString = stdb::memory::small_byte_string;
     #else
     using FBEString = std::string;
     #endif
 
-    #if defined(USING_MEMORY_ARENA_STRING)
-    using ArenaString = stdb::memory::arena_string;
+    #if defined(USING_SMALL_ARENA_STRING)
+    using ArenaString = stdb::memory::pmr::small_byte_string;
     #else
     using ArenaString = pmr::string;
     #endif
@@ -4388,7 +4388,7 @@ public:
     size_t fbe_allocation_size(const char (&data)[N]) const noexcept { return 4 + N; }
     template <size_t N>
     size_t fbe_allocation_size(const std::array<char, N>& data) const noexcept { return 4 + N; }
-    size_t fbe_allocation_size(const std::string& value) const noexcept { return 4 + value.size(); }
+    size_t fbe_allocation_size(const FBEString& value) const noexcept { return 4 + value.size(); }
 
     // Get the field offset
     size_t fbe_offset() const noexcept { return _offset; }
@@ -5763,11 +5763,11 @@ struct KeyWriter<TWriter, char>
     }
 };
 
-#if defined(USING_SEASTAR_STRING) || defined(USING_MEMORY_STRING)
+#if defined(USING_SEASTAR_STRING) || defined(USING_SMALL_STRING)
 template <class TWriter>
-struct KeyWriter<TWriter, std::string>
+struct KeyWriter<TWriter, std::string_view>
 {
-    static bool to_json_key(TWriter& writer, const std::string& key)
+    static bool to_json_key(TWriter& writer, const std::string_view& key)
     {
         return writer.Key(key);
     }
@@ -5779,7 +5779,7 @@ struct KeyWriter<TWriter, FBEString>
 {
     static bool to_json_key(TWriter& writer, const FBEString& key)
     {
-        return writer.Key(key.c_str());
+        return writer.Key(key);
     }
 };
 
@@ -5788,7 +5788,7 @@ struct KeyWriter<TWriter, ArenaString>
 {
     static bool to_json_key(TWriter& writer, const ArenaString& key)
     {
-        return writer.Key(key.c_str());
+        return writer.Key(key);
     }
 };
 
@@ -5951,11 +5951,11 @@ struct ValueWriter<TWriter, FBE::uuid_t>
     }
 };
 
-#if defined(USING_SEASTAR_STRING) || defined(USING_MEMORY_STRING)
+#if defined(USING_SEASTAR_STRING) || defined(USING_SMALL_STRING)
 template <class TWriter>
-struct ValueWriter<TWriter, std::string>
+struct ValueWriter<TWriter, std::string_view>
 {
-    static bool to_json(TWriter& writer, const std::string& value, bool scope = true)
+    static bool to_json(TWriter& writer, const std::string_view& value, bool scope = true)
     {
         return writer.String(value);
     }
@@ -5967,7 +5967,7 @@ struct ValueWriter<TWriter, FBEString>
 {
     static bool to_json(TWriter& writer, const FBEString& value, bool scope = true)
     {
-        return writer.String(value.c_str());
+        return writer.String(value);
     }
 };
 
@@ -5976,7 +5976,7 @@ struct ValueWriter<TWriter, ArenaString>
 {
     static bool to_json(TWriter& writer, const ArenaString& value, bool scope = true)
     {
-        return writer.String(value.c_str());
+        return writer.String(value);
     }
 };
 
@@ -6137,7 +6137,7 @@ bool from_json_key(const TJson& json, T& key)
     return KeyReader<TJson, T>::from_json_key(json, key);
 }
 
-#if defined(USING_SEASTAR_STRING) || defined(USING_MEMORY_STRING)
+#if defined(USING_SEASTAR_STRING) || defined(USING_SMALL_STRING)
 template <class TJson>
 struct KeyReader<TJson, std::string>
 {
@@ -6464,7 +6464,7 @@ struct ValueReader<TJson, FBE::uuid_t>
     }
 };
 
-#if defined(USING_SEASTAR_STRING) || defined(USING_MEMORY_STRING)
+#if defined(USING_SEASTAR_STRING) || defined(USING_SMALL_STRING)
 template <class TJson>
 struct ValueReader<TJson, std::string>
 {
