@@ -202,7 +202,7 @@ public:
     void resize(size_t size, uint8_t value = 0) { _data.resize(size, value); }
     void shrink_to_fit() { _data.shrink_to_fit(); }
 
-    void assign(const std::string& str) { assign((const uint8_t*)str.data(), str.size()); }
+    void assign(const std::string& str) { assign((const uint8_t*)str.c_str(), str.size()); }
     void assign(const FastVec<uint8_t>& vec) { assign(vec.begin(), vec.end()); }
     void assign(size_t size, uint8_t value) { _data.assign(size, value); }
     void assign(const uint8_t* data, size_t size) { _data.assign(data, data + size); }
