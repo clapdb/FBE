@@ -11,8 +11,8 @@ jobs:
       matrix:
         compiler: [clangd, gcc]
         include:
-          - compiler: clangd
-            env: CC=clang-16 CXX=clang++-16
+          - compiler: clang
+            env: CC=clang-20 CXX=clang++-20
           - compiler: gcc
             env: CC=/usr/local/bin/gcc CXX=/usr/local/bin/g++
     runs-on: ubuntu-22.04
@@ -30,12 +30,12 @@ jobs:
         with:
           version: 12
 
-      - if: ${{ matrix.compiler == 'clangd'}}
-        name: "Setup clangd"
+      - if: ${{ matrix.compiler == 'clang'}}
+        name: "Setup clang"
         run: |
           wget https://apt.llvm.org/llvm.sh
           chmod +x ./llvm.sh
-          sudo ./llvm.sh 16
+          sudo ./llvm.sh 20
 
       - name: 'Setup cmake'
         run: cmake --version
