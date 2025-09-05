@@ -7,3 +7,6 @@
 [submodule "modules/rapidjson"]
 	path = modules/rapidjson
 	url = https://github.com/Tencent/rapidjson.git
+[submodule "modules/smallstring"]
+	path = modules/smallstring
+	url = https://github.com/clapdb/smallstring.git

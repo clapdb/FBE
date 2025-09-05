@@ -52,6 +52,7 @@ include_directories(SYSTEM ${Boost_INCLUDE_DIRS})
 find_package(LibUUID)
 
 include_directories("modules/memory")
+include_directories("modules/smallstring/include")
 
 
 # Modules
