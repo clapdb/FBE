@@ -92,9 +92,9 @@ auto Option::validate() -> bool {
 OptionParser::OptionParser(char prefix) : _prefix(prefix) {
     if (_prefix != '-' and _prefix != '+' and _prefix != '#' and _prefix != '$' and _prefix != '&' and _prefix != '%') {
         throw std::logic_error(
-          std::format("Invalid prefix: {}, the prefix has to be one of -, +, #, $, &, %", _prefix));
+          fmt::format("Invalid prefix: {}, the prefix has to be one of -, +, #, $, &, %", _prefix));
     }
-    _long_prefix = std::format("{}{}", _prefix, _prefix);
+    _long_prefix = fmt::format("{}{}", _prefix, _prefix);
 }
 
 OptionParser::OptionParser(stdb::optparse::ConflictHandler handler) : _conflict_handler(handler) {}
@@ -131,18 +131,18 @@ auto OptionParser::add_option(stdb::optparse::Option option) -> Option& {
         auto type = extract_option_type(name);
         if (type == OptionType::ShortOpt) {
             if (_conflict_handler == ConflictHandler::Error and _short_option_map.contains(name)) {
-                throw std::logic_error(std::format("Short option {} is already registered", name));
+                throw std::logic_error(fmt::format("Short option {} is already registered", name));
             }
             // if the ConflictHandler is Replace, we will replace the old option with the new one.
             _short_option_map[name] = _options.size() - 1;
         } else if (type == OptionType::LongOpt) {
             if (_conflict_handler == ConflictHandler::Error and _long_option_map.contains(name)) {
-                throw std::logic_error(std::format("Long option {} is already registered", name));
+                throw std::logic_error(fmt::format("Long option {} is already registered", name));
             }
             // if the ConflictHandler is Replace, we will replace the old option with the new one.
             _long_option_map[name] = _options.size() - 1;
         } else {
-            throw std::logic_error(std::format("Invalid option name: {}", name));
+            throw std::logic_error(fmt::format("Invalid option name: {}", name));
         }
     }
 
@@ -161,40 +161,40 @@ auto OptionParser::add_option(string short_name, string long_name) -> Option& {
 
 auto OptionParser::add_help_option(string help_msg) -> void {
     auto local_msg = std::move(help_msg);
-    auto short_help_name = std::format("{}h", _prefix);
-    auto long_help_name = std::format("{}help", _long_prefix);
+    auto short_help_name = fmt::format("{}h", _prefix);
+    auto long_help_name = fmt::format("{}help", _long_prefix);
     if (not _short_option_map.contains(short_help_name) and not _long_option_map.contains(long_help_name)) {
         add_option(short_help_name, long_help_name)
           .dest("help")
           .action(Action::StoreTrue)
           .type(Type::Bool)
-          .help(local_msg.empty() ? std::format("show the help of the {}", _program) : std::move(local_msg));
+          .help(local_msg.empty() ? fmt::format("show the help of the {}", _program) : std::move(local_msg));
     }
 }
 
 auto OptionParser::add_usage_option(string usage_msg) -> void {
     auto local_msg = std::move(usage_msg);
-    auto short_usage_name = std::format("{}u", _prefix);
-    auto long_usage_name = std::format("{}usage", _long_prefix);
+    auto short_usage_name = fmt::format("{}u", _prefix);
+    auto long_usage_name = fmt::format("{}usage", _long_prefix);
     if (not _short_option_map.contains(short_usage_name) and not _long_option_map.contains(long_usage_name)) {
         add_option(short_usage_name, long_usage_name)
           .dest("usage")
           .action(Action::StoreTrue)
           .type(Type::Bool)
-          .help(local_msg.empty() ? std::format("show usage of the {}", _program) : std::move(local_msg));
+          .help(local_msg.empty() ? fmt::format("show usage of the {}", _program) : std::move(local_msg));
     }
 }
 
 auto OptionParser::add_version_option(stdb::optparse::string version_msg) -> void {
     _version = std::move(version_msg);
-    auto short_version_name = std::format("{}v", _prefix);
-    auto long_version_name = std::format("{}version", _long_prefix);
+    auto short_version_name = fmt::format("{}v", _prefix);
+    auto long_version_name = fmt::format("{}version", _long_prefix);
     if (not _short_option_map.contains(short_version_name) and not _long_option_map.contains(long_version_name)) {
         add_option(short_version_name, long_version_name)
           .dest("version")
           .action(Action::StoreTrue)
           .type(Type::Bool)
-          .help(std::format("show version of the {}", _program));
+          .help(fmt::format("show version of the {}", _program));
     }
 }
 
@@ -221,7 +221,7 @@ auto OptionParser::parse_args(vector<stdb::optparse::string> args, const char** 
     _invalid_args.clear();
     for (auto& opt : _options) {
         if (not opt.validate()) {
-            throw std::logic_error(std::format("incomplete option: {}", opt.names().front()));
+            throw std::logic_error(fmt::format("incomplete option: {}", opt.names().front()));
         }
     }
     add_usage_option({});
@@ -447,7 +447,7 @@ auto OptionParser::handle_opt(ValueStore& values, ArgList& args, std::span<const
                 process_opt(opt, values, {});
                 return true;
             }
-            throw std::logic_error(std::format("option {} is not Bool, so requires an value-argument", opt.dest()));
+            throw std::logic_error(fmt::format("option {} is not Bool, so requires an value-argument", opt.dest()));
         }
         // has_value_to_process in the front
         if (auto val = extract_opt_value(front); val.empty()) {
@@ -508,7 +508,7 @@ auto OptionParser::handle_long_opt(stdb::optparse::ValueStore& values, ArgList& 
                 return true;
             }
             // raise error if the option is not a bool option.
-            throw std::logic_error(std::format("option {} is not Bool, and it requires an argument", front));
+            throw std::logic_error(fmt::format("option {} is not Bool, and it requires an argument", front));
         }
         // if nargs is 2, then process the option and pop the next 2 arguments.
         if (opt.nargs() == 1) {
@@ -557,15 +557,15 @@ auto to_upper(string& input) -> void {
 auto OptionParser::format_usage() -> string {
     if (_usage.empty()) {
         // enrich the _usage message.
-        _usage = std::format("usage: {}", _program);
+        _usage = fmt::format("usage: {}", _program);
         for (auto& opt : _options) {
             if (opt.type() == Type::Bool) {
                 auto upper_dest = opt.dest();
                 to_upper(upper_dest);
-                auto opt_msg = std::format(" [{} {}]", opt.names().front(), upper_dest);
+                auto opt_msg = fmt::format(" [{} {}]", opt.names().front(), upper_dest);
                 _usage += std::string_view{opt_msg};
             } else {
-                auto opt_msg = std::format(" [{}]", opt.names().front());
+                auto opt_msg = fmt::format(" [{}]", opt.names().front());
                 _usage += std::string_view{opt_msg};
             }
         }
@@ -576,7 +576,7 @@ auto OptionParser::format_usage() -> string {
 
 auto OptionParser::format_verison() -> string {
     if (_version.empty()) {
-        _version = std::format("{} : {}", _program, "0.0.0");
+        _version = fmt::format("{} : {}", _program, "0.0.0");
     }
     return _version;
 }
@@ -585,13 +585,13 @@ auto format_opt_names(const vector<string>& names) -> string {
     if (names.empty()) {
         throw std::logic_error("names should not be empty vector");
     }
-    auto opt_msg = std::format("{}", names.front());
+    auto opt_msg = fmt::format("{}", names.front());
     if (names.size() == 1) {
         return opt_msg;
     }
     // for-loop the rest names, and append to the opt_msg
     for (size_t off = 1; off < names.size(); ++off) {
-        opt_msg += std::format(", {}", names[off]);
+        opt_msg += fmt::format(", {}", names[off]);
     }
     return opt_msg;
 }
@@ -600,7 +600,7 @@ auto OptionParser::format_help() -> string {
     vector<std::pair<string, string>> line_and_helps;
 
     for (auto& opt : _options) {
-        string line = std::format("{}=<{}>", format_opt_names(opt.names()), opt.type());
+        string line = fmt::format("{}=<{}>", format_opt_names(opt.names()), opt.type());
         auto help = opt.help();
         line_and_helps.emplace_back(line, help);
     }
@@ -610,11 +610,11 @@ auto OptionParser::format_help() -> string {
                        [](auto& lhs, auto& rhs) -> bool { return rhs.first.size() > lhs.first.size(); });
 
     const auto align_size = max_line->first.size() + 1;
-    auto content = std::format("{} \n options: \n", format_usage());
+    auto content = fmt::format("{} \n options: \n", format_usage());
     for (const auto& [line, help] : line_and_helps) {
         const int space_width = align_size - line.size();
         auto spaces = string(static_cast<size_t>(space_width), ' ');
-        content += std::format("  {}{}{}\n", line, spaces, help);
+        content += fmt::format("  {}{}{}\n", line, spaces, help);
     }
     return content;
 }
@@ -642,10 +642,10 @@ auto OptionParser::get_raw_argv() const -> std::unique_ptr<const char*[]> {  // 
 }
 }  // namespace stdb::optparse
 
-namespace std {
+namespace fmt {
 
 auto formatter<stdb::optparse::OptionType>::format(stdb::optparse::OptionType opt_type,
-                                                   std::format_context& ctx) const noexcept -> decltype(ctx.out()) {
+                                                   fmt::format_context& ctx) const noexcept -> decltype(ctx.out()) {
     std::string str;
     switch (opt_type) {
         // generate all the option type names.
@@ -659,10 +659,10 @@ auto formatter<stdb::optparse::OptionType>::format(stdb::optparse::OptionType op
             str = "invalid option";
             break;
     }
-    return formatter<string>::format(str, ctx);
+    return formatter<std::string>::format(str, ctx);
 }
 
-auto formatter<stdb::optparse::Type>::format(stdb::optparse::Type opt_type, std::format_context& ctx) const noexcept
+auto formatter<stdb::optparse::Type>::format(stdb::optparse::Type opt_type, fmt::format_context& ctx) const noexcept
   -> decltype(ctx.out()) {
     std::string str;
     switch (opt_type) {
@@ -690,4 +690,4 @@ auto formatter<stdb::optparse::Type>::format(stdb::optparse::Type opt_type, std:
     }
     return formatter<string_view>::format(str, ctx);
 }
-}  // namespace std
+}  // namespace fmt
