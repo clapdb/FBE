@@ -31,7 +31,7 @@
 */
 
 #pragma once
-#include <format>
+#include <fmt/format.h>
 #include <iterator>
 #include <map>
 #include <memory>
@@ -39,6 +39,7 @@
 #include <set>
 #include <variant>
 #include <vector>
+#include <span>
 
 namespace stdb::optparse {
 
@@ -390,16 +391,16 @@ class OptionParser
 
 }  // namespace stdb::optparse
 
-namespace std {
+namespace fmt {
 template <>
-struct formatter<stdb::optparse::OptionType> : std::formatter<std::string>
+struct formatter<stdb::optparse::OptionType> : fmt::formatter<std::string>
 {
-    auto format(stdb::optparse::OptionType opt_type, std::format_context& ctx) const noexcept -> decltype(ctx.out());
+    auto format(stdb::optparse::OptionType opt_type, fmt::format_context& ctx) const noexcept -> decltype(ctx.out());
 };
 
 template <>
-struct formatter<stdb::optparse::Type> : std::formatter<std::string_view>
+struct formatter<stdb::optparse::Type> : fmt::formatter<std::string_view>
 {
-    auto format(stdb::optparse::Type type, std::format_context& ctx) const noexcept -> decltype(ctx.out());
+    auto format(stdb::optparse::Type type, fmt::format_context& ctx) const noexcept -> decltype(ctx.out());
 };
-}  // namespace std
+}  // namespace fmt
