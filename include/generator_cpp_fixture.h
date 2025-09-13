@@ -53,7 +53,7 @@ namespace pmr = std::pmr;
 #endif
 #include <utility>
 #include <variant>
-#include "container/stdb_vector.hpp"
+#include "container/vectra.hpp"
 
 #if defined(USING_SEASTAR_STRING)
 #include <seastar/core/sstring.hh>
@@ -70,7 +70,7 @@ namespace FBE {
     #if defined(USING_STD_VECTOR)
     using FastVec = std::vector<T>;
     #else
-    using FastVec = stdb::container::stdb_vector<T>;
+    using FastVec = stdb::container::vectra<T>;
     #endif
     using Safety = stdb::container::Safety;
 

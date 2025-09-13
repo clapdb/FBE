@@ -7,3 +7,9 @@
 [submodule "modules/smallstring"]
 	path = modules/smallstring
 	url = https://github.com/clapdb/smallstring.git
+[submodule "modules/arena"]
+	path = modules/arena
+	url = https://github.com/clapdb/Arena.git
+[submodule "modules/containa"]
+	path = modules/containa
+	url = https://github.com/clapdb/Containa.git
