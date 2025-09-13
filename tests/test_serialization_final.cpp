@@ -13,12 +13,6 @@
 #include "../proto/proto_final_models.h"
 #include "../proto/test_final_models.h"
 
-template <typename T>
-#if defined(USING_STD_VECTOR)
-using FastVec = std::vector<T>;
-#else
-using FastVec = stdb::container::stdb_vector<T>;
-#endif
 
 TEST_CASE("Serialization (Final): domain", "[FBE][.]")
 {
@@ -753,9 +747,9 @@ TEST_CASE("Serialization (Final): struct array", "[FBE][.]")
     struct1.f1[1] = (uint8_t)65;
     struct1.f2[0] = (uint8_t)97;
     struct1.f2[1] = std::nullopt;
-    struct1.f3[0] = FastVec<uint8_t>(3, 48);
-    struct1.f3[1] = FastVec<uint8_t>(3, 65);
-    struct1.f4[0] = FastVec<uint8_t>(3, 97);
+    struct1.f3[0] = FBE::FastVec<uint8_t>(3, 48);
+    struct1.f3[1] = FBE::FastVec<uint8_t>(3, 65);
+    struct1.f4[0] = FBE::FastVec<uint8_t>(3, 97);
     struct1.f4[1] = std::nullopt;
     struct1.f5[0] = test::EnumSimple::ENUM_VALUE_1;
     struct1.f5[1] = test::EnumSimple::ENUM_VALUE_2;
@@ -848,9 +842,9 @@ TEST_CASE("Serialization (Final): struct vector", "[FBE][.]")
     struct1.f1.emplace_back((uint8_t)65);
     struct1.f2.emplace_back((uint8_t)97);
     struct1.f2.emplace_back(std::nullopt);
-    struct1.f3.emplace_back(FastVec<uint8_t>(3, 48));
-    struct1.f3.emplace_back(FastVec<uint8_t>(3, 65));
-    struct1.f4.emplace_back(FastVec<uint8_t>(3, 97));
+    struct1.f3.emplace_back(FBE::FastVec<uint8_t>(3, 48));
+    struct1.f3.emplace_back(FBE::FastVec<uint8_t>(3, 65));
+    struct1.f4.emplace_back(FBE::FastVec<uint8_t>(3, 97));
     struct1.f4.emplace_back(std::nullopt);
     struct1.f5.emplace_back(test::EnumSimple::ENUM_VALUE_1);
     struct1.f5.emplace_back(test::EnumSimple::ENUM_VALUE_2);
@@ -943,9 +937,9 @@ TEST_CASE("Serialization (Final): struct list", "[FBE][.]")
     struct1.f1.emplace_back((uint8_t)65);
     struct1.f2.emplace_back((uint8_t)97);
     struct1.f2.emplace_back(std::nullopt);
-    struct1.f3.emplace_back(FastVec<uint8_t>(3, 48));
-    struct1.f3.emplace_back(FastVec<uint8_t>(3, 65));
-    struct1.f4.emplace_back(FastVec<uint8_t>(3, 97));
+    struct1.f3.emplace_back(FBE::FastVec<uint8_t>(3, 48));
+    struct1.f3.emplace_back(FBE::FastVec<uint8_t>(3, 65));
+    struct1.f4.emplace_back(FBE::FastVec<uint8_t>(3, 97));
     struct1.f4.emplace_back(std::nullopt);
     struct1.f5.emplace_back(test::EnumSimple::ENUM_VALUE_1);
     struct1.f5.emplace_back(test::EnumSimple::ENUM_VALUE_2);
@@ -1092,9 +1086,9 @@ TEST_CASE("Serialization (Final): struct map", "[FBE][.]")
     struct1.f1.emplace(20, (uint8_t)65);
     struct1.f2.emplace(10, (uint8_t)97);
     struct1.f2.emplace(20, std::nullopt);
-    struct1.f3.emplace(10, FastVec<uint8_t>(3, 48));
-    struct1.f3.emplace(20, FastVec<uint8_t>(3, 65));
-    struct1.f4.emplace(10, FastVec<uint8_t>(3, 97));
+    struct1.f3.emplace(10, FBE::FastVec<uint8_t>(3, 48));
+    struct1.f3.emplace(20, FBE::FastVec<uint8_t>(3, 65));
+    struct1.f4.emplace(10, FBE::FastVec<uint8_t>(3, 97));
     struct1.f4.emplace(20, std::nullopt);
     struct1.f5.emplace(10, test::EnumSimple::ENUM_VALUE_1);
     struct1.f5.emplace(20, test::EnumSimple::ENUM_VALUE_2);
@@ -1174,9 +1168,9 @@ TEST_CASE("Serialization (Final): struct hash", "[FBE][.]")
     struct1.f1.emplace("20", (uint8_t)65);
     struct1.f2.emplace("10", (uint8_t)97);
     struct1.f2.emplace("20", std::nullopt);
-    struct1.f3.emplace("10", FastVec<uint8_t>(3, 48));
-    struct1.f3.emplace("20", FastVec<uint8_t>(3, 65));
-    struct1.f4.emplace("10", FastVec<uint8_t>(3, 97));
+    struct1.f3.emplace("10", FBE::FastVec<uint8_t>(3, 48));
+    struct1.f3.emplace("20", FBE::FastVec<uint8_t>(3, 65));
+    struct1.f4.emplace("10", FBE::FastVec<uint8_t>(3, 97));
     struct1.f4.emplace("20", std::nullopt);
     struct1.f5.emplace("10", test::EnumSimple::ENUM_VALUE_1);
     struct1.f5.emplace("20", test::EnumSimple::ENUM_VALUE_2);

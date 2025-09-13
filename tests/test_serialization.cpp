@@ -18,12 +18,13 @@
 #include "variants.h"
 #include <cstdint>
 #include <limits>
+#include "containa/container/vectra.hpp"
 
 template <typename T>
 #if defined(USING_STD_VECTOR)
 using FastVec = std::vector<T>;
 #else
-using FastVec = stdb::container::stdb_vector<T>;
+using FastVec = stdb::container::vectra<T>;
 #endif
 
 TEST_CASE("Serialization: domain", "[FBE]")

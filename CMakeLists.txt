@@ -51,12 +51,15 @@ include_directories(SYSTEM ${Boost_INCLUDE_DIRS})
 # uuid
 find_package(LibUUID)
 
-include_directories("modules/memory")
+include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+include_directories("modules/arena/include")
+include_directories("modules/containa")
 include_directories("modules/smallstring/include")
 
 
 # Modules
-add_subdirectory("modules/memory")
+add_subdirectory("modules/arena")
+add_subdirectory("optparse")
 
 # Link libraries
 #list(APPEND LINKLIBS cppcommon)
@@ -67,14 +70,14 @@ if (FBE_USING_STD_VECTOR)
 endif()
 
 option(FBE_USING_SEASTAR_STRING "using seastar string" OFF)
-option(FBE_USING_SMALL_STRING "using memory string" OFF)
+option(FBE_USING_SMALL_STRING "using small string" OFF)
 if (FBE_USING_SEASTAR_STRING)
   add_definitions(-DUSING_SEASTAR_STRING)
 elseif(FBE_USING_SMALL_STRING)
   add_definitions(-DUSING_SMALL_STRING)
 endif()
 
-option(FBE_USING_SMALL_ARENA_STRING "using memory arena string" OFF)
+option(FBE_USING_SMALL_ARENA_STRING "using small arena string" OFF)
 if (FBE_USING_SMALL_ARENA_STRING)
   add_definitions(-DUSING_SMALL_ARENA_STRING)
 endif()
