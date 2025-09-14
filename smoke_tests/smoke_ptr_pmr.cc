@@ -5,11 +5,10 @@
 #include "fbe.h"
 #include "smoke_ptr_ptr_pmr.h"
 #include "smoke_ptr_ptr_pmr_models.h"
-#include "string/small_string.hpp"
+#include "smallstring.hpp"
 
 using int128_t = __int128;
-using stdb::memory::Arena;
-using stdb::memory::arena_string;
+using arena::Arena;
 using namespace smoke_ptr_pmr;
 using namespace FBE::smoke_ptr_pmr;
 using BufferT = pmr_buffer_t;
@@ -67,26 +66,17 @@ struct TypeHelper<int128_t>
 };
 
 template <>
-struct TypeHelper<arena_string>
+struct TypeHelper<small::pmr::small_byte_string>
 {
     using Type = String;
     using Model = StringModel;
-    static auto random_value(Arena& arena) -> ArenaString{
-        return {"asdfqwerzxcvasdfqwerzxcvasdfqwerzxcv", arena.get_memory_resource()};
-    };
-};
-
-template <>
-struct TypeHelper<BufferT>
-{
-    using Type = Bytes;
-    using Model = BytesModel;
-    static auto random_value(Arena& arena) -> BufferT {
-        return BufferT{arena_string{"asdfqwer", arena.get_memory_resource()}};
+    static auto random_value(Arena& arena) -> small::pmr::small_byte_string {
+        return small::pmr::small_byte_string{"asdfqwer", arena.get_memory_resource()};
     }
+
 };
 
-TEST_CASE_TEMPLATE("Smoke::serialize::ptr_pmr", T, bool, int8_t, int16_t, int32_t, int64_t, int128_t, arena_string) {
+TEST_CASE_TEMPLATE("Smoke::serialize::ptr_pmr", T, bool, int8_t, int16_t, int32_t, int64_t, int128_t, small::pmr::small_byte_string) {
     using Helper = TypeHelper<T>;
     using Model = Helper::Model;
     using Type = Helper::Type;
@@ -127,7 +117,7 @@ TEST_CASE_TEMPLATE("Smoke::serialize::ptr_pmr", T, bool, int8_t, int16_t, int32_
 
 TEST_CASE("Smoke::serialize::ptr_pmr::nested") {
     Arena arena{Arena::Options::GetDefaultOptions()};
-    using String = stdb::memory::pmr::small_byte_string;
+    using String = small::pmr::small_byte_string;
 
     Outer obj_1{arena.get_memory_resource()};
     obj_1.inner.value = 10;

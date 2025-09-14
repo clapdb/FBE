@@ -53,16 +53,16 @@ namespace pmr = std::pmr;
 #endif
 #include <utility>
 #include <variant>
-#include "container/stdb_vector.hpp"
+#include "container/vectra.hpp"
 
 #if defined(USING_SEASTAR_STRING)
 #include <seastar/core/sstring.hh>
 #elif defined(USING_SMALL_STRING)
-#include "string/small_string.hpp"
+#include "smallstring.hpp"
 #endif
 
 #if defined(USING_SMALL_ARENA_STRING)
-#include "string/small_string.hpp"
+#include "smallstring.hpp"
 #endif
 
 namespace FBE {
@@ -70,20 +70,20 @@ namespace FBE {
     #if defined(USING_STD_VECTOR)
     using FastVec = std::vector<T>;
     #else
-    using FastVec = stdb::container::stdb_vector<T>;
+    using FastVec = stdb::container::vectra<T>;
     #endif
     using Safety = stdb::container::Safety;
 
     #if defined(USING_SEASTAR_STRING)
     using FBEString = seastar::sstring;
     #elif defined(USING_SMALL_STRING)
-    using FBEString = stdb::memory::small_byte_string;
+    using FBEString = small::small_byte_string;
     #else
     using FBEString = std::string;
     #endif
 
     #if defined(USING_SMALL_ARENA_STRING)
-    using ArenaString = stdb::memory::pmr::small_byte_string;
+    using ArenaString = small::pmr::small_byte_string;
     #else
     using ArenaString = pmr::string;
     #endif

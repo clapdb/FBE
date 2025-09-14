@@ -6,12 +6,10 @@
 #include "doctest/doctest.h"
 #include "fbe.h"
 #include "smoke_normal_pmr_models.h"
-#include "string/arena_string.hpp"
-#include "string/small_string.hpp"
+#include "smallstring.hpp"
 
 using int128_t = __int128;
-using stdb::memory::Arena;
-using stdb::memory::arena_string;
+using arena::Arena;
 using namespace smoke_normal_pmr;
 using namespace FBE::smoke_normal_pmr;
 using BufferT = pmr_buffer_t;
@@ -69,7 +67,7 @@ struct TypeHelper<int128_t>
 };
 
 template <>
-struct TypeHelper<stdb::memory::pmr::small_byte_string>
+struct TypeHelper<small::pmr::small_byte_string>
 {
     using Type = String;
     using Model = StringModel;
@@ -88,7 +86,7 @@ struct TypeHelper<BufferT>
     }
 };
 
-TEST_CASE_TEMPLATE("Smoke::serialize::normal_pmr", T, bool, int8_t, int16_t, int32_t, int64_t, int128_t, stdb::memory::pmr::small_byte_string,
+TEST_CASE_TEMPLATE("Smoke::serialize::normal_pmr", T, bool, int8_t, int16_t, int32_t, int64_t, int128_t, small::pmr::small_byte_string,
                    BufferT) {
     using Helper = TypeHelper<T>;
     using Model = Helper::Model;

@@ -110,9 +110,10 @@ target_compile_options(smoke_metas PUBLIC "-Wno-unused-parameter")
 add_dependencies(smoke_metas ${METAS_DEPENDENCIES})
 target_link_libraries(smoke_metas uuid arena)
 
-include_directories(${PROJECT_SOURCE_DIR}/modules/memory/doctest)
+include_directories(${PROJECT_SOURCE_DIR}/modules/arena/doctest)
 include_directories(${CMAKE_BINARY_DIR}/generated)
 
 aux_source_directory(. SMOKE_TEST_SRC)
 add_executable(smoke_tests ${SMOKE_TEST_SRC})
+target_compile_options(smoke_tests PRIVATE "-Wno-deprecated-pragma" "-Wno-#warnings")
 target_link_libraries(smoke_tests smoke_metas xxhash)

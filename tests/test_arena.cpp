@@ -15,8 +15,8 @@
 #include "../proto/arena_pmr_models.h"
 #include "../proto/arena_ptr_ptr_pmr_models.h"
 
-using stdb::memory::Arena;
-using stdb::memory::ArenaContainStatus;
+using arena::Arena;
+using arena::ArenaContainStatus;
 
 class alloc_class
 {
