@@ -8,7 +8,7 @@
 #include "smallstring.hpp"
 
 using int128_t = __int128;
-using stdb::memory::Arena;
+using arena::Arena;
 using namespace smoke_ptr_pmr;
 using namespace FBE::smoke_ptr_pmr;
 using BufferT = pmr_buffer_t;

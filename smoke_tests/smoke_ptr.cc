@@ -7,7 +7,7 @@
 #include "smoke_ptr_ptr_models.h"
 
 using int128_t = __int128;
-using stdb::memory::Arena;
+using arena::Arena;
 using namespace smoke_ptr;
 using namespace FBE::smoke_ptr;
 using BufferT = buffer_t;
