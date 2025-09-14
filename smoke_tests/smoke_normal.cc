@@ -10,7 +10,7 @@
 #include "smoke_normal_models.h"
 
 using int128_t = __int128;
-using stdb::memory::Arena;
+using arena::Arena;
 using namespace smoke_normal;
 using namespace FBE::smoke_normal;
 using BufferT = buffer_t;

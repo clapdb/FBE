@@ -9,7 +9,7 @@
 #include "smallstring.hpp"
 
 using int128_t = __int128;
-using stdb::memory::Arena;
+using arena::Arena;
 using namespace smoke_normal_pmr;
 using namespace FBE::smoke_normal_pmr;
 using BufferT = pmr_buffer_t;
