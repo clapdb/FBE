@@ -79,7 +79,7 @@ Extra& Extra::operator=(Extra&& other) noexcept
     return *this;
 }
 
-std::string Extra::string() const
+std::string Extra::to_string() const
 {
     std::stringstream ss; ss << *this; return ss.str();
 }
@@ -160,7 +160,7 @@ Simple& Simple::operator=(Simple&& other) noexcept
     return *this;
 }
 
-std::string Simple::string() const
+std::string Simple::to_string() const
 {
     std::stringstream ss; ss << *this; return ss.str();
 }
@@ -291,7 +291,7 @@ Complex& Complex::operator=(Complex&& other) noexcept
     return *this;
 }
 
-std::string Complex::string() const
+std::string Complex::to_string() const
 {
     std::stringstream ss; ss << *this; return ss.str();
 }

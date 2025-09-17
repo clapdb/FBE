@@ -73,7 +73,7 @@ struct Simple : FBE::Base
     bool operator>(const Simple& other) const noexcept { return !operator<=(other); }
     bool operator>=(const Simple& other) const noexcept { return !operator<(other); }
 
-    std::string string() const;
+    std::string to_string() const;
 
     friend std::ostream& operator<<(std::ostream& stream, const Simple& value);
 
@@ -122,7 +122,7 @@ struct ExprContainer : FBE::Base
     bool operator>(const ExprContainer& other) const noexcept { return !operator<=(other); }
     bool operator>=(const ExprContainer& other) const noexcept { return !operator<(other); }
 
-    std::string string() const;
+    std::string to_string() const;
 
     friend std::ostream& operator<<(std::ostream& stream, const ExprContainer& value);
 
@@ -171,7 +171,7 @@ struct Value : FBE::Base
     bool operator>(const Value& other) const noexcept { return !operator<=(other); }
     bool operator>=(const Value& other) const noexcept { return !operator<(other); }
 
-    std::string string() const;
+    std::string to_string() const;
 
     friend std::ostream& operator<<(std::ostream& stream, const Value& value);
 
@@ -219,7 +219,7 @@ struct ValueContainer : FBE::Base
     bool operator>(const ValueContainer& other) const noexcept { return !operator<=(other); }
     bool operator>=(const ValueContainer& other) const noexcept { return !operator<(other); }
 
-    std::string string() const;
+    std::string to_string() const;
 
     friend std::ostream& operator<<(std::ostream& stream, const ValueContainer& value);
 
@@ -266,7 +266,7 @@ struct Scalar1Container : FBE::Base
     bool operator>(const Scalar1Container& other) const noexcept { return !operator<=(other); }
     bool operator>=(const Scalar1Container& other) const noexcept { return !operator<(other); }
 
-    std::string string() const;
+    std::string to_string() const;
 
     friend std::ostream& operator<<(std::ostream& stream, const Scalar1Container& value);
 

@@ -5216,4 +5216,1239 @@ size_t StructEmptyModel::deserialize(::test_pmr::StructEmpty& value, pmr::memory
 
 } // namespace test_pmr
 
+FieldModel<::test_pmr::StructFieldNamedString>::FieldModel(FBEBuffer& buffer, size_t offset) noexcept : _buffer(buffer), _offset(offset)
+    , string(buffer, 4 + 4)
+{}
+
+size_t FieldModel<::test_pmr::StructFieldNamedString>::fbe_body() const noexcept
+{
+    size_t fbe_result = 4 + 4
+        + string.fbe_size()
+        ;
+    return fbe_result;
+}
+
+size_t FieldModel<::test_pmr::StructFieldNamedString>::fbe_extra() const noexcept
+{
+    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+        return 0;
+
+    uint32_t fbe_struct_offset = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset());
+    if ((fbe_struct_offset == 0) || ((_buffer.offset() + fbe_struct_offset + 4) > _buffer.size()))
+        return 0;
+
+    _buffer.shift(fbe_struct_offset);
+
+    size_t fbe_result = fbe_body()
+        + string.fbe_extra()
+        ;
+
+    _buffer.unshift(fbe_struct_offset);
+
+    return fbe_result;
+}
+
+bool FieldModel<::test_pmr::StructFieldNamedString>::verify(bool fbe_verify_type) const noexcept
+{
+    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+        return true;
+
+    uint32_t fbe_struct_offset = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset());
+    if ((fbe_struct_offset == 0) || ((_buffer.offset() + fbe_struct_offset + 4 + 4) > _buffer.size()))
+        return false;
+
+    uint32_t fbe_struct_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_struct_offset);
+    if (fbe_struct_size < (4 + 4))
+        return false;
+
+    uint32_t fbe_struct_type = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_struct_offset + 4);
+    if (fbe_verify_type && (fbe_struct_type != fbe_type()))
+        return false;
+
+    _buffer.shift(fbe_struct_offset);
+    bool fbe_result = verify_fields(fbe_struct_size);
+    _buffer.unshift(fbe_struct_offset);
+    return fbe_result;
+}
+
+bool FieldModel<::test_pmr::StructFieldNamedString>::verify_fields([[maybe_unused]] size_t fbe_struct_size) const noexcept
+{
+    size_t fbe_current_size = 4 + 4;
+
+    if ((fbe_current_size + string.fbe_size()) > fbe_struct_size)
+        return true;
+    if (!string.verify())
+        return false;
+    fbe_current_size += string.fbe_size();
+
+    return true;
+}
+
+size_t FieldModel<::test_pmr::StructFieldNamedString>::get_begin() const noexcept
+{
+    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+        return 0;
+
+    uint32_t fbe_struct_offset = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset());
+    assert(((fbe_struct_offset > 0) && ((_buffer.offset() + fbe_struct_offset + 4 + 4) <= _buffer.size())) && "Model is broken!");
+    if ((fbe_struct_offset == 0) || ((_buffer.offset() + fbe_struct_offset + 4 + 4) > _buffer.size()))
+        return 0;
+
+    uint32_t fbe_struct_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_struct_offset);
+    assert((fbe_struct_size >= (4 + 4)) && "Model is broken!");
+    if (fbe_struct_size < (4 + 4))
+        return 0;
+
+    _buffer.shift(fbe_struct_offset);
+    return fbe_struct_offset;
+}
+
+void FieldModel<::test_pmr::StructFieldNamedString>::get_end(size_t fbe_begin) const noexcept
+{
+    _buffer.unshift(fbe_begin);
+}
+
+void FieldModel<::test_pmr::StructFieldNamedString>::get(::test_pmr::StructFieldNamedString& fbe_value, pmr::memory_resource* resource) const noexcept
+{
+    size_t fbe_begin = get_begin();
+    if (fbe_begin == 0)
+        return;
+
+    uint32_t fbe_struct_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset());
+    get_fields(fbe_value, fbe_struct_size, resource);
+    get_end(fbe_begin);
+}
+
+void FieldModel<::test_pmr::StructFieldNamedString>::get_fields([[maybe_unused]] ::test_pmr::StructFieldNamedString& fbe_value, [[maybe_unused]] size_t fbe_struct_size, pmr::memory_resource* resource) const noexcept
+{
+    size_t fbe_current_size = 4 + 4;
+
+    if ((fbe_current_size + string.fbe_size()) <= fbe_struct_size)
+        string.get(fbe_value.string, resource);
+    else
+        fbe_value.string = ::test_pmr::StructEmpty();
+    fbe_current_size += string.fbe_size();
+}
+
+size_t FieldModel<::test_pmr::StructFieldNamedString>::set_begin()
+{
+    assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
+    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+        return 0;
+
+    uint32_t fbe_struct_size = (uint32_t)fbe_body();
+    uint32_t fbe_struct_offset = (uint32_t)(_buffer.allocate(fbe_struct_size) - _buffer.offset());
+    assert(((fbe_struct_offset > 0) && ((_buffer.offset() + fbe_struct_offset + fbe_struct_size) <= _buffer.size())) && "Model is broken!");
+    if ((fbe_struct_offset == 0) || ((_buffer.offset() + fbe_struct_offset + fbe_struct_size) > _buffer.size()))
+        return 0;
+
+    unaligned_store<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset(), fbe_struct_offset);
+    unaligned_store<uint32_t>(_buffer.data() + _buffer.offset() + fbe_struct_offset, fbe_struct_size);
+    unaligned_store<uint32_t>(_buffer.data() + _buffer.offset() + fbe_struct_offset + 4, (uint32_t)fbe_type());
+
+    _buffer.shift(fbe_struct_offset);
+    return fbe_struct_offset;
+}
+
+void FieldModel<::test_pmr::StructFieldNamedString>::set_end(size_t fbe_begin)
+{
+    _buffer.unshift(fbe_begin);
+}
+
+void FieldModel<::test_pmr::StructFieldNamedString>::set(const ::test_pmr::StructFieldNamedString& fbe_value, pmr::memory_resource* resource) noexcept
+{
+    size_t fbe_begin = set_begin();
+    if (fbe_begin == 0)
+        return;
+
+    set_fields(fbe_value, resource);
+    set_end(fbe_begin);
+}
+
+void FieldModel<::test_pmr::StructFieldNamedString>::set_fields([[maybe_unused]] const ::test_pmr::StructFieldNamedString& fbe_value, pmr::memory_resource* resource) noexcept
+{
+    string.set(fbe_value.string, resource);
+}
+
+namespace test_pmr {
+
+bool StructFieldNamedStringModel::verify()
+{
+    if ((this->buffer().offset() + model.fbe_offset() - 4) > this->buffer().size())
+        return false;
+
+    uint32_t fbe_full_size = unaligned_load<uint32_t>(this->buffer().data() + this->buffer().offset() + model.fbe_offset() - 4);
+    if (fbe_full_size < model.fbe_size())
+        return false;
+
+    return model.verify();
+}
+
+size_t StructFieldNamedStringModel::create_begin()
+{
+    size_t fbe_begin = this->buffer().allocate(4 + model.fbe_size());
+    return fbe_begin;
+}
+
+size_t StructFieldNamedStringModel::create_end(size_t fbe_begin)
+{
+    size_t fbe_end = this->buffer().size();
+    uint32_t fbe_full_size = (uint32_t)(fbe_end - fbe_begin);
+    unaligned_store<uint32_t>(this->buffer().data() + this->buffer().offset() + model.fbe_offset() - 4, fbe_full_size);
+    return fbe_full_size;
+}
+
+size_t StructFieldNamedStringModel::serialize(const ::test_pmr::StructFieldNamedString& value, pmr::memory_resource* resource)
+{
+    size_t fbe_begin = create_begin();
+    model.set(value, resource);
+    size_t fbe_full_size = create_end(fbe_begin);
+    return fbe_full_size;
+}
+
+size_t StructFieldNamedStringModel::deserialize(::test_pmr::StructFieldNamedString& value, pmr::memory_resource* resource) const noexcept
+{
+    if ((this->buffer().offset() + model.fbe_offset() - 4) > this->buffer().size())
+        return 0;
+
+    uint32_t fbe_full_size = unaligned_load<uint32_t>(this->buffer().data() + this->buffer().offset() + model.fbe_offset() - 4);
+    assert((fbe_full_size >= model.fbe_size()) && "Model is broken!");
+    if (fbe_full_size < model.fbe_size())
+        return 0;
+
+    model.get(value, resource);
+    return fbe_full_size;
+}
+
+} // namespace test_pmr
+
+FieldModel<::test_pmr::StringFieldNamedString>::FieldModel(FBEBuffer& buffer, size_t offset) noexcept : _buffer(buffer), _offset(offset)
+    , string(buffer, 4 + 4)
+{}
+
+size_t FieldModel<::test_pmr::StringFieldNamedString>::fbe_body() const noexcept
+{
+    size_t fbe_result = 4 + 4
+        + string.fbe_size()
+        ;
+    return fbe_result;
+}
+
+size_t FieldModel<::test_pmr::StringFieldNamedString>::fbe_extra() const noexcept
+{
+    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+        return 0;
+
+    uint32_t fbe_struct_offset = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset());
+    if ((fbe_struct_offset == 0) || ((_buffer.offset() + fbe_struct_offset + 4) > _buffer.size()))
+        return 0;
+
+    _buffer.shift(fbe_struct_offset);
+
+    size_t fbe_result = fbe_body()
+        + string.fbe_extra()
+        ;
+
+    _buffer.unshift(fbe_struct_offset);
+
+    return fbe_result;
+}
+
+bool FieldModel<::test_pmr::StringFieldNamedString>::verify(bool fbe_verify_type) const noexcept
+{
+    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+        return true;
+
+    uint32_t fbe_struct_offset = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset());
+    if ((fbe_struct_offset == 0) || ((_buffer.offset() + fbe_struct_offset + 4 + 4) > _buffer.size()))
+        return false;
+
+    uint32_t fbe_struct_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_struct_offset);
+    if (fbe_struct_size < (4 + 4))
+        return false;
+
+    uint32_t fbe_struct_type = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_struct_offset + 4);
+    if (fbe_verify_type && (fbe_struct_type != fbe_type()))
+        return false;
+
+    _buffer.shift(fbe_struct_offset);
+    bool fbe_result = verify_fields(fbe_struct_size);
+    _buffer.unshift(fbe_struct_offset);
+    return fbe_result;
+}
+
+bool FieldModel<::test_pmr::StringFieldNamedString>::verify_fields([[maybe_unused]] size_t fbe_struct_size) const noexcept
+{
+    size_t fbe_current_size = 4 + 4;
+
+    if ((fbe_current_size + string.fbe_size()) > fbe_struct_size)
+        return true;
+    if (!string.verify())
+        return false;
+    fbe_current_size += string.fbe_size();
+
+    return true;
+}
+
+size_t FieldModel<::test_pmr::StringFieldNamedString>::get_begin() const noexcept
+{
+    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+        return 0;
+
+    uint32_t fbe_struct_offset = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset());
+    assert(((fbe_struct_offset > 0) && ((_buffer.offset() + fbe_struct_offset + 4 + 4) <= _buffer.size())) && "Model is broken!");
+    if ((fbe_struct_offset == 0) || ((_buffer.offset() + fbe_struct_offset + 4 + 4) > _buffer.size()))
+        return 0;
+
+    uint32_t fbe_struct_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_struct_offset);
+    assert((fbe_struct_size >= (4 + 4)) && "Model is broken!");
+    if (fbe_struct_size < (4 + 4))
+        return 0;
+
+    _buffer.shift(fbe_struct_offset);
+    return fbe_struct_offset;
+}
+
+void FieldModel<::test_pmr::StringFieldNamedString>::get_end(size_t fbe_begin) const noexcept
+{
+    _buffer.unshift(fbe_begin);
+}
+
+void FieldModel<::test_pmr::StringFieldNamedString>::get(::test_pmr::StringFieldNamedString& fbe_value, pmr::memory_resource* resource) const noexcept
+{
+    size_t fbe_begin = get_begin();
+    if (fbe_begin == 0)
+        return;
+
+    uint32_t fbe_struct_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset());
+    get_fields(fbe_value, fbe_struct_size, resource);
+    get_end(fbe_begin);
+}
+
+void FieldModel<::test_pmr::StringFieldNamedString>::get_fields([[maybe_unused]] ::test_pmr::StringFieldNamedString& fbe_value, [[maybe_unused]] size_t fbe_struct_size, pmr::memory_resource* resource) const noexcept
+{
+    size_t fbe_current_size = 4 + 4;
+
+    if ((fbe_current_size + string.fbe_size()) <= fbe_struct_size)
+        string.get(fbe_value.string, resource);
+    else
+        fbe_value.string = "";
+    fbe_current_size += string.fbe_size();
+}
+
+size_t FieldModel<::test_pmr::StringFieldNamedString>::set_begin()
+{
+    assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
+    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+        return 0;
+
+    uint32_t fbe_struct_size = (uint32_t)fbe_body();
+    uint32_t fbe_struct_offset = (uint32_t)(_buffer.allocate(fbe_struct_size) - _buffer.offset());
+    assert(((fbe_struct_offset > 0) && ((_buffer.offset() + fbe_struct_offset + fbe_struct_size) <= _buffer.size())) && "Model is broken!");
+    if ((fbe_struct_offset == 0) || ((_buffer.offset() + fbe_struct_offset + fbe_struct_size) > _buffer.size()))
+        return 0;
+
+    unaligned_store<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset(), fbe_struct_offset);
+    unaligned_store<uint32_t>(_buffer.data() + _buffer.offset() + fbe_struct_offset, fbe_struct_size);
+    unaligned_store<uint32_t>(_buffer.data() + _buffer.offset() + fbe_struct_offset + 4, (uint32_t)fbe_type());
+
+    _buffer.shift(fbe_struct_offset);
+    return fbe_struct_offset;
+}
+
+void FieldModel<::test_pmr::StringFieldNamedString>::set_end(size_t fbe_begin)
+{
+    _buffer.unshift(fbe_begin);
+}
+
+void FieldModel<::test_pmr::StringFieldNamedString>::set(const ::test_pmr::StringFieldNamedString& fbe_value, pmr::memory_resource* resource) noexcept
+{
+    size_t fbe_begin = set_begin();
+    if (fbe_begin == 0)
+        return;
+
+    set_fields(fbe_value, resource);
+    set_end(fbe_begin);
+}
+
+void FieldModel<::test_pmr::StringFieldNamedString>::set_fields([[maybe_unused]] const ::test_pmr::StringFieldNamedString& fbe_value, pmr::memory_resource* resource) noexcept
+{
+    string.set(fbe_value.string, resource);
+}
+
+namespace test_pmr {
+
+bool StringFieldNamedStringModel::verify()
+{
+    if ((this->buffer().offset() + model.fbe_offset() - 4) > this->buffer().size())
+        return false;
+
+    uint32_t fbe_full_size = unaligned_load<uint32_t>(this->buffer().data() + this->buffer().offset() + model.fbe_offset() - 4);
+    if (fbe_full_size < model.fbe_size())
+        return false;
+
+    return model.verify();
+}
+
+size_t StringFieldNamedStringModel::create_begin()
+{
+    size_t fbe_begin = this->buffer().allocate(4 + model.fbe_size());
+    return fbe_begin;
+}
+
+size_t StringFieldNamedStringModel::create_end(size_t fbe_begin)
+{
+    size_t fbe_end = this->buffer().size();
+    uint32_t fbe_full_size = (uint32_t)(fbe_end - fbe_begin);
+    unaligned_store<uint32_t>(this->buffer().data() + this->buffer().offset() + model.fbe_offset() - 4, fbe_full_size);
+    return fbe_full_size;
+}
+
+size_t StringFieldNamedStringModel::serialize(const ::test_pmr::StringFieldNamedString& value, pmr::memory_resource* resource)
+{
+    size_t fbe_begin = create_begin();
+    model.set(value, resource);
+    size_t fbe_full_size = create_end(fbe_begin);
+    return fbe_full_size;
+}
+
+size_t StringFieldNamedStringModel::deserialize(::test_pmr::StringFieldNamedString& value, pmr::memory_resource* resource) const noexcept
+{
+    if ((this->buffer().offset() + model.fbe_offset() - 4) > this->buffer().size())
+        return 0;
+
+    uint32_t fbe_full_size = unaligned_load<uint32_t>(this->buffer().data() + this->buffer().offset() + model.fbe_offset() - 4);
+    assert((fbe_full_size >= model.fbe_size()) && "Model is broken!");
+    if (fbe_full_size < model.fbe_size())
+        return 0;
+
+    model.get(value, resource);
+    return fbe_full_size;
+}
+
+} // namespace test_pmr
+
+FieldModel<::test_pmr::OptionalFieldNamedString>::FieldModel(FBEBuffer& buffer, size_t offset) noexcept : _buffer(buffer), _offset(offset)
+    , string(buffer, 4 + 4)
+{}
+
+size_t FieldModel<::test_pmr::OptionalFieldNamedString>::fbe_body() const noexcept
+{
+    size_t fbe_result = 4 + 4
+        + string.fbe_size()
+        ;
+    return fbe_result;
+}
+
+size_t FieldModel<::test_pmr::OptionalFieldNamedString>::fbe_extra() const noexcept
+{
+    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+        return 0;
+
+    uint32_t fbe_struct_offset = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset());
+    if ((fbe_struct_offset == 0) || ((_buffer.offset() + fbe_struct_offset + 4) > _buffer.size()))
+        return 0;
+
+    _buffer.shift(fbe_struct_offset);
+
+    size_t fbe_result = fbe_body()
+        + string.fbe_extra()
+        ;
+
+    _buffer.unshift(fbe_struct_offset);
+
+    return fbe_result;
+}
+
+bool FieldModel<::test_pmr::OptionalFieldNamedString>::verify(bool fbe_verify_type) const noexcept
+{
+    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+        return true;
+
+    uint32_t fbe_struct_offset = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset());
+    if ((fbe_struct_offset == 0) || ((_buffer.offset() + fbe_struct_offset + 4 + 4) > _buffer.size()))
+        return false;
+
+    uint32_t fbe_struct_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_struct_offset);
+    if (fbe_struct_size < (4 + 4))
+        return false;
+
+    uint32_t fbe_struct_type = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_struct_offset + 4);
+    if (fbe_verify_type && (fbe_struct_type != fbe_type()))
+        return false;
+
+    _buffer.shift(fbe_struct_offset);
+    bool fbe_result = verify_fields(fbe_struct_size);
+    _buffer.unshift(fbe_struct_offset);
+    return fbe_result;
+}
+
+bool FieldModel<::test_pmr::OptionalFieldNamedString>::verify_fields([[maybe_unused]] size_t fbe_struct_size) const noexcept
+{
+    size_t fbe_current_size = 4 + 4;
+
+    if ((fbe_current_size + string.fbe_size()) > fbe_struct_size)
+        return true;
+    if (!string.verify())
+        return false;
+    fbe_current_size += string.fbe_size();
+
+    return true;
+}
+
+size_t FieldModel<::test_pmr::OptionalFieldNamedString>::get_begin() const noexcept
+{
+    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+        return 0;
+
+    uint32_t fbe_struct_offset = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset());
+    assert(((fbe_struct_offset > 0) && ((_buffer.offset() + fbe_struct_offset + 4 + 4) <= _buffer.size())) && "Model is broken!");
+    if ((fbe_struct_offset == 0) || ((_buffer.offset() + fbe_struct_offset + 4 + 4) > _buffer.size()))
+        return 0;
+
+    uint32_t fbe_struct_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_struct_offset);
+    assert((fbe_struct_size >= (4 + 4)) && "Model is broken!");
+    if (fbe_struct_size < (4 + 4))
+        return 0;
+
+    _buffer.shift(fbe_struct_offset);
+    return fbe_struct_offset;
+}
+
+void FieldModel<::test_pmr::OptionalFieldNamedString>::get_end(size_t fbe_begin) const noexcept
+{
+    _buffer.unshift(fbe_begin);
+}
+
+void FieldModel<::test_pmr::OptionalFieldNamedString>::get(::test_pmr::OptionalFieldNamedString& fbe_value, pmr::memory_resource* resource) const noexcept
+{
+    size_t fbe_begin = get_begin();
+    if (fbe_begin == 0)
+        return;
+
+    uint32_t fbe_struct_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset());
+    get_fields(fbe_value, fbe_struct_size, resource);
+    get_end(fbe_begin);
+}
+
+void FieldModel<::test_pmr::OptionalFieldNamedString>::get_fields([[maybe_unused]] ::test_pmr::OptionalFieldNamedString& fbe_value, [[maybe_unused]] size_t fbe_struct_size, pmr::memory_resource* resource) const noexcept
+{
+    size_t fbe_current_size = 4 + 4;
+
+    if ((fbe_current_size + string.fbe_size()) <= fbe_struct_size)
+        string.get(fbe_value.string, resource);
+    else
+        fbe_value.string = std::nullopt;
+    fbe_current_size += string.fbe_size();
+}
+
+size_t FieldModel<::test_pmr::OptionalFieldNamedString>::set_begin()
+{
+    assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
+    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+        return 0;
+
+    uint32_t fbe_struct_size = (uint32_t)fbe_body();
+    uint32_t fbe_struct_offset = (uint32_t)(_buffer.allocate(fbe_struct_size) - _buffer.offset());
+    assert(((fbe_struct_offset > 0) && ((_buffer.offset() + fbe_struct_offset + fbe_struct_size) <= _buffer.size())) && "Model is broken!");
+    if ((fbe_struct_offset == 0) || ((_buffer.offset() + fbe_struct_offset + fbe_struct_size) > _buffer.size()))
+        return 0;
+
+    unaligned_store<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset(), fbe_struct_offset);
+    unaligned_store<uint32_t>(_buffer.data() + _buffer.offset() + fbe_struct_offset, fbe_struct_size);
+    unaligned_store<uint32_t>(_buffer.data() + _buffer.offset() + fbe_struct_offset + 4, (uint32_t)fbe_type());
+
+    _buffer.shift(fbe_struct_offset);
+    return fbe_struct_offset;
+}
+
+void FieldModel<::test_pmr::OptionalFieldNamedString>::set_end(size_t fbe_begin)
+{
+    _buffer.unshift(fbe_begin);
+}
+
+void FieldModel<::test_pmr::OptionalFieldNamedString>::set(const ::test_pmr::OptionalFieldNamedString& fbe_value, pmr::memory_resource* resource) noexcept
+{
+    size_t fbe_begin = set_begin();
+    if (fbe_begin == 0)
+        return;
+
+    set_fields(fbe_value, resource);
+    set_end(fbe_begin);
+}
+
+void FieldModel<::test_pmr::OptionalFieldNamedString>::set_fields([[maybe_unused]] const ::test_pmr::OptionalFieldNamedString& fbe_value, pmr::memory_resource* resource) noexcept
+{
+    string.set(fbe_value.string, resource);
+}
+
+namespace test_pmr {
+
+bool OptionalFieldNamedStringModel::verify()
+{
+    if ((this->buffer().offset() + model.fbe_offset() - 4) > this->buffer().size())
+        return false;
+
+    uint32_t fbe_full_size = unaligned_load<uint32_t>(this->buffer().data() + this->buffer().offset() + model.fbe_offset() - 4);
+    if (fbe_full_size < model.fbe_size())
+        return false;
+
+    return model.verify();
+}
+
+size_t OptionalFieldNamedStringModel::create_begin()
+{
+    size_t fbe_begin = this->buffer().allocate(4 + model.fbe_size());
+    return fbe_begin;
+}
+
+size_t OptionalFieldNamedStringModel::create_end(size_t fbe_begin)
+{
+    size_t fbe_end = this->buffer().size();
+    uint32_t fbe_full_size = (uint32_t)(fbe_end - fbe_begin);
+    unaligned_store<uint32_t>(this->buffer().data() + this->buffer().offset() + model.fbe_offset() - 4, fbe_full_size);
+    return fbe_full_size;
+}
+
+size_t OptionalFieldNamedStringModel::serialize(const ::test_pmr::OptionalFieldNamedString& value, pmr::memory_resource* resource)
+{
+    size_t fbe_begin = create_begin();
+    model.set(value, resource);
+    size_t fbe_full_size = create_end(fbe_begin);
+    return fbe_full_size;
+}
+
+size_t OptionalFieldNamedStringModel::deserialize(::test_pmr::OptionalFieldNamedString& value, pmr::memory_resource* resource) const noexcept
+{
+    if ((this->buffer().offset() + model.fbe_offset() - 4) > this->buffer().size())
+        return 0;
+
+    uint32_t fbe_full_size = unaligned_load<uint32_t>(this->buffer().data() + this->buffer().offset() + model.fbe_offset() - 4);
+    assert((fbe_full_size >= model.fbe_size()) && "Model is broken!");
+    if (fbe_full_size < model.fbe_size())
+        return 0;
+
+    model.get(value, resource);
+    return fbe_full_size;
+}
+
+} // namespace test_pmr
+
+FieldModel<::test_pmr::ArrayFieldNamedString>::FieldModel(FBEBuffer& buffer, size_t offset) noexcept : _buffer(buffer), _offset(offset)
+    , string(buffer, 4 + 4)
+{}
+
+size_t FieldModel<::test_pmr::ArrayFieldNamedString>::fbe_body() const noexcept
+{
+    size_t fbe_result = 4 + 4
+        + string.fbe_size()
+        ;
+    return fbe_result;
+}
+
+size_t FieldModel<::test_pmr::ArrayFieldNamedString>::fbe_extra() const noexcept
+{
+    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+        return 0;
+
+    uint32_t fbe_struct_offset = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset());
+    if ((fbe_struct_offset == 0) || ((_buffer.offset() + fbe_struct_offset + 4) > _buffer.size()))
+        return 0;
+
+    _buffer.shift(fbe_struct_offset);
+
+    size_t fbe_result = fbe_body()
+        + string.fbe_extra()
+        ;
+
+    _buffer.unshift(fbe_struct_offset);
+
+    return fbe_result;
+}
+
+bool FieldModel<::test_pmr::ArrayFieldNamedString>::verify(bool fbe_verify_type) const noexcept
+{
+    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+        return true;
+
+    uint32_t fbe_struct_offset = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset());
+    if ((fbe_struct_offset == 0) || ((_buffer.offset() + fbe_struct_offset + 4 + 4) > _buffer.size()))
+        return false;
+
+    uint32_t fbe_struct_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_struct_offset);
+    if (fbe_struct_size < (4 + 4))
+        return false;
+
+    uint32_t fbe_struct_type = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_struct_offset + 4);
+    if (fbe_verify_type && (fbe_struct_type != fbe_type()))
+        return false;
+
+    _buffer.shift(fbe_struct_offset);
+    bool fbe_result = verify_fields(fbe_struct_size);
+    _buffer.unshift(fbe_struct_offset);
+    return fbe_result;
+}
+
+bool FieldModel<::test_pmr::ArrayFieldNamedString>::verify_fields([[maybe_unused]] size_t fbe_struct_size) const noexcept
+{
+    size_t fbe_current_size = 4 + 4;
+
+    if ((fbe_current_size + string.fbe_size()) > fbe_struct_size)
+        return true;
+    if (!string.verify())
+        return false;
+    fbe_current_size += string.fbe_size();
+
+    return true;
+}
+
+size_t FieldModel<::test_pmr::ArrayFieldNamedString>::get_begin() const noexcept
+{
+    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+        return 0;
+
+    uint32_t fbe_struct_offset = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset());
+    assert(((fbe_struct_offset > 0) && ((_buffer.offset() + fbe_struct_offset + 4 + 4) <= _buffer.size())) && "Model is broken!");
+    if ((fbe_struct_offset == 0) || ((_buffer.offset() + fbe_struct_offset + 4 + 4) > _buffer.size()))
+        return 0;
+
+    uint32_t fbe_struct_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_struct_offset);
+    assert((fbe_struct_size >= (4 + 4)) && "Model is broken!");
+    if (fbe_struct_size < (4 + 4))
+        return 0;
+
+    _buffer.shift(fbe_struct_offset);
+    return fbe_struct_offset;
+}
+
+void FieldModel<::test_pmr::ArrayFieldNamedString>::get_end(size_t fbe_begin) const noexcept
+{
+    _buffer.unshift(fbe_begin);
+}
+
+void FieldModel<::test_pmr::ArrayFieldNamedString>::get(::test_pmr::ArrayFieldNamedString& fbe_value, pmr::memory_resource* resource) const noexcept
+{
+    size_t fbe_begin = get_begin();
+    if (fbe_begin == 0)
+        return;
+
+    uint32_t fbe_struct_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset());
+    get_fields(fbe_value, fbe_struct_size, resource);
+    get_end(fbe_begin);
+}
+
+void FieldModel<::test_pmr::ArrayFieldNamedString>::get_fields([[maybe_unused]] ::test_pmr::ArrayFieldNamedString& fbe_value, [[maybe_unused]] size_t fbe_struct_size, pmr::memory_resource* resource) const noexcept
+{
+    size_t fbe_current_size = 4 + 4;
+
+    if ((fbe_current_size + string.fbe_size()) <= fbe_struct_size)
+        string.get(fbe_value.string, resource);
+    else
+    fbe_current_size += string.fbe_size();
+}
+
+size_t FieldModel<::test_pmr::ArrayFieldNamedString>::set_begin()
+{
+    assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
+    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+        return 0;
+
+    uint32_t fbe_struct_size = (uint32_t)fbe_body();
+    uint32_t fbe_struct_offset = (uint32_t)(_buffer.allocate(fbe_struct_size) - _buffer.offset());
+    assert(((fbe_struct_offset > 0) && ((_buffer.offset() + fbe_struct_offset + fbe_struct_size) <= _buffer.size())) && "Model is broken!");
+    if ((fbe_struct_offset == 0) || ((_buffer.offset() + fbe_struct_offset + fbe_struct_size) > _buffer.size()))
+        return 0;
+
+    unaligned_store<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset(), fbe_struct_offset);
+    unaligned_store<uint32_t>(_buffer.data() + _buffer.offset() + fbe_struct_offset, fbe_struct_size);
+    unaligned_store<uint32_t>(_buffer.data() + _buffer.offset() + fbe_struct_offset + 4, (uint32_t)fbe_type());
+
+    _buffer.shift(fbe_struct_offset);
+    return fbe_struct_offset;
+}
+
+void FieldModel<::test_pmr::ArrayFieldNamedString>::set_end(size_t fbe_begin)
+{
+    _buffer.unshift(fbe_begin);
+}
+
+void FieldModel<::test_pmr::ArrayFieldNamedString>::set(const ::test_pmr::ArrayFieldNamedString& fbe_value, pmr::memory_resource* resource) noexcept
+{
+    size_t fbe_begin = set_begin();
+    if (fbe_begin == 0)
+        return;
+
+    set_fields(fbe_value, resource);
+    set_end(fbe_begin);
+}
+
+void FieldModel<::test_pmr::ArrayFieldNamedString>::set_fields([[maybe_unused]] const ::test_pmr::ArrayFieldNamedString& fbe_value, pmr::memory_resource* resource) noexcept
+{
+    string.set(fbe_value.string, resource);
+}
+
+namespace test_pmr {
+
+bool ArrayFieldNamedStringModel::verify()
+{
+    if ((this->buffer().offset() + model.fbe_offset() - 4) > this->buffer().size())
+        return false;
+
+    uint32_t fbe_full_size = unaligned_load<uint32_t>(this->buffer().data() + this->buffer().offset() + model.fbe_offset() - 4);
+    if (fbe_full_size < model.fbe_size())
+        return false;
+
+    return model.verify();
+}
+
+size_t ArrayFieldNamedStringModel::create_begin()
+{
+    size_t fbe_begin = this->buffer().allocate(4 + model.fbe_size());
+    return fbe_begin;
+}
+
+size_t ArrayFieldNamedStringModel::create_end(size_t fbe_begin)
+{
+    size_t fbe_end = this->buffer().size();
+    uint32_t fbe_full_size = (uint32_t)(fbe_end - fbe_begin);
+    unaligned_store<uint32_t>(this->buffer().data() + this->buffer().offset() + model.fbe_offset() - 4, fbe_full_size);
+    return fbe_full_size;
+}
+
+size_t ArrayFieldNamedStringModel::serialize(const ::test_pmr::ArrayFieldNamedString& value, pmr::memory_resource* resource)
+{
+    size_t fbe_begin = create_begin();
+    model.set(value, resource);
+    size_t fbe_full_size = create_end(fbe_begin);
+    return fbe_full_size;
+}
+
+size_t ArrayFieldNamedStringModel::deserialize(::test_pmr::ArrayFieldNamedString& value, pmr::memory_resource* resource) const noexcept
+{
+    if ((this->buffer().offset() + model.fbe_offset() - 4) > this->buffer().size())
+        return 0;
+
+    uint32_t fbe_full_size = unaligned_load<uint32_t>(this->buffer().data() + this->buffer().offset() + model.fbe_offset() - 4);
+    assert((fbe_full_size >= model.fbe_size()) && "Model is broken!");
+    if (fbe_full_size < model.fbe_size())
+        return 0;
+
+    model.get(value, resource);
+    return fbe_full_size;
+}
+
+} // namespace test_pmr
+
+FieldModel<::test_pmr::VectorFieldNamedString>::FieldModel(FBEBuffer& buffer, size_t offset) noexcept : _buffer(buffer), _offset(offset)
+    , string(buffer, 4 + 4)
+{}
+
+size_t FieldModel<::test_pmr::VectorFieldNamedString>::fbe_body() const noexcept
+{
+    size_t fbe_result = 4 + 4
+        + string.fbe_size()
+        ;
+    return fbe_result;
+}
+
+size_t FieldModel<::test_pmr::VectorFieldNamedString>::fbe_extra() const noexcept
+{
+    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+        return 0;
+
+    uint32_t fbe_struct_offset = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset());
+    if ((fbe_struct_offset == 0) || ((_buffer.offset() + fbe_struct_offset + 4) > _buffer.size()))
+        return 0;
+
+    _buffer.shift(fbe_struct_offset);
+
+    size_t fbe_result = fbe_body()
+        + string.fbe_extra()
+        ;
+
+    _buffer.unshift(fbe_struct_offset);
+
+    return fbe_result;
+}
+
+bool FieldModel<::test_pmr::VectorFieldNamedString>::verify(bool fbe_verify_type) const noexcept
+{
+    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+        return true;
+
+    uint32_t fbe_struct_offset = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset());
+    if ((fbe_struct_offset == 0) || ((_buffer.offset() + fbe_struct_offset + 4 + 4) > _buffer.size()))
+        return false;
+
+    uint32_t fbe_struct_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_struct_offset);
+    if (fbe_struct_size < (4 + 4))
+        return false;
+
+    uint32_t fbe_struct_type = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_struct_offset + 4);
+    if (fbe_verify_type && (fbe_struct_type != fbe_type()))
+        return false;
+
+    _buffer.shift(fbe_struct_offset);
+    bool fbe_result = verify_fields(fbe_struct_size);
+    _buffer.unshift(fbe_struct_offset);
+    return fbe_result;
+}
+
+bool FieldModel<::test_pmr::VectorFieldNamedString>::verify_fields([[maybe_unused]] size_t fbe_struct_size) const noexcept
+{
+    size_t fbe_current_size = 4 + 4;
+
+    if ((fbe_current_size + string.fbe_size()) > fbe_struct_size)
+        return true;
+    if (!string.verify())
+        return false;
+    fbe_current_size += string.fbe_size();
+
+    return true;
+}
+
+size_t FieldModel<::test_pmr::VectorFieldNamedString>::get_begin() const noexcept
+{
+    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+        return 0;
+
+    uint32_t fbe_struct_offset = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset());
+    assert(((fbe_struct_offset > 0) && ((_buffer.offset() + fbe_struct_offset + 4 + 4) <= _buffer.size())) && "Model is broken!");
+    if ((fbe_struct_offset == 0) || ((_buffer.offset() + fbe_struct_offset + 4 + 4) > _buffer.size()))
+        return 0;
+
+    uint32_t fbe_struct_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_struct_offset);
+    assert((fbe_struct_size >= (4 + 4)) && "Model is broken!");
+    if (fbe_struct_size < (4 + 4))
+        return 0;
+
+    _buffer.shift(fbe_struct_offset);
+    return fbe_struct_offset;
+}
+
+void FieldModel<::test_pmr::VectorFieldNamedString>::get_end(size_t fbe_begin) const noexcept
+{
+    _buffer.unshift(fbe_begin);
+}
+
+void FieldModel<::test_pmr::VectorFieldNamedString>::get(::test_pmr::VectorFieldNamedString& fbe_value, pmr::memory_resource* resource) const noexcept
+{
+    size_t fbe_begin = get_begin();
+    if (fbe_begin == 0)
+        return;
+
+    uint32_t fbe_struct_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset());
+    get_fields(fbe_value, fbe_struct_size, resource);
+    get_end(fbe_begin);
+}
+
+void FieldModel<::test_pmr::VectorFieldNamedString>::get_fields([[maybe_unused]] ::test_pmr::VectorFieldNamedString& fbe_value, [[maybe_unused]] size_t fbe_struct_size, pmr::memory_resource* resource) const noexcept
+{
+    size_t fbe_current_size = 4 + 4;
+
+    if ((fbe_current_size + string.fbe_size()) <= fbe_struct_size)
+        string.get(fbe_value.string, resource);
+    else
+        fbe_value.string.clear();
+    fbe_current_size += string.fbe_size();
+}
+
+size_t FieldModel<::test_pmr::VectorFieldNamedString>::set_begin()
+{
+    assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
+    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+        return 0;
+
+    uint32_t fbe_struct_size = (uint32_t)fbe_body();
+    uint32_t fbe_struct_offset = (uint32_t)(_buffer.allocate(fbe_struct_size) - _buffer.offset());
+    assert(((fbe_struct_offset > 0) && ((_buffer.offset() + fbe_struct_offset + fbe_struct_size) <= _buffer.size())) && "Model is broken!");
+    if ((fbe_struct_offset == 0) || ((_buffer.offset() + fbe_struct_offset + fbe_struct_size) > _buffer.size()))
+        return 0;
+
+    unaligned_store<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset(), fbe_struct_offset);
+    unaligned_store<uint32_t>(_buffer.data() + _buffer.offset() + fbe_struct_offset, fbe_struct_size);
+    unaligned_store<uint32_t>(_buffer.data() + _buffer.offset() + fbe_struct_offset + 4, (uint32_t)fbe_type());
+
+    _buffer.shift(fbe_struct_offset);
+    return fbe_struct_offset;
+}
+
+void FieldModel<::test_pmr::VectorFieldNamedString>::set_end(size_t fbe_begin)
+{
+    _buffer.unshift(fbe_begin);
+}
+
+void FieldModel<::test_pmr::VectorFieldNamedString>::set(const ::test_pmr::VectorFieldNamedString& fbe_value, pmr::memory_resource* resource) noexcept
+{
+    size_t fbe_begin = set_begin();
+    if (fbe_begin == 0)
+        return;
+
+    set_fields(fbe_value, resource);
+    set_end(fbe_begin);
+}
+
+void FieldModel<::test_pmr::VectorFieldNamedString>::set_fields([[maybe_unused]] const ::test_pmr::VectorFieldNamedString& fbe_value, pmr::memory_resource* resource) noexcept
+{
+    string.set(fbe_value.string, resource);
+}
+
+namespace test_pmr {
+
+bool VectorFieldNamedStringModel::verify()
+{
+    if ((this->buffer().offset() + model.fbe_offset() - 4) > this->buffer().size())
+        return false;
+
+    uint32_t fbe_full_size = unaligned_load<uint32_t>(this->buffer().data() + this->buffer().offset() + model.fbe_offset() - 4);
+    if (fbe_full_size < model.fbe_size())
+        return false;
+
+    return model.verify();
+}
+
+size_t VectorFieldNamedStringModel::create_begin()
+{
+    size_t fbe_begin = this->buffer().allocate(4 + model.fbe_size());
+    return fbe_begin;
+}
+
+size_t VectorFieldNamedStringModel::create_end(size_t fbe_begin)
+{
+    size_t fbe_end = this->buffer().size();
+    uint32_t fbe_full_size = (uint32_t)(fbe_end - fbe_begin);
+    unaligned_store<uint32_t>(this->buffer().data() + this->buffer().offset() + model.fbe_offset() - 4, fbe_full_size);
+    return fbe_full_size;
+}
+
+size_t VectorFieldNamedStringModel::serialize(const ::test_pmr::VectorFieldNamedString& value, pmr::memory_resource* resource)
+{
+    size_t fbe_begin = create_begin();
+    model.set(value, resource);
+    size_t fbe_full_size = create_end(fbe_begin);
+    return fbe_full_size;
+}
+
+size_t VectorFieldNamedStringModel::deserialize(::test_pmr::VectorFieldNamedString& value, pmr::memory_resource* resource) const noexcept
+{
+    if ((this->buffer().offset() + model.fbe_offset() - 4) > this->buffer().size())
+        return 0;
+
+    uint32_t fbe_full_size = unaligned_load<uint32_t>(this->buffer().data() + this->buffer().offset() + model.fbe_offset() - 4);
+    assert((fbe_full_size >= model.fbe_size()) && "Model is broken!");
+    if (fbe_full_size < model.fbe_size())
+        return 0;
+
+    model.get(value, resource);
+    return fbe_full_size;
+}
+
+} // namespace test_pmr
+
+FieldModel<::test_pmr::BytesFieldNamedString>::FieldModel(FBEBuffer& buffer, size_t offset) noexcept : _buffer(buffer), _offset(offset)
+    , string(buffer, 4 + 4)
+{}
+
+size_t FieldModel<::test_pmr::BytesFieldNamedString>::fbe_body() const noexcept
+{
+    size_t fbe_result = 4 + 4
+        + string.fbe_size()
+        ;
+    return fbe_result;
+}
+
+size_t FieldModel<::test_pmr::BytesFieldNamedString>::fbe_extra() const noexcept
+{
+    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+        return 0;
+
+    uint32_t fbe_struct_offset = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset());
+    if ((fbe_struct_offset == 0) || ((_buffer.offset() + fbe_struct_offset + 4) > _buffer.size()))
+        return 0;
+
+    _buffer.shift(fbe_struct_offset);
+
+    size_t fbe_result = fbe_body()
+        + string.fbe_extra()
+        ;
+
+    _buffer.unshift(fbe_struct_offset);
+
+    return fbe_result;
+}
+
+bool FieldModel<::test_pmr::BytesFieldNamedString>::verify(bool fbe_verify_type) const noexcept
+{
+    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+        return true;
+
+    uint32_t fbe_struct_offset = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset());
+    if ((fbe_struct_offset == 0) || ((_buffer.offset() + fbe_struct_offset + 4 + 4) > _buffer.size()))
+        return false;
+
+    uint32_t fbe_struct_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_struct_offset);
+    if (fbe_struct_size < (4 + 4))
+        return false;
+
+    uint32_t fbe_struct_type = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_struct_offset + 4);
+    if (fbe_verify_type && (fbe_struct_type != fbe_type()))
+        return false;
+
+    _buffer.shift(fbe_struct_offset);
+    bool fbe_result = verify_fields(fbe_struct_size);
+    _buffer.unshift(fbe_struct_offset);
+    return fbe_result;
+}
+
+bool FieldModel<::test_pmr::BytesFieldNamedString>::verify_fields([[maybe_unused]] size_t fbe_struct_size) const noexcept
+{
+    size_t fbe_current_size = 4 + 4;
+
+    if ((fbe_current_size + string.fbe_size()) > fbe_struct_size)
+        return true;
+    if (!string.verify())
+        return false;
+    fbe_current_size += string.fbe_size();
+
+    return true;
+}
+
+size_t FieldModel<::test_pmr::BytesFieldNamedString>::get_begin() const noexcept
+{
+    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+        return 0;
+
+    uint32_t fbe_struct_offset = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset());
+    assert(((fbe_struct_offset > 0) && ((_buffer.offset() + fbe_struct_offset + 4 + 4) <= _buffer.size())) && "Model is broken!");
+    if ((fbe_struct_offset == 0) || ((_buffer.offset() + fbe_struct_offset + 4 + 4) > _buffer.size()))
+        return 0;
+
+    uint32_t fbe_struct_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_struct_offset);
+    assert((fbe_struct_size >= (4 + 4)) && "Model is broken!");
+    if (fbe_struct_size < (4 + 4))
+        return 0;
+
+    _buffer.shift(fbe_struct_offset);
+    return fbe_struct_offset;
+}
+
+void FieldModel<::test_pmr::BytesFieldNamedString>::get_end(size_t fbe_begin) const noexcept
+{
+    _buffer.unshift(fbe_begin);
+}
+
+void FieldModel<::test_pmr::BytesFieldNamedString>::get(::test_pmr::BytesFieldNamedString& fbe_value, pmr::memory_resource* resource) const noexcept
+{
+    size_t fbe_begin = get_begin();
+    if (fbe_begin == 0)
+        return;
+
+    uint32_t fbe_struct_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset());
+    get_fields(fbe_value, fbe_struct_size, resource);
+    get_end(fbe_begin);
+}
+
+void FieldModel<::test_pmr::BytesFieldNamedString>::get_fields([[maybe_unused]] ::test_pmr::BytesFieldNamedString& fbe_value, [[maybe_unused]] size_t fbe_struct_size, pmr::memory_resource* resource) const noexcept
+{
+    size_t fbe_current_size = 4 + 4;
+
+    if ((fbe_current_size + string.fbe_size()) <= fbe_struct_size)
+        string.get(fbe_value.string, resource);
+    else
+        fbe_value.string.clear();
+    fbe_current_size += string.fbe_size();
+}
+
+size_t FieldModel<::test_pmr::BytesFieldNamedString>::set_begin()
+{
+    assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
+    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+        return 0;
+
+    uint32_t fbe_struct_size = (uint32_t)fbe_body();
+    uint32_t fbe_struct_offset = (uint32_t)(_buffer.allocate(fbe_struct_size) - _buffer.offset());
+    assert(((fbe_struct_offset > 0) && ((_buffer.offset() + fbe_struct_offset + fbe_struct_size) <= _buffer.size())) && "Model is broken!");
+    if ((fbe_struct_offset == 0) || ((_buffer.offset() + fbe_struct_offset + fbe_struct_size) > _buffer.size()))
+        return 0;
+
+    unaligned_store<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset(), fbe_struct_offset);
+    unaligned_store<uint32_t>(_buffer.data() + _buffer.offset() + fbe_struct_offset, fbe_struct_size);
+    unaligned_store<uint32_t>(_buffer.data() + _buffer.offset() + fbe_struct_offset + 4, (uint32_t)fbe_type());
+
+    _buffer.shift(fbe_struct_offset);
+    return fbe_struct_offset;
+}
+
+void FieldModel<::test_pmr::BytesFieldNamedString>::set_end(size_t fbe_begin)
+{
+    _buffer.unshift(fbe_begin);
+}
+
+void FieldModel<::test_pmr::BytesFieldNamedString>::set(const ::test_pmr::BytesFieldNamedString& fbe_value, pmr::memory_resource* resource) noexcept
+{
+    size_t fbe_begin = set_begin();
+    if (fbe_begin == 0)
+        return;
+
+    set_fields(fbe_value, resource);
+    set_end(fbe_begin);
+}
+
+void FieldModel<::test_pmr::BytesFieldNamedString>::set_fields([[maybe_unused]] const ::test_pmr::BytesFieldNamedString& fbe_value, pmr::memory_resource* resource) noexcept
+{
+    string.set(fbe_value.string, resource);
+}
+
+namespace test_pmr {
+
+bool BytesFieldNamedStringModel::verify()
+{
+    if ((this->buffer().offset() + model.fbe_offset() - 4) > this->buffer().size())
+        return false;
+
+    uint32_t fbe_full_size = unaligned_load<uint32_t>(this->buffer().data() + this->buffer().offset() + model.fbe_offset() - 4);
+    if (fbe_full_size < model.fbe_size())
+        return false;
+
+    return model.verify();
+}
+
+size_t BytesFieldNamedStringModel::create_begin()
+{
+    size_t fbe_begin = this->buffer().allocate(4 + model.fbe_size());
+    return fbe_begin;
+}
+
+size_t BytesFieldNamedStringModel::create_end(size_t fbe_begin)
+{
+    size_t fbe_end = this->buffer().size();
+    uint32_t fbe_full_size = (uint32_t)(fbe_end - fbe_begin);
+    unaligned_store<uint32_t>(this->buffer().data() + this->buffer().offset() + model.fbe_offset() - 4, fbe_full_size);
+    return fbe_full_size;
+}
+
+size_t BytesFieldNamedStringModel::serialize(const ::test_pmr::BytesFieldNamedString& value, pmr::memory_resource* resource)
+{
+    size_t fbe_begin = create_begin();
+    model.set(value, resource);
+    size_t fbe_full_size = create_end(fbe_begin);
+    return fbe_full_size;
+}
+
+size_t BytesFieldNamedStringModel::deserialize(::test_pmr::BytesFieldNamedString& value, pmr::memory_resource* resource) const noexcept
+{
+    if ((this->buffer().offset() + model.fbe_offset() - 4) > this->buffer().size())
+        return 0;
+
+    uint32_t fbe_full_size = unaligned_load<uint32_t>(this->buffer().data() + this->buffer().offset() + model.fbe_offset() - 4);
+    assert((fbe_full_size >= model.fbe_size()) && "Model is broken!");
+    if (fbe_full_size < model.fbe_size())
+        return 0;
+
+    model.get(value, resource);
+    return fbe_full_size;
+}
+
+} // namespace test_pmr
+
 } // namespace FBE
