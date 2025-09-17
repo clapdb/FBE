@@ -2480,7 +2480,7 @@ void GeneratorCpp::GenerateStruct_Header(const std::shared_ptr<Package>& p, cons
         WriteLine(");");
     }
 
-    // Generate struct copy/mode constructor, destructor and assign operators
+    // Generate struct copy/move constructor, destructor and assign operators
     WriteLineIndent(*s->name + "(const " + *s->name + "& other) = default;");
     WriteLineIndent(*s->name + "(" + *s->name + "&& other) = default;");
     WriteLineIndent("~" + *s->name + "() = default;");
@@ -2499,7 +2499,7 @@ void GeneratorCpp::GenerateStruct_Header(const std::shared_ptr<Package>& p, cons
 
     // Generate struct string convert
     WriteLine();
-    WriteLineIndent("std::string string() const;");
+    WriteLineIndent("std::string to_string() const;");
 
     // Generate struct output stream operator
     WriteLine();
@@ -2710,9 +2710,9 @@ void GeneratorCpp::GenerateStruct_Source(const std::shared_ptr<Package>& p, cons
     Indent(-1);
     WriteLineIndent("}");
 
-    // Generate struct string method
+    // Generate struct to_string method
     WriteLine();
-    WriteLineIndent("std::string " + *s->name + "::string() const");
+    WriteLineIndent("std::string " + *s->name + "::to_string() const");
     WriteLineIndent("{");
     Indent(1);
     WriteLineIndent("std::stringstream ss; ss << *this; return ss.str();");
@@ -5792,7 +5792,7 @@ void GeneratorCpp::GeneratePtrStruct_Header(const std::shared_ptr<Package>& p, c
 
     // Generate struct string convert
     WriteLine();
-    WriteLineIndent("std::string string() const;");
+    WriteLineIndent("std::string to_string() const;");
 
     // Generate struct output stream operator
     WriteLine();
@@ -6315,7 +6315,7 @@ void GeneratorCpp::GeneratePtrStruct_Source(const std::shared_ptr<Package>& p, c
 
     // Generate struct string method
     WriteLine();
-    WriteLineIndent("std::string " + *s->name + "::string() const");
+    WriteLineIndent("std::string " + *s->name + "::to_string() const");
     WriteLineIndent("{");
     Indent(1);
     WriteLineIndent("std::stringstream ss; ss << *this; return ss.str();");
