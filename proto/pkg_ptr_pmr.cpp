@@ -71,7 +71,7 @@ Info& Info::operator=(Info&& other) noexcept
     return *this;
 }
 
-std::string Info::string() const
+std::string Info::to_string() const
 {
     std::stringstream ss; ss << *this; return ss.str();
 }
@@ -146,7 +146,7 @@ Detail& Detail::operator=(Detail&& other) noexcept
     return *this;
 }
 
-std::string Detail::string() const
+std::string Detail::to_string() const
 {
     std::stringstream ss; ss << *this; return ss.str();
 }

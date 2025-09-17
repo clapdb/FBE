@@ -87,7 +87,7 @@ struct KeyWriter<TWriter, FBEString>
 {
     static bool to_json_key(TWriter& writer, const FBEString& key)
     {
-        return writer.Key(key);
+        return writer.Key(key.data(), key.size());
     }
 };
 
@@ -96,7 +96,7 @@ struct KeyWriter<TWriter, ArenaString>
 {
     static bool to_json_key(TWriter& writer, const ArenaString& key)
     {
-        return writer.Key(key);
+        return writer.Key(key.data(), key.size());
     }
 };
 
@@ -275,7 +275,7 @@ struct ValueWriter<TWriter, FBEString>
 {
     static bool to_json(TWriter& writer, const FBEString& value, bool scope = true)
     {
-        return writer.String(value);
+        return writer.String(value.data(), value.size());
     }
 };
 
@@ -284,7 +284,7 @@ struct ValueWriter<TWriter, ArenaString>
 {
     static bool to_json(TWriter& writer, const ArenaString& value, bool scope = true)
     {
-        return writer.String(value);
+        return writer.String(value.data(), value.size());
     }
 };
 

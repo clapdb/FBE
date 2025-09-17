@@ -430,7 +430,7 @@ Simple& Simple::operator=(Simple&& other) noexcept
     return *this;
 }
 
-std::string Simple::string() const
+std::string Simple::to_string() const
 {
     std::stringstream ss; ss << *this; return ss.str();
 }
@@ -524,7 +524,7 @@ ExprContainer& ExprContainer::operator=(ExprContainer&& other) noexcept
     return *this;
 }
 
-std::string ExprContainer::string() const
+std::string ExprContainer::to_string() const
 {
     std::stringstream ss; ss << *this; return ss.str();
 }
@@ -623,7 +623,7 @@ Value& Value::operator=(Value&& other) noexcept
     return *this;
 }
 
-std::string Value::string() const
+std::string Value::to_string() const
 {
     std::stringstream ss; ss << *this; return ss.str();
 }
@@ -703,7 +703,7 @@ ValueContainer& ValueContainer::operator=(ValueContainer&& other) noexcept
     return *this;
 }
 
-std::string ValueContainer::string() const
+std::string ValueContainer::to_string() const
 {
     std::stringstream ss; ss << *this; return ss.str();
 }
@@ -789,7 +789,7 @@ Scalar1Container& Scalar1Container::operator=(Scalar1Container&& other) noexcept
     return *this;
 }
 
-std::string Scalar1Container::string() const
+std::string Scalar1Container::to_string() const
 {
     std::stringstream ss; ss << *this; return ss.str();
 }

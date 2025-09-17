@@ -198,7 +198,7 @@ struct StructSimple
     bool operator>(const StructSimple& other) const noexcept { return !operator<=(other); }
     bool operator>=(const StructSimple& other) const noexcept { return !operator<(other); }
 
-    std::string string() const;
+    std::string to_string() const;
 
     friend std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const StructSimple& value);
 
@@ -314,7 +314,7 @@ struct StructOptional : public ::test_pmr::StructSimple
     bool operator>(const StructOptional& other) const noexcept { return !operator<=(other); }
     bool operator>=(const StructOptional& other) const noexcept { return !operator<(other); }
 
-    std::string string() const;
+    std::string to_string() const;
 
     friend std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const StructOptional& value);
 
@@ -376,7 +376,7 @@ struct StructNested : public ::test_pmr::StructOptional
     bool operator>(const StructNested& other) const noexcept { return !operator<=(other); }
     bool operator>=(const StructNested& other) const noexcept { return !operator<(other); }
 
-    std::string string() const;
+    std::string to_string() const;
 
     friend std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const StructNested& value);
 
@@ -429,7 +429,7 @@ struct StructBytes
     bool operator>(const StructBytes& other) const noexcept { return !operator<=(other); }
     bool operator>=(const StructBytes& other) const noexcept { return !operator<(other); }
 
-    std::string string() const;
+    std::string to_string() const;
 
     friend std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const StructBytes& value);
 
@@ -488,7 +488,7 @@ struct StructArray
     bool operator>(const StructArray& other) const noexcept { return !operator<=(other); }
     bool operator>=(const StructArray& other) const noexcept { return !operator<(other); }
 
-    std::string string() const;
+    std::string to_string() const;
 
     friend std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const StructArray& value);
 
@@ -547,7 +547,7 @@ struct StructVector
     bool operator>(const StructVector& other) const noexcept { return !operator<=(other); }
     bool operator>=(const StructVector& other) const noexcept { return !operator<(other); }
 
-    std::string string() const;
+    std::string to_string() const;
 
     friend std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const StructVector& value);
 
@@ -606,7 +606,7 @@ struct StructList
     bool operator>(const StructList& other) const noexcept { return !operator<=(other); }
     bool operator>=(const StructList& other) const noexcept { return !operator<(other); }
 
-    std::string string() const;
+    std::string to_string() const;
 
     friend std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const StructList& value);
 
@@ -659,7 +659,7 @@ struct StructSet
     bool operator>(const StructSet& other) const noexcept { return !operator<=(other); }
     bool operator>=(const StructSet& other) const noexcept { return !operator<(other); }
 
-    std::string string() const;
+    std::string to_string() const;
 
     friend std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const StructSet& value);
 
@@ -718,7 +718,7 @@ struct StructMap
     bool operator>(const StructMap& other) const noexcept { return !operator<=(other); }
     bool operator>=(const StructMap& other) const noexcept { return !operator<(other); }
 
-    std::string string() const;
+    std::string to_string() const;
 
     friend std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const StructMap& value);
 
@@ -777,7 +777,7 @@ struct StructHash
     bool operator>(const StructHash& other) const noexcept { return !operator<=(other); }
     bool operator>=(const StructHash& other) const noexcept { return !operator<(other); }
 
-    std::string string() const;
+    std::string to_string() const;
 
     friend std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const StructHash& value);
 
@@ -828,7 +828,7 @@ struct StructHashEx
     bool operator>(const StructHashEx& other) const noexcept { return !operator<=(other); }
     bool operator>=(const StructHashEx& other) const noexcept { return !operator<(other); }
 
-    std::string string() const;
+    std::string to_string() const;
 
     friend std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const StructHashEx& value);
 
@@ -875,7 +875,7 @@ struct StructEmpty
     bool operator>(const StructEmpty& other) const noexcept { return !operator<=(other); }
     bool operator>=(const StructEmpty& other) const noexcept { return !operator<(other); }
 
-    std::string string() const;
+    std::string to_string() const;
 
     friend std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const StructEmpty& value);
 
@@ -889,6 +889,306 @@ template<>
 struct std::hash<test_pmr::StructEmpty>
 {
     typedef test_pmr::StructEmpty argument_type;
+    typedef size_t result_type;
+
+    result_type operator() ([[maybe_unused]] const argument_type& value) const
+    {
+        result_type result = 17;
+        return result;
+    }
+};
+
+namespace test_pmr {
+
+struct StructFieldNamedString
+{
+    ArenaManagedCreateOnlyTag;
+
+    ::test_pmr::StructEmpty string;
+
+    size_t fbe_type() const noexcept { return 144; }
+
+    StructFieldNamedString();
+    explicit StructFieldNamedString(allocator_type alloc);
+    explicit StructFieldNamedString(const ::test_pmr::StructEmpty& arg_string);
+    StructFieldNamedString(const StructFieldNamedString& other) = default;
+    StructFieldNamedString(StructFieldNamedString&& other) = default;
+    ~StructFieldNamedString() = default;
+
+    StructFieldNamedString& operator=(const StructFieldNamedString& other) = default;
+    StructFieldNamedString& operator=(StructFieldNamedString&& other) = default;
+
+    bool operator==(const StructFieldNamedString& other) const noexcept;
+    bool operator!=(const StructFieldNamedString& other) const noexcept { return !operator==(other); }
+    bool operator<(const StructFieldNamedString& other) const noexcept;
+    bool operator<=(const StructFieldNamedString& other) const noexcept { return operator<(other) || operator==(other); }
+    bool operator>(const StructFieldNamedString& other) const noexcept { return !operator<=(other); }
+    bool operator>=(const StructFieldNamedString& other) const noexcept { return !operator<(other); }
+
+    std::string to_string() const;
+
+    friend std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const StructFieldNamedString& value);
+
+    void swap(StructFieldNamedString& other) noexcept;
+    friend void swap(StructFieldNamedString& value1, StructFieldNamedString& value2) noexcept { value1.swap(value2); }
+};
+
+} // namespace test_pmr
+
+template<>
+struct std::hash<test_pmr::StructFieldNamedString>
+{
+    typedef test_pmr::StructFieldNamedString argument_type;
+    typedef size_t result_type;
+
+    result_type operator() ([[maybe_unused]] const argument_type& value) const
+    {
+        result_type result = 17;
+        return result;
+    }
+};
+
+namespace test_pmr {
+
+struct StringFieldNamedString
+{
+    ArenaManagedCreateOnlyTag;
+
+    ArenaString string;
+
+    size_t fbe_type() const noexcept { return 145; }
+
+    StringFieldNamedString();
+    explicit StringFieldNamedString(allocator_type alloc);
+    explicit StringFieldNamedString(const ArenaString& arg_string);
+    StringFieldNamedString(const StringFieldNamedString& other) = default;
+    StringFieldNamedString(StringFieldNamedString&& other) = default;
+    ~StringFieldNamedString() = default;
+
+    StringFieldNamedString& operator=(const StringFieldNamedString& other) = default;
+    StringFieldNamedString& operator=(StringFieldNamedString&& other) = default;
+
+    bool operator==(const StringFieldNamedString& other) const noexcept;
+    bool operator!=(const StringFieldNamedString& other) const noexcept { return !operator==(other); }
+    bool operator<(const StringFieldNamedString& other) const noexcept;
+    bool operator<=(const StringFieldNamedString& other) const noexcept { return operator<(other) || operator==(other); }
+    bool operator>(const StringFieldNamedString& other) const noexcept { return !operator<=(other); }
+    bool operator>=(const StringFieldNamedString& other) const noexcept { return !operator<(other); }
+
+    std::string to_string() const;
+
+    friend std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const StringFieldNamedString& value);
+
+    void swap(StringFieldNamedString& other) noexcept;
+    friend void swap(StringFieldNamedString& value1, StringFieldNamedString& value2) noexcept { value1.swap(value2); }
+};
+
+} // namespace test_pmr
+
+template<>
+struct std::hash<test_pmr::StringFieldNamedString>
+{
+    typedef test_pmr::StringFieldNamedString argument_type;
+    typedef size_t result_type;
+
+    result_type operator() ([[maybe_unused]] const argument_type& value) const
+    {
+        result_type result = 17;
+        return result;
+    }
+};
+
+namespace test_pmr {
+
+struct OptionalFieldNamedString
+{
+    ArenaManagedCreateOnlyTag;
+
+    std::optional<ArenaString> string;
+
+    size_t fbe_type() const noexcept { return 146; }
+
+    OptionalFieldNamedString();
+    explicit OptionalFieldNamedString(allocator_type alloc);
+    explicit OptionalFieldNamedString(const std::optional<ArenaString>& arg_string);
+    OptionalFieldNamedString(const OptionalFieldNamedString& other) = default;
+    OptionalFieldNamedString(OptionalFieldNamedString&& other) = default;
+    ~OptionalFieldNamedString() = default;
+
+    OptionalFieldNamedString& operator=(const OptionalFieldNamedString& other) = default;
+    OptionalFieldNamedString& operator=(OptionalFieldNamedString&& other) = default;
+
+    bool operator==(const OptionalFieldNamedString& other) const noexcept;
+    bool operator!=(const OptionalFieldNamedString& other) const noexcept { return !operator==(other); }
+    bool operator<(const OptionalFieldNamedString& other) const noexcept;
+    bool operator<=(const OptionalFieldNamedString& other) const noexcept { return operator<(other) || operator==(other); }
+    bool operator>(const OptionalFieldNamedString& other) const noexcept { return !operator<=(other); }
+    bool operator>=(const OptionalFieldNamedString& other) const noexcept { return !operator<(other); }
+
+    std::string to_string() const;
+
+    friend std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const OptionalFieldNamedString& value);
+
+    void swap(OptionalFieldNamedString& other) noexcept;
+    friend void swap(OptionalFieldNamedString& value1, OptionalFieldNamedString& value2) noexcept { value1.swap(value2); }
+};
+
+} // namespace test_pmr
+
+template<>
+struct std::hash<test_pmr::OptionalFieldNamedString>
+{
+    typedef test_pmr::OptionalFieldNamedString argument_type;
+    typedef size_t result_type;
+
+    result_type operator() ([[maybe_unused]] const argument_type& value) const
+    {
+        result_type result = 17;
+        return result;
+    }
+};
+
+namespace test_pmr {
+
+struct ArrayFieldNamedString
+{
+    ArenaManagedCreateOnlyTag;
+
+    std::array<ArenaString, 4> string;
+
+    size_t fbe_type() const noexcept { return 147; }
+
+    ArrayFieldNamedString();
+    explicit ArrayFieldNamedString(allocator_type alloc);
+    explicit ArrayFieldNamedString(const std::array<ArenaString, 4>& arg_string);
+    ArrayFieldNamedString(const ArrayFieldNamedString& other) = default;
+    ArrayFieldNamedString(ArrayFieldNamedString&& other) = default;
+    ~ArrayFieldNamedString() = default;
+
+    ArrayFieldNamedString& operator=(const ArrayFieldNamedString& other) = default;
+    ArrayFieldNamedString& operator=(ArrayFieldNamedString&& other) = default;
+
+    bool operator==(const ArrayFieldNamedString& other) const noexcept;
+    bool operator!=(const ArrayFieldNamedString& other) const noexcept { return !operator==(other); }
+    bool operator<(const ArrayFieldNamedString& other) const noexcept;
+    bool operator<=(const ArrayFieldNamedString& other) const noexcept { return operator<(other) || operator==(other); }
+    bool operator>(const ArrayFieldNamedString& other) const noexcept { return !operator<=(other); }
+    bool operator>=(const ArrayFieldNamedString& other) const noexcept { return !operator<(other); }
+
+    std::string to_string() const;
+
+    friend std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const ArrayFieldNamedString& value);
+
+    void swap(ArrayFieldNamedString& other) noexcept;
+    friend void swap(ArrayFieldNamedString& value1, ArrayFieldNamedString& value2) noexcept { value1.swap(value2); }
+};
+
+} // namespace test_pmr
+
+template<>
+struct std::hash<test_pmr::ArrayFieldNamedString>
+{
+    typedef test_pmr::ArrayFieldNamedString argument_type;
+    typedef size_t result_type;
+
+    result_type operator() ([[maybe_unused]] const argument_type& value) const
+    {
+        result_type result = 17;
+        return result;
+    }
+};
+
+namespace test_pmr {
+
+struct VectorFieldNamedString
+{
+    ArenaManagedCreateOnlyTag;
+
+    pmr::vector<ArenaString> string;
+
+    size_t fbe_type() const noexcept { return 148; }
+
+    VectorFieldNamedString();
+    explicit VectorFieldNamedString(allocator_type alloc);
+    explicit VectorFieldNamedString(const pmr::vector<ArenaString>& arg_string);
+    VectorFieldNamedString(const VectorFieldNamedString& other) = default;
+    VectorFieldNamedString(VectorFieldNamedString&& other) = default;
+    ~VectorFieldNamedString() = default;
+
+    VectorFieldNamedString& operator=(const VectorFieldNamedString& other) = default;
+    VectorFieldNamedString& operator=(VectorFieldNamedString&& other) = default;
+
+    bool operator==(const VectorFieldNamedString& other) const noexcept;
+    bool operator!=(const VectorFieldNamedString& other) const noexcept { return !operator==(other); }
+    bool operator<(const VectorFieldNamedString& other) const noexcept;
+    bool operator<=(const VectorFieldNamedString& other) const noexcept { return operator<(other) || operator==(other); }
+    bool operator>(const VectorFieldNamedString& other) const noexcept { return !operator<=(other); }
+    bool operator>=(const VectorFieldNamedString& other) const noexcept { return !operator<(other); }
+
+    std::string to_string() const;
+
+    friend std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const VectorFieldNamedString& value);
+
+    void swap(VectorFieldNamedString& other) noexcept;
+    friend void swap(VectorFieldNamedString& value1, VectorFieldNamedString& value2) noexcept { value1.swap(value2); }
+};
+
+} // namespace test_pmr
+
+template<>
+struct std::hash<test_pmr::VectorFieldNamedString>
+{
+    typedef test_pmr::VectorFieldNamedString argument_type;
+    typedef size_t result_type;
+
+    result_type operator() ([[maybe_unused]] const argument_type& value) const
+    {
+        result_type result = 17;
+        return result;
+    }
+};
+
+namespace test_pmr {
+
+struct BytesFieldNamedString
+{
+    ArenaManagedCreateOnlyTag;
+
+    FBE::pmr_buffer_t string;
+
+    size_t fbe_type() const noexcept { return 149; }
+
+    BytesFieldNamedString();
+    explicit BytesFieldNamedString(allocator_type alloc);
+    explicit BytesFieldNamedString(const FBE::pmr_buffer_t& arg_string);
+    BytesFieldNamedString(const BytesFieldNamedString& other) = default;
+    BytesFieldNamedString(BytesFieldNamedString&& other) = default;
+    ~BytesFieldNamedString() = default;
+
+    BytesFieldNamedString& operator=(const BytesFieldNamedString& other) = default;
+    BytesFieldNamedString& operator=(BytesFieldNamedString&& other) = default;
+
+    bool operator==(const BytesFieldNamedString& other) const noexcept;
+    bool operator!=(const BytesFieldNamedString& other) const noexcept { return !operator==(other); }
+    bool operator<(const BytesFieldNamedString& other) const noexcept;
+    bool operator<=(const BytesFieldNamedString& other) const noexcept { return operator<(other) || operator==(other); }
+    bool operator>(const BytesFieldNamedString& other) const noexcept { return !operator<=(other); }
+    bool operator>=(const BytesFieldNamedString& other) const noexcept { return !operator<(other); }
+
+    std::string to_string() const;
+
+    friend std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const BytesFieldNamedString& value);
+
+    void swap(BytesFieldNamedString& other) noexcept;
+    friend void swap(BytesFieldNamedString& value1, BytesFieldNamedString& value2) noexcept { value1.swap(value2); }
+};
+
+} // namespace test_pmr
+
+template<>
+struct std::hash<test_pmr::BytesFieldNamedString>
+{
+    typedef test_pmr::BytesFieldNamedString argument_type;
     typedef size_t result_type;
 
     result_type operator() ([[maybe_unused]] const argument_type& value) const

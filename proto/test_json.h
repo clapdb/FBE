@@ -1043,6 +1043,186 @@ struct ValueReader<TJson, ::test::StructEmpty>
     }
 };
 
+template <class TWriter>
+struct ValueWriter<TWriter, ::test::StructFieldNamedString>
+{
+    static bool to_json(TWriter& writer, const ::test::StructFieldNamedString& value, bool scope = true)
+    {
+        if (scope)
+            if (!writer.StartObject())
+                return false;
+        if (!FBE::JSON::to_json_key(writer, "string") || !FBE::JSON::to_json(writer, value.string, true))
+            return false;
+        if (scope)
+            if (!writer.EndObject())
+                return false;
+        return true;
+    }
+};
+
+template <class TJson>
+struct ValueReader<TJson, ::test::StructFieldNamedString>
+{
+    static bool from_json(const TJson& json, ::test::StructFieldNamedString& value, const char* key = nullptr)
+    {
+        if (key != nullptr)
+            return FBE::JSON::from_json_child(json, value, key);
+        bool result = true;
+        result &= FBE::JSON::from_json(json, value.string, "string");
+        return result;
+    }
+};
+
+template <class TWriter>
+struct ValueWriter<TWriter, ::test::StringFieldNamedString>
+{
+    static bool to_json(TWriter& writer, const ::test::StringFieldNamedString& value, bool scope = true)
+    {
+        if (scope)
+            if (!writer.StartObject())
+                return false;
+        if (!FBE::JSON::to_json_key(writer, "string") || !FBE::JSON::to_json(writer, value.string, true))
+            return false;
+        if (scope)
+            if (!writer.EndObject())
+                return false;
+        return true;
+    }
+};
+
+template <class TJson>
+struct ValueReader<TJson, ::test::StringFieldNamedString>
+{
+    static bool from_json(const TJson& json, ::test::StringFieldNamedString& value, const char* key = nullptr)
+    {
+        if (key != nullptr)
+            return FBE::JSON::from_json_child(json, value, key);
+        bool result = true;
+        result &= FBE::JSON::from_json(json, value.string, "string");
+        return result;
+    }
+};
+
+template <class TWriter>
+struct ValueWriter<TWriter, ::test::OptionalFieldNamedString>
+{
+    static bool to_json(TWriter& writer, const ::test::OptionalFieldNamedString& value, bool scope = true)
+    {
+        if (scope)
+            if (!writer.StartObject())
+                return false;
+        if (!FBE::JSON::to_json_key(writer, "string") || !FBE::JSON::to_json(writer, value.string, true))
+            return false;
+        if (scope)
+            if (!writer.EndObject())
+                return false;
+        return true;
+    }
+};
+
+template <class TJson>
+struct ValueReader<TJson, ::test::OptionalFieldNamedString>
+{
+    static bool from_json(const TJson& json, ::test::OptionalFieldNamedString& value, const char* key = nullptr)
+    {
+        if (key != nullptr)
+            return FBE::JSON::from_json_child(json, value, key);
+        bool result = true;
+        result &= FBE::JSON::from_json(json, value.string, "string");
+        return result;
+    }
+};
+
+template <class TWriter>
+struct ValueWriter<TWriter, ::test::ArrayFieldNamedString>
+{
+    static bool to_json(TWriter& writer, const ::test::ArrayFieldNamedString& value, bool scope = true)
+    {
+        if (scope)
+            if (!writer.StartObject())
+                return false;
+        if (!FBE::JSON::to_json_key(writer, "string") || !FBE::JSON::to_json(writer, value.string, true))
+            return false;
+        if (scope)
+            if (!writer.EndObject())
+                return false;
+        return true;
+    }
+};
+
+template <class TJson>
+struct ValueReader<TJson, ::test::ArrayFieldNamedString>
+{
+    static bool from_json(const TJson& json, ::test::ArrayFieldNamedString& value, const char* key = nullptr)
+    {
+        if (key != nullptr)
+            return FBE::JSON::from_json_child(json, value, key);
+        bool result = true;
+        result &= FBE::JSON::from_json(json, value.string, "string");
+        return result;
+    }
+};
+
+template <class TWriter>
+struct ValueWriter<TWriter, ::test::VectorFieldNamedString>
+{
+    static bool to_json(TWriter& writer, const ::test::VectorFieldNamedString& value, bool scope = true)
+    {
+        if (scope)
+            if (!writer.StartObject())
+                return false;
+        if (!FBE::JSON::to_json_key(writer, "string") || !FBE::JSON::to_json(writer, value.string, true))
+            return false;
+        if (scope)
+            if (!writer.EndObject())
+                return false;
+        return true;
+    }
+};
+
+template <class TJson>
+struct ValueReader<TJson, ::test::VectorFieldNamedString>
+{
+    static bool from_json(const TJson& json, ::test::VectorFieldNamedString& value, const char* key = nullptr)
+    {
+        if (key != nullptr)
+            return FBE::JSON::from_json_child(json, value, key);
+        bool result = true;
+        result &= FBE::JSON::from_json(json, value.string, "string");
+        return result;
+    }
+};
+
+template <class TWriter>
+struct ValueWriter<TWriter, ::test::BytesFieldNamedString>
+{
+    static bool to_json(TWriter& writer, const ::test::BytesFieldNamedString& value, bool scope = true)
+    {
+        if (scope)
+            if (!writer.StartObject())
+                return false;
+        if (!FBE::JSON::to_json_key(writer, "string") || !FBE::JSON::to_json(writer, value.string, true))
+            return false;
+        if (scope)
+            if (!writer.EndObject())
+                return false;
+        return true;
+    }
+};
+
+template <class TJson>
+struct ValueReader<TJson, ::test::BytesFieldNamedString>
+{
+    static bool from_json(const TJson& json, ::test::BytesFieldNamedString& value, const char* key = nullptr)
+    {
+        if (key != nullptr)
+            return FBE::JSON::from_json_child(json, value, key);
+        bool result = true;
+        result &= FBE::JSON::from_json(json, value.string, "string");
+        return result;
+    }
+};
+
 } // namespace JSON
 
 } // namespace FBE

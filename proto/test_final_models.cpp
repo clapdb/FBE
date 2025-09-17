@@ -4654,4 +4654,784 @@ size_t StructEmptyFinalModel::deserialize(::test::StructEmpty& value) const noex
 
 } // namespace test
 
+FinalModel<::test::StructFieldNamedString>::FinalModel(FBEBuffer& buffer, size_t offset) noexcept : _buffer(buffer), _offset(offset)
+    , string(buffer, 0)
+{}
+
+size_t FinalModel<::test::StructFieldNamedString>::fbe_allocation_size(const ::test::StructFieldNamedString& fbe_value) const noexcept
+{
+    size_t fbe_result = 0
+        + string.fbe_allocation_size(fbe_value.string)
+        ;
+    return fbe_result;
+}
+
+size_t FinalModel<::test::StructFieldNamedString>::verify() const noexcept
+{
+    _buffer.shift(fbe_offset());
+    size_t fbe_result = verify_fields();
+    _buffer.unshift(fbe_offset());
+    return fbe_result;
+}
+
+size_t FinalModel<::test::StructFieldNamedString>::verify_fields() const noexcept
+{
+    size_t fbe_current_offset = 0;
+    size_t fbe_field_size;
+
+    string.fbe_offset(fbe_current_offset);
+    fbe_field_size = string.verify();
+    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
+        return std::numeric_limits<std::size_t>::max();
+    fbe_current_offset += fbe_field_size;
+
+    return fbe_current_offset;
+}
+
+size_t FinalModel<::test::StructFieldNamedString>::get(::test::StructFieldNamedString& fbe_value) const noexcept
+{
+    _buffer.shift(fbe_offset());
+    size_t fbe_result = get_fields(fbe_value);
+    _buffer.unshift(fbe_offset());
+    return fbe_result;
+}
+
+size_t FinalModel<::test::StructFieldNamedString>::get_fields([[maybe_unused]] ::test::StructFieldNamedString& fbe_value) const noexcept
+{
+    size_t fbe_current_offset = 0;
+    size_t fbe_current_size = 0;
+    size_t fbe_field_size;
+
+    string.fbe_offset(fbe_current_offset);
+    fbe_field_size = string.get(fbe_value.string);
+    fbe_current_offset += fbe_field_size;
+    fbe_current_size += fbe_field_size;
+
+    return fbe_current_size;
+}
+
+size_t FinalModel<::test::StructFieldNamedString>::set(const ::test::StructFieldNamedString& fbe_value) noexcept
+{
+    _buffer.shift(fbe_offset());
+    size_t fbe_result = set_fields(fbe_value);
+    _buffer.unshift(fbe_offset());
+    return fbe_result;
+}
+
+size_t FinalModel<::test::StructFieldNamedString>::set_fields([[maybe_unused]] const ::test::StructFieldNamedString& fbe_value) noexcept
+{
+    size_t fbe_current_offset = 0;
+    size_t fbe_current_size = 0;
+    size_t fbe_field_size;
+
+    string.fbe_offset(fbe_current_offset);
+    fbe_field_size = string.set(fbe_value.string);
+    fbe_current_offset += fbe_field_size;
+    fbe_current_size += fbe_field_size;
+
+    return fbe_current_size;
+}
+
+namespace test {
+
+bool StructFieldNamedStringFinalModel::verify()
+{
+    if ((this->buffer().offset() + _model.fbe_offset()) > this->buffer().size())
+        return false;
+
+    size_t fbe_struct_size = unaligned_load<uint32_t>(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 8);
+    size_t fbe_struct_type = unaligned_load<uint32_t>(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 4);
+    if ((fbe_struct_size == 0) || (fbe_struct_type != fbe_type()))
+        return false;
+
+    return ((8 + _model.verify()) == fbe_struct_size);
+}
+
+size_t StructFieldNamedStringFinalModel::serialize(const ::test::StructFieldNamedString& value)
+{
+    size_t fbe_initial_size = this->buffer().size();
+
+    uint32_t fbe_struct_type = (uint32_t)fbe_type();
+    uint32_t fbe_struct_size = (uint32_t)(8 + _model.fbe_allocation_size(value));
+    uint32_t fbe_struct_offset = (uint32_t)(this->buffer().allocate(fbe_struct_size) - this->buffer().offset());
+    assert(((this->buffer().offset() + fbe_struct_offset + fbe_struct_size) <= this->buffer().size()) && "Model is broken!");
+    if ((this->buffer().offset() + fbe_struct_offset + fbe_struct_size) > this->buffer().size())
+        return 0;
+
+    fbe_struct_size = (uint32_t)(8 + _model.set(value));
+    this->buffer().resize(fbe_initial_size + fbe_struct_size);
+
+    *((uint32_t*)(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 8)) = fbe_struct_size;
+    *((uint32_t*)(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 4)) = fbe_struct_type;
+
+    return fbe_struct_size;
+}
+
+size_t StructFieldNamedStringFinalModel::deserialize(::test::StructFieldNamedString& value) const noexcept
+{
+    assert(((this->buffer().offset() + _model.fbe_offset()) <= this->buffer().size()) && "Model is broken!");
+    if ((this->buffer().offset() + _model.fbe_offset()) > this->buffer().size())
+        return 0;
+
+    size_t fbe_struct_size = unaligned_load<uint32_t>(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 8);
+    size_t fbe_struct_type = unaligned_load<uint32_t>(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 4);
+    assert(((fbe_struct_size > 0) && (fbe_struct_type == fbe_type())) && "Model is broken!");
+    if ((fbe_struct_size == 0) || (fbe_struct_type != fbe_type()))
+        return 8;
+
+    return 8 + _model.get(value);
+}
+
+} // namespace test
+
+FinalModel<::test::StringFieldNamedString>::FinalModel(FBEBuffer& buffer, size_t offset) noexcept : _buffer(buffer), _offset(offset)
+    , string(buffer, 0)
+{}
+
+size_t FinalModel<::test::StringFieldNamedString>::fbe_allocation_size(const ::test::StringFieldNamedString& fbe_value) const noexcept
+{
+    size_t fbe_result = 0
+        + string.fbe_allocation_size(fbe_value.string)
+        ;
+    return fbe_result;
+}
+
+size_t FinalModel<::test::StringFieldNamedString>::verify() const noexcept
+{
+    _buffer.shift(fbe_offset());
+    size_t fbe_result = verify_fields();
+    _buffer.unshift(fbe_offset());
+    return fbe_result;
+}
+
+size_t FinalModel<::test::StringFieldNamedString>::verify_fields() const noexcept
+{
+    size_t fbe_current_offset = 0;
+    size_t fbe_field_size;
+
+    string.fbe_offset(fbe_current_offset);
+    fbe_field_size = string.verify();
+    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
+        return std::numeric_limits<std::size_t>::max();
+    fbe_current_offset += fbe_field_size;
+
+    return fbe_current_offset;
+}
+
+size_t FinalModel<::test::StringFieldNamedString>::get(::test::StringFieldNamedString& fbe_value) const noexcept
+{
+    _buffer.shift(fbe_offset());
+    size_t fbe_result = get_fields(fbe_value);
+    _buffer.unshift(fbe_offset());
+    return fbe_result;
+}
+
+size_t FinalModel<::test::StringFieldNamedString>::get_fields([[maybe_unused]] ::test::StringFieldNamedString& fbe_value) const noexcept
+{
+    size_t fbe_current_offset = 0;
+    size_t fbe_current_size = 0;
+    size_t fbe_field_size;
+
+    string.fbe_offset(fbe_current_offset);
+    fbe_field_size = string.get(fbe_value.string);
+    fbe_current_offset += fbe_field_size;
+    fbe_current_size += fbe_field_size;
+
+    return fbe_current_size;
+}
+
+size_t FinalModel<::test::StringFieldNamedString>::set(const ::test::StringFieldNamedString& fbe_value) noexcept
+{
+    _buffer.shift(fbe_offset());
+    size_t fbe_result = set_fields(fbe_value);
+    _buffer.unshift(fbe_offset());
+    return fbe_result;
+}
+
+size_t FinalModel<::test::StringFieldNamedString>::set_fields([[maybe_unused]] const ::test::StringFieldNamedString& fbe_value) noexcept
+{
+    size_t fbe_current_offset = 0;
+    size_t fbe_current_size = 0;
+    size_t fbe_field_size;
+
+    string.fbe_offset(fbe_current_offset);
+    fbe_field_size = string.set(fbe_value.string);
+    fbe_current_offset += fbe_field_size;
+    fbe_current_size += fbe_field_size;
+
+    return fbe_current_size;
+}
+
+namespace test {
+
+bool StringFieldNamedStringFinalModel::verify()
+{
+    if ((this->buffer().offset() + _model.fbe_offset()) > this->buffer().size())
+        return false;
+
+    size_t fbe_struct_size = unaligned_load<uint32_t>(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 8);
+    size_t fbe_struct_type = unaligned_load<uint32_t>(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 4);
+    if ((fbe_struct_size == 0) || (fbe_struct_type != fbe_type()))
+        return false;
+
+    return ((8 + _model.verify()) == fbe_struct_size);
+}
+
+size_t StringFieldNamedStringFinalModel::serialize(const ::test::StringFieldNamedString& value)
+{
+    size_t fbe_initial_size = this->buffer().size();
+
+    uint32_t fbe_struct_type = (uint32_t)fbe_type();
+    uint32_t fbe_struct_size = (uint32_t)(8 + _model.fbe_allocation_size(value));
+    uint32_t fbe_struct_offset = (uint32_t)(this->buffer().allocate(fbe_struct_size) - this->buffer().offset());
+    assert(((this->buffer().offset() + fbe_struct_offset + fbe_struct_size) <= this->buffer().size()) && "Model is broken!");
+    if ((this->buffer().offset() + fbe_struct_offset + fbe_struct_size) > this->buffer().size())
+        return 0;
+
+    fbe_struct_size = (uint32_t)(8 + _model.set(value));
+    this->buffer().resize(fbe_initial_size + fbe_struct_size);
+
+    *((uint32_t*)(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 8)) = fbe_struct_size;
+    *((uint32_t*)(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 4)) = fbe_struct_type;
+
+    return fbe_struct_size;
+}
+
+size_t StringFieldNamedStringFinalModel::deserialize(::test::StringFieldNamedString& value) const noexcept
+{
+    assert(((this->buffer().offset() + _model.fbe_offset()) <= this->buffer().size()) && "Model is broken!");
+    if ((this->buffer().offset() + _model.fbe_offset()) > this->buffer().size())
+        return 0;
+
+    size_t fbe_struct_size = unaligned_load<uint32_t>(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 8);
+    size_t fbe_struct_type = unaligned_load<uint32_t>(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 4);
+    assert(((fbe_struct_size > 0) && (fbe_struct_type == fbe_type())) && "Model is broken!");
+    if ((fbe_struct_size == 0) || (fbe_struct_type != fbe_type()))
+        return 8;
+
+    return 8 + _model.get(value);
+}
+
+} // namespace test
+
+FinalModel<::test::OptionalFieldNamedString>::FinalModel(FBEBuffer& buffer, size_t offset) noexcept : _buffer(buffer), _offset(offset)
+    , string(buffer, 0)
+{}
+
+size_t FinalModel<::test::OptionalFieldNamedString>::fbe_allocation_size(const ::test::OptionalFieldNamedString& fbe_value) const noexcept
+{
+    size_t fbe_result = 0
+        + string.fbe_allocation_size(fbe_value.string)
+        ;
+    return fbe_result;
+}
+
+size_t FinalModel<::test::OptionalFieldNamedString>::verify() const noexcept
+{
+    _buffer.shift(fbe_offset());
+    size_t fbe_result = verify_fields();
+    _buffer.unshift(fbe_offset());
+    return fbe_result;
+}
+
+size_t FinalModel<::test::OptionalFieldNamedString>::verify_fields() const noexcept
+{
+    size_t fbe_current_offset = 0;
+    size_t fbe_field_size;
+
+    string.fbe_offset(fbe_current_offset);
+    fbe_field_size = string.verify();
+    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
+        return std::numeric_limits<std::size_t>::max();
+    fbe_current_offset += fbe_field_size;
+
+    return fbe_current_offset;
+}
+
+size_t FinalModel<::test::OptionalFieldNamedString>::get(::test::OptionalFieldNamedString& fbe_value) const noexcept
+{
+    _buffer.shift(fbe_offset());
+    size_t fbe_result = get_fields(fbe_value);
+    _buffer.unshift(fbe_offset());
+    return fbe_result;
+}
+
+size_t FinalModel<::test::OptionalFieldNamedString>::get_fields([[maybe_unused]] ::test::OptionalFieldNamedString& fbe_value) const noexcept
+{
+    size_t fbe_current_offset = 0;
+    size_t fbe_current_size = 0;
+    size_t fbe_field_size;
+
+    string.fbe_offset(fbe_current_offset);
+    fbe_field_size = string.get(fbe_value.string);
+    fbe_current_offset += fbe_field_size;
+    fbe_current_size += fbe_field_size;
+
+    return fbe_current_size;
+}
+
+size_t FinalModel<::test::OptionalFieldNamedString>::set(const ::test::OptionalFieldNamedString& fbe_value) noexcept
+{
+    _buffer.shift(fbe_offset());
+    size_t fbe_result = set_fields(fbe_value);
+    _buffer.unshift(fbe_offset());
+    return fbe_result;
+}
+
+size_t FinalModel<::test::OptionalFieldNamedString>::set_fields([[maybe_unused]] const ::test::OptionalFieldNamedString& fbe_value) noexcept
+{
+    size_t fbe_current_offset = 0;
+    size_t fbe_current_size = 0;
+    size_t fbe_field_size;
+
+    string.fbe_offset(fbe_current_offset);
+    fbe_field_size = string.set(fbe_value.string);
+    fbe_current_offset += fbe_field_size;
+    fbe_current_size += fbe_field_size;
+
+    return fbe_current_size;
+}
+
+namespace test {
+
+bool OptionalFieldNamedStringFinalModel::verify()
+{
+    if ((this->buffer().offset() + _model.fbe_offset()) > this->buffer().size())
+        return false;
+
+    size_t fbe_struct_size = unaligned_load<uint32_t>(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 8);
+    size_t fbe_struct_type = unaligned_load<uint32_t>(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 4);
+    if ((fbe_struct_size == 0) || (fbe_struct_type != fbe_type()))
+        return false;
+
+    return ((8 + _model.verify()) == fbe_struct_size);
+}
+
+size_t OptionalFieldNamedStringFinalModel::serialize(const ::test::OptionalFieldNamedString& value)
+{
+    size_t fbe_initial_size = this->buffer().size();
+
+    uint32_t fbe_struct_type = (uint32_t)fbe_type();
+    uint32_t fbe_struct_size = (uint32_t)(8 + _model.fbe_allocation_size(value));
+    uint32_t fbe_struct_offset = (uint32_t)(this->buffer().allocate(fbe_struct_size) - this->buffer().offset());
+    assert(((this->buffer().offset() + fbe_struct_offset + fbe_struct_size) <= this->buffer().size()) && "Model is broken!");
+    if ((this->buffer().offset() + fbe_struct_offset + fbe_struct_size) > this->buffer().size())
+        return 0;
+
+    fbe_struct_size = (uint32_t)(8 + _model.set(value));
+    this->buffer().resize(fbe_initial_size + fbe_struct_size);
+
+    *((uint32_t*)(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 8)) = fbe_struct_size;
+    *((uint32_t*)(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 4)) = fbe_struct_type;
+
+    return fbe_struct_size;
+}
+
+size_t OptionalFieldNamedStringFinalModel::deserialize(::test::OptionalFieldNamedString& value) const noexcept
+{
+    assert(((this->buffer().offset() + _model.fbe_offset()) <= this->buffer().size()) && "Model is broken!");
+    if ((this->buffer().offset() + _model.fbe_offset()) > this->buffer().size())
+        return 0;
+
+    size_t fbe_struct_size = unaligned_load<uint32_t>(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 8);
+    size_t fbe_struct_type = unaligned_load<uint32_t>(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 4);
+    assert(((fbe_struct_size > 0) && (fbe_struct_type == fbe_type())) && "Model is broken!");
+    if ((fbe_struct_size == 0) || (fbe_struct_type != fbe_type()))
+        return 8;
+
+    return 8 + _model.get(value);
+}
+
+} // namespace test
+
+FinalModel<::test::ArrayFieldNamedString>::FinalModel(FBEBuffer& buffer, size_t offset) noexcept : _buffer(buffer), _offset(offset)
+    , string(buffer, 0)
+{}
+
+size_t FinalModel<::test::ArrayFieldNamedString>::fbe_allocation_size(const ::test::ArrayFieldNamedString& fbe_value) const noexcept
+{
+    size_t fbe_result = 0
+        + string.fbe_allocation_size(fbe_value.string)
+        ;
+    return fbe_result;
+}
+
+size_t FinalModel<::test::ArrayFieldNamedString>::verify() const noexcept
+{
+    _buffer.shift(fbe_offset());
+    size_t fbe_result = verify_fields();
+    _buffer.unshift(fbe_offset());
+    return fbe_result;
+}
+
+size_t FinalModel<::test::ArrayFieldNamedString>::verify_fields() const noexcept
+{
+    size_t fbe_current_offset = 0;
+    size_t fbe_field_size;
+
+    string.fbe_offset(fbe_current_offset);
+    fbe_field_size = string.verify();
+    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
+        return std::numeric_limits<std::size_t>::max();
+    fbe_current_offset += fbe_field_size;
+
+    return fbe_current_offset;
+}
+
+size_t FinalModel<::test::ArrayFieldNamedString>::get(::test::ArrayFieldNamedString& fbe_value) const noexcept
+{
+    _buffer.shift(fbe_offset());
+    size_t fbe_result = get_fields(fbe_value);
+    _buffer.unshift(fbe_offset());
+    return fbe_result;
+}
+
+size_t FinalModel<::test::ArrayFieldNamedString>::get_fields([[maybe_unused]] ::test::ArrayFieldNamedString& fbe_value) const noexcept
+{
+    size_t fbe_current_offset = 0;
+    size_t fbe_current_size = 0;
+    size_t fbe_field_size;
+
+    string.fbe_offset(fbe_current_offset);
+    fbe_field_size = string.get(fbe_value.string);
+    fbe_current_offset += fbe_field_size;
+    fbe_current_size += fbe_field_size;
+
+    return fbe_current_size;
+}
+
+size_t FinalModel<::test::ArrayFieldNamedString>::set(const ::test::ArrayFieldNamedString& fbe_value) noexcept
+{
+    _buffer.shift(fbe_offset());
+    size_t fbe_result = set_fields(fbe_value);
+    _buffer.unshift(fbe_offset());
+    return fbe_result;
+}
+
+size_t FinalModel<::test::ArrayFieldNamedString>::set_fields([[maybe_unused]] const ::test::ArrayFieldNamedString& fbe_value) noexcept
+{
+    size_t fbe_current_offset = 0;
+    size_t fbe_current_size = 0;
+    size_t fbe_field_size;
+
+    string.fbe_offset(fbe_current_offset);
+    fbe_field_size = string.set(fbe_value.string);
+    fbe_current_offset += fbe_field_size;
+    fbe_current_size += fbe_field_size;
+
+    return fbe_current_size;
+}
+
+namespace test {
+
+bool ArrayFieldNamedStringFinalModel::verify()
+{
+    if ((this->buffer().offset() + _model.fbe_offset()) > this->buffer().size())
+        return false;
+
+    size_t fbe_struct_size = unaligned_load<uint32_t>(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 8);
+    size_t fbe_struct_type = unaligned_load<uint32_t>(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 4);
+    if ((fbe_struct_size == 0) || (fbe_struct_type != fbe_type()))
+        return false;
+
+    return ((8 + _model.verify()) == fbe_struct_size);
+}
+
+size_t ArrayFieldNamedStringFinalModel::serialize(const ::test::ArrayFieldNamedString& value)
+{
+    size_t fbe_initial_size = this->buffer().size();
+
+    uint32_t fbe_struct_type = (uint32_t)fbe_type();
+    uint32_t fbe_struct_size = (uint32_t)(8 + _model.fbe_allocation_size(value));
+    uint32_t fbe_struct_offset = (uint32_t)(this->buffer().allocate(fbe_struct_size) - this->buffer().offset());
+    assert(((this->buffer().offset() + fbe_struct_offset + fbe_struct_size) <= this->buffer().size()) && "Model is broken!");
+    if ((this->buffer().offset() + fbe_struct_offset + fbe_struct_size) > this->buffer().size())
+        return 0;
+
+    fbe_struct_size = (uint32_t)(8 + _model.set(value));
+    this->buffer().resize(fbe_initial_size + fbe_struct_size);
+
+    *((uint32_t*)(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 8)) = fbe_struct_size;
+    *((uint32_t*)(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 4)) = fbe_struct_type;
+
+    return fbe_struct_size;
+}
+
+size_t ArrayFieldNamedStringFinalModel::deserialize(::test::ArrayFieldNamedString& value) const noexcept
+{
+    assert(((this->buffer().offset() + _model.fbe_offset()) <= this->buffer().size()) && "Model is broken!");
+    if ((this->buffer().offset() + _model.fbe_offset()) > this->buffer().size())
+        return 0;
+
+    size_t fbe_struct_size = unaligned_load<uint32_t>(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 8);
+    size_t fbe_struct_type = unaligned_load<uint32_t>(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 4);
+    assert(((fbe_struct_size > 0) && (fbe_struct_type == fbe_type())) && "Model is broken!");
+    if ((fbe_struct_size == 0) || (fbe_struct_type != fbe_type()))
+        return 8;
+
+    return 8 + _model.get(value);
+}
+
+} // namespace test
+
+FinalModel<::test::VectorFieldNamedString>::FinalModel(FBEBuffer& buffer, size_t offset) noexcept : _buffer(buffer), _offset(offset)
+    , string(buffer, 0)
+{}
+
+size_t FinalModel<::test::VectorFieldNamedString>::fbe_allocation_size(const ::test::VectorFieldNamedString& fbe_value) const noexcept
+{
+    size_t fbe_result = 0
+        + string.fbe_allocation_size(fbe_value.string)
+        ;
+    return fbe_result;
+}
+
+size_t FinalModel<::test::VectorFieldNamedString>::verify() const noexcept
+{
+    _buffer.shift(fbe_offset());
+    size_t fbe_result = verify_fields();
+    _buffer.unshift(fbe_offset());
+    return fbe_result;
+}
+
+size_t FinalModel<::test::VectorFieldNamedString>::verify_fields() const noexcept
+{
+    size_t fbe_current_offset = 0;
+    size_t fbe_field_size;
+
+    string.fbe_offset(fbe_current_offset);
+    fbe_field_size = string.verify();
+    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
+        return std::numeric_limits<std::size_t>::max();
+    fbe_current_offset += fbe_field_size;
+
+    return fbe_current_offset;
+}
+
+size_t FinalModel<::test::VectorFieldNamedString>::get(::test::VectorFieldNamedString& fbe_value) const noexcept
+{
+    _buffer.shift(fbe_offset());
+    size_t fbe_result = get_fields(fbe_value);
+    _buffer.unshift(fbe_offset());
+    return fbe_result;
+}
+
+size_t FinalModel<::test::VectorFieldNamedString>::get_fields([[maybe_unused]] ::test::VectorFieldNamedString& fbe_value) const noexcept
+{
+    size_t fbe_current_offset = 0;
+    size_t fbe_current_size = 0;
+    size_t fbe_field_size;
+
+    string.fbe_offset(fbe_current_offset);
+    fbe_field_size = string.get(fbe_value.string);
+    fbe_current_offset += fbe_field_size;
+    fbe_current_size += fbe_field_size;
+
+    return fbe_current_size;
+}
+
+size_t FinalModel<::test::VectorFieldNamedString>::set(const ::test::VectorFieldNamedString& fbe_value) noexcept
+{
+    _buffer.shift(fbe_offset());
+    size_t fbe_result = set_fields(fbe_value);
+    _buffer.unshift(fbe_offset());
+    return fbe_result;
+}
+
+size_t FinalModel<::test::VectorFieldNamedString>::set_fields([[maybe_unused]] const ::test::VectorFieldNamedString& fbe_value) noexcept
+{
+    size_t fbe_current_offset = 0;
+    size_t fbe_current_size = 0;
+    size_t fbe_field_size;
+
+    string.fbe_offset(fbe_current_offset);
+    fbe_field_size = string.set(fbe_value.string);
+    fbe_current_offset += fbe_field_size;
+    fbe_current_size += fbe_field_size;
+
+    return fbe_current_size;
+}
+
+namespace test {
+
+bool VectorFieldNamedStringFinalModel::verify()
+{
+    if ((this->buffer().offset() + _model.fbe_offset()) > this->buffer().size())
+        return false;
+
+    size_t fbe_struct_size = unaligned_load<uint32_t>(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 8);
+    size_t fbe_struct_type = unaligned_load<uint32_t>(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 4);
+    if ((fbe_struct_size == 0) || (fbe_struct_type != fbe_type()))
+        return false;
+
+    return ((8 + _model.verify()) == fbe_struct_size);
+}
+
+size_t VectorFieldNamedStringFinalModel::serialize(const ::test::VectorFieldNamedString& value)
+{
+    size_t fbe_initial_size = this->buffer().size();
+
+    uint32_t fbe_struct_type = (uint32_t)fbe_type();
+    uint32_t fbe_struct_size = (uint32_t)(8 + _model.fbe_allocation_size(value));
+    uint32_t fbe_struct_offset = (uint32_t)(this->buffer().allocate(fbe_struct_size) - this->buffer().offset());
+    assert(((this->buffer().offset() + fbe_struct_offset + fbe_struct_size) <= this->buffer().size()) && "Model is broken!");
+    if ((this->buffer().offset() + fbe_struct_offset + fbe_struct_size) > this->buffer().size())
+        return 0;
+
+    fbe_struct_size = (uint32_t)(8 + _model.set(value));
+    this->buffer().resize(fbe_initial_size + fbe_struct_size);
+
+    *((uint32_t*)(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 8)) = fbe_struct_size;
+    *((uint32_t*)(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 4)) = fbe_struct_type;
+
+    return fbe_struct_size;
+}
+
+size_t VectorFieldNamedStringFinalModel::deserialize(::test::VectorFieldNamedString& value) const noexcept
+{
+    assert(((this->buffer().offset() + _model.fbe_offset()) <= this->buffer().size()) && "Model is broken!");
+    if ((this->buffer().offset() + _model.fbe_offset()) > this->buffer().size())
+        return 0;
+
+    size_t fbe_struct_size = unaligned_load<uint32_t>(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 8);
+    size_t fbe_struct_type = unaligned_load<uint32_t>(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 4);
+    assert(((fbe_struct_size > 0) && (fbe_struct_type == fbe_type())) && "Model is broken!");
+    if ((fbe_struct_size == 0) || (fbe_struct_type != fbe_type()))
+        return 8;
+
+    return 8 + _model.get(value);
+}
+
+} // namespace test
+
+FinalModel<::test::BytesFieldNamedString>::FinalModel(FBEBuffer& buffer, size_t offset) noexcept : _buffer(buffer), _offset(offset)
+    , string(buffer, 0)
+{}
+
+size_t FinalModel<::test::BytesFieldNamedString>::fbe_allocation_size(const ::test::BytesFieldNamedString& fbe_value) const noexcept
+{
+    size_t fbe_result = 0
+        + string.fbe_allocation_size(fbe_value.string)
+        ;
+    return fbe_result;
+}
+
+size_t FinalModel<::test::BytesFieldNamedString>::verify() const noexcept
+{
+    _buffer.shift(fbe_offset());
+    size_t fbe_result = verify_fields();
+    _buffer.unshift(fbe_offset());
+    return fbe_result;
+}
+
+size_t FinalModel<::test::BytesFieldNamedString>::verify_fields() const noexcept
+{
+    size_t fbe_current_offset = 0;
+    size_t fbe_field_size;
+
+    string.fbe_offset(fbe_current_offset);
+    fbe_field_size = string.verify();
+    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
+        return std::numeric_limits<std::size_t>::max();
+    fbe_current_offset += fbe_field_size;
+
+    return fbe_current_offset;
+}
+
+size_t FinalModel<::test::BytesFieldNamedString>::get(::test::BytesFieldNamedString& fbe_value) const noexcept
+{
+    _buffer.shift(fbe_offset());
+    size_t fbe_result = get_fields(fbe_value);
+    _buffer.unshift(fbe_offset());
+    return fbe_result;
+}
+
+size_t FinalModel<::test::BytesFieldNamedString>::get_fields([[maybe_unused]] ::test::BytesFieldNamedString& fbe_value) const noexcept
+{
+    size_t fbe_current_offset = 0;
+    size_t fbe_current_size = 0;
+    size_t fbe_field_size;
+
+    string.fbe_offset(fbe_current_offset);
+    fbe_field_size = string.get(fbe_value.string);
+    fbe_current_offset += fbe_field_size;
+    fbe_current_size += fbe_field_size;
+
+    return fbe_current_size;
+}
+
+size_t FinalModel<::test::BytesFieldNamedString>::set(const ::test::BytesFieldNamedString& fbe_value) noexcept
+{
+    _buffer.shift(fbe_offset());
+    size_t fbe_result = set_fields(fbe_value);
+    _buffer.unshift(fbe_offset());
+    return fbe_result;
+}
+
+size_t FinalModel<::test::BytesFieldNamedString>::set_fields([[maybe_unused]] const ::test::BytesFieldNamedString& fbe_value) noexcept
+{
+    size_t fbe_current_offset = 0;
+    size_t fbe_current_size = 0;
+    size_t fbe_field_size;
+
+    string.fbe_offset(fbe_current_offset);
+    fbe_field_size = string.set(fbe_value.string);
+    fbe_current_offset += fbe_field_size;
+    fbe_current_size += fbe_field_size;
+
+    return fbe_current_size;
+}
+
+namespace test {
+
+bool BytesFieldNamedStringFinalModel::verify()
+{
+    if ((this->buffer().offset() + _model.fbe_offset()) > this->buffer().size())
+        return false;
+
+    size_t fbe_struct_size = unaligned_load<uint32_t>(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 8);
+    size_t fbe_struct_type = unaligned_load<uint32_t>(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 4);
+    if ((fbe_struct_size == 0) || (fbe_struct_type != fbe_type()))
+        return false;
+
+    return ((8 + _model.verify()) == fbe_struct_size);
+}
+
+size_t BytesFieldNamedStringFinalModel::serialize(const ::test::BytesFieldNamedString& value)
+{
+    size_t fbe_initial_size = this->buffer().size();
+
+    uint32_t fbe_struct_type = (uint32_t)fbe_type();
+    uint32_t fbe_struct_size = (uint32_t)(8 + _model.fbe_allocation_size(value));
+    uint32_t fbe_struct_offset = (uint32_t)(this->buffer().allocate(fbe_struct_size) - this->buffer().offset());
+    assert(((this->buffer().offset() + fbe_struct_offset + fbe_struct_size) <= this->buffer().size()) && "Model is broken!");
+    if ((this->buffer().offset() + fbe_struct_offset + fbe_struct_size) > this->buffer().size())
+        return 0;
+
+    fbe_struct_size = (uint32_t)(8 + _model.set(value));
+    this->buffer().resize(fbe_initial_size + fbe_struct_size);
+
+    *((uint32_t*)(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 8)) = fbe_struct_size;
+    *((uint32_t*)(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 4)) = fbe_struct_type;
+
+    return fbe_struct_size;
+}
+
+size_t BytesFieldNamedStringFinalModel::deserialize(::test::BytesFieldNamedString& value) const noexcept
+{
+    assert(((this->buffer().offset() + _model.fbe_offset()) <= this->buffer().size()) && "Model is broken!");
+    if ((this->buffer().offset() + _model.fbe_offset()) > this->buffer().size())
+        return 0;
+
+    size_t fbe_struct_size = unaligned_load<uint32_t>(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 8);
+    size_t fbe_struct_type = unaligned_load<uint32_t>(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 4);
+    assert(((fbe_struct_size > 0) && (fbe_struct_type == fbe_type())) && "Model is broken!");
+    if ((fbe_struct_size == 0) || (fbe_struct_type != fbe_type()))
+        return 8;
+
+    return 8 + _model.get(value);
+}
+
+} // namespace test
+
 } // namespace FBE

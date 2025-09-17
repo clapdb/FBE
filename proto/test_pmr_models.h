@@ -1423,4 +1423,592 @@ using type = test_pmr::StructEmptyModel;
 };
 
 
+// Fast Binary Encoding ::test_pmr::StructFieldNamedString field model
+template <>
+class FieldModel<::test_pmr::StructFieldNamedString>
+{
+public:
+    FieldModel(FBEBuffer& buffer, size_t offset) noexcept;
+
+    // Get the field offset
+    size_t fbe_offset() const noexcept { return _offset; }
+    // Get the field size
+    size_t fbe_size() const noexcept { return 4; }
+    // Get the field body size
+    size_t fbe_body() const noexcept;
+    // Get the field extra size
+    size_t fbe_extra() const noexcept;
+    // Get the field type
+    static constexpr size_t fbe_type() noexcept { return 144; }
+
+    // Shift the current field offset
+    void fbe_shift(size_t size) noexcept { _offset += size; }
+    // Unshift the current field offset
+    void fbe_unshift(size_t size) noexcept { _offset -= size; }
+
+    // Check if the struct value is valid
+    bool verify(bool fbe_verify_type = true) const noexcept;
+    // Check if the struct fields are valid
+    bool verify_fields(size_t fbe_struct_size) const noexcept;
+
+    // Get the struct value (begin phase)
+    size_t get_begin() const noexcept;
+    // Get the struct value (end phase)
+    void get_end(size_t fbe_begin) const noexcept;
+
+    // Get the struct value
+    void get(::test_pmr::StructFieldNamedString& fbe_value, pmr::memory_resource* resource) const noexcept;
+    // Get the struct fields values
+    void get_fields(::test_pmr::StructFieldNamedString& fbe_value, size_t fbe_struct_size, pmr::memory_resource* resource) const noexcept;
+
+    // Set the struct value (begin phase)
+    size_t set_begin();
+    // Set the struct value (end phase)
+    void set_end(size_t fbe_begin);
+
+    // Set the struct value
+    void set(const ::test_pmr::StructFieldNamedString& fbe_value, pmr::memory_resource* resource) noexcept;
+    // Set the struct fields values
+    void set_fields(const ::test_pmr::StructFieldNamedString& fbe_value, pmr::memory_resource* resource) noexcept;
+
+private:
+    FBEBuffer& _buffer;
+    size_t _offset;
+
+public:
+    FieldModel<::test_pmr::StructEmpty> string;
+};
+
+namespace test_pmr {
+
+// Fast Binary Encoding StructFieldNamedString model
+class StructFieldNamedStringModel : public FBE::Model
+{
+public:
+    StructFieldNamedStringModel() : model(this->buffer(), 4) {}
+    StructFieldNamedStringModel(const std::shared_ptr<FBEBuffer>& buffer) : FBE::Model(buffer), model(this->buffer(), 4) {}
+
+    // Get the model size
+    size_t fbe_size() const noexcept { return model.fbe_size() + model.fbe_extra(); }
+    // Get the model type
+    static constexpr size_t fbe_type() noexcept { return FieldModel<::test_pmr::StructFieldNamedString>::fbe_type(); }
+
+    // Check if the struct value is valid
+    bool verify();
+
+    // Create a new model (begin phase)
+    size_t create_begin();
+    // Create a new model (end phase)
+    size_t create_end(size_t fbe_begin);
+
+    // Serialize the struct value
+    size_t serialize(const ::test_pmr::StructFieldNamedString& value, pmr::memory_resource* resource);
+    // Deserialize the struct value
+    size_t deserialize(::test_pmr::StructFieldNamedString& value, pmr::memory_resource* resource) const noexcept;
+
+    // Move to the next struct value
+    void next(size_t prev) noexcept { model.fbe_shift(prev); }
+
+public:
+    FieldModel<::test_pmr::StructFieldNamedString> model;
+};
+
+} // namespace test_pmr
+
+template<>
+struct model_of<::test_pmr::StructFieldNamedString> {
+using type = test_pmr::StructFieldNamedStringModel;
+};
+
+
+// Fast Binary Encoding ::test_pmr::StringFieldNamedString field model
+template <>
+class FieldModel<::test_pmr::StringFieldNamedString>
+{
+public:
+    FieldModel(FBEBuffer& buffer, size_t offset) noexcept;
+
+    // Get the field offset
+    size_t fbe_offset() const noexcept { return _offset; }
+    // Get the field size
+    size_t fbe_size() const noexcept { return 4; }
+    // Get the field body size
+    size_t fbe_body() const noexcept;
+    // Get the field extra size
+    size_t fbe_extra() const noexcept;
+    // Get the field type
+    static constexpr size_t fbe_type() noexcept { return 145; }
+
+    // Shift the current field offset
+    void fbe_shift(size_t size) noexcept { _offset += size; }
+    // Unshift the current field offset
+    void fbe_unshift(size_t size) noexcept { _offset -= size; }
+
+    // Check if the struct value is valid
+    bool verify(bool fbe_verify_type = true) const noexcept;
+    // Check if the struct fields are valid
+    bool verify_fields(size_t fbe_struct_size) const noexcept;
+
+    // Get the struct value (begin phase)
+    size_t get_begin() const noexcept;
+    // Get the struct value (end phase)
+    void get_end(size_t fbe_begin) const noexcept;
+
+    // Get the struct value
+    void get(::test_pmr::StringFieldNamedString& fbe_value, pmr::memory_resource* resource) const noexcept;
+    // Get the struct fields values
+    void get_fields(::test_pmr::StringFieldNamedString& fbe_value, size_t fbe_struct_size, pmr::memory_resource* resource) const noexcept;
+
+    // Set the struct value (begin phase)
+    size_t set_begin();
+    // Set the struct value (end phase)
+    void set_end(size_t fbe_begin);
+
+    // Set the struct value
+    void set(const ::test_pmr::StringFieldNamedString& fbe_value, pmr::memory_resource* resource) noexcept;
+    // Set the struct fields values
+    void set_fields(const ::test_pmr::StringFieldNamedString& fbe_value, pmr::memory_resource* resource) noexcept;
+
+private:
+    FBEBuffer& _buffer;
+    size_t _offset;
+
+public:
+    FieldModel<ArenaString> string;
+};
+
+namespace test_pmr {
+
+// Fast Binary Encoding StringFieldNamedString model
+class StringFieldNamedStringModel : public FBE::Model
+{
+public:
+    StringFieldNamedStringModel() : model(this->buffer(), 4) {}
+    StringFieldNamedStringModel(const std::shared_ptr<FBEBuffer>& buffer) : FBE::Model(buffer), model(this->buffer(), 4) {}
+
+    // Get the model size
+    size_t fbe_size() const noexcept { return model.fbe_size() + model.fbe_extra(); }
+    // Get the model type
+    static constexpr size_t fbe_type() noexcept { return FieldModel<::test_pmr::StringFieldNamedString>::fbe_type(); }
+
+    // Check if the struct value is valid
+    bool verify();
+
+    // Create a new model (begin phase)
+    size_t create_begin();
+    // Create a new model (end phase)
+    size_t create_end(size_t fbe_begin);
+
+    // Serialize the struct value
+    size_t serialize(const ::test_pmr::StringFieldNamedString& value, pmr::memory_resource* resource);
+    // Deserialize the struct value
+    size_t deserialize(::test_pmr::StringFieldNamedString& value, pmr::memory_resource* resource) const noexcept;
+
+    // Move to the next struct value
+    void next(size_t prev) noexcept { model.fbe_shift(prev); }
+
+public:
+    FieldModel<::test_pmr::StringFieldNamedString> model;
+};
+
+} // namespace test_pmr
+
+template<>
+struct model_of<::test_pmr::StringFieldNamedString> {
+using type = test_pmr::StringFieldNamedStringModel;
+};
+
+
+// Fast Binary Encoding ::test_pmr::OptionalFieldNamedString field model
+template <>
+class FieldModel<::test_pmr::OptionalFieldNamedString>
+{
+public:
+    FieldModel(FBEBuffer& buffer, size_t offset) noexcept;
+
+    // Get the field offset
+    size_t fbe_offset() const noexcept { return _offset; }
+    // Get the field size
+    size_t fbe_size() const noexcept { return 4; }
+    // Get the field body size
+    size_t fbe_body() const noexcept;
+    // Get the field extra size
+    size_t fbe_extra() const noexcept;
+    // Get the field type
+    static constexpr size_t fbe_type() noexcept { return 146; }
+
+    // Shift the current field offset
+    void fbe_shift(size_t size) noexcept { _offset += size; }
+    // Unshift the current field offset
+    void fbe_unshift(size_t size) noexcept { _offset -= size; }
+
+    // Check if the struct value is valid
+    bool verify(bool fbe_verify_type = true) const noexcept;
+    // Check if the struct fields are valid
+    bool verify_fields(size_t fbe_struct_size) const noexcept;
+
+    // Get the struct value (begin phase)
+    size_t get_begin() const noexcept;
+    // Get the struct value (end phase)
+    void get_end(size_t fbe_begin) const noexcept;
+
+    // Get the struct value
+    void get(::test_pmr::OptionalFieldNamedString& fbe_value, pmr::memory_resource* resource) const noexcept;
+    // Get the struct fields values
+    void get_fields(::test_pmr::OptionalFieldNamedString& fbe_value, size_t fbe_struct_size, pmr::memory_resource* resource) const noexcept;
+
+    // Set the struct value (begin phase)
+    size_t set_begin();
+    // Set the struct value (end phase)
+    void set_end(size_t fbe_begin);
+
+    // Set the struct value
+    void set(const ::test_pmr::OptionalFieldNamedString& fbe_value, pmr::memory_resource* resource) noexcept;
+    // Set the struct fields values
+    void set_fields(const ::test_pmr::OptionalFieldNamedString& fbe_value, pmr::memory_resource* resource) noexcept;
+
+private:
+    FBEBuffer& _buffer;
+    size_t _offset;
+
+public:
+    FieldModel<std::optional<ArenaString>> string;
+};
+
+namespace test_pmr {
+
+// Fast Binary Encoding OptionalFieldNamedString model
+class OptionalFieldNamedStringModel : public FBE::Model
+{
+public:
+    OptionalFieldNamedStringModel() : model(this->buffer(), 4) {}
+    OptionalFieldNamedStringModel(const std::shared_ptr<FBEBuffer>& buffer) : FBE::Model(buffer), model(this->buffer(), 4) {}
+
+    // Get the model size
+    size_t fbe_size() const noexcept { return model.fbe_size() + model.fbe_extra(); }
+    // Get the model type
+    static constexpr size_t fbe_type() noexcept { return FieldModel<::test_pmr::OptionalFieldNamedString>::fbe_type(); }
+
+    // Check if the struct value is valid
+    bool verify();
+
+    // Create a new model (begin phase)
+    size_t create_begin();
+    // Create a new model (end phase)
+    size_t create_end(size_t fbe_begin);
+
+    // Serialize the struct value
+    size_t serialize(const ::test_pmr::OptionalFieldNamedString& value, pmr::memory_resource* resource);
+    // Deserialize the struct value
+    size_t deserialize(::test_pmr::OptionalFieldNamedString& value, pmr::memory_resource* resource) const noexcept;
+
+    // Move to the next struct value
+    void next(size_t prev) noexcept { model.fbe_shift(prev); }
+
+public:
+    FieldModel<::test_pmr::OptionalFieldNamedString> model;
+};
+
+} // namespace test_pmr
+
+template<>
+struct model_of<::test_pmr::OptionalFieldNamedString> {
+using type = test_pmr::OptionalFieldNamedStringModel;
+};
+
+
+// Fast Binary Encoding ::test_pmr::ArrayFieldNamedString field model
+template <>
+class FieldModel<::test_pmr::ArrayFieldNamedString>
+{
+public:
+    FieldModel(FBEBuffer& buffer, size_t offset) noexcept;
+
+    // Get the field offset
+    size_t fbe_offset() const noexcept { return _offset; }
+    // Get the field size
+    size_t fbe_size() const noexcept { return 4; }
+    // Get the field body size
+    size_t fbe_body() const noexcept;
+    // Get the field extra size
+    size_t fbe_extra() const noexcept;
+    // Get the field type
+    static constexpr size_t fbe_type() noexcept { return 147; }
+
+    // Shift the current field offset
+    void fbe_shift(size_t size) noexcept { _offset += size; }
+    // Unshift the current field offset
+    void fbe_unshift(size_t size) noexcept { _offset -= size; }
+
+    // Check if the struct value is valid
+    bool verify(bool fbe_verify_type = true) const noexcept;
+    // Check if the struct fields are valid
+    bool verify_fields(size_t fbe_struct_size) const noexcept;
+
+    // Get the struct value (begin phase)
+    size_t get_begin() const noexcept;
+    // Get the struct value (end phase)
+    void get_end(size_t fbe_begin) const noexcept;
+
+    // Get the struct value
+    void get(::test_pmr::ArrayFieldNamedString& fbe_value, pmr::memory_resource* resource) const noexcept;
+    // Get the struct fields values
+    void get_fields(::test_pmr::ArrayFieldNamedString& fbe_value, size_t fbe_struct_size, pmr::memory_resource* resource) const noexcept;
+
+    // Set the struct value (begin phase)
+    size_t set_begin();
+    // Set the struct value (end phase)
+    void set_end(size_t fbe_begin);
+
+    // Set the struct value
+    void set(const ::test_pmr::ArrayFieldNamedString& fbe_value, pmr::memory_resource* resource) noexcept;
+    // Set the struct fields values
+    void set_fields(const ::test_pmr::ArrayFieldNamedString& fbe_value, pmr::memory_resource* resource) noexcept;
+
+private:
+    FBEBuffer& _buffer;
+    size_t _offset;
+
+public:
+    FieldModelArray<ArenaString, 4> string;
+};
+
+namespace test_pmr {
+
+// Fast Binary Encoding ArrayFieldNamedString model
+class ArrayFieldNamedStringModel : public FBE::Model
+{
+public:
+    ArrayFieldNamedStringModel() : model(this->buffer(), 4) {}
+    ArrayFieldNamedStringModel(const std::shared_ptr<FBEBuffer>& buffer) : FBE::Model(buffer), model(this->buffer(), 4) {}
+
+    // Get the model size
+    size_t fbe_size() const noexcept { return model.fbe_size() + model.fbe_extra(); }
+    // Get the model type
+    static constexpr size_t fbe_type() noexcept { return FieldModel<::test_pmr::ArrayFieldNamedString>::fbe_type(); }
+
+    // Check if the struct value is valid
+    bool verify();
+
+    // Create a new model (begin phase)
+    size_t create_begin();
+    // Create a new model (end phase)
+    size_t create_end(size_t fbe_begin);
+
+    // Serialize the struct value
+    size_t serialize(const ::test_pmr::ArrayFieldNamedString& value, pmr::memory_resource* resource);
+    // Deserialize the struct value
+    size_t deserialize(::test_pmr::ArrayFieldNamedString& value, pmr::memory_resource* resource) const noexcept;
+
+    // Move to the next struct value
+    void next(size_t prev) noexcept { model.fbe_shift(prev); }
+
+public:
+    FieldModel<::test_pmr::ArrayFieldNamedString> model;
+};
+
+} // namespace test_pmr
+
+template<>
+struct model_of<::test_pmr::ArrayFieldNamedString> {
+using type = test_pmr::ArrayFieldNamedStringModel;
+};
+
+
+// Fast Binary Encoding ::test_pmr::VectorFieldNamedString field model
+template <>
+class FieldModel<::test_pmr::VectorFieldNamedString>
+{
+public:
+    FieldModel(FBEBuffer& buffer, size_t offset) noexcept;
+
+    // Get the field offset
+    size_t fbe_offset() const noexcept { return _offset; }
+    // Get the field size
+    size_t fbe_size() const noexcept { return 4; }
+    // Get the field body size
+    size_t fbe_body() const noexcept;
+    // Get the field extra size
+    size_t fbe_extra() const noexcept;
+    // Get the field type
+    static constexpr size_t fbe_type() noexcept { return 148; }
+
+    // Shift the current field offset
+    void fbe_shift(size_t size) noexcept { _offset += size; }
+    // Unshift the current field offset
+    void fbe_unshift(size_t size) noexcept { _offset -= size; }
+
+    // Check if the struct value is valid
+    bool verify(bool fbe_verify_type = true) const noexcept;
+    // Check if the struct fields are valid
+    bool verify_fields(size_t fbe_struct_size) const noexcept;
+
+    // Get the struct value (begin phase)
+    size_t get_begin() const noexcept;
+    // Get the struct value (end phase)
+    void get_end(size_t fbe_begin) const noexcept;
+
+    // Get the struct value
+    void get(::test_pmr::VectorFieldNamedString& fbe_value, pmr::memory_resource* resource) const noexcept;
+    // Get the struct fields values
+    void get_fields(::test_pmr::VectorFieldNamedString& fbe_value, size_t fbe_struct_size, pmr::memory_resource* resource) const noexcept;
+
+    // Set the struct value (begin phase)
+    size_t set_begin();
+    // Set the struct value (end phase)
+    void set_end(size_t fbe_begin);
+
+    // Set the struct value
+    void set(const ::test_pmr::VectorFieldNamedString& fbe_value, pmr::memory_resource* resource) noexcept;
+    // Set the struct fields values
+    void set_fields(const ::test_pmr::VectorFieldNamedString& fbe_value, pmr::memory_resource* resource) noexcept;
+
+private:
+    FBEBuffer& _buffer;
+    size_t _offset;
+
+public:
+    FieldModelVector<ArenaString> string;
+};
+
+namespace test_pmr {
+
+// Fast Binary Encoding VectorFieldNamedString model
+class VectorFieldNamedStringModel : public FBE::Model
+{
+public:
+    VectorFieldNamedStringModel() : model(this->buffer(), 4) {}
+    VectorFieldNamedStringModel(const std::shared_ptr<FBEBuffer>& buffer) : FBE::Model(buffer), model(this->buffer(), 4) {}
+
+    // Get the model size
+    size_t fbe_size() const noexcept { return model.fbe_size() + model.fbe_extra(); }
+    // Get the model type
+    static constexpr size_t fbe_type() noexcept { return FieldModel<::test_pmr::VectorFieldNamedString>::fbe_type(); }
+
+    // Check if the struct value is valid
+    bool verify();
+
+    // Create a new model (begin phase)
+    size_t create_begin();
+    // Create a new model (end phase)
+    size_t create_end(size_t fbe_begin);
+
+    // Serialize the struct value
+    size_t serialize(const ::test_pmr::VectorFieldNamedString& value, pmr::memory_resource* resource);
+    // Deserialize the struct value
+    size_t deserialize(::test_pmr::VectorFieldNamedString& value, pmr::memory_resource* resource) const noexcept;
+
+    // Move to the next struct value
+    void next(size_t prev) noexcept { model.fbe_shift(prev); }
+
+public:
+    FieldModel<::test_pmr::VectorFieldNamedString> model;
+};
+
+} // namespace test_pmr
+
+template<>
+struct model_of<::test_pmr::VectorFieldNamedString> {
+using type = test_pmr::VectorFieldNamedStringModel;
+};
+
+
+// Fast Binary Encoding ::test_pmr::BytesFieldNamedString field model
+template <>
+class FieldModel<::test_pmr::BytesFieldNamedString>
+{
+public:
+    FieldModel(FBEBuffer& buffer, size_t offset) noexcept;
+
+    // Get the field offset
+    size_t fbe_offset() const noexcept { return _offset; }
+    // Get the field size
+    size_t fbe_size() const noexcept { return 4; }
+    // Get the field body size
+    size_t fbe_body() const noexcept;
+    // Get the field extra size
+    size_t fbe_extra() const noexcept;
+    // Get the field type
+    static constexpr size_t fbe_type() noexcept { return 149; }
+
+    // Shift the current field offset
+    void fbe_shift(size_t size) noexcept { _offset += size; }
+    // Unshift the current field offset
+    void fbe_unshift(size_t size) noexcept { _offset -= size; }
+
+    // Check if the struct value is valid
+    bool verify(bool fbe_verify_type = true) const noexcept;
+    // Check if the struct fields are valid
+    bool verify_fields(size_t fbe_struct_size) const noexcept;
+
+    // Get the struct value (begin phase)
+    size_t get_begin() const noexcept;
+    // Get the struct value (end phase)
+    void get_end(size_t fbe_begin) const noexcept;
+
+    // Get the struct value
+    void get(::test_pmr::BytesFieldNamedString& fbe_value, pmr::memory_resource* resource) const noexcept;
+    // Get the struct fields values
+    void get_fields(::test_pmr::BytesFieldNamedString& fbe_value, size_t fbe_struct_size, pmr::memory_resource* resource) const noexcept;
+
+    // Set the struct value (begin phase)
+    size_t set_begin();
+    // Set the struct value (end phase)
+    void set_end(size_t fbe_begin);
+
+    // Set the struct value
+    void set(const ::test_pmr::BytesFieldNamedString& fbe_value, pmr::memory_resource* resource) noexcept;
+    // Set the struct fields values
+    void set_fields(const ::test_pmr::BytesFieldNamedString& fbe_value, pmr::memory_resource* resource) noexcept;
+
+private:
+    FBEBuffer& _buffer;
+    size_t _offset;
+
+public:
+    FieldModel<FBE::pmr_buffer_t> string;
+};
+
+namespace test_pmr {
+
+// Fast Binary Encoding BytesFieldNamedString model
+class BytesFieldNamedStringModel : public FBE::Model
+{
+public:
+    BytesFieldNamedStringModel() : model(this->buffer(), 4) {}
+    BytesFieldNamedStringModel(const std::shared_ptr<FBEBuffer>& buffer) : FBE::Model(buffer), model(this->buffer(), 4) {}
+
+    // Get the model size
+    size_t fbe_size() const noexcept { return model.fbe_size() + model.fbe_extra(); }
+    // Get the model type
+    static constexpr size_t fbe_type() noexcept { return FieldModel<::test_pmr::BytesFieldNamedString>::fbe_type(); }
+
+    // Check if the struct value is valid
+    bool verify();
+
+    // Create a new model (begin phase)
+    size_t create_begin();
+    // Create a new model (end phase)
+    size_t create_end(size_t fbe_begin);
+
+    // Serialize the struct value
+    size_t serialize(const ::test_pmr::BytesFieldNamedString& value, pmr::memory_resource* resource);
+    // Deserialize the struct value
+    size_t deserialize(::test_pmr::BytesFieldNamedString& value, pmr::memory_resource* resource) const noexcept;
+
+    // Move to the next struct value
+    void next(size_t prev) noexcept { model.fbe_shift(prev); }
+
+public:
+    FieldModel<::test_pmr::BytesFieldNamedString> model;
+};
+
+} // namespace test_pmr
+
+template<>
+struct model_of<::test_pmr::BytesFieldNamedString> {
+using type = test_pmr::BytesFieldNamedStringModel;
+};
+
+
 } // namespace FBE
