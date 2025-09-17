@@ -2480,7 +2480,7 @@ void GeneratorCpp::GenerateStruct_Header(const std::shared_ptr<Package>& p, cons
         WriteLine(");");
     }
 
-    // Generate struct copy/mode constructor, destructor and assign operators
+    // Generate struct copy/move constructor, destructor and assign operators
     WriteLineIndent(*s->name + "(const " + *s->name + "& other) = default;");
     WriteLineIndent(*s->name + "(" + *s->name + "&& other) = default;");
     WriteLineIndent("~" + *s->name + "() = default;");
@@ -2499,7 +2499,7 @@ void GeneratorCpp::GenerateStruct_Header(const std::shared_ptr<Package>& p, cons
 
     // Generate struct string convert
     WriteLine();
-    WriteLineIndent("std::string string() const;");
+    WriteLineIndent("std::string to_string() const;");
 
     // Generate struct output stream operator
     WriteLine();
@@ -2710,9 +2710,9 @@ void GeneratorCpp::GenerateStruct_Source(const std::shared_ptr<Package>& p, cons
     Indent(-1);
     WriteLineIndent("}");
 
-    // Generate struct string method
+    // Generate struct to_string method
     WriteLine();
-    WriteLineIndent("std::string " + *s->name + "::string() const");
+    WriteLineIndent("std::string " + *s->name + "::to_string() const");
     WriteLineIndent("{");
     Indent(1);
     WriteLineIndent("std::stringstream ss; ss << *this; return ss.str();");
@@ -4282,7 +4282,7 @@ void GeneratorCpp::GenerateSender_Source(const std::shared_ptr<Package>& p, bool
                 WriteLineIndent("if (this->_logging)");
                 WriteLineIndent("{");
                 Indent(1);
-                WriteLineIndent("std::string message = value.string();");
+                WriteLineIndent("std::string message = value.to_string();");
                 WriteLineIndent("this->onSendLog(message);");
                 Indent(-1);
                 WriteLineIndent("}");
@@ -4418,7 +4418,7 @@ void GeneratorCpp::GenerateReceiver_Source(const std::shared_ptr<Package>& p, bo
                 WriteLineIndent("if (this->_logging)");
                 WriteLineIndent("{");
                 Indent(1);
-                WriteLineIndent("std::string message = " + *s->name + "Value.string();");
+                WriteLineIndent("std::string message = " + *s->name + "Value.to_string();");
                 WriteLineIndent("this->onReceiveLog(message);");
                 Indent(-1);
                 WriteLineIndent("}");
@@ -5075,7 +5075,7 @@ void GeneratorCpp::GenerateClient_Source(const std::shared_ptr<Package>& p, bool
                             WriteLineIndent("auto timestamp = std::get<0>(it_" + struct_response_field + "->second);");
                             WriteLineIndent("[[maybe_unused]] auto timespan = std::get<1>(it_" + struct_response_field + "->second);");
                             WriteLineIndent("auto& promise = std::get<2>(it_" + struct_response_field + "->second);");
-                            WriteLineIndent("promise.set_exception(std::make_exception_ptr(std::runtime_error(reject.string())));");
+                            WriteLineIndent("promise.set_exception(std::make_exception_ptr(std::runtime_error(reject.to_string())));");
                             WriteLineIndent("_requests_by_id_" + struct_response_field + ".erase(reject.id);");
                             WriteLineIndent("_requests_by_timestamp_" + struct_response_field + ".erase(timestamp);");
                             WriteLineIndent("return true;");
@@ -5792,7 +5792,7 @@ void GeneratorCpp::GeneratePtrStruct_Header(const std::shared_ptr<Package>& p, c
 
     // Generate struct string convert
     WriteLine();
-    WriteLineIndent("std::string string() const;");
+    WriteLineIndent("std::string to_string() const;");
 
     // Generate struct output stream operator
     WriteLine();
@@ -6315,7 +6315,7 @@ void GeneratorCpp::GeneratePtrStruct_Source(const std::shared_ptr<Package>& p, c
 
     // Generate struct string method
     WriteLine();
-    WriteLineIndent("std::string " + *s->name + "::string() const");
+    WriteLineIndent("std::string " + *s->name + "::to_string() const");
     WriteLineIndent("{");
     Indent(1);
     WriteLineIndent("std::stringstream ss; ss << *this; return ss.str();");
