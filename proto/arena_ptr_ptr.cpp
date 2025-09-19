@@ -46,7 +46,7 @@ Line& Line::operator=(Line&& other) noexcept
     return *this;
 }
 
-std::string Line::string() const
+std::string Line::to_string() const
 {
     std::stringstream ss; ss << *this; return ss.str();
 }
@@ -102,7 +102,7 @@ Line2& Line2::operator=(Line2&& other) noexcept
     return *this;
 }
 
-std::string Line2::string() const
+std::string Line2::to_string() const
 {
     std::stringstream ss; ss << *this; return ss.str();
 }

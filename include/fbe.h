@@ -184,6 +184,17 @@ inline auto count_char(const std::string& src, char ch) -> std::size_t {
     return std::count_if(src.cbegin(), src.cend(), [ch](char c){ return c == ch; });
 }
 
+inline auto is_escaped_name(const std::string& name) -> bool {
+    if (name.size() > 4 and name.starts_with("__") and name.ends_with("__"))
+        return true;
+    return false;
+}
+
+inline void extract_escaped_name_inplace(std::string& name) {
+    assert(is_escaped_name(name));
+    name.assign(name.substr(2, name.size() - 4));
+}
+
 int yyerror(const char* msg);
 int yyerror(const std::string& msg);
 

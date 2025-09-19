@@ -114,7 +114,7 @@ Simple& Simple::operator=(Simple&& other) noexcept
     return *this;
 }
 
-std::string Simple::string() const
+std::string Simple::to_string() const
 {
     std::stringstream ss; ss << *this; return ss.str();
 }

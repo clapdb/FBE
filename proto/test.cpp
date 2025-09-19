@@ -289,7 +289,7 @@ bool StructSimple::operator<([[maybe_unused]] const StructSimple& other) const n
     return false;
 }
 
-std::string StructSimple::string() const
+std::string StructSimple::to_string() const
 {
     std::stringstream ss; ss << *this; return ss.str();
 }
@@ -618,7 +618,7 @@ bool StructOptional::operator<([[maybe_unused]] const StructOptional& other) con
     return false;
 }
 
-std::string StructOptional::string() const
+std::string StructOptional::to_string() const
 {
     std::stringstream ss; ss << *this; return ss.str();
 }
@@ -829,7 +829,7 @@ bool StructNested::operator<([[maybe_unused]] const StructNested& other) const n
     return false;
 }
 
-std::string StructNested::string() const
+std::string StructNested::to_string() const
 {
     std::stringstream ss; ss << *this; return ss.str();
 }
@@ -898,7 +898,7 @@ bool StructBytes::operator<([[maybe_unused]] const StructBytes& other) const noe
     return false;
 }
 
-std::string StructBytes::string() const
+std::string StructBytes::to_string() const
 {
     std::stringstream ss; ss << *this; return ss.str();
 }
@@ -968,7 +968,7 @@ bool StructArray::operator<([[maybe_unused]] const StructArray& other) const noe
     return false;
 }
 
-std::string StructArray::string() const
+std::string StructArray::to_string() const
 {
     std::stringstream ss; ss << *this; return ss.str();
 }
@@ -1142,7 +1142,7 @@ bool StructVector::operator<([[maybe_unused]] const StructVector& other) const n
     return false;
 }
 
-std::string StructVector::string() const
+std::string StructVector::to_string() const
 {
     std::stringstream ss; ss << *this; return ss.str();
 }
@@ -1316,7 +1316,7 @@ bool StructList::operator<([[maybe_unused]] const StructList& other) const noexc
     return false;
 }
 
-std::string StructList::string() const
+std::string StructList::to_string() const
 {
     std::stringstream ss; ss << *this; return ss.str();
 }
@@ -1472,7 +1472,7 @@ bool StructSet::operator<([[maybe_unused]] const StructSet& other) const noexcep
     return false;
 }
 
-std::string StructSet::string() const
+std::string StructSet::to_string() const
 {
     std::stringstream ss; ss << *this; return ss.str();
 }
@@ -1580,7 +1580,7 @@ bool StructMap::operator<([[maybe_unused]] const StructMap& other) const noexcep
     return false;
 }
 
-std::string StructMap::string() const
+std::string StructMap::to_string() const
 {
     std::stringstream ss; ss << *this; return ss.str();
 }
@@ -1774,7 +1774,7 @@ bool StructHash::operator<([[maybe_unused]] const StructHash& other) const noexc
     return false;
 }
 
-std::string StructHash::string() const
+std::string StructHash::to_string() const
 {
     std::stringstream ss; ss << *this; return ss.str();
 }
@@ -1944,7 +1944,7 @@ bool StructHashEx::operator<([[maybe_unused]] const StructHashEx& other) const n
     return false;
 }
 
-std::string StructHashEx::string() const
+std::string StructHashEx::to_string() const
 {
     std::stringstream ss; ss << *this; return ss.str();
 }
@@ -2002,7 +2002,7 @@ bool StructEmpty::operator<([[maybe_unused]] const StructEmpty& other) const noe
     return false;
 }
 
-std::string StructEmpty::string() const
+std::string StructEmpty::to_string() const
 {
     std::stringstream ss; ss << *this; return ss.str();
 }
@@ -2015,6 +2015,258 @@ void StructEmpty::swap([[maybe_unused]] StructEmpty& other) noexcept
 std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const StructEmpty& value)
 {
     stream << "StructEmpty(";
+    stream << ")";
+    return stream;
+}
+
+StructFieldNamedString::StructFieldNamedString()
+    : string()
+{}
+
+StructFieldNamedString::StructFieldNamedString(const ::test::StructEmpty& arg_string)
+    : string(arg_string)
+{}
+
+bool StructFieldNamedString::operator==([[maybe_unused]] const StructFieldNamedString& other) const noexcept
+{
+    return (
+        (string == other.string)
+        );
+}
+
+bool StructFieldNamedString::operator<([[maybe_unused]] const StructFieldNamedString& other) const noexcept
+{
+    return false;
+}
+
+std::string StructFieldNamedString::to_string() const
+{
+    std::stringstream ss; ss << *this; return ss.str();
+}
+
+void StructFieldNamedString::swap([[maybe_unused]] StructFieldNamedString& other) noexcept
+{
+    using std::swap;
+    swap(string, other.string);
+}
+
+std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const StructFieldNamedString& value)
+{
+    stream << "StructFieldNamedString(";
+    stream << "string="; stream << value.string;
+    stream << ")";
+    return stream;
+}
+
+StringFieldNamedString::StringFieldNamedString()
+    : string()
+{}
+
+StringFieldNamedString::StringFieldNamedString(const FBEString& arg_string)
+    : string(arg_string)
+{}
+
+bool StringFieldNamedString::operator==([[maybe_unused]] const StringFieldNamedString& other) const noexcept
+{
+    return (
+        (string == other.string)
+        );
+}
+
+bool StringFieldNamedString::operator<([[maybe_unused]] const StringFieldNamedString& other) const noexcept
+{
+    return false;
+}
+
+std::string StringFieldNamedString::to_string() const
+{
+    std::stringstream ss; ss << *this; return ss.str();
+}
+
+void StringFieldNamedString::swap([[maybe_unused]] StringFieldNamedString& other) noexcept
+{
+    using std::swap;
+    swap(string, other.string);
+}
+
+std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const StringFieldNamedString& value)
+{
+    stream << "StringFieldNamedString(";
+    stream << "string="; stream << "\"" << value.string << "\"";
+    stream << ")";
+    return stream;
+}
+
+OptionalFieldNamedString::OptionalFieldNamedString()
+    : string()
+{}
+
+OptionalFieldNamedString::OptionalFieldNamedString(const std::optional<FBEString>& arg_string)
+    : string(arg_string)
+{}
+
+bool OptionalFieldNamedString::operator==([[maybe_unused]] const OptionalFieldNamedString& other) const noexcept
+{
+    return (
+        (string == other.string)
+        );
+}
+
+bool OptionalFieldNamedString::operator<([[maybe_unused]] const OptionalFieldNamedString& other) const noexcept
+{
+    return false;
+}
+
+std::string OptionalFieldNamedString::to_string() const
+{
+    std::stringstream ss; ss << *this; return ss.str();
+}
+
+void OptionalFieldNamedString::swap([[maybe_unused]] OptionalFieldNamedString& other) noexcept
+{
+    using std::swap;
+    swap(string, other.string);
+}
+
+std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const OptionalFieldNamedString& value)
+{
+    stream << "OptionalFieldNamedString(";
+    stream << "string="; if (value.string) stream << "\"" << *value.string << "\""; else stream << "null";
+    stream << ")";
+    return stream;
+}
+
+ArrayFieldNamedString::ArrayFieldNamedString()
+    : string()
+{}
+
+ArrayFieldNamedString::ArrayFieldNamedString(const std::array<FBEString, 4>& arg_string)
+    : string(arg_string)
+{}
+
+bool ArrayFieldNamedString::operator==([[maybe_unused]] const ArrayFieldNamedString& other) const noexcept
+{
+    return (
+        (string == other.string)
+        );
+}
+
+bool ArrayFieldNamedString::operator<([[maybe_unused]] const ArrayFieldNamedString& other) const noexcept
+{
+    return false;
+}
+
+std::string ArrayFieldNamedString::to_string() const
+{
+    std::stringstream ss; ss << *this; return ss.str();
+}
+
+void ArrayFieldNamedString::swap([[maybe_unused]] ArrayFieldNamedString& other) noexcept
+{
+    using std::swap;
+    swap(string, other.string);
+}
+
+std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const ArrayFieldNamedString& value)
+{
+    stream << "ArrayFieldNamedString(";
+    {
+        bool first = true;
+        stream << "string=[4][";
+        for (size_t i = 0; i < 4; ++i)
+        {
+            stream << std::string(first ? "" : ",") << "\"" << value.string[i] << "\"";
+            first = false;
+        }
+        stream << "]";
+    }
+    stream << ")";
+    return stream;
+}
+
+VectorFieldNamedString::VectorFieldNamedString()
+    : string()
+{}
+
+VectorFieldNamedString::VectorFieldNamedString(const FastVec<FBEString>& arg_string)
+    : string(arg_string)
+{}
+
+bool VectorFieldNamedString::operator==([[maybe_unused]] const VectorFieldNamedString& other) const noexcept
+{
+    return (
+        (string == other.string)
+        );
+}
+
+bool VectorFieldNamedString::operator<([[maybe_unused]] const VectorFieldNamedString& other) const noexcept
+{
+    return false;
+}
+
+std::string VectorFieldNamedString::to_string() const
+{
+    std::stringstream ss; ss << *this; return ss.str();
+}
+
+void VectorFieldNamedString::swap([[maybe_unused]] VectorFieldNamedString& other) noexcept
+{
+    using std::swap;
+    swap(string, other.string);
+}
+
+std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const VectorFieldNamedString& value)
+{
+    stream << "VectorFieldNamedString(";
+    {
+        bool first = true;
+        stream << "string=[" << value.string.size() << "][";
+        for ([[maybe_unused]] const auto& it : value.string)
+        {
+            stream << std::string(first ? "" : ",") << "\"" << it << "\"";
+            first = false;
+        }
+        stream << "]";
+    }
+    stream << ")";
+    return stream;
+}
+
+BytesFieldNamedString::BytesFieldNamedString()
+    : string()
+{}
+
+BytesFieldNamedString::BytesFieldNamedString(const FBE::buffer_t& arg_string)
+    : string(arg_string)
+{}
+
+bool BytesFieldNamedString::operator==([[maybe_unused]] const BytesFieldNamedString& other) const noexcept
+{
+    return (
+        (string == other.string)
+        );
+}
+
+bool BytesFieldNamedString::operator<([[maybe_unused]] const BytesFieldNamedString& other) const noexcept
+{
+    return false;
+}
+
+std::string BytesFieldNamedString::to_string() const
+{
+    std::stringstream ss; ss << *this; return ss.str();
+}
+
+void BytesFieldNamedString::swap([[maybe_unused]] BytesFieldNamedString& other) noexcept
+{
+    using std::swap;
+    swap(string, other.string);
+}
+
+std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const BytesFieldNamedString& value)
+{
+    stream << "BytesFieldNamedString(";
+    stream << "string="; stream << "bytes[" << value.string.size() << "]";
     stream << ")";
     return stream;
 }

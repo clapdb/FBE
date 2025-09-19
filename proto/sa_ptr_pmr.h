@@ -88,7 +88,7 @@ struct Extra : FBE::Base
     bool operator>(const Extra& other) const noexcept { return !operator<=(other); }
     bool operator>=(const Extra& other) const noexcept { return !operator<(other); }
 
-    std::string string() const;
+    std::string to_string() const;
 
     friend std::ostream& operator<<(std::ostream& stream, const Extra& value);
 
@@ -141,7 +141,7 @@ struct Simple : FBE::Base
     bool operator>(const Simple& other) const noexcept { return !operator<=(other); }
     bool operator>=(const Simple& other) const noexcept { return !operator<(other); }
 
-    std::string string() const;
+    std::string to_string() const;
 
     friend std::ostream& operator<<(std::ostream& stream, const Simple& value);
 
@@ -195,7 +195,7 @@ struct Complex : FBE::Base
     bool operator>(const Complex& other) const noexcept { return !operator<=(other); }
     bool operator>=(const Complex& other) const noexcept { return !operator<(other); }
 
-    std::string string() const;
+    std::string to_string() const;
 
     friend std::ostream& operator<<(std::ostream& stream, const Complex& value);
 

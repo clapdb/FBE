@@ -315,3 +315,34 @@ struct StructHashEx
 struct StructEmpty
 {
 }
+
+
+struct StructFieldNamedString
+{
+    StructEmpty __string__;
+}
+
+struct StringFieldNamedString
+{
+    string __string__;
+}
+
+struct OptionalFieldNamedString
+{
+    string? __string__;
+}
+
+struct ArrayFieldNamedString
+{
+    string[4] __string__;
+}
+
+struct VectorFieldNamedString
+{
+    string[] __string__;
+}
+
+struct BytesFieldNamedString
+{
+    bytes __string__;
+}

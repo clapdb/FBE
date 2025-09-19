@@ -1123,4 +1123,442 @@ private:
 
 } // namespace test
 
+// Fast Binary Encoding ::test::StructFieldNamedString final model
+template <>
+class FinalModel<::test::StructFieldNamedString>
+{
+public:
+    FinalModel(FBEBuffer& buffer, size_t offset) noexcept;
+
+    // Get the allocation size
+    size_t fbe_allocation_size(const ::test::StructFieldNamedString& fbe_value) const noexcept;
+    // Get the final offset
+    size_t fbe_offset() const noexcept { return _offset; }
+    // Set the final offset
+    size_t fbe_offset(size_t offset) const noexcept { return _offset = offset; }
+    // Get the final type
+    static constexpr size_t fbe_type() noexcept { return 144; }
+
+    // Shift the current final offset
+    void fbe_shift(size_t size) noexcept { _offset += size; }
+    // Unshift the current final offset
+    void fbe_unshift(size_t size) noexcept { _offset -= size; }
+
+    // Check if the struct value is valid
+    size_t verify() const noexcept;
+    // Check if the struct fields are valid
+    size_t verify_fields() const noexcept;
+
+    // Get the struct value
+    size_t get(::test::StructFieldNamedString& fbe_value) const noexcept;
+    // Get the struct fields values
+    size_t get_fields(::test::StructFieldNamedString& fbe_value) const noexcept;
+
+    // Set the struct value
+    size_t set(const ::test::StructFieldNamedString& fbe_value) noexcept;
+    // Set the struct fields values
+    size_t set_fields(const ::test::StructFieldNamedString& fbe_value) noexcept;
+
+private:
+    FBEBuffer& _buffer;
+    mutable size_t _offset;
+
+public:
+    FinalModel<::test::StructEmpty> string;
+};
+
+namespace test {
+
+// Fast Binary Encoding StructFieldNamedString final model
+class StructFieldNamedStringFinalModel : public FBE::Model
+{
+public:
+    StructFieldNamedStringFinalModel() : _model(this->buffer(), 8) {}
+    StructFieldNamedStringFinalModel(const std::shared_ptr<FBEBuffer>& buffer) : FBE::Model(buffer), _model(this->buffer(), 8) {}
+
+    // Get the model type
+    static constexpr size_t fbe_type() noexcept { return FinalModel<::test::StructFieldNamedString>::fbe_type(); }
+
+    // Check if the struct value is valid
+    bool verify();
+
+    // Serialize the struct value
+    size_t serialize(const ::test::StructFieldNamedString& value);
+    // Deserialize the struct value
+    size_t deserialize(::test::StructFieldNamedString& value) const noexcept;
+
+    // Move to the next struct value
+    void next(size_t prev) noexcept { _model.fbe_shift(prev); }
+
+private:
+    FinalModel<::test::StructFieldNamedString> _model;
+};
+
+} // namespace test
+
+// Fast Binary Encoding ::test::StringFieldNamedString final model
+template <>
+class FinalModel<::test::StringFieldNamedString>
+{
+public:
+    FinalModel(FBEBuffer& buffer, size_t offset) noexcept;
+
+    // Get the allocation size
+    size_t fbe_allocation_size(const ::test::StringFieldNamedString& fbe_value) const noexcept;
+    // Get the final offset
+    size_t fbe_offset() const noexcept { return _offset; }
+    // Set the final offset
+    size_t fbe_offset(size_t offset) const noexcept { return _offset = offset; }
+    // Get the final type
+    static constexpr size_t fbe_type() noexcept { return 145; }
+
+    // Shift the current final offset
+    void fbe_shift(size_t size) noexcept { _offset += size; }
+    // Unshift the current final offset
+    void fbe_unshift(size_t size) noexcept { _offset -= size; }
+
+    // Check if the struct value is valid
+    size_t verify() const noexcept;
+    // Check if the struct fields are valid
+    size_t verify_fields() const noexcept;
+
+    // Get the struct value
+    size_t get(::test::StringFieldNamedString& fbe_value) const noexcept;
+    // Get the struct fields values
+    size_t get_fields(::test::StringFieldNamedString& fbe_value) const noexcept;
+
+    // Set the struct value
+    size_t set(const ::test::StringFieldNamedString& fbe_value) noexcept;
+    // Set the struct fields values
+    size_t set_fields(const ::test::StringFieldNamedString& fbe_value) noexcept;
+
+private:
+    FBEBuffer& _buffer;
+    mutable size_t _offset;
+
+public:
+    FinalModel<FBEString> string;
+};
+
+namespace test {
+
+// Fast Binary Encoding StringFieldNamedString final model
+class StringFieldNamedStringFinalModel : public FBE::Model
+{
+public:
+    StringFieldNamedStringFinalModel() : _model(this->buffer(), 8) {}
+    StringFieldNamedStringFinalModel(const std::shared_ptr<FBEBuffer>& buffer) : FBE::Model(buffer), _model(this->buffer(), 8) {}
+
+    // Get the model type
+    static constexpr size_t fbe_type() noexcept { return FinalModel<::test::StringFieldNamedString>::fbe_type(); }
+
+    // Check if the struct value is valid
+    bool verify();
+
+    // Serialize the struct value
+    size_t serialize(const ::test::StringFieldNamedString& value);
+    // Deserialize the struct value
+    size_t deserialize(::test::StringFieldNamedString& value) const noexcept;
+
+    // Move to the next struct value
+    void next(size_t prev) noexcept { _model.fbe_shift(prev); }
+
+private:
+    FinalModel<::test::StringFieldNamedString> _model;
+};
+
+} // namespace test
+
+// Fast Binary Encoding ::test::OptionalFieldNamedString final model
+template <>
+class FinalModel<::test::OptionalFieldNamedString>
+{
+public:
+    FinalModel(FBEBuffer& buffer, size_t offset) noexcept;
+
+    // Get the allocation size
+    size_t fbe_allocation_size(const ::test::OptionalFieldNamedString& fbe_value) const noexcept;
+    // Get the final offset
+    size_t fbe_offset() const noexcept { return _offset; }
+    // Set the final offset
+    size_t fbe_offset(size_t offset) const noexcept { return _offset = offset; }
+    // Get the final type
+    static constexpr size_t fbe_type() noexcept { return 146; }
+
+    // Shift the current final offset
+    void fbe_shift(size_t size) noexcept { _offset += size; }
+    // Unshift the current final offset
+    void fbe_unshift(size_t size) noexcept { _offset -= size; }
+
+    // Check if the struct value is valid
+    size_t verify() const noexcept;
+    // Check if the struct fields are valid
+    size_t verify_fields() const noexcept;
+
+    // Get the struct value
+    size_t get(::test::OptionalFieldNamedString& fbe_value) const noexcept;
+    // Get the struct fields values
+    size_t get_fields(::test::OptionalFieldNamedString& fbe_value) const noexcept;
+
+    // Set the struct value
+    size_t set(const ::test::OptionalFieldNamedString& fbe_value) noexcept;
+    // Set the struct fields values
+    size_t set_fields(const ::test::OptionalFieldNamedString& fbe_value) noexcept;
+
+private:
+    FBEBuffer& _buffer;
+    mutable size_t _offset;
+
+public:
+    FinalModel<std::optional<FBEString>> string;
+};
+
+namespace test {
+
+// Fast Binary Encoding OptionalFieldNamedString final model
+class OptionalFieldNamedStringFinalModel : public FBE::Model
+{
+public:
+    OptionalFieldNamedStringFinalModel() : _model(this->buffer(), 8) {}
+    OptionalFieldNamedStringFinalModel(const std::shared_ptr<FBEBuffer>& buffer) : FBE::Model(buffer), _model(this->buffer(), 8) {}
+
+    // Get the model type
+    static constexpr size_t fbe_type() noexcept { return FinalModel<::test::OptionalFieldNamedString>::fbe_type(); }
+
+    // Check if the struct value is valid
+    bool verify();
+
+    // Serialize the struct value
+    size_t serialize(const ::test::OptionalFieldNamedString& value);
+    // Deserialize the struct value
+    size_t deserialize(::test::OptionalFieldNamedString& value) const noexcept;
+
+    // Move to the next struct value
+    void next(size_t prev) noexcept { _model.fbe_shift(prev); }
+
+private:
+    FinalModel<::test::OptionalFieldNamedString> _model;
+};
+
+} // namespace test
+
+// Fast Binary Encoding ::test::ArrayFieldNamedString final model
+template <>
+class FinalModel<::test::ArrayFieldNamedString>
+{
+public:
+    FinalModel(FBEBuffer& buffer, size_t offset) noexcept;
+
+    // Get the allocation size
+    size_t fbe_allocation_size(const ::test::ArrayFieldNamedString& fbe_value) const noexcept;
+    // Get the final offset
+    size_t fbe_offset() const noexcept { return _offset; }
+    // Set the final offset
+    size_t fbe_offset(size_t offset) const noexcept { return _offset = offset; }
+    // Get the final type
+    static constexpr size_t fbe_type() noexcept { return 147; }
+
+    // Shift the current final offset
+    void fbe_shift(size_t size) noexcept { _offset += size; }
+    // Unshift the current final offset
+    void fbe_unshift(size_t size) noexcept { _offset -= size; }
+
+    // Check if the struct value is valid
+    size_t verify() const noexcept;
+    // Check if the struct fields are valid
+    size_t verify_fields() const noexcept;
+
+    // Get the struct value
+    size_t get(::test::ArrayFieldNamedString& fbe_value) const noexcept;
+    // Get the struct fields values
+    size_t get_fields(::test::ArrayFieldNamedString& fbe_value) const noexcept;
+
+    // Set the struct value
+    size_t set(const ::test::ArrayFieldNamedString& fbe_value) noexcept;
+    // Set the struct fields values
+    size_t set_fields(const ::test::ArrayFieldNamedString& fbe_value) noexcept;
+
+private:
+    FBEBuffer& _buffer;
+    mutable size_t _offset;
+
+public:
+    FinalModelArray<FBEString, 4> string;
+};
+
+namespace test {
+
+// Fast Binary Encoding ArrayFieldNamedString final model
+class ArrayFieldNamedStringFinalModel : public FBE::Model
+{
+public:
+    ArrayFieldNamedStringFinalModel() : _model(this->buffer(), 8) {}
+    ArrayFieldNamedStringFinalModel(const std::shared_ptr<FBEBuffer>& buffer) : FBE::Model(buffer), _model(this->buffer(), 8) {}
+
+    // Get the model type
+    static constexpr size_t fbe_type() noexcept { return FinalModel<::test::ArrayFieldNamedString>::fbe_type(); }
+
+    // Check if the struct value is valid
+    bool verify();
+
+    // Serialize the struct value
+    size_t serialize(const ::test::ArrayFieldNamedString& value);
+    // Deserialize the struct value
+    size_t deserialize(::test::ArrayFieldNamedString& value) const noexcept;
+
+    // Move to the next struct value
+    void next(size_t prev) noexcept { _model.fbe_shift(prev); }
+
+private:
+    FinalModel<::test::ArrayFieldNamedString> _model;
+};
+
+} // namespace test
+
+// Fast Binary Encoding ::test::VectorFieldNamedString final model
+template <>
+class FinalModel<::test::VectorFieldNamedString>
+{
+public:
+    FinalModel(FBEBuffer& buffer, size_t offset) noexcept;
+
+    // Get the allocation size
+    size_t fbe_allocation_size(const ::test::VectorFieldNamedString& fbe_value) const noexcept;
+    // Get the final offset
+    size_t fbe_offset() const noexcept { return _offset; }
+    // Set the final offset
+    size_t fbe_offset(size_t offset) const noexcept { return _offset = offset; }
+    // Get the final type
+    static constexpr size_t fbe_type() noexcept { return 148; }
+
+    // Shift the current final offset
+    void fbe_shift(size_t size) noexcept { _offset += size; }
+    // Unshift the current final offset
+    void fbe_unshift(size_t size) noexcept { _offset -= size; }
+
+    // Check if the struct value is valid
+    size_t verify() const noexcept;
+    // Check if the struct fields are valid
+    size_t verify_fields() const noexcept;
+
+    // Get the struct value
+    size_t get(::test::VectorFieldNamedString& fbe_value) const noexcept;
+    // Get the struct fields values
+    size_t get_fields(::test::VectorFieldNamedString& fbe_value) const noexcept;
+
+    // Set the struct value
+    size_t set(const ::test::VectorFieldNamedString& fbe_value) noexcept;
+    // Set the struct fields values
+    size_t set_fields(const ::test::VectorFieldNamedString& fbe_value) noexcept;
+
+private:
+    FBEBuffer& _buffer;
+    mutable size_t _offset;
+
+public:
+    FinalModelVector<FBEString> string;
+};
+
+namespace test {
+
+// Fast Binary Encoding VectorFieldNamedString final model
+class VectorFieldNamedStringFinalModel : public FBE::Model
+{
+public:
+    VectorFieldNamedStringFinalModel() : _model(this->buffer(), 8) {}
+    VectorFieldNamedStringFinalModel(const std::shared_ptr<FBEBuffer>& buffer) : FBE::Model(buffer), _model(this->buffer(), 8) {}
+
+    // Get the model type
+    static constexpr size_t fbe_type() noexcept { return FinalModel<::test::VectorFieldNamedString>::fbe_type(); }
+
+    // Check if the struct value is valid
+    bool verify();
+
+    // Serialize the struct value
+    size_t serialize(const ::test::VectorFieldNamedString& value);
+    // Deserialize the struct value
+    size_t deserialize(::test::VectorFieldNamedString& value) const noexcept;
+
+    // Move to the next struct value
+    void next(size_t prev) noexcept { _model.fbe_shift(prev); }
+
+private:
+    FinalModel<::test::VectorFieldNamedString> _model;
+};
+
+} // namespace test
+
+// Fast Binary Encoding ::test::BytesFieldNamedString final model
+template <>
+class FinalModel<::test::BytesFieldNamedString>
+{
+public:
+    FinalModel(FBEBuffer& buffer, size_t offset) noexcept;
+
+    // Get the allocation size
+    size_t fbe_allocation_size(const ::test::BytesFieldNamedString& fbe_value) const noexcept;
+    // Get the final offset
+    size_t fbe_offset() const noexcept { return _offset; }
+    // Set the final offset
+    size_t fbe_offset(size_t offset) const noexcept { return _offset = offset; }
+    // Get the final type
+    static constexpr size_t fbe_type() noexcept { return 149; }
+
+    // Shift the current final offset
+    void fbe_shift(size_t size) noexcept { _offset += size; }
+    // Unshift the current final offset
+    void fbe_unshift(size_t size) noexcept { _offset -= size; }
+
+    // Check if the struct value is valid
+    size_t verify() const noexcept;
+    // Check if the struct fields are valid
+    size_t verify_fields() const noexcept;
+
+    // Get the struct value
+    size_t get(::test::BytesFieldNamedString& fbe_value) const noexcept;
+    // Get the struct fields values
+    size_t get_fields(::test::BytesFieldNamedString& fbe_value) const noexcept;
+
+    // Set the struct value
+    size_t set(const ::test::BytesFieldNamedString& fbe_value) noexcept;
+    // Set the struct fields values
+    size_t set_fields(const ::test::BytesFieldNamedString& fbe_value) noexcept;
+
+private:
+    FBEBuffer& _buffer;
+    mutable size_t _offset;
+
+public:
+    FinalModel<FBE::buffer_t> string;
+};
+
+namespace test {
+
+// Fast Binary Encoding BytesFieldNamedString final model
+class BytesFieldNamedStringFinalModel : public FBE::Model
+{
+public:
+    BytesFieldNamedStringFinalModel() : _model(this->buffer(), 8) {}
+    BytesFieldNamedStringFinalModel(const std::shared_ptr<FBEBuffer>& buffer) : FBE::Model(buffer), _model(this->buffer(), 8) {}
+
+    // Get the model type
+    static constexpr size_t fbe_type() noexcept { return FinalModel<::test::BytesFieldNamedString>::fbe_type(); }
+
+    // Check if the struct value is valid
+    bool verify();
+
+    // Serialize the struct value
+    size_t serialize(const ::test::BytesFieldNamedString& value);
+    // Deserialize the struct value
+    size_t deserialize(::test::BytesFieldNamedString& value) const noexcept;
+
+    // Move to the next struct value
+    void next(size_t prev) noexcept { _model.fbe_shift(prev); }
+
+private:
+    FinalModel<::test::BytesFieldNamedString> _model;
+};
+
+} // namespace test
+
 } // namespace FBE

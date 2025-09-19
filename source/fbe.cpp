@@ -85,6 +85,8 @@ void StructBody::AddField(StructField* f)
         yyerror("Struct field name is invalid!");
     if (f->type->empty())
         yyerror("Struct field type is invalid!");
+    if (is_escaped_name(*f->name))
+        extract_escaped_name_inplace(*f->name);
 
     // Check for duplicates
     auto it = std::find_if(fields.begin(), fields.end(), [f](auto item)->bool { return *item->name.get() == *f->name.get(); });
