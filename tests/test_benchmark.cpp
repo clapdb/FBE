@@ -49,8 +49,10 @@ static test::StructSimple CreateSimpleStruct()
     s.f8 = 600;
     s.f9 = 70;
     s.f10 = 80;
-    s.f11 = 3.14f;
-    s.f12 = 2.71828;
+    s.f11 = 90;
+    s.f12 = 100;
+    s.f25 = 3.14f;
+    s.f27 = 2.71828;
     return s;
 }
 
