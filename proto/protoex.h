@@ -110,7 +110,7 @@ struct Order
     bool operator>(const Order& other) const noexcept { return !operator<=(other); }
     bool operator>=(const Order& other) const noexcept { return !operator<(other); }
 
-    std::string string() const;
+    std::string to_string() const;
 
     friend std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const Order& value);
 
@@ -158,7 +158,7 @@ struct Balance : public ::proto::Balance
     bool operator>(const Balance& other) const noexcept { return !operator<=(other); }
     bool operator>=(const Balance& other) const noexcept { return !operator<(other); }
 
-    std::string string() const;
+    std::string to_string() const;
 
     friend std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const Balance& value);
 
@@ -211,7 +211,7 @@ struct Account
     bool operator>(const Account& other) const noexcept { return !operator<=(other); }
     bool operator>=(const Account& other) const noexcept { return !operator<(other); }
 
-    std::string string() const;
+    std::string to_string() const;
 
     friend std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const Account& value);
 
@@ -259,7 +259,7 @@ struct OrderMessage
     bool operator>(const OrderMessage& other) const noexcept { return !operator<=(other); }
     bool operator>=(const OrderMessage& other) const noexcept { return !operator<(other); }
 
-    std::string string() const;
+    std::string to_string() const;
 
     friend std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const OrderMessage& value);
 
@@ -306,7 +306,7 @@ struct BalanceMessage
     bool operator>(const BalanceMessage& other) const noexcept { return !operator<=(other); }
     bool operator>=(const BalanceMessage& other) const noexcept { return !operator<(other); }
 
-    std::string string() const;
+    std::string to_string() const;
 
     friend std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const BalanceMessage& value);
 
@@ -353,7 +353,7 @@ struct AccountMessage
     bool operator>(const AccountMessage& other) const noexcept { return !operator<=(other); }
     bool operator>=(const AccountMessage& other) const noexcept { return !operator<(other); }
 
-    std::string string() const;
+    std::string to_string() const;
 
     friend std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const AccountMessage& value);
 

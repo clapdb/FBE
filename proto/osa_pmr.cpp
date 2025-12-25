@@ -60,7 +60,7 @@ bool Extra::operator<([[maybe_unused]] const Extra& other) const noexcept
     return false;
 }
 
-std::string Extra::string() const
+std::string Extra::to_string() const
 {
     std::stringstream ss; ss << *this; return ss.str();
 }
@@ -121,7 +121,7 @@ bool Simple::operator<([[maybe_unused]] const Simple& other) const noexcept
     return false;
 }
 
-std::string Simple::string() const
+std::string Simple::to_string() const
 {
     std::stringstream ss; ss << *this; return ss.str();
 }

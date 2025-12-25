@@ -26,7 +26,7 @@ size_t FinalSender::send(const ::proto::OrderMessage& value)
     // Log the value
     if (this->_logging)
     {
-        std::string message = value.string();
+        std::string message = value.to_string();
         this->onSendLog(message);
     }
 
@@ -44,7 +44,7 @@ size_t FinalSender::send(const ::proto::BalanceMessage& value)
     // Log the value
     if (this->_logging)
     {
-        std::string message = value.string();
+        std::string message = value.to_string();
         this->onSendLog(message);
     }
 
@@ -62,7 +62,7 @@ size_t FinalSender::send(const ::proto::AccountMessage& value)
     // Log the value
     if (this->_logging)
     {
-        std::string message = value.string();
+        std::string message = value.to_string();
         this->onSendLog(message);
     }
 
@@ -85,7 +85,7 @@ bool FinalReceiver::onReceive(size_t type, const void* data, size_t size)
             // Log the value
             if (this->_logging)
             {
-                std::string message = OrderMessageValue.string();
+                std::string message = OrderMessageValue.to_string();
                 this->onReceiveLog(message);
             }
 
@@ -104,7 +104,7 @@ bool FinalReceiver::onReceive(size_t type, const void* data, size_t size)
             // Log the value
             if (this->_logging)
             {
-                std::string message = BalanceMessageValue.string();
+                std::string message = BalanceMessageValue.to_string();
                 this->onReceiveLog(message);
             }
 
@@ -123,7 +123,7 @@ bool FinalReceiver::onReceive(size_t type, const void* data, size_t size)
             // Log the value
             if (this->_logging)
             {
-                std::string message = AccountMessageValue.string();
+                std::string message = AccountMessageValue.to_string();
                 this->onReceiveLog(message);
             }
 

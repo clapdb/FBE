@@ -19,10 +19,11 @@ inline size_t FinalModelBase<T, TBase>::verify() const noexcept
 template <typename T, typename TBase>
 inline size_t FinalModelBase<T, TBase>::get(T& value) const noexcept
 {
-    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+    size_t fbe_full_offset = _buffer.offset() + fbe_offset();
+    if ((fbe_full_offset + fbe_size()) > _buffer.size())
         return 0;
 
-    value = unaligned_load<T>(_buffer.data() + _buffer.offset() + fbe_offset());
+    value = unaligned_load<T>(_buffer.data() + fbe_full_offset);
 
     return fbe_size();
 }
@@ -30,31 +31,34 @@ inline size_t FinalModelBase<T, TBase>::get(T& value) const noexcept
 template <typename T, typename TBase>
 inline size_t FinalModelBase<T, TBase>::set(T value) noexcept
 {
-    assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
-    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+    size_t fbe_full_offset = _buffer.offset() + fbe_offset();
+    assert(((fbe_full_offset + fbe_size()) <= _buffer.size()) && "Model is broken!");
+    if ((fbe_full_offset + fbe_size()) > _buffer.size())
         return 0;
 
-    unaligned_store<TBase>(_buffer.data() + _buffer.offset() + fbe_offset(), (TBase)value);
+    unaligned_store<TBase>(_buffer.data() + fbe_full_offset, (TBase)value);
     return fbe_size();
 }
 
 template <typename T>
 inline bool FinalModel<std::optional<T>>::has_value() const noexcept
 {
-    if ((_buffer.offset() + fbe_offset() + 1) > _buffer.size())
+    size_t fbe_full_offset = _buffer.offset() + fbe_offset();
+    if ((fbe_full_offset + 1) > _buffer.size())
         return false;
 
-    uint8_t fbe_has_value = *((const uint8_t*)(_buffer.data() + _buffer.offset() + fbe_offset()));
+    uint8_t fbe_has_value = *((const uint8_t*)(_buffer.data() + fbe_full_offset));
     return (fbe_has_value != 0);
 }
 
 template <typename T>
 inline size_t FinalModel<std::optional<T>>::verify() const noexcept
 {
-    if ((_buffer.offset() + fbe_offset() + 1) > _buffer.size())
+    size_t fbe_full_offset = _buffer.offset() + fbe_offset();
+    if ((fbe_full_offset + 1) > _buffer.size())
         return std::numeric_limits<std::size_t>::max();
 
-    uint8_t fbe_has_value = *((const uint8_t*)(_buffer.data() + _buffer.offset() + fbe_offset()));
+    uint8_t fbe_has_value = *((const uint8_t*)(_buffer.data() + fbe_full_offset));
     if (fbe_has_value == 0)
         return 1;
 
@@ -69,11 +73,13 @@ inline size_t FinalModel<std::optional<T>>::get(std::optional<T>& opt) const noe
 {
     opt = std::nullopt;
 
-    assert(((_buffer.offset() + fbe_offset() + 1) <= _buffer.size()) && "Model is broken!");
-    if ((_buffer.offset() + fbe_offset() + 1) > _buffer.size())
+    size_t fbe_full_offset = _buffer.offset() + fbe_offset();
+    assert(((fbe_full_offset + 1) <= _buffer.size()) && "Model is broken!");
+    if ((fbe_full_offset + 1) > _buffer.size())
         return 0;
 
-    if (!has_value())
+    uint8_t fbe_has_value = *((const uint8_t*)(_buffer.data() + fbe_full_offset));
+    if (fbe_has_value == 0)
         return 1;
 
     _buffer.shift(fbe_offset() + 1);
@@ -87,12 +93,13 @@ inline size_t FinalModel<std::optional<T>>::get(std::optional<T>& opt) const noe
 template <typename T>
 inline size_t FinalModel<std::optional<T>>::set(const std::optional<T>& opt)
 {
-    assert(((_buffer.offset() + fbe_offset() + 1) <= _buffer.size()) && "Model is broken!");
-    if ((_buffer.offset() + fbe_offset() + 1) > _buffer.size())
+    size_t fbe_full_offset = _buffer.offset() + fbe_offset();
+    assert(((fbe_full_offset + 1) <= _buffer.size()) && "Model is broken!");
+    if ((fbe_full_offset + 1) > _buffer.size())
         return 0;
 
     uint8_t fbe_has_value = opt ? 1 : 0;
-    *((uint8_t*)(_buffer.data() + _buffer.offset() + fbe_offset())) = fbe_has_value;
+    *((uint8_t*)(_buffer.data() + fbe_full_offset)) = fbe_has_value;
     if (fbe_has_value == 0)
         return 1;
 
@@ -159,8 +166,9 @@ template <typename T, size_t N>
 template <size_t S>
 inline size_t FinalModelArray<T, N>::get(T (&values)[S]) const noexcept
 {
-    assert(((_buffer.offset() + fbe_offset()) <= _buffer.size()) && "Model is broken!");
-    if ((_buffer.offset() + fbe_offset()) > _buffer.size())
+    size_t fbe_full_offset = _buffer.offset() + fbe_offset();
+    assert((fbe_full_offset <= _buffer.size()) && "Model is broken!");
+    if (fbe_full_offset > _buffer.size())
         return 0;
 
     size_t size = 0;
@@ -178,8 +186,9 @@ template <typename T, size_t N>
 template <size_t S>
 inline size_t FinalModelArray<T, N>::get(std::array<T, S>& values) const noexcept
 {
-    assert(((_buffer.offset() + fbe_offset()) <= _buffer.size()) && "Model is broken!");
-    if ((_buffer.offset() + fbe_offset()) > _buffer.size())
+    size_t fbe_full_offset = _buffer.offset() + fbe_offset();
+    assert((fbe_full_offset <= _buffer.size()) && "Model is broken!");
+    if (fbe_full_offset > _buffer.size())
         return 0;
 
     size_t size = 0;
@@ -198,8 +207,9 @@ inline size_t FinalModelArray<T, N>::get(FastVec<T>& values) const noexcept
 {
     values.clear();
 
-    assert(((_buffer.offset() + fbe_offset()) <= _buffer.size()) && "Model is broken!");
-    if ((_buffer.offset() + fbe_offset()) > _buffer.size())
+    size_t fbe_full_offset = _buffer.offset() + fbe_offset();
+    assert((fbe_full_offset <= _buffer.size()) && "Model is broken!");
+    if (fbe_full_offset > _buffer.size())
         return 0;
 
     values.reserve(N);
@@ -208,12 +218,12 @@ inline size_t FinalModelArray<T, N>::get(FastVec<T>& values) const noexcept
     FinalModel<T> fbe_model(_buffer, fbe_offset());
     for (size_t i = N; i-- > 0;)
     {
-        T value = T();
+        T value{};
         size_t offset = fbe_model.get(value);
         #if defined(USING_STD_VECTOR)
-        values.emplace_back(value);
+        values.emplace_back(std::move(value));
         #else
-        values.template emplace_back<Safety::Unsafe>(value);
+        values.template emplace_back<Safety::Unsafe>(std::move(value));
         #endif
         fbe_model.fbe_shift(offset);
         size += offset;
@@ -333,11 +343,12 @@ inline size_t FinalModelVector<T>::get(FastVec<T>& values) const noexcept
 {
     values.clear();
 
-    assert(((_buffer.offset() + fbe_offset() + 4) <= _buffer.size()) && "Model is broken!");
-    if ((_buffer.offset() + fbe_offset() + 4) > _buffer.size())
+    size_t fbe_full_offset = _buffer.offset() + fbe_offset();
+    assert(((fbe_full_offset + 4) <= _buffer.size()) && "Model is broken!");
+    if ((fbe_full_offset + 4) > _buffer.size())
         return 0;
 
-    size_t fbe_vector_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset());
+    size_t fbe_vector_size = unaligned_load<uint32_t>(_buffer.data() + fbe_full_offset);
     if (fbe_vector_size == 0)
         return 4;
 
@@ -347,12 +358,12 @@ inline size_t FinalModelVector<T>::get(FastVec<T>& values) const noexcept
     FinalModel<T> fbe_model(_buffer, fbe_offset() + 4);
     for (size_t i = fbe_vector_size; i-- > 0;)
     {
-        T value = T();
+        T value{};
         size_t offset = fbe_model.get(value);
         #if defined(USING_STD_VECTOR)
-        values.emplace_back(value);
+        values.emplace_back(std::move(value));
         #else
-        values.template emplace_back<Safety::Unsafe>(value);
+        values.template emplace_back<Safety::Unsafe>(std::move(value));
         #endif
         fbe_model.fbe_shift(offset);
         size += offset;
@@ -365,11 +376,12 @@ inline size_t FinalModelVector<T>::get(std::list<T>& values) const noexcept
 {
     values.clear();
 
-    assert(((_buffer.offset() + fbe_offset() + 4) <= _buffer.size()) && "Model is broken!");
-    if ((_buffer.offset() + fbe_offset() + 4) > _buffer.size())
+    size_t fbe_full_offset = _buffer.offset() + fbe_offset();
+    assert(((fbe_full_offset + 4) <= _buffer.size()) && "Model is broken!");
+    if ((fbe_full_offset + 4) > _buffer.size())
         return 0;
 
-    size_t fbe_vector_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset());
+    size_t fbe_vector_size = unaligned_load<uint32_t>(_buffer.data() + fbe_full_offset);
     if (fbe_vector_size == 0)
         return 4;
 
@@ -377,9 +389,9 @@ inline size_t FinalModelVector<T>::get(std::list<T>& values) const noexcept
     FinalModel<T> fbe_model(_buffer, fbe_offset() + 4);
     for (size_t i = fbe_vector_size; i-- > 0;)
     {
-        T value = T();
+        T value{};
         size_t offset = fbe_model.get(value);
-        values.emplace_back(value);
+        values.emplace_back(std::move(value));
         fbe_model.fbe_shift(offset);
         size += offset;
     }
@@ -391,11 +403,12 @@ inline size_t FinalModelVector<T>::get(std::set<T>& values) const noexcept
 {
     values.clear();
 
-    assert(((_buffer.offset() + fbe_offset() + 4) <= _buffer.size()) && "Model is broken!");
-    if ((_buffer.offset() + fbe_offset() + 4) > _buffer.size())
+    size_t fbe_full_offset = _buffer.offset() + fbe_offset();
+    assert(((fbe_full_offset + 4) <= _buffer.size()) && "Model is broken!");
+    if ((fbe_full_offset + 4) > _buffer.size())
         return 0;
 
-    size_t fbe_vector_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset());
+    size_t fbe_vector_size = unaligned_load<uint32_t>(_buffer.data() + fbe_full_offset);
     if (fbe_vector_size == 0)
         return 4;
 
@@ -403,9 +416,9 @@ inline size_t FinalModelVector<T>::get(std::set<T>& values) const noexcept
     FinalModel<T> fbe_model(_buffer, fbe_offset() + 4);
     for (size_t i = fbe_vector_size; i-- > 0;)
     {
-        T value = T();
+        T value{};
         size_t offset = fbe_model.get(value);
-        values.emplace(value);
+        values.emplace(std::move(value));
         fbe_model.fbe_shift(offset);
         size += offset;
     }
@@ -415,11 +428,12 @@ inline size_t FinalModelVector<T>::get(std::set<T>& values) const noexcept
 template <typename T>
 inline size_t FinalModelVector<T>::set(const FastVec<T>& values) noexcept
 {
-    assert(((_buffer.offset() + fbe_offset() + 4) <= _buffer.size()) && "Model is broken!");
-    if ((_buffer.offset() + fbe_offset() + 4) > _buffer.size())
+    size_t fbe_full_offset = _buffer.offset() + fbe_offset();
+    assert(((fbe_full_offset + 4) <= _buffer.size()) && "Model is broken!");
+    if ((fbe_full_offset + 4) > _buffer.size())
         return 0;
 
-    *((uint32_t*)(_buffer.data() + _buffer.offset() + fbe_offset())) = (uint32_t)values.size();
+    *((uint32_t*)(_buffer.data() + fbe_full_offset)) = (uint32_t)values.size();
 
     size_t size = 4;
     FinalModel<T> fbe_model(_buffer, fbe_offset() + 4);
@@ -435,11 +449,12 @@ inline size_t FinalModelVector<T>::set(const FastVec<T>& values) noexcept
 template <typename T>
 inline size_t FinalModelVector<T>::set(const std::list<T>& values) noexcept
 {
-    assert(((_buffer.offset() + fbe_offset() + 4) <= _buffer.size()) && "Model is broken!");
-    if ((_buffer.offset() + fbe_offset() + 4) > _buffer.size())
+    size_t fbe_full_offset = _buffer.offset() + fbe_offset();
+    assert(((fbe_full_offset + 4) <= _buffer.size()) && "Model is broken!");
+    if ((fbe_full_offset + 4) > _buffer.size())
         return 0;
 
-    *((uint32_t*)(_buffer.data() + _buffer.offset() + fbe_offset())) = (uint32_t)values.size();
+    *((uint32_t*)(_buffer.data() + fbe_full_offset)) = (uint32_t)values.size();
 
     size_t size = 4;
     FinalModel<T> fbe_model(_buffer, fbe_offset() + 4);
@@ -455,11 +470,12 @@ inline size_t FinalModelVector<T>::set(const std::list<T>& values) noexcept
 template <typename T>
 inline size_t FinalModelVector<T>::set(const std::set<T>& values) noexcept
 {
-    assert(((_buffer.offset() + fbe_offset() + 4) <= _buffer.size()) && "Model is broken!");
-    if ((_buffer.offset() + fbe_offset() + 4) > _buffer.size())
+    size_t fbe_full_offset = _buffer.offset() + fbe_offset();
+    assert(((fbe_full_offset + 4) <= _buffer.size()) && "Model is broken!");
+    if ((fbe_full_offset + 4) > _buffer.size())
         return 0;
 
-    *((uint32_t*)(_buffer.data() + _buffer.offset() + fbe_offset())) = (uint32_t)values.size();
+    *((uint32_t*)(_buffer.data() + fbe_full_offset)) = (uint32_t)values.size();
 
     size_t size = 4;
     FinalModel<T> fbe_model(_buffer, fbe_offset() + 4);
@@ -534,11 +550,12 @@ inline size_t FinalModelMap<TKey, TValue>::get(std::map<TKey, TValue>& values) c
 {
     values.clear();
 
-    assert(((_buffer.offset() + fbe_offset() + 4) <= _buffer.size()) && "Model is broken!");
-    if ((_buffer.offset() + fbe_offset() + 4) > _buffer.size())
+    size_t fbe_full_offset = _buffer.offset() + fbe_offset();
+    assert(((fbe_full_offset + 4) <= _buffer.size()) && "Model is broken!");
+    if ((fbe_full_offset + 4) > _buffer.size())
         return 0;
 
-    size_t fbe_map_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset());
+    size_t fbe_map_size = unaligned_load<uint32_t>(_buffer.data() + fbe_full_offset);
     if (fbe_map_size == 0)
         return 4;
 
@@ -547,15 +564,15 @@ inline size_t FinalModelMap<TKey, TValue>::get(std::map<TKey, TValue>& values) c
     FinalModel<TValue> fbe_model_value(_buffer, fbe_offset() + 4);
     for (size_t i = fbe_map_size; i-- > 0;)
     {
-        TKey key;
-        TValue value;
+        TKey key{};
+        TValue value{};
         size_t offset_key = fbe_model_key.get(key);
         fbe_model_key.fbe_shift(offset_key);
         fbe_model_value.fbe_shift(offset_key);
         size_t offset_value = fbe_model_value.get(value);
         fbe_model_key.fbe_shift(offset_value);
         fbe_model_value.fbe_shift(offset_value);
-        values.emplace(key, value);
+        values.emplace(std::move(key), std::move(value));
         size += offset_key + offset_value;
     }
     return size;
@@ -566,11 +583,12 @@ inline size_t FinalModelMap<TKey, TValue>::get(std::unordered_map<TKey, TValue>&
 {
     values.clear();
 
-    assert(((_buffer.offset() + fbe_offset() + 4) <= _buffer.size()) && "Model is broken!");
-    if ((_buffer.offset() + fbe_offset() + 4) > _buffer.size())
+    size_t fbe_full_offset = _buffer.offset() + fbe_offset();
+    assert(((fbe_full_offset + 4) <= _buffer.size()) && "Model is broken!");
+    if ((fbe_full_offset + 4) > _buffer.size())
         return 0;
 
-    size_t fbe_map_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset());
+    size_t fbe_map_size = unaligned_load<uint32_t>(_buffer.data() + fbe_full_offset);
     if (fbe_map_size == 0)
         return 4;
 
@@ -579,15 +597,15 @@ inline size_t FinalModelMap<TKey, TValue>::get(std::unordered_map<TKey, TValue>&
     FinalModel<TValue> fbe_model_value(_buffer, fbe_offset() + 4);
     for (size_t i = fbe_map_size; i-- > 0;)
     {
-        TKey key;
-        TValue value;
+        TKey key{};
+        TValue value{};
         size_t offset_key = fbe_model_key.get(key);
         fbe_model_key.fbe_shift(offset_key);
         fbe_model_value.fbe_shift(offset_key);
         size_t offset_value = fbe_model_value.get(value);
         fbe_model_key.fbe_shift(offset_value);
         fbe_model_value.fbe_shift(offset_value);
-        values.emplace(key, value);
+        values.emplace(std::move(key), std::move(value));
         size += offset_key + offset_value;
     }
     return size;
@@ -596,11 +614,12 @@ inline size_t FinalModelMap<TKey, TValue>::get(std::unordered_map<TKey, TValue>&
 template <typename TKey, typename TValue>
 inline size_t FinalModelMap<TKey, TValue>::set(const std::map<TKey, TValue>& values) noexcept
 {
-    assert(((_buffer.offset() + fbe_offset() + 4) <= _buffer.size()) && "Model is broken!");
-    if ((_buffer.offset() + fbe_offset() + 4) > _buffer.size())
+    size_t fbe_full_offset = _buffer.offset() + fbe_offset();
+    assert(((fbe_full_offset + 4) <= _buffer.size()) && "Model is broken!");
+    if ((fbe_full_offset + 4) > _buffer.size())
         return 0;
 
-    *((uint32_t*)(_buffer.data() + _buffer.offset() + fbe_offset())) = (uint32_t)values.size();
+    *((uint32_t*)(_buffer.data() + fbe_full_offset)) = (uint32_t)values.size();
 
     size_t size = 4;
     FinalModel<TKey> fbe_model_key(_buffer, fbe_offset() + 4);
@@ -621,11 +640,12 @@ inline size_t FinalModelMap<TKey, TValue>::set(const std::map<TKey, TValue>& val
 template <typename TKey, typename TValue>
 inline size_t FinalModelMap<TKey, TValue>::set(const std::unordered_map<TKey, TValue>& values) noexcept
 {
-    assert(((_buffer.offset() + fbe_offset() + 4) <= _buffer.size()) && "Model is broken!");
-    if ((_buffer.offset() + fbe_offset() + 4) > _buffer.size())
+    size_t fbe_full_offset = _buffer.offset() + fbe_offset();
+    assert(((fbe_full_offset + 4) <= _buffer.size()) && "Model is broken!");
+    if ((fbe_full_offset + 4) > _buffer.size())
         return 0;
 
-    *((uint32_t*)(_buffer.data() + _buffer.offset() + fbe_offset())) = (uint32_t)values.size();
+    *((uint32_t*)(_buffer.data() + fbe_full_offset)) = (uint32_t)values.size();
 
     size_t size = 4;
     FinalModel<TKey> fbe_model_key(_buffer, fbe_offset() + 4);
