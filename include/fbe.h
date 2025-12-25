@@ -87,6 +87,8 @@ inline void write_all(const fs::path& path, const std::string& content) {
 // string section
 inline auto replace_all(std::string& inout, std::string_view what, std::string_view with) -> size_t
 {
+    if (what.empty())
+        return 0;  // Avoid infinite loop with empty search string
     std::size_t count{};
     for (std::string::size_type pos{};
          inout.npos != (pos = inout.find(what.data(), pos, what.length()));
@@ -191,7 +193,9 @@ inline auto is_escaped_name(const std::string& name) -> bool {
 }
 
 inline void extract_escaped_name_inplace(std::string& name) {
-    assert(is_escaped_name(name));
+    // is_escaped_name requires size > 4, so substr(2, size-4) is always valid
+    if (!is_escaped_name(name))
+        return;  // Invalid input - do nothing
     name.assign(name.substr(2, name.size() - 4));
 }
 

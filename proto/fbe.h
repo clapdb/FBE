@@ -109,16 +109,37 @@ namespace FBE {
 namespace FBE {
 
 template <typename T>
-inline auto unaligned_load(void const* ptr) noexcept -> T {
-    // using memcpy so we don't get into unaligned load problems.
-    // compiler should optimize this very well anyways.
+[[gnu::always_inline]] inline auto unaligned_load(void const* ptr) noexcept -> T {
     T t;
     std::memcpy(&t, ptr, sizeof(T));
     return t;
-};
+}
 
 template <typename T>
-inline void unaligned_store(void *ptr, T v) { memcpy(ptr, &v, sizeof(T)); }
+[[gnu::always_inline]] inline void unaligned_store(void *ptr, T v) noexcept {
+    std::memcpy(ptr, &v, sizeof(T));
+}
+
+// Specializations for common types to help compiler optimize
+template <>
+[[gnu::always_inline]] inline auto unaligned_load<uint8_t>(void const* ptr) noexcept -> uint8_t {
+    return *static_cast<const uint8_t*>(ptr);
+}
+
+template <>
+[[gnu::always_inline]] inline auto unaligned_load<int8_t>(void const* ptr) noexcept -> int8_t {
+    return *static_cast<const int8_t*>(ptr);
+}
+
+template <>
+[[gnu::always_inline]] inline void unaligned_store<uint8_t>(void *ptr, uint8_t v) noexcept {
+    *static_cast<uint8_t*>(ptr) = v;
+}
+
+template <>
+[[gnu::always_inline]] inline void unaligned_store<int8_t>(void *ptr, int8_t v) noexcept {
+    *static_cast<int8_t*>(ptr) = v;
+}
 
 template<typename T> struct is_variant : std::false_type {};
 

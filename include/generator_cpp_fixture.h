@@ -1460,23 +1460,25 @@ auto variant_set_value(M* model, T& value, pmr::memory_resource* resource) {
 template <typename T, typename TBase>
 inline void FieldModelBase<T, TBase>::get(T& value, pmr::memory_resource* resource, T defaults) const noexcept
 {
-    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+    size_t fbe_full_offset = _buffer.offset() + fbe_offset();
+    if ((fbe_full_offset + fbe_size()) > _buffer.size())
     {
         value = defaults;
         return;
     }
 
-    value = unaligned_load<T>(_buffer.data() + _buffer.offset() + fbe_offset());
+    value = unaligned_load<T>(_buffer.data() + fbe_full_offset);
 }
 
 template <typename T, typename TBase>
 inline void FieldModelBase<T, TBase>::set(T value, pmr::memory_resource* resource) noexcept
 {
-    assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
-    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+    size_t fbe_full_offset = _buffer.offset() + fbe_offset();
+    assert(((fbe_full_offset + fbe_size()) <= _buffer.size()) && "Model is broken!");
+    if ((fbe_full_offset + fbe_size()) > _buffer.size())
         return;
 
-    unaligned_store<TBase>(_buffer.data() + _buffer.offset() + fbe_offset(), (TBase)value);
+    unaligned_store<TBase>(_buffer.data() + fbe_full_offset, (TBase)value);
 }
 )CODE";
     }
@@ -1523,6 +1525,37 @@ private:
     
     static std::string GenerateFBEFieldModelDecimal_Source() {
       return R"CODE(
+// Lookup table for powers of 10 (10^0 to 10^28)
+static constexpr double kPow10Table[] = {
+    1e0,  1e1,  1e2,  1e3,  1e4,  1e5,  1e6,  1e7,  1e8,  1e9,
+    1e10, 1e11, 1e12, 1e13, 1e14, 1e15, 1e16, 1e17, 1e18, 1e19,
+    1e20, 1e21, 1e22, 1e23, 1e24, 1e25, 1e26, 1e27, 1e28
+};
+
+// Lookup table for powers of 10 as uint64_t (10^0 to 10^19)
+static constexpr uint64_t kPow10TableU64[] = {
+    1ULL,
+    10ULL,
+    100ULL,
+    1000ULL,
+    10000ULL,
+    100000ULL,
+    1000000ULL,
+    10000000ULL,
+    100000000ULL,
+    1000000000ULL,
+    10000000000ULL,
+    100000000000ULL,
+    1000000000000ULL,
+    10000000000000ULL,
+    100000000000000ULL,
+    1000000000000000ULL,
+    10000000000000000ULL,
+    100000000000000000ULL,
+    1000000000000000000ULL,
+    10000000000000000000ULL
+};
+
 uint64_t FieldModel<decimal_t>::extract(double a) noexcept
 {
     uint64_t result;
@@ -1579,7 +1612,8 @@ void FieldModel<decimal_t>::get(decimal_t& value, pmr::memory_resource* resource
     uint32_t flags = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset() + 12);
 
     // Calculate decimal value
-    double dValue = ((double)low + (double)high * ds2to64) / pow(10.0, (uint8_t)(flags >> 16));
+    uint8_t scale = (uint8_t)(flags >> 16);
+    double dValue = ((double)low + (double)high * ds2to64) / kPow10Table[scale];
     if (flags & 0x80000000)
         dValue = -dValue;
 
@@ -1630,12 +1664,12 @@ void FieldModel<decimal_t>::set(decimal_t value, pmr::memory_resource* resource)
         if (iPower > 28)
             iPower = 28;
 
-        dValue *= pow(10.0, iPower);
+        dValue *= kPow10Table[iPower];
     }
     else
     {
         if ((iPower != -1) || (dValue >= 1E15))
-            dValue /= pow(10.0, -iPower);
+            dValue /= kPow10Table[-iPower];
         else
             iPower = 0; // didn't scale it
     }
@@ -1668,7 +1702,7 @@ void FieldModel<decimal_t>::set(decimal_t value, pmr::memory_resource* resource)
         iPower = -iPower;
         if (iPower < 10)
         {
-            double pow10 = (double)powl(10.0, iPower);
+            uint64_t pow10 = kPow10TableU64[iPower];
             uint64_t low64 = uint32x32((uint32_t)ulMant, (uint32_t)pow10);
             uint64_t high64 = uint32x32((uint32_t)(ulMant >> 32), (uint32_t)pow10);
             *((uint32_t*)(_buffer.data() + _buffer.offset() + fbe_offset())) = (uint32_t)low64;
@@ -1683,7 +1717,7 @@ void FieldModel<decimal_t>::set(decimal_t value, pmr::memory_resource* resource)
             assert(iPower <= 14);
             uint64_t low64;
             uint32_t high32;
-            uint64x64(ulMant, (uint64_t)pow(10.0, iPower), low64, high32);
+            uint64x64(ulMant, kPow10TableU64[iPower], low64, high32);
             *((uint64_t*)(_buffer.data() + _buffer.offset() + fbe_offset())) = low64;
             *((uint32_t*)(_buffer.data() + _buffer.offset() + fbe_offset() + 8)) = high32;
         }
@@ -1916,25 +1950,30 @@ size_t FieldModel<buffer_t>::get(void* data, size_t size, pmr::memory_resource* 
     if ((size > 0) && (data == nullptr))
         return 0;
 
-    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+    size_t buffer_offset = _buffer.offset();
+    const uint8_t* buffer_data = _buffer.data();
+    size_t buffer_size = _buffer.size();
+
+    if ((buffer_offset + fbe_offset() + fbe_size()) > buffer_size)
         return 0;
 
-    uint32_t fbe_bytes_offset = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset());
+    uint32_t fbe_bytes_offset = unaligned_load<uint32_t>(buffer_data + buffer_offset + fbe_offset());
     if (fbe_bytes_offset == 0)
         return 0;
 
-    assert(((_buffer.offset() + fbe_bytes_offset + 4) <= _buffer.size()) && "Model is broken!");
-    if ((_buffer.offset() + fbe_bytes_offset + 4) > _buffer.size())
+    size_t bytes_base = buffer_offset + fbe_bytes_offset;
+    assert(((bytes_base + 4) <= buffer_size) && "Model is broken!");
+    if ((bytes_base + 4) > buffer_size)
         return 0;
 
-    uint32_t fbe_bytes_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_bytes_offset);
-    assert(((_buffer.offset() + fbe_bytes_offset + 4 + fbe_bytes_size) <= _buffer.size()) && "Model is broken!");
-    if ((_buffer.offset() + fbe_bytes_offset + 4 + fbe_bytes_size) > _buffer.size())
+    uint32_t fbe_bytes_size = unaligned_load<uint32_t>(buffer_data + bytes_base);
+    assert(((bytes_base + 4 + fbe_bytes_size) <= buffer_size) && "Model is broken!");
+    if ((bytes_base + 4 + fbe_bytes_size) > buffer_size)
         return 0;
 
     size_t result = std::min(size, (size_t)fbe_bytes_size);
     if (result > 0)
-        memcpy(data, (const char*)(_buffer.data() + _buffer.offset() + fbe_bytes_offset + 4), result);
+        memcpy(data, buffer_data + bytes_base + 4, result);
     return result;
 }
 
@@ -1942,24 +1981,29 @@ void FieldModel<buffer_t>::get(FastVec<uint8_t>& value, pmr::memory_resource* re
 {
     value.clear();
 
-    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+    size_t buffer_offset = _buffer.offset();
+    const uint8_t* buffer_data = _buffer.data();
+    size_t buffer_size = _buffer.size();
+
+    if ((buffer_offset + fbe_offset() + fbe_size()) > buffer_size)
         return;
 
-    uint32_t fbe_bytes_offset = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset());
+    uint32_t fbe_bytes_offset = unaligned_load<uint32_t>(buffer_data + buffer_offset + fbe_offset());
     if (fbe_bytes_offset == 0)
         return;
 
-    assert(((_buffer.offset() + fbe_bytes_offset + 4) <= _buffer.size()) && "Model is broken!");
-    if ((_buffer.offset() + fbe_bytes_offset + 4) > _buffer.size())
+    size_t bytes_base = buffer_offset + fbe_bytes_offset;
+    assert(((bytes_base + 4) <= buffer_size) && "Model is broken!");
+    if ((bytes_base + 4) > buffer_size)
         return;
 
-    uint32_t fbe_bytes_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_bytes_offset);
-    assert(((_buffer.offset() + fbe_bytes_offset + 4 + fbe_bytes_size) <= _buffer.size()) && "Model is broken!");
-    if ((_buffer.offset() + fbe_bytes_offset + 4 + fbe_bytes_size) > _buffer.size())
+    uint32_t fbe_bytes_size = unaligned_load<uint32_t>(buffer_data + bytes_base);
+    assert(((bytes_base + 4 + fbe_bytes_size) <= buffer_size) && "Model is broken!");
+    if ((bytes_base + 4 + fbe_bytes_size) > buffer_size)
         return;
 
     if (fbe_bytes_size > 0) {
-        const char* fbe_bytes = (const char*)(_buffer.data() + _buffer.offset() + fbe_bytes_offset + 4);
+        const char* fbe_bytes = (const char*)(buffer_data + bytes_base + 4);
         value.assign(fbe_bytes, fbe_bytes + fbe_bytes_size);
     }
 }
@@ -2080,24 +2124,29 @@ size_t FieldModel<pmr_buffer_t>::get(void* data, size_t size) const noexcept
     if ((size > 0) && (data == nullptr))
         return 0;
 
-    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+    size_t buffer_offset = _buffer.offset();
+    const uint8_t* buffer_data = _buffer.data();
+    size_t buffer_size = _buffer.size();
+
+    if ((buffer_offset + fbe_offset() + fbe_size()) > buffer_size)
         return 0;
 
-    uint32_t fbe_bytes_offset = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset());
+    uint32_t fbe_bytes_offset = unaligned_load<uint32_t>(buffer_data + buffer_offset + fbe_offset());
     if (fbe_bytes_offset == 0)
         return 0;
 
-    assert(((_buffer.offset() + fbe_bytes_offset + 4) <= _buffer.size()) && "Model is broken!");
-    if ((_buffer.offset() + fbe_bytes_offset + 4) > _buffer.size())
+    size_t bytes_base = buffer_offset + fbe_bytes_offset;
+    assert(((bytes_base + 4) <= buffer_size) && "Model is broken!");
+    if ((bytes_base + 4) > buffer_size)
         return 0;
 
-    uint32_t fbe_bytes_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_bytes_offset);
-    assert(((_buffer.offset() + fbe_bytes_offset + 4 + fbe_bytes_size) <= _buffer.size()) && "Model is broken!");
-    if ((_buffer.offset() + fbe_bytes_offset + 4 + fbe_bytes_size) > _buffer.size())
+    uint32_t fbe_bytes_size = unaligned_load<uint32_t>(buffer_data + bytes_base);
+    assert(((bytes_base + 4 + fbe_bytes_size) <= buffer_size) && "Model is broken!");
+    if ((bytes_base + 4 + fbe_bytes_size) > buffer_size)
         return 0;
 
     size_t result = std::min(size, (size_t)fbe_bytes_size);
-    memcpy(data, (const char*)(_buffer.data() + _buffer.offset() + fbe_bytes_offset + 4), result);
+    memcpy(data, buffer_data + bytes_base + 4, result);
     return result;
 }
 
@@ -2105,23 +2154,28 @@ void FieldModel<pmr_buffer_t>::get(pmr::vector<uint8_t>& value, pmr::memory_reso
 {
     value.clear();
 
-    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+    size_t buffer_offset = _buffer.offset();
+    const uint8_t* buffer_data = _buffer.data();
+    size_t buffer_size = _buffer.size();
+
+    if ((buffer_offset + fbe_offset() + fbe_size()) > buffer_size)
         return;
 
-    uint32_t fbe_bytes_offset = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset());
+    uint32_t fbe_bytes_offset = unaligned_load<uint32_t>(buffer_data + buffer_offset + fbe_offset());
     if (fbe_bytes_offset == 0)
         return;
 
-    assert(((_buffer.offset() + fbe_bytes_offset + 4) <= _buffer.size()) && "Model is broken!");
-    if ((_buffer.offset() + fbe_bytes_offset + 4) > _buffer.size())
+    size_t bytes_base = buffer_offset + fbe_bytes_offset;
+    assert(((bytes_base + 4) <= buffer_size) && "Model is broken!");
+    if ((bytes_base + 4) > buffer_size)
         return;
 
-    uint32_t fbe_bytes_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_bytes_offset);
-    assert(((_buffer.offset() + fbe_bytes_offset + 4 + fbe_bytes_size) <= _buffer.size()) && "Model is broken!");
-    if ((_buffer.offset() + fbe_bytes_offset + 4 + fbe_bytes_size) > _buffer.size())
+    uint32_t fbe_bytes_size = unaligned_load<uint32_t>(buffer_data + bytes_base);
+    assert(((bytes_base + 4 + fbe_bytes_size) <= buffer_size) && "Model is broken!");
+    if ((bytes_base + 4 + fbe_bytes_size) > buffer_size)
         return;
 
-    const char* fbe_bytes = (const char*)(_buffer.data() + _buffer.offset() + fbe_bytes_offset + 4);
+    const char* fbe_bytes = (const char*)(buffer_data + bytes_base + 4);
     value.assign(fbe_bytes, fbe_bytes + fbe_bytes_size);
 }
 
@@ -2264,31 +2318,38 @@ private:
       return R"CODE(
 size_t FieldModel<FBEString>::fbe_extra() const noexcept
 {
-    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+    size_t buffer_offset = _buffer.offset();
+    size_t buffer_size = _buffer.size();
+    if ((buffer_offset + fbe_offset() + fbe_size()) > buffer_size)
         return 0;
 
-    uint32_t fbe_string_offset = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset());
-    if ((fbe_string_offset == 0) || ((_buffer.offset() + fbe_string_offset + 4) > _buffer.size()))
+    const uint8_t* buffer_data = _buffer.data();
+    uint32_t fbe_string_offset = unaligned_load<uint32_t>(buffer_data + buffer_offset + fbe_offset());
+    if ((fbe_string_offset == 0) || ((buffer_offset + fbe_string_offset + 4) > buffer_size))
         return 0;
 
-    uint32_t fbe_string_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_string_offset);
+    uint32_t fbe_string_size = unaligned_load<uint32_t>(buffer_data + buffer_offset + fbe_string_offset);
     return (size_t)(4 + fbe_string_size);
 }
 
 bool FieldModel<FBEString>::verify() const noexcept
 {
-    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+    size_t buffer_offset = _buffer.offset();
+    size_t buffer_size = _buffer.size();
+    if ((buffer_offset + fbe_offset() + fbe_size()) > buffer_size)
         return true;
 
-    uint32_t fbe_string_offset = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset());
+    const uint8_t* buffer_data = _buffer.data();
+    uint32_t fbe_string_offset = unaligned_load<uint32_t>(buffer_data + buffer_offset + fbe_offset());
     if (fbe_string_offset == 0)
         return true;
 
-    if ((_buffer.offset() + fbe_string_offset + 4) > _buffer.size())
+    size_t string_base = buffer_offset + fbe_string_offset;
+    if ((string_base + 4) > buffer_size)
         return false;
 
-    uint32_t fbe_string_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_string_offset);
-    if ((_buffer.offset() + fbe_string_offset + 4 + fbe_string_size) > _buffer.size())
+    uint32_t fbe_string_size = unaligned_load<uint32_t>(buffer_data + string_base);
+    if ((string_base + 4 + fbe_string_size) > buffer_size)
         return false;
 
     return true;
@@ -2300,24 +2361,29 @@ size_t FieldModel<FBEString>::get(char* data, size_t size) const noexcept
     if ((size > 0) && (data == nullptr))
         return 0;
 
-    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+    size_t buffer_offset = _buffer.offset();
+    const uint8_t* buffer_data = _buffer.data();
+    size_t buffer_size = _buffer.size();
+
+    if ((buffer_offset + fbe_offset() + fbe_size()) > buffer_size)
         return 0;
 
-    uint32_t fbe_string_offset = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset());
+    uint32_t fbe_string_offset = unaligned_load<uint32_t>(buffer_data + buffer_offset + fbe_offset());
     if (fbe_string_offset == 0)
         return 0;
 
-    assert(((_buffer.offset() + fbe_string_offset + 4) <= _buffer.size()) && "Model is broken!");
-    if ((_buffer.offset() + fbe_string_offset + 4) > _buffer.size())
+    size_t string_base = buffer_offset + fbe_string_offset;
+    assert(((string_base + 4) <= buffer_size) && "Model is broken!");
+    if ((string_base + 4) > buffer_size)
         return 0;
 
-    uint32_t fbe_string_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_string_offset);
-    assert(((_buffer.offset() + fbe_string_offset + 4 + fbe_string_size) <= _buffer.size()) && "Model is broken!");
-    if ((_buffer.offset() + fbe_string_offset + 4 + fbe_string_size) > _buffer.size())
+    uint32_t fbe_string_size = unaligned_load<uint32_t>(buffer_data + string_base);
+    assert(((string_base + 4 + fbe_string_size) <= buffer_size) && "Model is broken!");
+    if ((string_base + 4 + fbe_string_size) > buffer_size)
         return 0;
 
     size_t result = std::min(size, (size_t)fbe_string_size);
-    memcpy(data, (const char*)(_buffer.data() + _buffer.offset() + fbe_string_offset + 4), result);
+    memcpy(data, (const char*)(buffer_data + string_base + 4), result);
     return result;
 }
 
@@ -2327,27 +2393,33 @@ void FieldModel<FBEString>::get(FBEString& value, pmr::memory_resource* resource
     value.clear();
     #endif
 
-    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+    size_t buffer_offset = _buffer.offset();
+    const uint8_t* buffer_data = _buffer.data();
+    size_t buffer_size = _buffer.size();
+
+    if ((buffer_offset + fbe_offset() + fbe_size()) > buffer_size)
         return;
 
-    uint32_t fbe_string_offset = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + _offset);
+    uint32_t fbe_string_offset = unaligned_load<uint32_t>(buffer_data + buffer_offset + _offset);
     if (fbe_string_offset == 0)
         return;
 
-    assert(((_buffer.offset() + fbe_string_offset + 4) <= _buffer.size()) && "Model is broken!");
-    if ((_buffer.offset() + fbe_string_offset + 4) > _buffer.size())
+    size_t string_base = buffer_offset + fbe_string_offset;
+    assert(((string_base + 4) <= buffer_size) && "Model is broken!");
+    if ((string_base + 4) > buffer_size)
         return;
 
-    uint32_t fbe_string_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_string_offset);
-    assert(((_buffer.offset() + fbe_string_offset + 4 + fbe_string_size) <= _buffer.size()) && "Model is broken!");
-    if ((_buffer.offset() + fbe_string_offset + 4 + fbe_string_size) > _buffer.size())
+    uint32_t fbe_string_size = unaligned_load<uint32_t>(buffer_data + string_base);
+    assert(((string_base + 4 + fbe_string_size) <= buffer_size) && "Model is broken!");
+    if ((string_base + 4 + fbe_string_size) > buffer_size)
         return;
 
+    const char* string_data = (const char*)(buffer_data + string_base + 4);
     #if defined(USING_SEASTAR_STRING)
     value.resize(fbe_string_size);
-    memcpy(value.data(), (const char*)(_buffer.data() + _buffer.offset() + fbe_string_offset + 4), fbe_string_size);
+    memcpy(value.data(), string_data, fbe_string_size);
     #else
-    value.assign((const char*)(_buffer.data() + _buffer.offset() + fbe_string_offset + 4), fbe_string_size);
+    value.assign(string_data, fbe_string_size);
     #endif
 }
 
@@ -2355,27 +2427,33 @@ void FieldModel<FBEString>::get(FBEString& value, pmr::memory_resource* resource
 {
     value = defaults;
 
-    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+    size_t buffer_offset = _buffer.offset();
+    const uint8_t* buffer_data = _buffer.data();
+    size_t buffer_size = _buffer.size();
+
+    if ((buffer_offset + fbe_offset() + fbe_size()) > buffer_size)
         return;
 
-    uint32_t fbe_string_offset = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + _offset);
+    uint32_t fbe_string_offset = unaligned_load<uint32_t>(buffer_data + buffer_offset + _offset);
     if (fbe_string_offset == 0)
         return;
 
-    assert(((_buffer.offset() + fbe_string_offset + 4) <= _buffer.size()) && "Model is broken!");
-    if ((_buffer.offset() + fbe_string_offset + 4) > _buffer.size())
+    size_t string_base = buffer_offset + fbe_string_offset;
+    assert(((string_base + 4) <= buffer_size) && "Model is broken!");
+    if ((string_base + 4) > buffer_size)
         return;
 
-    uint32_t fbe_string_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_string_offset);
-    assert(((_buffer.offset() + fbe_string_offset + 4 + fbe_string_size) <= _buffer.size()) && "Model is broken!");
-    if ((_buffer.offset() + fbe_string_offset + 4 + fbe_string_size) > _buffer.size())
+    uint32_t fbe_string_size = unaligned_load<uint32_t>(buffer_data + string_base);
+    assert(((string_base + 4 + fbe_string_size) <= buffer_size) && "Model is broken!");
+    if ((string_base + 4 + fbe_string_size) > buffer_size)
         return;
 
+    const char* string_data = (const char*)(buffer_data + string_base + 4);
     #if defined(USING_SEASTAR_STRING)
     value.resize(fbe_string_size);
-    memcpy(value.data(), (const char*)(_buffer.data() + _buffer.offset() + fbe_string_offset + 4), fbe_string_size);
+    memcpy(value.data(), string_data, fbe_string_size);
     #else
-    value.assign((const char*)(_buffer.data() + _buffer.offset() + fbe_string_offset + 4), fbe_string_size);
+    value.assign(string_data, fbe_string_size);
     #endif
 }
 
@@ -2385,40 +2463,46 @@ void FieldModel<FBEString>::set(const char* data, size_t size, pmr::memory_resou
     if ((size > 0) && (data == nullptr))
         return;
 
-    assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
-    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+    size_t buffer_offset = _buffer.offset();
+    assert(((buffer_offset + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
+    if ((buffer_offset + fbe_offset() + fbe_size()) > _buffer.size())
         return;
 
     uint32_t fbe_string_size = (uint32_t)size;
-    uint32_t fbe_string_offset = (uint32_t)(_buffer.allocate(4 + fbe_string_size) - _buffer.offset());
-    assert(((fbe_string_offset > 0) && ((_buffer.offset() + fbe_string_offset + 4 + fbe_string_size) <= _buffer.size())) && "Model is broken!");
-    if ((fbe_string_offset == 0) || ((_buffer.offset() + fbe_string_offset + 4 + fbe_string_size) > _buffer.size()))
+    uint32_t fbe_string_offset = (uint32_t)(_buffer.allocate(4 + fbe_string_size) - buffer_offset);
+    assert(((fbe_string_offset > 0) && ((buffer_offset + fbe_string_offset + 4 + fbe_string_size) <= _buffer.size())) && "Model is broken!");
+    if ((fbe_string_offset == 0) || ((buffer_offset + fbe_string_offset + 4 + fbe_string_size) > _buffer.size()))
         return;
 
-    unaligned_store<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset(), fbe_string_offset);
-    unaligned_store<uint32_t>(_buffer.data() + _buffer.offset() + fbe_string_offset, fbe_string_size);
+    uint8_t* buffer_data = _buffer.data();
+    size_t string_base = buffer_offset + fbe_string_offset;
+    unaligned_store<uint32_t>(buffer_data + buffer_offset + fbe_offset(), fbe_string_offset);
+    unaligned_store<uint32_t>(buffer_data + string_base, fbe_string_size);
 
     if (fbe_string_size > 0)
-        memcpy((char*)(_buffer.data() + _buffer.offset() + fbe_string_offset + 4), data, fbe_string_size);
+        memcpy((char*)(buffer_data + string_base + 4), data, fbe_string_size);
 }
 
 void FieldModel<FBEString>::set(const FBEString& value, pmr::memory_resource* resource)
 {
-    assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
-    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+    size_t buffer_offset = _buffer.offset();
+    assert(((buffer_offset + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
+    if ((buffer_offset + fbe_offset() + fbe_size()) > _buffer.size())
         return;
 
     uint32_t fbe_string_size = (uint32_t)value.size();
-    uint32_t fbe_string_offset = (uint32_t)(_buffer.allocate(4 + fbe_string_size) - _buffer.offset());
-    assert(((fbe_string_offset > 0) && ((_buffer.offset() + fbe_string_offset + 4 + fbe_string_size) <= _buffer.size())) && "Model is broken!");
-    if ((fbe_string_offset == 0) || ((_buffer.offset() + fbe_string_offset + 4 + fbe_string_size) > _buffer.size()))
+    uint32_t fbe_string_offset = (uint32_t)(_buffer.allocate(4 + fbe_string_size) - buffer_offset);
+    assert(((fbe_string_offset > 0) && ((buffer_offset + fbe_string_offset + 4 + fbe_string_size) <= _buffer.size())) && "Model is broken!");
+    if ((fbe_string_offset == 0) || ((buffer_offset + fbe_string_offset + 4 + fbe_string_size) > _buffer.size()))
         return;
 
-    unaligned_store<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset(), fbe_string_offset);
-    unaligned_store<uint32_t>(_buffer.data() + _buffer.offset() + fbe_string_offset, fbe_string_size);
+    uint8_t* buffer_data = _buffer.data();
+    size_t string_base = buffer_offset + fbe_string_offset;
+    unaligned_store<uint32_t>(buffer_data + buffer_offset + fbe_offset(), fbe_string_offset);
+    unaligned_store<uint32_t>(buffer_data + string_base, fbe_string_size);
 
     if (fbe_string_size > 0)
-        memcpy((char*)(_buffer.data() + _buffer.offset() + fbe_string_offset + 4), value.data(), fbe_string_size);
+        memcpy((char*)(buffer_data + string_base + 4), value.data(), fbe_string_size);
 }
 )CODE";
     }
@@ -2427,31 +2511,38 @@ void FieldModel<FBEString>::set(const FBEString& value, pmr::memory_resource* re
       return R"CODE(
 size_t FieldModel<ArenaString>::fbe_extra() const noexcept
 {
-    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+    size_t buffer_offset = _buffer.offset();
+    size_t buffer_size = _buffer.size();
+    if ((buffer_offset + fbe_offset() + fbe_size()) > buffer_size)
         return 0;
 
-    uint32_t fbe_string_offset = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset());
-    if ((fbe_string_offset == 0) || ((_buffer.offset() + fbe_string_offset + 4) > _buffer.size()))
+    const uint8_t* buffer_data = _buffer.data();
+    uint32_t fbe_string_offset = unaligned_load<uint32_t>(buffer_data + buffer_offset + fbe_offset());
+    if ((fbe_string_offset == 0) || ((buffer_offset + fbe_string_offset + 4) > buffer_size))
         return 0;
 
-    uint32_t fbe_string_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_string_offset);
+    uint32_t fbe_string_size = unaligned_load<uint32_t>(buffer_data + buffer_offset + fbe_string_offset);
     return (size_t)(4 + fbe_string_size);
 }
 
 bool FieldModel<ArenaString>::verify() const noexcept
 {
-    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+    size_t buffer_offset = _buffer.offset();
+    size_t buffer_size = _buffer.size();
+    if ((buffer_offset + fbe_offset() + fbe_size()) > buffer_size)
         return true;
 
-    uint32_t fbe_string_offset = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset());
+    const uint8_t* buffer_data = _buffer.data();
+    uint32_t fbe_string_offset = unaligned_load<uint32_t>(buffer_data + buffer_offset + fbe_offset());
     if (fbe_string_offset == 0)
         return true;
 
-    if ((_buffer.offset() + fbe_string_offset + 4) > _buffer.size())
+    size_t string_base = buffer_offset + fbe_string_offset;
+    if ((string_base + 4) > buffer_size)
         return false;
 
-    uint32_t fbe_string_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_string_offset);
-    if ((_buffer.offset() + fbe_string_offset + 4 + fbe_string_size) > _buffer.size())
+    uint32_t fbe_string_size = unaligned_load<uint32_t>(buffer_data + string_base);
+    if ((string_base + 4 + fbe_string_size) > buffer_size)
         return false;
 
     return true;
@@ -2463,24 +2554,29 @@ size_t FieldModel<ArenaString>::get(char* data, size_t size) const noexcept
     if ((size > 0) && (data == nullptr))
         return 0;
 
-    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+    size_t buffer_offset = _buffer.offset();
+    const uint8_t* buffer_data = _buffer.data();
+    size_t buffer_size = _buffer.size();
+
+    if ((buffer_offset + fbe_offset() + fbe_size()) > buffer_size)
         return 0;
 
-    uint32_t fbe_string_offset = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset());
+    uint32_t fbe_string_offset = unaligned_load<uint32_t>(buffer_data + buffer_offset + fbe_offset());
     if (fbe_string_offset == 0)
         return 0;
 
-    assert(((_buffer.offset() + fbe_string_offset + 4) <= _buffer.size()) && "Model is broken!");
-    if ((_buffer.offset() + fbe_string_offset + 4) > _buffer.size())
+    size_t string_base = buffer_offset + fbe_string_offset;
+    assert(((string_base + 4) <= buffer_size) && "Model is broken!");
+    if ((string_base + 4) > buffer_size)
         return 0;
 
-    uint32_t fbe_string_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_string_offset);
-    assert(((_buffer.offset() + fbe_string_offset + 4 + fbe_string_size) <= _buffer.size()) && "Model is broken!");
-    if ((_buffer.offset() + fbe_string_offset + 4 + fbe_string_size) > _buffer.size())
+    uint32_t fbe_string_size = unaligned_load<uint32_t>(buffer_data + string_base);
+    assert(((string_base + 4 + fbe_string_size) <= buffer_size) && "Model is broken!");
+    if ((string_base + 4 + fbe_string_size) > buffer_size)
         return 0;
 
     size_t result = std::min(size, (size_t)fbe_string_size);
-    memcpy(data, (const char*)(_buffer.data() + _buffer.offset() + fbe_string_offset + 4), result);
+    memcpy(data, (const char*)(buffer_data + string_base + 4), result);
     return result;
 }
 
@@ -2488,46 +2584,56 @@ void FieldModel<ArenaString>::get(ArenaString& value, pmr::memory_resource* reso
 {
     value.clear();
 
-    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+    size_t buffer_offset = _buffer.offset();
+    const uint8_t* buffer_data = _buffer.data();
+    size_t buffer_size = _buffer.size();
+
+    if ((buffer_offset + fbe_offset() + fbe_size()) > buffer_size)
         return;
 
-    uint32_t fbe_string_offset = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + _offset);
+    uint32_t fbe_string_offset = unaligned_load<uint32_t>(buffer_data + buffer_offset + _offset);
     if (fbe_string_offset == 0)
         return;
 
-    assert(((_buffer.offset() + fbe_string_offset + 4) <= _buffer.size()) && "Model is broken!");
-    if ((_buffer.offset() + fbe_string_offset + 4) > _buffer.size())
+    size_t string_base = buffer_offset + fbe_string_offset;
+    assert(((string_base + 4) <= buffer_size) && "Model is broken!");
+    if ((string_base + 4) > buffer_size)
         return;
 
-    uint32_t fbe_string_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_string_offset);
-    assert(((_buffer.offset() + fbe_string_offset + 4 + fbe_string_size) <= _buffer.size()) && "Model is broken!");
-    if ((_buffer.offset() + fbe_string_offset + 4 + fbe_string_size) > _buffer.size())
+    uint32_t fbe_string_size = unaligned_load<uint32_t>(buffer_data + string_base);
+    assert(((string_base + 4 + fbe_string_size) <= buffer_size) && "Model is broken!");
+    if ((string_base + 4 + fbe_string_size) > buffer_size)
         return;
 
-    value.assign((const char*)(_buffer.data() + _buffer.offset() + fbe_string_offset + 4), fbe_string_size);
+    value.assign((const char*)(buffer_data + string_base + 4), fbe_string_size);
 }
 
 void FieldModel<ArenaString>::get(ArenaString& value, pmr::memory_resource* resource, const ArenaString& defaults) const noexcept
 {
     value = defaults;
 
-    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+    size_t buffer_offset = _buffer.offset();
+    const uint8_t* buffer_data = _buffer.data();
+    size_t buffer_size = _buffer.size();
+
+    if ((buffer_offset + fbe_offset() + fbe_size()) > buffer_size)
         return;
 
-    uint32_t fbe_string_offset = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + _offset);
+    uint32_t fbe_string_offset = unaligned_load<uint32_t>(buffer_data + buffer_offset + _offset);
     if (fbe_string_offset == 0)
         return;
 
-    assert(((_buffer.offset() + fbe_string_offset + 4) <= _buffer.size()) && "Model is broken!");
-    if ((_buffer.offset() + fbe_string_offset + 4) > _buffer.size())
+    size_t string_base = buffer_offset + fbe_string_offset;
+    assert(((string_base + 4) <= buffer_size) && "Model is broken!");
+    if ((string_base + 4) > buffer_size)
         return;
 
-    uint32_t fbe_string_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_string_offset);
-    assert(((_buffer.offset() + fbe_string_offset + 4 + fbe_string_size) <= _buffer.size()) && "Model is broken!");
-    if ((_buffer.offset() + fbe_string_offset + 4 + fbe_string_size) > _buffer.size())
+    uint32_t fbe_string_size = unaligned_load<uint32_t>(buffer_data + string_base);
+    assert(((string_base + 4 + fbe_string_size) <= buffer_size) && "Model is broken!");
+    if ((string_base + 4 + fbe_string_size) > buffer_size)
         return;
 
-    value.assign((const char*)(_buffer.data() + _buffer.offset() + fbe_string_offset + 4), fbe_string_size);
+    value.assign((const char*)(buffer_data + string_base + 4), fbe_string_size);
 }
 
 void FieldModel<ArenaString>::set(const char* data, size_t size, pmr::memory_resource* resource)
@@ -2536,40 +2642,46 @@ void FieldModel<ArenaString>::set(const char* data, size_t size, pmr::memory_res
     if ((size > 0) && (data == nullptr))
         return;
 
-    assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
-    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+    size_t buffer_offset = _buffer.offset();
+    assert(((buffer_offset + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
+    if ((buffer_offset + fbe_offset() + fbe_size()) > _buffer.size())
         return;
 
     uint32_t fbe_string_size = (uint32_t)size;
-    uint32_t fbe_string_offset = (uint32_t)(_buffer.allocate(4 + fbe_string_size) - _buffer.offset());
-    assert(((fbe_string_offset > 0) && ((_buffer.offset() + fbe_string_offset + 4 + fbe_string_size) <= _buffer.size())) && "Model is broken!");
-    if ((fbe_string_offset == 0) || ((_buffer.offset() + fbe_string_offset + 4 + fbe_string_size) > _buffer.size()))
+    uint32_t fbe_string_offset = (uint32_t)(_buffer.allocate(4 + fbe_string_size) - buffer_offset);
+    assert(((fbe_string_offset > 0) && ((buffer_offset + fbe_string_offset + 4 + fbe_string_size) <= _buffer.size())) && "Model is broken!");
+    if ((fbe_string_offset == 0) || ((buffer_offset + fbe_string_offset + 4 + fbe_string_size) > _buffer.size()))
         return;
 
-    unaligned_store<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset(), fbe_string_offset);
-    unaligned_store<uint32_t>(_buffer.data() + _buffer.offset() + fbe_string_offset, fbe_string_size);
+    uint8_t* buffer_data = _buffer.data();
+    size_t string_base = buffer_offset + fbe_string_offset;
+    unaligned_store<uint32_t>(buffer_data + buffer_offset + fbe_offset(), fbe_string_offset);
+    unaligned_store<uint32_t>(buffer_data + string_base, fbe_string_size);
 
     if (fbe_string_size > 0)
-        memcpy((char*)(_buffer.data() + _buffer.offset() + fbe_string_offset + 4), data, fbe_string_size);
+        memcpy((char*)(buffer_data + string_base + 4), data, fbe_string_size);
 }
 
 void FieldModel<ArenaString>::set(const ArenaString& value, pmr::memory_resource* resource)
 {
-    assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
-    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+    size_t buffer_offset = _buffer.offset();
+    assert(((buffer_offset + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
+    if ((buffer_offset + fbe_offset() + fbe_size()) > _buffer.size())
         return;
 
     uint32_t fbe_string_size = (uint32_t)value.size();
-    uint32_t fbe_string_offset = (uint32_t)(_buffer.allocate(4 + fbe_string_size) - _buffer.offset());
-    assert(((fbe_string_offset > 0) && ((_buffer.offset() + fbe_string_offset + 4 + fbe_string_size) <= _buffer.size())) && "Model is broken!");
-    if ((fbe_string_offset == 0) || ((_buffer.offset() + fbe_string_offset + 4 + fbe_string_size) > _buffer.size()))
+    uint32_t fbe_string_offset = (uint32_t)(_buffer.allocate(4 + fbe_string_size) - buffer_offset);
+    assert(((fbe_string_offset > 0) && ((buffer_offset + fbe_string_offset + 4 + fbe_string_size) <= _buffer.size())) && "Model is broken!");
+    if ((fbe_string_offset == 0) || ((buffer_offset + fbe_string_offset + 4 + fbe_string_size) > _buffer.size()))
         return;
 
-    unaligned_store<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset(), fbe_string_offset);
-    unaligned_store<uint32_t>(_buffer.data() + _buffer.offset() + fbe_string_offset, fbe_string_size);
+    uint8_t* buffer_data = _buffer.data();
+    size_t string_base = buffer_offset + fbe_string_offset;
+    unaligned_store<uint32_t>(buffer_data + buffer_offset + fbe_offset(), fbe_string_offset);
+    unaligned_store<uint32_t>(buffer_data + string_base, fbe_string_size);
 
     if (fbe_string_size > 0)
-        memcpy((char*)(_buffer.data() + _buffer.offset() + fbe_string_offset + 4), value.data(), fbe_string_size);
+        memcpy((char*)(buffer_data + string_base + 4), value.data(), fbe_string_size);
 }
 )CODE";
     }
@@ -3852,10 +3964,11 @@ inline size_t FinalModelBase<T, TBase>::verify() const noexcept
 template <typename T, typename TBase>
 inline size_t FinalModelBase<T, TBase>::get(T& value) const noexcept
 {
-    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+    size_t fbe_full_offset = _buffer.offset() + fbe_offset();
+    if ((fbe_full_offset + fbe_size()) > _buffer.size())
         return 0;
 
-    value = unaligned_load<T>(_buffer.data() + _buffer.offset() + fbe_offset());
+    value = unaligned_load<T>(_buffer.data() + fbe_full_offset);
 
     return fbe_size();
 }
@@ -3863,11 +3976,12 @@ inline size_t FinalModelBase<T, TBase>::get(T& value) const noexcept
 template <typename T, typename TBase>
 inline size_t FinalModelBase<T, TBase>::set(T value) noexcept
 {
-    assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
-    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+    size_t fbe_full_offset = _buffer.offset() + fbe_offset();
+    assert(((fbe_full_offset + fbe_size()) <= _buffer.size()) && "Model is broken!");
+    if ((fbe_full_offset + fbe_size()) > _buffer.size())
         return 0;
 
-    unaligned_store<TBase>(_buffer.data() + _buffer.offset() + fbe_offset(), (TBase)value);
+    unaligned_store<TBase>(_buffer.data() + fbe_full_offset, (TBase)value);
     return fbe_size();
 }
 )CODE";
@@ -3919,6 +4033,37 @@ private:
 
     static std::string GenerateFBEFinalModelDecimal_Source() {
       return R"CODE(
+// Lookup table for powers of 10 (10^0 to 10^28) - for FinalModel
+static constexpr double kFinalPow10Table[] = {
+    1e0,  1e1,  1e2,  1e3,  1e4,  1e5,  1e6,  1e7,  1e8,  1e9,
+    1e10, 1e11, 1e12, 1e13, 1e14, 1e15, 1e16, 1e17, 1e18, 1e19,
+    1e20, 1e21, 1e22, 1e23, 1e24, 1e25, 1e26, 1e27, 1e28
+};
+
+// Lookup table for powers of 10 as uint64_t (10^0 to 10^19) - for FinalModel
+static constexpr uint64_t kFinalPow10TableU64[] = {
+    1ULL,
+    10ULL,
+    100ULL,
+    1000ULL,
+    10000ULL,
+    100000ULL,
+    1000000ULL,
+    10000000ULL,
+    100000000ULL,
+    1000000000ULL,
+    10000000000ULL,
+    100000000000ULL,
+    1000000000000ULL,
+    10000000000000ULL,
+    100000000000000ULL,
+    1000000000000000ULL,
+    10000000000000000ULL,
+    100000000000000000ULL,
+    1000000000000000000ULL,
+    10000000000000000000ULL
+};
+
 uint64_t FinalModel<decimal_t>::extract(double a) noexcept
 {
     uint64_t result;
@@ -3980,7 +4125,8 @@ size_t FinalModel<decimal_t>::get(decimal_t& value) const noexcept
     uint32_t flags = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset() + 12);
 
     // Calculate decimal value
-    double dValue = ((double)low + (double)high * ds2to64) / pow(10.0, (uint8_t)(flags >> 16));
+    uint8_t scale = (uint8_t)(flags >> 16);
+    double dValue = ((double)low + (double)high * ds2to64) / kFinalPow10Table[scale];
     if (flags & 0x80000000)
         dValue = -dValue;
 
@@ -4032,12 +4178,12 @@ size_t FinalModel<decimal_t>::set(decimal_t value) noexcept
         if (iPower > 28)
             iPower = 28;
 
-        dValue *= pow(10.0, iPower);
+        dValue *= kFinalPow10Table[iPower];
     }
     else
     {
         if ((iPower != -1) || (dValue >= 1E15))
-            dValue /= pow(10.0, -iPower);
+            dValue /= kFinalPow10Table[-iPower];
         else
             iPower = 0; // didn't scale it
     }
@@ -4070,7 +4216,7 @@ size_t FinalModel<decimal_t>::set(decimal_t value) noexcept
         iPower = -iPower;
         if (iPower < 10)
         {
-            double pow10 = (double)powl(10.0, iPower);
+            uint64_t pow10 = kFinalPow10TableU64[iPower];
             uint64_t low64 = uint32x32((uint32_t)ulMant, (uint32_t)pow10);
             uint64_t high64 = uint32x32((uint32_t)(ulMant >> 32), (uint32_t)pow10);
             *((uint32_t*)(_buffer.data() + _buffer.offset() + fbe_offset())) = (uint32_t)low64;
@@ -4085,7 +4231,7 @@ size_t FinalModel<decimal_t>::set(decimal_t value) noexcept
             assert(iPower <= 14);
             uint64_t low64;
             uint32_t high32;
-            uint64x64(ulMant, (uint64_t)pow(10.0, iPower), low64, high32);
+            uint64x64(ulMant, kFinalPow10TableU64[iPower], low64, high32);
             *((uint64_t*)(_buffer.data() + _buffer.offset() + fbe_offset())) = low64;
             *((uint32_t*)(_buffer.data() + _buffer.offset() + fbe_offset() + 8)) = high32;
         }
@@ -4301,11 +4447,13 @@ private:
       return R"CODE(
 size_t FinalModel<buffer_t>::verify() const noexcept
 {
-    if ((_buffer.offset() + fbe_offset() + 4) > _buffer.size())
+    size_t fbe_full_offset = _buffer.offset() + fbe_offset();
+    size_t buffer_size = _buffer.size();
+    if ((fbe_full_offset + 4) > buffer_size)
         return std::numeric_limits<std::size_t>::max();
 
-    uint32_t fbe_bytes_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset());
-    if ((_buffer.offset() + fbe_offset() + 4 + fbe_bytes_size) > _buffer.size())
+    uint32_t fbe_bytes_size = unaligned_load<uint32_t>(_buffer.data() + fbe_full_offset);
+    if ((fbe_full_offset + 4 + fbe_bytes_size) > buffer_size)
         return std::numeric_limits<std::size_t>::max();
 
     return 4 + fbe_bytes_size;
@@ -4317,17 +4465,21 @@ size_t FinalModel<buffer_t>::get(void* data, size_t size) const noexcept
     if ((size > 0) && (data == nullptr))
         return 0;
 
-    assert(((_buffer.offset() + fbe_offset() + 4) <= _buffer.size()) && "Model is broken!");
-    if ((_buffer.offset() + fbe_offset() + 4) > _buffer.size())
+    size_t fbe_full_offset = _buffer.offset() + fbe_offset();
+    const uint8_t* buffer_data = _buffer.data();
+    size_t buffer_size = _buffer.size();
+
+    assert(((fbe_full_offset + 4) <= buffer_size) && "Model is broken!");
+    if ((fbe_full_offset + 4) > buffer_size)
         return 0;
 
-    uint32_t fbe_bytes_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset());
-    assert(((_buffer.offset() + fbe_offset() + 4 + fbe_bytes_size) <= _buffer.size()) && "Model is broken!");
-    if ((_buffer.offset() + fbe_offset() + 4 + fbe_bytes_size) > _buffer.size())
+    uint32_t fbe_bytes_size = unaligned_load<uint32_t>(buffer_data + fbe_full_offset);
+    assert(((fbe_full_offset + 4 + fbe_bytes_size) <= buffer_size) && "Model is broken!");
+    if ((fbe_full_offset + 4 + fbe_bytes_size) > buffer_size)
         return 4;
 
     size_t result = std::min(size, (size_t)fbe_bytes_size);
-    memcpy(data, (const char*)(_buffer.data() + _buffer.offset() + fbe_offset() + 4), result);
+    memcpy(data, buffer_data + fbe_full_offset + 4, result);
     return 4 + fbe_bytes_size;
 }
 
@@ -4335,16 +4487,20 @@ size_t FinalModel<buffer_t>::get(FastVec<uint8_t>& value) const noexcept
 {
     value.clear();
 
-    assert(((_buffer.offset() + fbe_offset() + 4) <= _buffer.size()) && "Model is broken!");
-    if ((_buffer.offset() + fbe_offset() + 4) > _buffer.size())
+    size_t fbe_full_offset = _buffer.offset() + fbe_offset();
+    const uint8_t* buffer_data = _buffer.data();
+    size_t buffer_size = _buffer.size();
+
+    assert(((fbe_full_offset + 4) <= buffer_size) && "Model is broken!");
+    if ((fbe_full_offset + 4) > buffer_size)
         return 0;
 
-    uint32_t fbe_bytes_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset());
-    assert(((_buffer.offset() + fbe_offset() + 4 + fbe_bytes_size) <= _buffer.size()) && "Model is broken!");
-    if ((_buffer.offset() + fbe_offset() + 4 + fbe_bytes_size) > _buffer.size())
+    uint32_t fbe_bytes_size = unaligned_load<uint32_t>(buffer_data + fbe_full_offset);
+    assert(((fbe_full_offset + 4 + fbe_bytes_size) <= buffer_size) && "Model is broken!");
+    if ((fbe_full_offset + 4 + fbe_bytes_size) > buffer_size)
         return 4;
 
-    const char* fbe_bytes = (const char*)(_buffer.data() + _buffer.offset() + fbe_offset() + 4);
+    const char* fbe_bytes = (const char*)(buffer_data + fbe_full_offset + 4);
     value.assign(fbe_bytes, fbe_bytes + fbe_bytes_size);
     return 4 + fbe_bytes_size;
 }
@@ -4355,19 +4511,23 @@ size_t FinalModel<buffer_t>::set(const void* data, size_t size)
     if ((size > 0) && (data == nullptr))
         return 0;
 
-    assert(((_buffer.offset() + fbe_offset() + 4) <= _buffer.size()) && "Model is broken!");
-    if ((_buffer.offset() + fbe_offset() + 4) > _buffer.size())
+    size_t fbe_full_offset = _buffer.offset() + fbe_offset();
+    uint8_t* buffer_data = _buffer.data();
+    size_t buffer_size = _buffer.size();
+
+    assert(((fbe_full_offset + 4) <= buffer_size) && "Model is broken!");
+    if ((fbe_full_offset + 4) > buffer_size)
         return 0;
 
     uint32_t fbe_bytes_size = (uint32_t)size;
-    assert(((_buffer.offset() + fbe_offset() + 4 + fbe_bytes_size) <= _buffer.size()) && "Model is broken!");
-    if ((_buffer.offset() + fbe_offset() + 4 + fbe_bytes_size) > _buffer.size())
+    assert(((fbe_full_offset + 4 + fbe_bytes_size) <= buffer_size) && "Model is broken!");
+    if ((fbe_full_offset + 4 + fbe_bytes_size) > buffer_size)
         return 4;
 
-    unaligned_store<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset(), fbe_bytes_size);
+    unaligned_store<uint32_t>(buffer_data + fbe_full_offset, fbe_bytes_size);
 
     if (fbe_bytes_size > 0)
-        memcpy((char*)(_buffer.data() + _buffer.offset() + fbe_offset() + 4), data, fbe_bytes_size);
+        memcpy((char*)(buffer_data + fbe_full_offset + 4), data, fbe_bytes_size);
     return 4 + fbe_bytes_size;
 }
 )CODE";
@@ -4436,11 +4596,13 @@ private:
       return R"CODE(
 size_t FinalModel<FBEString>::verify() const noexcept
 {
-    if ((_buffer.offset() + fbe_offset() + 4) > _buffer.size())
+    size_t fbe_full_offset = _buffer.offset() + fbe_offset();
+    size_t buffer_size = _buffer.size();
+    if ((fbe_full_offset + 4) > buffer_size)
         return std::numeric_limits<std::size_t>::max();
 
-    uint32_t fbe_string_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset());
-    if ((_buffer.offset() + fbe_offset() + 4 + fbe_string_size) > _buffer.size())
+    uint32_t fbe_string_size = unaligned_load<uint32_t>(_buffer.data() + fbe_full_offset);
+    if ((fbe_full_offset + 4 + fbe_string_size) > buffer_size)
         return std::numeric_limits<std::size_t>::max();
 
     return 4 + fbe_string_size;
@@ -4452,17 +4614,21 @@ size_t FinalModel<FBEString>::get(char* data, size_t size) const noexcept
     if ((size > 0) && (data == nullptr))
         return 0;
 
-    assert(((_buffer.offset() + fbe_offset() + 4) <= _buffer.size()) && "Model is broken!");
-    if ((_buffer.offset() + fbe_offset() + 4) > _buffer.size())
+    size_t fbe_full_offset = _buffer.offset() + fbe_offset();
+    const uint8_t* buffer_data = _buffer.data();
+    size_t buffer_size = _buffer.size();
+
+    assert(((fbe_full_offset + 4) <= buffer_size) && "Model is broken!");
+    if ((fbe_full_offset + 4) > buffer_size)
         return 0;
 
-    uint32_t fbe_string_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset());
-    assert(((_buffer.offset() + fbe_offset() + 4 + fbe_string_size) <= _buffer.size()) && "Model is broken!");
-    if ((_buffer.offset() + fbe_offset() + 4 + fbe_string_size) > _buffer.size())
+    uint32_t fbe_string_size = unaligned_load<uint32_t>(buffer_data + fbe_full_offset);
+    assert(((fbe_full_offset + 4 + fbe_string_size) <= buffer_size) && "Model is broken!");
+    if ((fbe_full_offset + 4 + fbe_string_size) > buffer_size)
         return 4;
 
     size_t result = std::min(size, (size_t)fbe_string_size);
-    memcpy(data, (const char*)(_buffer.data() + _buffer.offset() + fbe_offset() + 4), result);
+    memcpy(data, buffer_data + fbe_full_offset + 4, result);
     return 4 + fbe_string_size;
 }
 
@@ -4472,19 +4638,23 @@ size_t FinalModel<FBEString>::get(FBEString& value) const noexcept
     value.clear();
     #endif
 
-    assert(((_buffer.offset() + fbe_offset() + 4) <= _buffer.size()) && "Model is broken!");
-    if ((_buffer.offset() + fbe_offset() + 4) > _buffer.size())
+    size_t fbe_full_offset = _buffer.offset() + fbe_offset();
+    const uint8_t* buffer_data = _buffer.data();
+    size_t buffer_size = _buffer.size();
+
+    assert(((fbe_full_offset + 4) <= buffer_size) && "Model is broken!");
+    if ((fbe_full_offset + 4) > buffer_size)
         return 0;
 
-    uint32_t fbe_string_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset());
-    assert(((_buffer.offset() + fbe_offset() + 4 + fbe_string_size) <= _buffer.size()) && "Model is broken!");
-    if ((_buffer.offset() + fbe_offset() + 4 + fbe_string_size) > _buffer.size())
+    uint32_t fbe_string_size = unaligned_load<uint32_t>(buffer_data + fbe_full_offset);
+    assert(((fbe_full_offset + 4 + fbe_string_size) <= buffer_size) && "Model is broken!");
+    if ((fbe_full_offset + 4 + fbe_string_size) > buffer_size)
         return 4;
     #if !defined(USING_SEASTAR_STRING)
-    value.assign((const char*)(_buffer.data() + _buffer.offset() + fbe_offset() + 4), fbe_string_size);
+    value.assign((const char*)(buffer_data + fbe_full_offset + 4), fbe_string_size);
     #else
     value.resize(fbe_string_size);
-    memcpy(value.data(), (const char*)(_buffer.data() + _buffer.offset() + fbe_offset() + 4), fbe_string_size);
+    memcpy(value.data(), buffer_data + fbe_full_offset + 4, fbe_string_size);
     #endif
     return 4 + fbe_string_size;
 }
@@ -4495,37 +4665,45 @@ size_t FinalModel<FBEString>::set(const char* data, size_t size)
     if ((size > 0) && (data == nullptr))
         return 0;
 
-    assert(((_buffer.offset() + fbe_offset() + 4) <= _buffer.size()) && "Model is broken!");
-    if ((_buffer.offset() + fbe_offset() + 4) > _buffer.size())
+    size_t fbe_full_offset = _buffer.offset() + fbe_offset();
+    uint8_t* buffer_data = _buffer.data();
+    size_t buffer_size = _buffer.size();
+
+    assert(((fbe_full_offset + 4) <= buffer_size) && "Model is broken!");
+    if ((fbe_full_offset + 4) > buffer_size)
         return 0;
 
     uint32_t fbe_string_size = (uint32_t)size;
-    assert(((_buffer.offset() + fbe_offset() + 4 + fbe_string_size) <= _buffer.size()) && "Model is broken!");
-    if ((_buffer.offset() + fbe_offset() + 4 + fbe_string_size) > _buffer.size())
+    assert(((fbe_full_offset + 4 + fbe_string_size) <= buffer_size) && "Model is broken!");
+    if ((fbe_full_offset + 4 + fbe_string_size) > buffer_size)
         return 4;
 
-    unaligned_store<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset(), fbe_string_size);
+    unaligned_store<uint32_t>(buffer_data + fbe_full_offset, fbe_string_size);
 
     if (fbe_string_size > 0)
-        memcpy((char*)(_buffer.data() + _buffer.offset() + fbe_offset() + 4), data, fbe_string_size);
+        memcpy((char*)(buffer_data + fbe_full_offset + 4), data, fbe_string_size);
     return 4 + fbe_string_size;
 }
 
 size_t FinalModel<FBEString>::set(const FBEString& value)
 {
-    assert(((_buffer.offset() + fbe_offset() + 4) <= _buffer.size()) && "Model is broken!");
-    if ((_buffer.offset() + fbe_offset() + 4) > _buffer.size())
+    size_t fbe_full_offset = _buffer.offset() + fbe_offset();
+    uint8_t* buffer_data = _buffer.data();
+    size_t buffer_size = _buffer.size();
+
+    assert(((fbe_full_offset + 4) <= buffer_size) && "Model is broken!");
+    if ((fbe_full_offset + 4) > buffer_size)
         return 0;
 
     uint32_t fbe_string_size = (uint32_t)value.size();
-    assert(((_buffer.offset() + fbe_offset() + 4 + fbe_string_size) <= _buffer.size()) && "Model is broken!");
-    if ((_buffer.offset() + fbe_offset() + 4 + fbe_string_size) > _buffer.size())
+    assert(((fbe_full_offset + 4 + fbe_string_size) <= buffer_size) && "Model is broken!");
+    if ((fbe_full_offset + 4 + fbe_string_size) > buffer_size)
         return 4;
 
-    unaligned_store<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset(), fbe_string_size);
+    unaligned_store<uint32_t>(buffer_data + fbe_full_offset, fbe_string_size);
 
     if (fbe_string_size > 0)
-        memcpy((char*)(_buffer.data() + _buffer.offset() + fbe_offset() + 4), value.data(), fbe_string_size);
+        memcpy((char*)(buffer_data + fbe_full_offset + 4), value.data(), fbe_string_size);
     return 4 + fbe_string_size;
 }
 )CODE";
@@ -4583,20 +4761,22 @@ public:
 template <typename T>
 inline bool FinalModel<std::optional<T>>::has_value() const noexcept
 {
-    if ((_buffer.offset() + fbe_offset() + 1) > _buffer.size())
+    size_t fbe_full_offset = _buffer.offset() + fbe_offset();
+    if ((fbe_full_offset + 1) > _buffer.size())
         return false;
 
-    uint8_t fbe_has_value = *((const uint8_t*)(_buffer.data() + _buffer.offset() + fbe_offset()));
+    uint8_t fbe_has_value = *((const uint8_t*)(_buffer.data() + fbe_full_offset));
     return (fbe_has_value != 0);
 }
 
 template <typename T>
 inline size_t FinalModel<std::optional<T>>::verify() const noexcept
 {
-    if ((_buffer.offset() + fbe_offset() + 1) > _buffer.size())
+    size_t fbe_full_offset = _buffer.offset() + fbe_offset();
+    if ((fbe_full_offset + 1) > _buffer.size())
         return std::numeric_limits<std::size_t>::max();
 
-    uint8_t fbe_has_value = *((const uint8_t*)(_buffer.data() + _buffer.offset() + fbe_offset()));
+    uint8_t fbe_has_value = *((const uint8_t*)(_buffer.data() + fbe_full_offset));
     if (fbe_has_value == 0)
         return 1;
 
@@ -4611,11 +4791,13 @@ inline size_t FinalModel<std::optional<T>>::get(std::optional<T>& opt) const noe
 {
     opt = std::nullopt;
 
-    assert(((_buffer.offset() + fbe_offset() + 1) <= _buffer.size()) && "Model is broken!");
-    if ((_buffer.offset() + fbe_offset() + 1) > _buffer.size())
+    size_t fbe_full_offset = _buffer.offset() + fbe_offset();
+    assert(((fbe_full_offset + 1) <= _buffer.size()) && "Model is broken!");
+    if ((fbe_full_offset + 1) > _buffer.size())
         return 0;
 
-    if (!has_value())
+    uint8_t fbe_has_value = *((const uint8_t*)(_buffer.data() + fbe_full_offset));
+    if (fbe_has_value == 0)
         return 1;
 
     _buffer.shift(fbe_offset() + 1);
@@ -4629,12 +4811,13 @@ inline size_t FinalModel<std::optional<T>>::get(std::optional<T>& opt) const noe
 template <typename T>
 inline size_t FinalModel<std::optional<T>>::set(const std::optional<T>& opt)
 {
-    assert(((_buffer.offset() + fbe_offset() + 1) <= _buffer.size()) && "Model is broken!");
-    if ((_buffer.offset() + fbe_offset() + 1) > _buffer.size())
+    size_t fbe_full_offset = _buffer.offset() + fbe_offset();
+    assert(((fbe_full_offset + 1) <= _buffer.size()) && "Model is broken!");
+    if ((fbe_full_offset + 1) > _buffer.size())
         return 0;
 
     uint8_t fbe_has_value = opt ? 1 : 0;
-    *((uint8_t*)(_buffer.data() + _buffer.offset() + fbe_offset())) = fbe_has_value;
+    *((uint8_t*)(_buffer.data() + fbe_full_offset)) = fbe_has_value;
     if (fbe_has_value == 0)
         return 1;
 
@@ -4759,8 +4942,9 @@ template <typename T, size_t N>
 template <size_t S>
 inline size_t FinalModelArray<T, N>::get(T (&values)[S]) const noexcept
 {
-    assert(((_buffer.offset() + fbe_offset()) <= _buffer.size()) && "Model is broken!");
-    if ((_buffer.offset() + fbe_offset()) > _buffer.size())
+    size_t fbe_full_offset = _buffer.offset() + fbe_offset();
+    assert((fbe_full_offset <= _buffer.size()) && "Model is broken!");
+    if (fbe_full_offset > _buffer.size())
         return 0;
 
     size_t size = 0;
@@ -4778,8 +4962,9 @@ template <typename T, size_t N>
 template <size_t S>
 inline size_t FinalModelArray<T, N>::get(std::array<T, S>& values) const noexcept
 {
-    assert(((_buffer.offset() + fbe_offset()) <= _buffer.size()) && "Model is broken!");
-    if ((_buffer.offset() + fbe_offset()) > _buffer.size())
+    size_t fbe_full_offset = _buffer.offset() + fbe_offset();
+    assert((fbe_full_offset <= _buffer.size()) && "Model is broken!");
+    if (fbe_full_offset > _buffer.size())
         return 0;
 
     size_t size = 0;
@@ -4798,8 +4983,9 @@ inline size_t FinalModelArray<T, N>::get(FastVec<T>& values) const noexcept
 {
     values.clear();
 
-    assert(((_buffer.offset() + fbe_offset()) <= _buffer.size()) && "Model is broken!");
-    if ((_buffer.offset() + fbe_offset()) > _buffer.size())
+    size_t fbe_full_offset = _buffer.offset() + fbe_offset();
+    assert((fbe_full_offset <= _buffer.size()) && "Model is broken!");
+    if (fbe_full_offset > _buffer.size())
         return 0;
 
     values.reserve(N);
@@ -4808,12 +4994,12 @@ inline size_t FinalModelArray<T, N>::get(FastVec<T>& values) const noexcept
     FinalModel<T> fbe_model(_buffer, fbe_offset());
     for (size_t i = N; i-- > 0;)
     {
-        T value = T();
+        T value{};
         size_t offset = fbe_model.get(value);
         #if defined(USING_STD_VECTOR)
-        values.emplace_back(value);
+        values.emplace_back(std::move(value));
         #else
-        values.template emplace_back<Safety::Unsafe>(value);
+        values.template emplace_back<Safety::Unsafe>(std::move(value));
         #endif
         fbe_model.fbe_shift(offset);
         size += offset;
@@ -4985,11 +5171,12 @@ inline size_t FinalModelVector<T>::get(FastVec<T>& values) const noexcept
 {
     values.clear();
 
-    assert(((_buffer.offset() + fbe_offset() + 4) <= _buffer.size()) && "Model is broken!");
-    if ((_buffer.offset() + fbe_offset() + 4) > _buffer.size())
+    size_t fbe_full_offset = _buffer.offset() + fbe_offset();
+    assert(((fbe_full_offset + 4) <= _buffer.size()) && "Model is broken!");
+    if ((fbe_full_offset + 4) > _buffer.size())
         return 0;
 
-    size_t fbe_vector_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset());
+    size_t fbe_vector_size = unaligned_load<uint32_t>(_buffer.data() + fbe_full_offset);
     if (fbe_vector_size == 0)
         return 4;
 
@@ -4999,12 +5186,12 @@ inline size_t FinalModelVector<T>::get(FastVec<T>& values) const noexcept
     FinalModel<T> fbe_model(_buffer, fbe_offset() + 4);
     for (size_t i = fbe_vector_size; i-- > 0;)
     {
-        T value = T();
+        T value{};
         size_t offset = fbe_model.get(value);
         #if defined(USING_STD_VECTOR)
-        values.emplace_back(value);
+        values.emplace_back(std::move(value));
         #else
-        values.template emplace_back<Safety::Unsafe>(value);
+        values.template emplace_back<Safety::Unsafe>(std::move(value));
         #endif
         fbe_model.fbe_shift(offset);
         size += offset;
@@ -5017,11 +5204,12 @@ inline size_t FinalModelVector<T>::get(std::list<T>& values) const noexcept
 {
     values.clear();
 
-    assert(((_buffer.offset() + fbe_offset() + 4) <= _buffer.size()) && "Model is broken!");
-    if ((_buffer.offset() + fbe_offset() + 4) > _buffer.size())
+    size_t fbe_full_offset = _buffer.offset() + fbe_offset();
+    assert(((fbe_full_offset + 4) <= _buffer.size()) && "Model is broken!");
+    if ((fbe_full_offset + 4) > _buffer.size())
         return 0;
 
-    size_t fbe_vector_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset());
+    size_t fbe_vector_size = unaligned_load<uint32_t>(_buffer.data() + fbe_full_offset);
     if (fbe_vector_size == 0)
         return 4;
 
@@ -5029,9 +5217,9 @@ inline size_t FinalModelVector<T>::get(std::list<T>& values) const noexcept
     FinalModel<T> fbe_model(_buffer, fbe_offset() + 4);
     for (size_t i = fbe_vector_size; i-- > 0;)
     {
-        T value = T();
+        T value{};
         size_t offset = fbe_model.get(value);
-        values.emplace_back(value);
+        values.emplace_back(std::move(value));
         fbe_model.fbe_shift(offset);
         size += offset;
     }
@@ -5043,11 +5231,12 @@ inline size_t FinalModelVector<T>::get(std::set<T>& values) const noexcept
 {
     values.clear();
 
-    assert(((_buffer.offset() + fbe_offset() + 4) <= _buffer.size()) && "Model is broken!");
-    if ((_buffer.offset() + fbe_offset() + 4) > _buffer.size())
+    size_t fbe_full_offset = _buffer.offset() + fbe_offset();
+    assert(((fbe_full_offset + 4) <= _buffer.size()) && "Model is broken!");
+    if ((fbe_full_offset + 4) > _buffer.size())
         return 0;
 
-    size_t fbe_vector_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset());
+    size_t fbe_vector_size = unaligned_load<uint32_t>(_buffer.data() + fbe_full_offset);
     if (fbe_vector_size == 0)
         return 4;
 
@@ -5055,9 +5244,9 @@ inline size_t FinalModelVector<T>::get(std::set<T>& values) const noexcept
     FinalModel<T> fbe_model(_buffer, fbe_offset() + 4);
     for (size_t i = fbe_vector_size; i-- > 0;)
     {
-        T value = T();
+        T value{};
         size_t offset = fbe_model.get(value);
-        values.emplace(value);
+        values.emplace(std::move(value));
         fbe_model.fbe_shift(offset);
         size += offset;
     }
@@ -5067,11 +5256,12 @@ inline size_t FinalModelVector<T>::get(std::set<T>& values) const noexcept
 template <typename T>
 inline size_t FinalModelVector<T>::set(const FastVec<T>& values) noexcept
 {
-    assert(((_buffer.offset() + fbe_offset() + 4) <= _buffer.size()) && "Model is broken!");
-    if ((_buffer.offset() + fbe_offset() + 4) > _buffer.size())
+    size_t fbe_full_offset = _buffer.offset() + fbe_offset();
+    assert(((fbe_full_offset + 4) <= _buffer.size()) && "Model is broken!");
+    if ((fbe_full_offset + 4) > _buffer.size())
         return 0;
 
-    *((uint32_t*)(_buffer.data() + _buffer.offset() + fbe_offset())) = (uint32_t)values.size();
+    *((uint32_t*)(_buffer.data() + fbe_full_offset)) = (uint32_t)values.size();
 
     size_t size = 4;
     FinalModel<T> fbe_model(_buffer, fbe_offset() + 4);
@@ -5087,11 +5277,12 @@ inline size_t FinalModelVector<T>::set(const FastVec<T>& values) noexcept
 template <typename T>
 inline size_t FinalModelVector<T>::set(const std::list<T>& values) noexcept
 {
-    assert(((_buffer.offset() + fbe_offset() + 4) <= _buffer.size()) && "Model is broken!");
-    if ((_buffer.offset() + fbe_offset() + 4) > _buffer.size())
+    size_t fbe_full_offset = _buffer.offset() + fbe_offset();
+    assert(((fbe_full_offset + 4) <= _buffer.size()) && "Model is broken!");
+    if ((fbe_full_offset + 4) > _buffer.size())
         return 0;
 
-    *((uint32_t*)(_buffer.data() + _buffer.offset() + fbe_offset())) = (uint32_t)values.size();
+    *((uint32_t*)(_buffer.data() + fbe_full_offset)) = (uint32_t)values.size();
 
     size_t size = 4;
     FinalModel<T> fbe_model(_buffer, fbe_offset() + 4);
@@ -5107,11 +5298,12 @@ inline size_t FinalModelVector<T>::set(const std::list<T>& values) noexcept
 template <typename T>
 inline size_t FinalModelVector<T>::set(const std::set<T>& values) noexcept
 {
-    assert(((_buffer.offset() + fbe_offset() + 4) <= _buffer.size()) && "Model is broken!");
-    if ((_buffer.offset() + fbe_offset() + 4) > _buffer.size())
+    size_t fbe_full_offset = _buffer.offset() + fbe_offset();
+    assert(((fbe_full_offset + 4) <= _buffer.size()) && "Model is broken!");
+    if ((fbe_full_offset + 4) > _buffer.size())
         return 0;
 
-    *((uint32_t*)(_buffer.data() + _buffer.offset() + fbe_offset())) = (uint32_t)values.size();
+    *((uint32_t*)(_buffer.data() + fbe_full_offset)) = (uint32_t)values.size();
 
     size_t size = 4;
     FinalModel<T> fbe_model(_buffer, fbe_offset() + 4);
@@ -5233,11 +5425,12 @@ inline size_t FinalModelMap<TKey, TValue>::get(std::map<TKey, TValue>& values) c
 {
     values.clear();
 
-    assert(((_buffer.offset() + fbe_offset() + 4) <= _buffer.size()) && "Model is broken!");
-    if ((_buffer.offset() + fbe_offset() + 4) > _buffer.size())
+    size_t fbe_full_offset = _buffer.offset() + fbe_offset();
+    assert(((fbe_full_offset + 4) <= _buffer.size()) && "Model is broken!");
+    if ((fbe_full_offset + 4) > _buffer.size())
         return 0;
 
-    size_t fbe_map_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset());
+    size_t fbe_map_size = unaligned_load<uint32_t>(_buffer.data() + fbe_full_offset);
     if (fbe_map_size == 0)
         return 4;
 
@@ -5246,15 +5439,15 @@ inline size_t FinalModelMap<TKey, TValue>::get(std::map<TKey, TValue>& values) c
     FinalModel<TValue> fbe_model_value(_buffer, fbe_offset() + 4);
     for (size_t i = fbe_map_size; i-- > 0;)
     {
-        TKey key;
-        TValue value;
+        TKey key{};
+        TValue value{};
         size_t offset_key = fbe_model_key.get(key);
         fbe_model_key.fbe_shift(offset_key);
         fbe_model_value.fbe_shift(offset_key);
         size_t offset_value = fbe_model_value.get(value);
         fbe_model_key.fbe_shift(offset_value);
         fbe_model_value.fbe_shift(offset_value);
-        values.emplace(key, value);
+        values.emplace(std::move(key), std::move(value));
         size += offset_key + offset_value;
     }
     return size;
@@ -5265,11 +5458,12 @@ inline size_t FinalModelMap<TKey, TValue>::get(std::unordered_map<TKey, TValue>&
 {
     values.clear();
 
-    assert(((_buffer.offset() + fbe_offset() + 4) <= _buffer.size()) && "Model is broken!");
-    if ((_buffer.offset() + fbe_offset() + 4) > _buffer.size())
+    size_t fbe_full_offset = _buffer.offset() + fbe_offset();
+    assert(((fbe_full_offset + 4) <= _buffer.size()) && "Model is broken!");
+    if ((fbe_full_offset + 4) > _buffer.size())
         return 0;
 
-    size_t fbe_map_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset());
+    size_t fbe_map_size = unaligned_load<uint32_t>(_buffer.data() + fbe_full_offset);
     if (fbe_map_size == 0)
         return 4;
 
@@ -5278,15 +5472,15 @@ inline size_t FinalModelMap<TKey, TValue>::get(std::unordered_map<TKey, TValue>&
     FinalModel<TValue> fbe_model_value(_buffer, fbe_offset() + 4);
     for (size_t i = fbe_map_size; i-- > 0;)
     {
-        TKey key;
-        TValue value;
+        TKey key{};
+        TValue value{};
         size_t offset_key = fbe_model_key.get(key);
         fbe_model_key.fbe_shift(offset_key);
         fbe_model_value.fbe_shift(offset_key);
         size_t offset_value = fbe_model_value.get(value);
         fbe_model_key.fbe_shift(offset_value);
         fbe_model_value.fbe_shift(offset_value);
-        values.emplace(key, value);
+        values.emplace(std::move(key), std::move(value));
         size += offset_key + offset_value;
     }
     return size;
@@ -5295,11 +5489,12 @@ inline size_t FinalModelMap<TKey, TValue>::get(std::unordered_map<TKey, TValue>&
 template <typename TKey, typename TValue>
 inline size_t FinalModelMap<TKey, TValue>::set(const std::map<TKey, TValue>& values) noexcept
 {
-    assert(((_buffer.offset() + fbe_offset() + 4) <= _buffer.size()) && "Model is broken!");
-    if ((_buffer.offset() + fbe_offset() + 4) > _buffer.size())
+    size_t fbe_full_offset = _buffer.offset() + fbe_offset();
+    assert(((fbe_full_offset + 4) <= _buffer.size()) && "Model is broken!");
+    if ((fbe_full_offset + 4) > _buffer.size())
         return 0;
 
-    *((uint32_t*)(_buffer.data() + _buffer.offset() + fbe_offset())) = (uint32_t)values.size();
+    *((uint32_t*)(_buffer.data() + fbe_full_offset)) = (uint32_t)values.size();
 
     size_t size = 4;
     FinalModel<TKey> fbe_model_key(_buffer, fbe_offset() + 4);
@@ -5320,11 +5515,12 @@ inline size_t FinalModelMap<TKey, TValue>::set(const std::map<TKey, TValue>& val
 template <typename TKey, typename TValue>
 inline size_t FinalModelMap<TKey, TValue>::set(const std::unordered_map<TKey, TValue>& values) noexcept
 {
-    assert(((_buffer.offset() + fbe_offset() + 4) <= _buffer.size()) && "Model is broken!");
-    if ((_buffer.offset() + fbe_offset() + 4) > _buffer.size())
+    size_t fbe_full_offset = _buffer.offset() + fbe_offset();
+    assert(((fbe_full_offset + 4) <= _buffer.size()) && "Model is broken!");
+    if ((fbe_full_offset + 4) > _buffer.size())
         return 0;
 
-    *((uint32_t*)(_buffer.data() + _buffer.offset() + fbe_offset())) = (uint32_t)values.size();
+    *((uint32_t*)(_buffer.data() + fbe_full_offset)) = (uint32_t)values.size();
 
     size_t size = 4;
     FinalModel<TKey> fbe_model_key(_buffer, fbe_offset() + 4);

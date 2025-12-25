@@ -10,23 +10,25 @@ namespace FBE {
 template <typename T, typename TBase>
 inline void FieldModelBase<T, TBase>::get(T& value, pmr::memory_resource* resource, T defaults) const noexcept
 {
-    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+    size_t fbe_full_offset = _buffer.offset() + fbe_offset();
+    if ((fbe_full_offset + fbe_size()) > _buffer.size())
     {
         value = defaults;
         return;
     }
 
-    value = unaligned_load<T>(_buffer.data() + _buffer.offset() + fbe_offset());
+    value = unaligned_load<T>(_buffer.data() + fbe_full_offset);
 }
 
 template <typename T, typename TBase>
 inline void FieldModelBase<T, TBase>::set(T value, pmr::memory_resource* resource) noexcept
 {
-    assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
-    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+    size_t fbe_full_offset = _buffer.offset() + fbe_offset();
+    assert(((fbe_full_offset + fbe_size()) <= _buffer.size()) && "Model is broken!");
+    if ((fbe_full_offset + fbe_size()) > _buffer.size())
         return;
 
-    unaligned_store<TBase>(_buffer.data() + _buffer.offset() + fbe_offset(), (TBase)value);
+    unaligned_store<TBase>(_buffer.data() + fbe_full_offset, (TBase)value);
 }
 
 template <typename T>

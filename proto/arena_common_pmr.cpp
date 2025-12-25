@@ -79,7 +79,7 @@ bool Alias::operator<([[maybe_unused]] const Alias& other) const noexcept
     return false;
 }
 
-std::string Alias::string() const
+std::string Alias::to_string() const
 {
     std::stringstream ss; ss << *this; return ss.str();
 }
@@ -134,7 +134,7 @@ bool Expression::operator<([[maybe_unused]] const Expression& other) const noexc
     return false;
 }
 
-std::string Expression::string() const
+std::string Expression::to_string() const
 {
     std::stringstream ss; ss << *this; return ss.str();
 }

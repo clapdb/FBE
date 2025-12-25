@@ -231,13 +231,49 @@ void Import::AddImport(std::string* i)
 
 Version::Version(const std::string& v)
 {
+    if (v.empty())
+        yyerror("Version string is empty!");
+
     auto pos = v.find('.');
     if (pos == v.npos)
-        minor = std::atoi(v.c_str());
+    {
+        // Single number means minor version only
+        std::size_t parsed_chars = 0;
+        try {
+            minor = std::stoi(v, &parsed_chars);
+        } catch (const std::exception&) {
+            yyerror("Invalid version string: " + v);
+        }
+        if (parsed_chars != v.size())
+            yyerror("Invalid version string (extra characters): " + v);
+    }
     else
     {
-        major = std::atoi(v.substr(0, pos).c_str());
-        minor = std::atoi(v.substr(pos + 1).c_str());
+        // major.minor format
+        if (pos == 0)
+            yyerror("Invalid version string (empty major): " + v);
+        if (pos + 1 >= v.size())
+            yyerror("Invalid version string (empty minor): " + v);
+
+        std::string major_str = v.substr(0, pos);
+        std::string minor_str = v.substr(pos + 1);
+        std::size_t parsed_chars = 0;
+
+        try {
+            major = std::stoi(major_str, &parsed_chars);
+        } catch (const std::exception&) {
+            yyerror("Invalid major version: " + major_str);
+        }
+        if (parsed_chars != major_str.size())
+            yyerror("Invalid major version (extra characters): " + major_str);
+
+        try {
+            minor = std::stoi(minor_str, &parsed_chars);
+        } catch (const std::exception&) {
+            yyerror("Invalid minor version: " + minor_str);
+        }
+        if (parsed_chars != minor_str.size())
+            yyerror("Invalid minor version (extra characters): " + minor_str);
     }
 }
 

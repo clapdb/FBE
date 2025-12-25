@@ -303,16 +303,37 @@ void GeneratorCpp::GenerateUnalignedAccessor_Header()
 {
     std::string code = R"CODE(
 template <typename T>
-inline auto unaligned_load(void const* ptr) noexcept -> T {
-    // using memcpy so we don't get into unaligned load problems.
-    // compiler should optimize this very well anyways.
+[[gnu::always_inline]] inline auto unaligned_load(void const* ptr) noexcept -> T {
     T t;
     std::memcpy(&t, ptr, sizeof(T));
     return t;
-};
+}
 
 template <typename T>
-inline void unaligned_store(void *ptr, T v) { memcpy(ptr, &v, sizeof(T)); }
+[[gnu::always_inline]] inline void unaligned_store(void *ptr, T v) noexcept {
+    std::memcpy(ptr, &v, sizeof(T));
+}
+
+// Specializations for common types to help compiler optimize
+template <>
+[[gnu::always_inline]] inline auto unaligned_load<uint8_t>(void const* ptr) noexcept -> uint8_t {
+    return *static_cast<const uint8_t*>(ptr);
+}
+
+template <>
+[[gnu::always_inline]] inline auto unaligned_load<int8_t>(void const* ptr) noexcept -> int8_t {
+    return *static_cast<const int8_t*>(ptr);
+}
+
+template <>
+[[gnu::always_inline]] inline void unaligned_store<uint8_t>(void *ptr, uint8_t v) noexcept {
+    *static_cast<uint8_t*>(ptr) = v;
+}
+
+template <>
+[[gnu::always_inline]] inline void unaligned_store<int8_t>(void *ptr, int8_t v) noexcept {
+    *static_cast<int8_t*>(ptr) = v;
+}
 )CODE";
 
     // Prepare code template
@@ -6578,7 +6599,7 @@ void GeneratorCpp::GenerateVariantFieldModel_Source(const std::shared_ptr<Packag
     WriteLine();
     // type
     WriteLineIndent("uint32_t fbe_variant_type = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_variant_offset);");
-    WriteLineIndent("if (fbe_variant_type < 0 || fbe_variant_type > " + std::to_string(v->body->values.size()) + ")");
+    WriteLineIndent("if (fbe_variant_type > " + std::to_string(v->body->values.size()) + ")");
     Indent(1);
     WriteLineIndent("return false;");
     Indent(-1);
@@ -6610,6 +6631,10 @@ void GeneratorCpp::GenerateVariantFieldModel_Source(const std::shared_ptr<Packag
         Indent(-1);
         WriteLineIndent("}");
     }
+    WriteLineIndent("default:");
+    Indent(1);
+    WriteLineIndent("return false;");
+    Indent(-1);
     Indent(-1);
     WriteLineIndent("}");
     WriteLine();
@@ -6635,7 +6660,7 @@ void GeneratorCpp::GenerateVariantFieldModel_Source(const std::shared_ptr<Packag
     WriteLineIndent("return;");
     Indent(-1);
     WriteLineIndent("uint32_t variant_type_index = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_variant_offset);");
-    WriteLineIndent("assert(variant_type_index >= 0 && variant_type_index <= " + std::to_string(v->body->values.size()) + " && \"Model is broken!\");");
+    WriteLineIndent("assert(variant_type_index <= " + std::to_string(v->body->values.size()) + " && \"Model is broken!\");");
     WriteLine();
     WriteLineIndent("_buffer.shift(fbe_variant_offset);");
     WriteLine();
@@ -6674,6 +6699,10 @@ void GeneratorCpp::GenerateVariantFieldModel_Source(const std::shared_ptr<Packag
         Indent(-1);
         WriteLineIndent("}");
     }
+    WriteLineIndent("default:");
+    Indent(1);
+    WriteLineIndent("break;");
+    Indent(-1);
     Indent(-1);
     WriteLineIndent("}");
     WriteLine();

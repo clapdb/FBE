@@ -105,7 +105,7 @@ bool Struct128::operator<([[maybe_unused]] const Struct128& other) const noexcep
     return false;
 }
 
-std::string Struct128::string() const
+std::string Struct128::to_string() const
 {
     std::stringstream ss; ss << *this; return ss.str();
 }

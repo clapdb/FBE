@@ -63,7 +63,7 @@ struct Item
     bool operator>(const Item& other) const noexcept { return !operator<=(other); }
     bool operator>=(const Item& other) const noexcept { return !operator<(other); }
 
-    std::string string() const;
+    std::string to_string() const;
 
     friend std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const Item& value);
 
@@ -113,7 +113,7 @@ struct Item2
     bool operator>(const Item2& other) const noexcept { return !operator<=(other); }
     bool operator>=(const Item2& other) const noexcept { return !operator<(other); }
 
-    std::string string() const;
+    std::string to_string() const;
 
     friend std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const Item2& value);
 

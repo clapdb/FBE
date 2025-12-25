@@ -133,7 +133,7 @@ bool Order::operator<([[maybe_unused]] const Order& other) const noexcept
     return false;
 }
 
-std::string Order::string() const
+std::string Order::to_string() const
 {
     std::stringstream ss; ss << *this; return ss.str();
 }
@@ -198,7 +198,7 @@ bool Balance::operator<([[maybe_unused]] const Balance& other) const noexcept
     return false;
 }
 
-std::string Balance::string() const
+std::string Balance::to_string() const
 {
     std::stringstream ss; ss << *this; return ss.str();
 }
@@ -267,7 +267,7 @@ bool Account::operator<([[maybe_unused]] const Account& other) const noexcept
     return false;
 }
 
-std::string Account::string() const
+std::string Account::to_string() const
 {
     std::stringstream ss; ss << *this; return ss.str();
 }
@@ -329,7 +329,7 @@ bool OrderMessage::operator<([[maybe_unused]] const OrderMessage& other) const n
     return false;
 }
 
-std::string OrderMessage::string() const
+std::string OrderMessage::to_string() const
 {
     std::stringstream ss; ss << *this; return ss.str();
 }
@@ -372,7 +372,7 @@ bool BalanceMessage::operator<([[maybe_unused]] const BalanceMessage& other) con
     return false;
 }
 
-std::string BalanceMessage::string() const
+std::string BalanceMessage::to_string() const
 {
     std::stringstream ss; ss << *this; return ss.str();
 }
@@ -415,7 +415,7 @@ bool AccountMessage::operator<([[maybe_unused]] const AccountMessage& other) con
     return false;
 }
 
-std::string AccountMessage::string() const
+std::string AccountMessage::to_string() const
 {
     std::stringstream ss; ss << *this; return ss.str();
 }

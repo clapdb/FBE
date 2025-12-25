@@ -45,7 +45,7 @@ bool Item::operator<([[maybe_unused]] const Item& other) const noexcept
     return false;
 }
 
-std::string Item::string() const
+std::string Item::to_string() const
 {
     std::stringstream ss; ss << *this; return ss.str();
 }
@@ -114,7 +114,7 @@ bool Item2::operator<([[maybe_unused]] const Item2& other) const noexcept
     return false;
 }
 
-std::string Item2::string() const
+std::string Item2::to_string() const
 {
     std::stringstream ss; ss << *this; return ss.str();
 }

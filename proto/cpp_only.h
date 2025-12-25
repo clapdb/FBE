@@ -64,7 +64,7 @@ struct Struct128
     bool operator>(const Struct128& other) const noexcept { return !operator<=(other); }
     bool operator>=(const Struct128& other) const noexcept { return !operator<(other); }
 
-    std::string string() const;
+    std::string to_string() const;
 
     friend std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const Struct128& value);
 

@@ -76,7 +76,7 @@ struct Alias
     bool operator>(const Alias& other) const noexcept { return !operator<=(other); }
     bool operator>=(const Alias& other) const noexcept { return !operator<(other); }
 
-    std::string string() const;
+    std::string to_string() const;
 
     friend std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const Alias& value);
 
@@ -125,7 +125,7 @@ struct Expression
     bool operator>(const Expression& other) const noexcept { return !operator<=(other); }
     bool operator>=(const Expression& other) const noexcept { return !operator<(other); }
 
-    std::string string() const;
+    std::string to_string() const;
 
     friend std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const Expression& value);
 

@@ -47,7 +47,7 @@ bool FieldModel<::variants::Expr>::verify() const noexcept
         return false;
 
     uint32_t fbe_variant_type = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_variant_offset);
-    if (fbe_variant_type < 0 || fbe_variant_type > 3)
+    if (fbe_variant_type > 3)
         return false;
 
     _buffer.shift(fbe_variant_offset);
@@ -76,6 +76,8 @@ bool FieldModel<::variants::Expr>::verify() const noexcept
                 return false;
             break;
         }
+        default:
+            return false;
     }
 
     _buffer.unshift(fbe_variant_offset);
@@ -92,7 +94,7 @@ void FieldModel<::variants::Expr>::get(::variants::Expr& fbe_value, pmr::memory_
     if ((fbe_variant_offset == 0) || ((_buffer.offset() + fbe_variant_offset + 4) > _buffer.size()))
         return;
     uint32_t variant_type_index = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_variant_offset);
-    assert(variant_type_index >= 0 && variant_type_index <= 3 && "Model is broken!");
+    assert(variant_type_index <= 3 && "Model is broken!");
 
     _buffer.shift(fbe_variant_offset);
 
@@ -123,6 +125,8 @@ void FieldModel<::variants::Expr>::get(::variants::Expr& fbe_value, pmr::memory_
             variant_get_value(fbe_model, value, resource);
             break;
         }
+        default:
+            break;
     }
 
     _buffer.unshift(fbe_variant_offset);
@@ -238,7 +242,7 @@ bool FieldModel<::variants::V>::verify() const noexcept
         return false;
 
     uint32_t fbe_variant_type = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_variant_offset);
-    if (fbe_variant_type < 0 || fbe_variant_type > 12)
+    if (fbe_variant_type > 12)
         return false;
 
     _buffer.shift(fbe_variant_offset);
@@ -321,6 +325,8 @@ bool FieldModel<::variants::V>::verify() const noexcept
                 return false;
             break;
         }
+        default:
+            return false;
     }
 
     _buffer.unshift(fbe_variant_offset);
@@ -337,7 +343,7 @@ void FieldModel<::variants::V>::get(::variants::V& fbe_value, pmr::memory_resour
     if ((fbe_variant_offset == 0) || ((_buffer.offset() + fbe_variant_offset + 4) > _buffer.size()))
         return;
     uint32_t variant_type_index = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_variant_offset);
-    assert(variant_type_index >= 0 && variant_type_index <= 12 && "Model is broken!");
+    assert(variant_type_index <= 12 && "Model is broken!");
 
     _buffer.shift(fbe_variant_offset);
 
@@ -431,6 +437,8 @@ void FieldModel<::variants::V>::get(::variants::V& fbe_value, pmr::memory_resour
             variant_get_value(fbe_model, value, resource);
             break;
         }
+        default:
+            break;
     }
 
     _buffer.unshift(fbe_variant_offset);
