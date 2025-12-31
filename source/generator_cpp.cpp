@@ -3890,7 +3890,7 @@ void GeneratorCpp::GenerateStructFinalModel_Source(const std::shared_ptr<Package
     if ((s->base && !s->base->empty()) || (s->body && !s->body->fields.empty()))
     {
         WriteLineIndent("size_t fbe_current_offset = 0;");
-        WriteLineIndent("size_t fbe_field_size;");
+        WriteLineIndent("[[maybe_unused]] size_t fbe_field_size;");
         if (s->base && !s->base->empty())
         {
             WriteLine();
@@ -4019,7 +4019,7 @@ void GeneratorCpp::GenerateStructFinalModel_Source(const std::shared_ptr<Package
             // Original logic with offset tracking for mixed fixed/non-fixed fields
             WriteLineIndent("size_t fbe_current_offset = 0;");
             WriteLineIndent("size_t fbe_current_size = 0;");
-            WriteLineIndent("size_t fbe_field_size;");
+            WriteLineIndent("[[maybe_unused]] size_t fbe_field_size;");
             if (has_base)
             {
                 WriteLine();
@@ -4266,7 +4266,7 @@ void GeneratorCpp::GenerateStructFinalModel_Source(const std::shared_ptr<Package
             // Original logic with offset tracking for mixed fixed/non-fixed fields
             WriteLineIndent("size_t fbe_current_offset = 0;");
             WriteLineIndent("size_t fbe_current_size = 0;");
-            WriteLineIndent("size_t fbe_field_size;");
+            WriteLineIndent("[[maybe_unused]] size_t fbe_field_size;");
             if (has_base)
             {
                 WriteLine();

@@ -499,6 +499,17 @@ inline void FieldModelVector<T>::get(FastVec<T>& values, std::pmr::memory_resour
         const uint8_t* src = _buffer.data() + _buffer.offset() + fbe_vector_offset + 4;
         values.resize(fbe_vector_size);
         memcpy(values.data(), src, fbe_vector_size * sizeof(T));
+    } else if constexpr (std::is_same_v<T, bool>) {
+        // Special case for vector<bool> - uses proxy objects, can't pass by reference
+        values.resize(fbe_vector_size);
+        auto fbe_model = (*this)[0];
+        for (size_t i = 0; i < fbe_vector_size; ++i)
+        {
+            T temp{};
+            fbe_model.get(temp, resource);
+            values[i] = temp;
+            fbe_model.fbe_shift(fbe_model.fbe_size());
+        }
     } else {
         // Pre-allocate and deserialize directly into elements (avoids temporaries)
         values.resize(fbe_vector_size);
@@ -566,6 +577,17 @@ inline void FieldModelVector<T>::get(std::pmr::vector<T>& values, std::pmr::memo
         const uint8_t* src = _buffer.data() + _buffer.offset() + fbe_vector_offset + 4;
         values.resize(fbe_vector_size);
         memcpy(values.data(), src, fbe_vector_size * sizeof(T));
+    } else if constexpr (std::is_same_v<T, bool>) {
+        // Special case for vector<bool> - uses proxy objects, can't pass by reference
+        values.resize(fbe_vector_size);
+        auto fbe_model = (*this)[0];
+        for (size_t i = 0; i < fbe_vector_size; ++i)
+        {
+            T temp{};
+            fbe_model.get(temp, resource);
+            values[i] = temp;
+            fbe_model.fbe_shift(fbe_model.fbe_size());
+        }
     } else {
         // Pre-allocate and deserialize directly into elements
         values.resize(fbe_vector_size);
