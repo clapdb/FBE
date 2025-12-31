@@ -24,7 +24,7 @@
 
 namespace sa_pmr {
 using namespace FBE;
-using allocator_type = pmr::polymorphic_allocator<char>;
+using allocator_type = std::pmr::polymorphic_allocator<char>;
 } // namespace sa_pmr
 
 namespace FBE {
@@ -174,13 +174,13 @@ struct Complex : FBE::Base
     std::optional<::sa_pmr::Sex> sex;
     std::optional<::sa_pmr::MyFLags> flag;
     std::optional<::sa_pmr::Extra> extra;
-    pmr::vector<int64_t> nums;
+    std::pmr::vector<int64_t> nums;
 
     size_t fbe_type() const noexcept { return 3; }
 
     Complex();
     explicit Complex(allocator_type alloc);
-    Complex(const ArenaString& arg_name, std::optional<::sa_pmr::Sex> arg_sex, std::optional<::sa_pmr::MyFLags> arg_flag, std::optional<::sa_pmr::Extra> arg_extra, pmr::vector<int64_t> arg_nums);
+    Complex(const ArenaString& arg_name, std::optional<::sa_pmr::Sex> arg_sex, std::optional<::sa_pmr::MyFLags> arg_flag, std::optional<::sa_pmr::Extra> arg_extra, std::pmr::vector<int64_t> arg_nums);
     Complex(const Complex& other) = default;
     Complex(Complex&& other) noexcept;
     ~Complex() override;

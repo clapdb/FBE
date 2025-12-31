@@ -686,7 +686,7 @@ void FieldModel<::enums::Enums>::get_end(size_t fbe_begin) const noexcept
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModel<::enums::Enums>::get(::enums::Enums& fbe_value, pmr::memory_resource* resource) const noexcept
+void FieldModel<::enums::Enums>::get(::enums::Enums& fbe_value, std::pmr::memory_resource* resource) const noexcept
 {
     size_t fbe_begin = get_begin();
     if (fbe_begin == 0)
@@ -697,7 +697,7 @@ void FieldModel<::enums::Enums>::get(::enums::Enums& fbe_value, pmr::memory_reso
     get_end(fbe_begin);
 }
 
-void FieldModel<::enums::Enums>::get_fields([[maybe_unused]] ::enums::Enums& fbe_value, [[maybe_unused]] size_t fbe_struct_size, pmr::memory_resource* resource) const noexcept
+void FieldModel<::enums::Enums>::get_fields([[maybe_unused]] ::enums::Enums& fbe_value, [[maybe_unused]] size_t fbe_struct_size, std::pmr::memory_resource* resource) const noexcept
 {
     size_t fbe_current_size = 4 + 4;
 
@@ -1123,7 +1123,7 @@ void FieldModel<::enums::Enums>::set_end(size_t fbe_begin)
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModel<::enums::Enums>::set(const ::enums::Enums& fbe_value, pmr::memory_resource* resource) noexcept
+void FieldModel<::enums::Enums>::set(const ::enums::Enums& fbe_value, std::pmr::memory_resource* resource) noexcept
 {
     size_t fbe_begin = set_begin();
     if (fbe_begin == 0)
@@ -1133,7 +1133,7 @@ void FieldModel<::enums::Enums>::set(const ::enums::Enums& fbe_value, pmr::memor
     set_end(fbe_begin);
 }
 
-void FieldModel<::enums::Enums>::set_fields([[maybe_unused]] const ::enums::Enums& fbe_value, pmr::memory_resource* resource) noexcept
+void FieldModel<::enums::Enums>::set_fields([[maybe_unused]] const ::enums::Enums& fbe_value, std::pmr::memory_resource* resource) noexcept
 {
     byte0.set(fbe_value.byte0, resource);
     byte1.set(fbe_value.byte1, resource);
@@ -1231,7 +1231,7 @@ size_t EnumsModel::create_end(size_t fbe_begin)
     return fbe_full_size;
 }
 
-size_t EnumsModel::serialize(const ::enums::Enums& value, pmr::memory_resource* resource)
+size_t EnumsModel::serialize(const ::enums::Enums& value, std::pmr::memory_resource* resource)
 {
     size_t fbe_begin = create_begin();
     model.set(value, resource);
@@ -1239,7 +1239,7 @@ size_t EnumsModel::serialize(const ::enums::Enums& value, pmr::memory_resource* 
     return fbe_full_size;
 }
 
-size_t EnumsModel::deserialize(::enums::Enums& value, pmr::memory_resource* resource) const noexcept
+size_t EnumsModel::deserialize(::enums::Enums& value, std::pmr::memory_resource* resource) const noexcept
 {
     if ((this->buffer().offset() + model.fbe_offset() - 4) > this->buffer().size())
         return 0;

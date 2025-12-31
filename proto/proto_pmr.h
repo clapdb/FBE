@@ -24,7 +24,7 @@
 
 namespace proto_pmr {
 using namespace FBE;
-using allocator_type = pmr::polymorphic_allocator<char>;
+using allocator_type = std::pmr::polymorphic_allocator<char>;
 } // namespace proto_pmr
 
 namespace FBE {
@@ -194,13 +194,13 @@ struct Account
     ::proto_pmr::State state;
     ::proto_pmr::Balance wallet;
     std::optional<::proto_pmr::Balance> asset;
-    pmr::vector<::proto_pmr::Order> orders;
+    std::pmr::vector<::proto_pmr::Order> orders;
 
     size_t fbe_type() const noexcept { return 3; }
 
     Account();
     explicit Account(allocator_type alloc);
-    Account(int32_t arg_id, const ArenaString& arg_name, const ::proto_pmr::State& arg_state, const ::proto_pmr::Balance& arg_wallet, const std::optional<::proto_pmr::Balance>& arg_asset, const pmr::vector<::proto_pmr::Order>& arg_orders);
+    Account(int32_t arg_id, const ArenaString& arg_name, const ::proto_pmr::State& arg_state, const ::proto_pmr::Balance& arg_wallet, const std::optional<::proto_pmr::Balance>& arg_asset, const std::pmr::vector<::proto_pmr::Order>& arg_orders);
     Account(const Account& other) = default;
     Account(Account&& other) = default;
     ~Account() = default;
@@ -245,13 +245,13 @@ struct CharMap
 {
     ArenaManagedCreateOnlyTag;
 
-    pmr::unordered_map<char, ArenaString> abbr;
+    std::pmr::unordered_map<char, ArenaString> abbr;
 
     size_t fbe_type() const noexcept { return 1; }
 
     CharMap();
     explicit CharMap(allocator_type alloc);
-    explicit CharMap(const pmr::unordered_map<char, ArenaString>& arg_abbr);
+    explicit CharMap(const std::pmr::unordered_map<char, ArenaString>& arg_abbr);
     CharMap(const CharMap& other) = default;
     CharMap(CharMap&& other) = default;
     ~CharMap() = default;
@@ -449,14 +449,14 @@ struct PremiumAccount
     ArenaString name;
     ArenaString info;
     ::proto_pmr::Balance private_wallet;
-    pmr::vector<::proto_pmr::Order> private_orders;
+    std::pmr::vector<::proto_pmr::Order> private_orders;
     ::proto_pmr::State private_state;
 
     size_t fbe_type() const noexcept { return 5; }
 
     PremiumAccount();
     explicit PremiumAccount(allocator_type alloc);
-    PremiumAccount(int32_t arg_id, const ArenaString& arg_name, const ArenaString& arg_info, const ::proto_pmr::Balance& arg_private_wallet, const pmr::vector<::proto_pmr::Order>& arg_private_orders, const ::proto_pmr::State& arg_private_state);
+    PremiumAccount(int32_t arg_id, const ArenaString& arg_name, const ArenaString& arg_info, const ::proto_pmr::Balance& arg_private_wallet, const std::pmr::vector<::proto_pmr::Order>& arg_private_orders, const ::proto_pmr::State& arg_private_state);
     PremiumAccount(const PremiumAccount& other) = default;
     PremiumAccount(PremiumAccount&& other) = default;
     ~PremiumAccount() = default;

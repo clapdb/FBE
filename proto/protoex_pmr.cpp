@@ -237,7 +237,7 @@ Account::Account([[maybe_unused]] allocator_type alloc)
     , orders(alloc)
 {}
 
-Account::Account(int32_t arg_id, const ArenaString& arg_name, const ::protoex_pmr::StateEx& arg_state, const ::protoex_pmr::Balance& arg_wallet, const std::optional<::protoex_pmr::Balance>& arg_asset, const pmr::vector<::protoex_pmr::Order>& arg_orders)
+Account::Account(int32_t arg_id, const ArenaString& arg_name, const ::protoex_pmr::StateEx& arg_state, const ::protoex_pmr::Balance& arg_wallet, const std::optional<::protoex_pmr::Balance>& arg_asset, const std::pmr::vector<::protoex_pmr::Order>& arg_orders)
     : id(arg_id)
     , name(arg_name)
     , state(arg_state)

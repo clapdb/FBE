@@ -96,7 +96,7 @@ bool FieldModel<::cpp_only::LargeNum>::verify() const noexcept
     return true;
 }
 
-void FieldModel<::cpp_only::LargeNum>::get(::cpp_only::LargeNum& fbe_value, pmr::memory_resource* resource) const noexcept
+void FieldModel<::cpp_only::LargeNum>::get(::cpp_only::LargeNum& fbe_value, std::pmr::memory_resource* resource) const noexcept
 {
     if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
         return;
@@ -183,7 +183,7 @@ void FieldModel<::cpp_only::LargeNum>::set_end(size_t fbe_begin)
 }
 
 // Set the variant value
-void FieldModel<::cpp_only::LargeNum>::set(const ::cpp_only::LargeNum& fbe_value, pmr::memory_resource* resource) noexcept
+void FieldModel<::cpp_only::LargeNum>::set(const ::cpp_only::LargeNum& fbe_value, std::pmr::memory_resource* resource) noexcept
 {
     assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
     if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
@@ -392,7 +392,7 @@ void FieldModel<::cpp_only::Struct128>::get_end(size_t fbe_begin) const noexcept
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModel<::cpp_only::Struct128>::get(::cpp_only::Struct128& fbe_value, pmr::memory_resource* resource) const noexcept
+void FieldModel<::cpp_only::Struct128>::get(::cpp_only::Struct128& fbe_value, std::pmr::memory_resource* resource) const noexcept
 {
     size_t fbe_begin = get_begin();
     if (fbe_begin == 0)
@@ -403,7 +403,7 @@ void FieldModel<::cpp_only::Struct128>::get(::cpp_only::Struct128& fbe_value, pm
     get_end(fbe_begin);
 }
 
-void FieldModel<::cpp_only::Struct128>::get_fields([[maybe_unused]] ::cpp_only::Struct128& fbe_value, [[maybe_unused]] size_t fbe_struct_size, pmr::memory_resource* resource) const noexcept
+void FieldModel<::cpp_only::Struct128>::get_fields([[maybe_unused]] ::cpp_only::Struct128& fbe_value, [[maybe_unused]] size_t fbe_struct_size, std::pmr::memory_resource* resource) const noexcept
 {
     size_t fbe_current_size = 4 + 4;
 
@@ -475,7 +475,7 @@ void FieldModel<::cpp_only::Struct128>::set_end(size_t fbe_begin)
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModel<::cpp_only::Struct128>::set(const ::cpp_only::Struct128& fbe_value, pmr::memory_resource* resource) noexcept
+void FieldModel<::cpp_only::Struct128>::set(const ::cpp_only::Struct128& fbe_value, std::pmr::memory_resource* resource) noexcept
 {
     size_t fbe_begin = set_begin();
     if (fbe_begin == 0)
@@ -485,7 +485,7 @@ void FieldModel<::cpp_only::Struct128>::set(const ::cpp_only::Struct128& fbe_val
     set_end(fbe_begin);
 }
 
-void FieldModel<::cpp_only::Struct128>::set_fields([[maybe_unused]] const ::cpp_only::Struct128& fbe_value, pmr::memory_resource* resource) noexcept
+void FieldModel<::cpp_only::Struct128>::set_fields([[maybe_unused]] const ::cpp_only::Struct128& fbe_value, std::pmr::memory_resource* resource) noexcept
 {
     f1.set(fbe_value.f1, resource);
     f2.set(fbe_value.f2, resource);
@@ -524,7 +524,7 @@ size_t Struct128Model::create_end(size_t fbe_begin)
     return fbe_full_size;
 }
 
-size_t Struct128Model::serialize(const ::cpp_only::Struct128& value, pmr::memory_resource* resource)
+size_t Struct128Model::serialize(const ::cpp_only::Struct128& value, std::pmr::memory_resource* resource)
 {
     size_t fbe_begin = create_begin();
     model.set(value, resource);
@@ -532,7 +532,7 @@ size_t Struct128Model::serialize(const ::cpp_only::Struct128& value, pmr::memory
     return fbe_full_size;
 }
 
-size_t Struct128Model::deserialize(::cpp_only::Struct128& value, pmr::memory_resource* resource) const noexcept
+size_t Struct128Model::deserialize(::cpp_only::Struct128& value, std::pmr::memory_resource* resource) const noexcept
 {
     if ((this->buffer().offset() + model.fbe_offset() - 4) > this->buffer().size())
         return 0;

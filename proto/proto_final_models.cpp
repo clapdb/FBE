@@ -44,11 +44,10 @@ size_t FinalModel<::proto::Order>::verify_fields() const noexcept
     size_t fbe_current_offset = 0;
     size_t fbe_field_size;
 
-    id.fbe_offset(fbe_current_offset);
-    fbe_field_size = id.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
+    // Inline verify of int32 field id (4 bytes)
+    if ((_buffer.offset() + fbe_current_offset + 4) > _buffer.size())
         return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
+    fbe_current_offset += 4;
 
     symbol.fbe_offset(fbe_current_offset);
     fbe_field_size = symbol.verify();
@@ -56,29 +55,12 @@ size_t FinalModel<::proto::Order>::verify_fields() const noexcept
         return std::numeric_limits<std::size_t>::max();
     fbe_current_offset += fbe_field_size;
 
-    side.fbe_offset(fbe_current_offset);
-    fbe_field_size = side.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
-        return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
-
-    type.fbe_offset(fbe_current_offset);
-    fbe_field_size = type.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
-        return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
-
-    price.fbe_offset(fbe_current_offset);
-    fbe_field_size = price.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
-        return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
-
-    volume.fbe_offset(fbe_current_offset);
-    fbe_field_size = volume.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
-        return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
+    // Batch verify 4 fixed-size fields (18 bytes)
+    {
+        if ((_buffer.offset() + fbe_current_offset + 18) > _buffer.size())
+            return std::numeric_limits<std::size_t>::max();
+        fbe_current_offset += 18;
+    }
 
     return fbe_current_offset;
 }
@@ -97,35 +79,34 @@ size_t FinalModel<::proto::Order>::get_fields([[maybe_unused]] ::proto::Order& f
     size_t fbe_current_size = 0;
     size_t fbe_field_size;
 
-    id.fbe_offset(fbe_current_offset);
-    fbe_field_size = id.get(fbe_value.id);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
+    // Inline read of int32 field id (4 bytes)
+    {
+        size_t fbe_field_offset = _buffer.offset() + fbe_current_offset;
+        if ((fbe_field_offset + 4) > _buffer.size())
+            return 0;
+        fbe_value.id = unaligned_load<int32_t>(_buffer.data() + fbe_field_offset);
+        fbe_current_offset += 4;
+        fbe_current_size += 4;
+    }
 
     symbol.fbe_offset(fbe_current_offset);
     fbe_field_size = symbol.get(fbe_value.symbol);
     fbe_current_offset += fbe_field_size;
     fbe_current_size += fbe_field_size;
 
-    side.fbe_offset(fbe_current_offset);
-    fbe_field_size = side.get(fbe_value.side);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    type.fbe_offset(fbe_current_offset);
-    fbe_field_size = type.get(fbe_value.type);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    price.fbe_offset(fbe_current_offset);
-    fbe_field_size = price.get(fbe_value.price);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    volume.fbe_offset(fbe_current_offset);
-    fbe_field_size = volume.get(fbe_value.volume);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
+    // Batch read 4 fixed-size fields (18 bytes)
+    {
+        size_t fbe_batch_offset = _buffer.offset() + fbe_current_offset;
+        if ((fbe_batch_offset + 18) > _buffer.size())
+            return 0;
+        const uint8_t* fbe_batch_ptr = _buffer.data() + fbe_batch_offset;
+        fbe_value.side = static_cast<decltype(fbe_value.side)>(unaligned_load<uint8_t>(fbe_batch_ptr + 0));
+        fbe_value.type = static_cast<decltype(fbe_value.type)>(unaligned_load<uint8_t>(fbe_batch_ptr + 1));
+        fbe_value.price = unaligned_load<double>(fbe_batch_ptr + 2);
+        fbe_value.volume = unaligned_load<double>(fbe_batch_ptr + 10);
+        fbe_current_offset += 18;
+        fbe_current_size += 18;
+    }
 
     return fbe_current_size;
 }
@@ -144,35 +125,36 @@ size_t FinalModel<::proto::Order>::set_fields([[maybe_unused]] const ::proto::Or
     size_t fbe_current_size = 0;
     size_t fbe_field_size;
 
-    id.fbe_offset(fbe_current_offset);
-    fbe_field_size = id.set(fbe_value.id);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
+    // Inline write of int32 field id (4 bytes)
+    {
+        size_t fbe_field_offset = _buffer.offset() + fbe_current_offset;
+        assert(((fbe_field_offset + 4) <= _buffer.size()) && "Model is broken!");
+        if ((fbe_field_offset + 4) > _buffer.size())
+            return 0;
+        unaligned_store<int32_t>(_buffer.data() + fbe_field_offset, fbe_value.id);
+        fbe_current_offset += 4;
+        fbe_current_size += 4;
+    }
 
     symbol.fbe_offset(fbe_current_offset);
     fbe_field_size = symbol.set(fbe_value.symbol);
     fbe_current_offset += fbe_field_size;
     fbe_current_size += fbe_field_size;
 
-    side.fbe_offset(fbe_current_offset);
-    fbe_field_size = side.set(fbe_value.side);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    type.fbe_offset(fbe_current_offset);
-    fbe_field_size = type.set(fbe_value.type);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    price.fbe_offset(fbe_current_offset);
-    fbe_field_size = price.set(fbe_value.price);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    volume.fbe_offset(fbe_current_offset);
-    fbe_field_size = volume.set(fbe_value.volume);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
+    // Batch write 4 fixed-size fields (18 bytes)
+    {
+        size_t fbe_batch_offset = _buffer.offset() + fbe_current_offset;
+        assert(((fbe_batch_offset + 18) <= _buffer.size()) && "Model is broken!");
+        if ((fbe_batch_offset + 18) > _buffer.size())
+            return 0;
+        uint8_t* fbe_batch_ptr = _buffer.data() + fbe_batch_offset;
+        unaligned_store<uint8_t>(fbe_batch_ptr + 0, static_cast<uint8_t>(fbe_value.side));
+        unaligned_store<uint8_t>(fbe_batch_ptr + 1, static_cast<uint8_t>(fbe_value.type));
+        unaligned_store<double>(fbe_batch_ptr + 2, fbe_value.price);
+        unaligned_store<double>(fbe_batch_ptr + 10, fbe_value.volume);
+        fbe_current_offset += 18;
+        fbe_current_size += 18;
+    }
 
     return fbe_current_size;
 }
@@ -262,11 +244,10 @@ size_t FinalModel<::proto::Balance>::verify_fields() const noexcept
         return std::numeric_limits<std::size_t>::max();
     fbe_current_offset += fbe_field_size;
 
-    amount.fbe_offset(fbe_current_offset);
-    fbe_field_size = amount.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
+    // Inline verify of double field amount (8 bytes)
+    if ((_buffer.offset() + fbe_current_offset + 8) > _buffer.size())
         return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
+    fbe_current_offset += 8;
 
     return fbe_current_offset;
 }
@@ -290,10 +271,15 @@ size_t FinalModel<::proto::Balance>::get_fields([[maybe_unused]] ::proto::Balanc
     fbe_current_offset += fbe_field_size;
     fbe_current_size += fbe_field_size;
 
-    amount.fbe_offset(fbe_current_offset);
-    fbe_field_size = amount.get(fbe_value.amount);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
+    // Inline read of double field amount (8 bytes)
+    {
+        size_t fbe_field_offset = _buffer.offset() + fbe_current_offset;
+        if ((fbe_field_offset + 8) > _buffer.size())
+            return 0;
+        fbe_value.amount = unaligned_load<double>(_buffer.data() + fbe_field_offset);
+        fbe_current_offset += 8;
+        fbe_current_size += 8;
+    }
 
     return fbe_current_size;
 }
@@ -317,10 +303,16 @@ size_t FinalModel<::proto::Balance>::set_fields([[maybe_unused]] const ::proto::
     fbe_current_offset += fbe_field_size;
     fbe_current_size += fbe_field_size;
 
-    amount.fbe_offset(fbe_current_offset);
-    fbe_field_size = amount.set(fbe_value.amount);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
+    // Inline write of double field amount (8 bytes)
+    {
+        size_t fbe_field_offset = _buffer.offset() + fbe_current_offset;
+        assert(((fbe_field_offset + 8) <= _buffer.size()) && "Model is broken!");
+        if ((fbe_field_offset + 8) > _buffer.size())
+            return 0;
+        unaligned_store<double>(_buffer.data() + fbe_field_offset, fbe_value.amount);
+        fbe_current_offset += 8;
+        fbe_current_size += 8;
+    }
 
     return fbe_current_size;
 }
@@ -412,11 +404,10 @@ size_t FinalModel<::proto::Account>::verify_fields() const noexcept
     size_t fbe_current_offset = 0;
     size_t fbe_field_size;
 
-    id.fbe_offset(fbe_current_offset);
-    fbe_field_size = id.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
+    // Inline verify of int32 field id (4 bytes)
+    if ((_buffer.offset() + fbe_current_offset + 4) > _buffer.size())
         return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
+    fbe_current_offset += 4;
 
     name.fbe_offset(fbe_current_offset);
     fbe_field_size = name.verify();
@@ -424,11 +415,10 @@ size_t FinalModel<::proto::Account>::verify_fields() const noexcept
         return std::numeric_limits<std::size_t>::max();
     fbe_current_offset += fbe_field_size;
 
-    state.fbe_offset(fbe_current_offset);
-    fbe_field_size = state.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
+    // Inline verify of State field state (1 bytes)
+    if ((_buffer.offset() + fbe_current_offset + 1) > _buffer.size())
         return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
+    fbe_current_offset += 1;
 
     wallet.fbe_offset(fbe_current_offset);
     fbe_field_size = wallet.verify();
@@ -465,20 +455,30 @@ size_t FinalModel<::proto::Account>::get_fields([[maybe_unused]] ::proto::Accoun
     size_t fbe_current_size = 0;
     size_t fbe_field_size;
 
-    id.fbe_offset(fbe_current_offset);
-    fbe_field_size = id.get(fbe_value.id);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
+    // Inline read of int32 field id (4 bytes)
+    {
+        size_t fbe_field_offset = _buffer.offset() + fbe_current_offset;
+        if ((fbe_field_offset + 4) > _buffer.size())
+            return 0;
+        fbe_value.id = unaligned_load<int32_t>(_buffer.data() + fbe_field_offset);
+        fbe_current_offset += 4;
+        fbe_current_size += 4;
+    }
 
     name.fbe_offset(fbe_current_offset);
     fbe_field_size = name.get(fbe_value.name);
     fbe_current_offset += fbe_field_size;
     fbe_current_size += fbe_field_size;
 
-    state.fbe_offset(fbe_current_offset);
-    fbe_field_size = state.get(fbe_value.state);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
+    // Inline read of State field state (1 bytes)
+    {
+        size_t fbe_field_offset = _buffer.offset() + fbe_current_offset;
+        if ((fbe_field_offset + 1) > _buffer.size())
+            return 0;
+        fbe_value.state = static_cast<decltype(fbe_value.state)>(unaligned_load<uint8_t>(_buffer.data() + fbe_field_offset));
+        fbe_current_offset += 1;
+        fbe_current_size += 1;
+    }
 
     wallet.fbe_offset(fbe_current_offset);
     fbe_field_size = wallet.get(fbe_value.wallet);
@@ -512,20 +512,32 @@ size_t FinalModel<::proto::Account>::set_fields([[maybe_unused]] const ::proto::
     size_t fbe_current_size = 0;
     size_t fbe_field_size;
 
-    id.fbe_offset(fbe_current_offset);
-    fbe_field_size = id.set(fbe_value.id);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
+    // Inline write of int32 field id (4 bytes)
+    {
+        size_t fbe_field_offset = _buffer.offset() + fbe_current_offset;
+        assert(((fbe_field_offset + 4) <= _buffer.size()) && "Model is broken!");
+        if ((fbe_field_offset + 4) > _buffer.size())
+            return 0;
+        unaligned_store<int32_t>(_buffer.data() + fbe_field_offset, fbe_value.id);
+        fbe_current_offset += 4;
+        fbe_current_size += 4;
+    }
 
     name.fbe_offset(fbe_current_offset);
     fbe_field_size = name.set(fbe_value.name);
     fbe_current_offset += fbe_field_size;
     fbe_current_size += fbe_field_size;
 
-    state.fbe_offset(fbe_current_offset);
-    fbe_field_size = state.set(fbe_value.state);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
+    // Inline write of State field state (1 bytes)
+    {
+        size_t fbe_field_offset = _buffer.offset() + fbe_current_offset;
+        assert(((fbe_field_offset + 1) <= _buffer.size()) && "Model is broken!");
+        if ((fbe_field_offset + 1) > _buffer.size())
+            return 0;
+        unaligned_store<uint8_t>(_buffer.data() + fbe_field_offset, static_cast<uint8_t>(fbe_value.state));
+        fbe_current_offset += 1;
+        fbe_current_size += 1;
+    }
 
     wallet.fbe_offset(fbe_current_offset);
     fbe_field_size = wallet.set(fbe_value.wallet);
@@ -1152,11 +1164,10 @@ size_t FinalModel<::proto::PremiumAccount>::verify_fields() const noexcept
     size_t fbe_current_offset = 0;
     size_t fbe_field_size;
 
-    id.fbe_offset(fbe_current_offset);
-    fbe_field_size = id.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
+    // Inline verify of int32 field id (4 bytes)
+    if ((_buffer.offset() + fbe_current_offset + 4) > _buffer.size())
         return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
+    fbe_current_offset += 4;
 
     name.fbe_offset(fbe_current_offset);
     fbe_field_size = name.verify();
@@ -1182,11 +1193,10 @@ size_t FinalModel<::proto::PremiumAccount>::verify_fields() const noexcept
         return std::numeric_limits<std::size_t>::max();
     fbe_current_offset += fbe_field_size;
 
-    private_state.fbe_offset(fbe_current_offset);
-    fbe_field_size = private_state.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
+    // Inline verify of State field private_state (1 bytes)
+    if ((_buffer.offset() + fbe_current_offset + 1) > _buffer.size())
         return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
+    fbe_current_offset += 1;
 
     return fbe_current_offset;
 }
@@ -1205,10 +1215,15 @@ size_t FinalModel<::proto::PremiumAccount>::get_fields([[maybe_unused]] ::proto:
     size_t fbe_current_size = 0;
     size_t fbe_field_size;
 
-    id.fbe_offset(fbe_current_offset);
-    fbe_field_size = id.get(fbe_value.id);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
+    // Inline read of int32 field id (4 bytes)
+    {
+        size_t fbe_field_offset = _buffer.offset() + fbe_current_offset;
+        if ((fbe_field_offset + 4) > _buffer.size())
+            return 0;
+        fbe_value.id = unaligned_load<int32_t>(_buffer.data() + fbe_field_offset);
+        fbe_current_offset += 4;
+        fbe_current_size += 4;
+    }
 
     name.fbe_offset(fbe_current_offset);
     fbe_field_size = name.get(fbe_value.name);
@@ -1230,10 +1245,15 @@ size_t FinalModel<::proto::PremiumAccount>::get_fields([[maybe_unused]] ::proto:
     fbe_current_offset += fbe_field_size;
     fbe_current_size += fbe_field_size;
 
-    private_state.fbe_offset(fbe_current_offset);
-    fbe_field_size = private_state.get(fbe_value.private_state);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
+    // Inline read of State field private_state (1 bytes)
+    {
+        size_t fbe_field_offset = _buffer.offset() + fbe_current_offset;
+        if ((fbe_field_offset + 1) > _buffer.size())
+            return 0;
+        fbe_value.private_state = static_cast<decltype(fbe_value.private_state)>(unaligned_load<uint8_t>(_buffer.data() + fbe_field_offset));
+        fbe_current_offset += 1;
+        fbe_current_size += 1;
+    }
 
     return fbe_current_size;
 }
@@ -1252,10 +1272,16 @@ size_t FinalModel<::proto::PremiumAccount>::set_fields([[maybe_unused]] const ::
     size_t fbe_current_size = 0;
     size_t fbe_field_size;
 
-    id.fbe_offset(fbe_current_offset);
-    fbe_field_size = id.set(fbe_value.id);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
+    // Inline write of int32 field id (4 bytes)
+    {
+        size_t fbe_field_offset = _buffer.offset() + fbe_current_offset;
+        assert(((fbe_field_offset + 4) <= _buffer.size()) && "Model is broken!");
+        if ((fbe_field_offset + 4) > _buffer.size())
+            return 0;
+        unaligned_store<int32_t>(_buffer.data() + fbe_field_offset, fbe_value.id);
+        fbe_current_offset += 4;
+        fbe_current_size += 4;
+    }
 
     name.fbe_offset(fbe_current_offset);
     fbe_field_size = name.set(fbe_value.name);
@@ -1277,10 +1303,16 @@ size_t FinalModel<::proto::PremiumAccount>::set_fields([[maybe_unused]] const ::
     fbe_current_offset += fbe_field_size;
     fbe_current_size += fbe_field_size;
 
-    private_state.fbe_offset(fbe_current_offset);
-    fbe_field_size = private_state.set(fbe_value.private_state);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
+    // Inline write of State field private_state (1 bytes)
+    {
+        size_t fbe_field_offset = _buffer.offset() + fbe_current_offset;
+        assert(((fbe_field_offset + 1) <= _buffer.size()) && "Model is broken!");
+        if ((fbe_field_offset + 1) > _buffer.size())
+            return 0;
+        unaligned_store<uint8_t>(_buffer.data() + fbe_field_offset, static_cast<uint8_t>(fbe_value.private_state));
+        fbe_current_offset += 1;
+        fbe_current_size += 1;
+    }
 
     return fbe_current_size;
 }

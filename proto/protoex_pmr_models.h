@@ -85,9 +85,9 @@ public:
     void get_end(size_t fbe_begin) const noexcept;
 
     // Get the struct value
-    void get(::protoex_pmr::Order& fbe_value, pmr::memory_resource* resource) const noexcept;
+    void get(::protoex_pmr::Order& fbe_value, std::pmr::memory_resource* resource) const noexcept;
     // Get the struct fields values
-    void get_fields(::protoex_pmr::Order& fbe_value, size_t fbe_struct_size, pmr::memory_resource* resource) const noexcept;
+    void get_fields(::protoex_pmr::Order& fbe_value, size_t fbe_struct_size, std::pmr::memory_resource* resource) const noexcept;
 
     // Set the struct value (begin phase)
     size_t set_begin();
@@ -95,9 +95,9 @@ public:
     void set_end(size_t fbe_begin);
 
     // Set the struct value
-    void set(const ::protoex_pmr::Order& fbe_value, pmr::memory_resource* resource) noexcept;
+    void set(const ::protoex_pmr::Order& fbe_value, std::pmr::memory_resource* resource) noexcept;
     // Set the struct fields values
-    void set_fields(const ::protoex_pmr::Order& fbe_value, pmr::memory_resource* resource) noexcept;
+    void set_fields(const ::protoex_pmr::Order& fbe_value, std::pmr::memory_resource* resource) noexcept;
 
 private:
     FBEBuffer& _buffer;
@@ -137,9 +137,9 @@ public:
     size_t create_end(size_t fbe_begin);
 
     // Serialize the struct value
-    size_t serialize(const ::protoex_pmr::Order& value, pmr::memory_resource* resource);
+    size_t serialize(const ::protoex_pmr::Order& value, std::pmr::memory_resource* resource);
     // Deserialize the struct value
-    size_t deserialize(::protoex_pmr::Order& value, pmr::memory_resource* resource) const noexcept;
+    size_t deserialize(::protoex_pmr::Order& value, std::pmr::memory_resource* resource) const noexcept;
 
     // Move to the next struct value
     void next(size_t prev) noexcept { model.fbe_shift(prev); }
@@ -190,9 +190,9 @@ public:
     void get_end(size_t fbe_begin) const noexcept;
 
     // Get the struct value
-    void get(::protoex_pmr::Balance& fbe_value, pmr::memory_resource* resource) const noexcept;
+    void get(::protoex_pmr::Balance& fbe_value, std::pmr::memory_resource* resource) const noexcept;
     // Get the struct fields values
-    void get_fields(::protoex_pmr::Balance& fbe_value, size_t fbe_struct_size, pmr::memory_resource* resource) const noexcept;
+    void get_fields(::protoex_pmr::Balance& fbe_value, size_t fbe_struct_size, std::pmr::memory_resource* resource) const noexcept;
 
     // Set the struct value (begin phase)
     size_t set_begin();
@@ -200,9 +200,9 @@ public:
     void set_end(size_t fbe_begin);
 
     // Set the struct value
-    void set(const ::protoex_pmr::Balance& fbe_value, pmr::memory_resource* resource) noexcept;
+    void set(const ::protoex_pmr::Balance& fbe_value, std::pmr::memory_resource* resource) noexcept;
     // Set the struct fields values
-    void set_fields(const ::protoex_pmr::Balance& fbe_value, pmr::memory_resource* resource) noexcept;
+    void set_fields(const ::protoex_pmr::Balance& fbe_value, std::pmr::memory_resource* resource) noexcept;
 
 private:
     FBEBuffer& _buffer;
@@ -236,9 +236,9 @@ public:
     size_t create_end(size_t fbe_begin);
 
     // Serialize the struct value
-    size_t serialize(const ::protoex_pmr::Balance& value, pmr::memory_resource* resource);
+    size_t serialize(const ::protoex_pmr::Balance& value, std::pmr::memory_resource* resource);
     // Deserialize the struct value
-    size_t deserialize(::protoex_pmr::Balance& value, pmr::memory_resource* resource) const noexcept;
+    size_t deserialize(::protoex_pmr::Balance& value, std::pmr::memory_resource* resource) const noexcept;
 
     // Move to the next struct value
     void next(size_t prev) noexcept { model.fbe_shift(prev); }
@@ -289,9 +289,9 @@ public:
     void get_end(size_t fbe_begin) const noexcept;
 
     // Get the struct value
-    void get(::protoex_pmr::Account& fbe_value, pmr::memory_resource* resource) const noexcept;
+    void get(::protoex_pmr::Account& fbe_value, std::pmr::memory_resource* resource) const noexcept;
     // Get the struct fields values
-    void get_fields(::protoex_pmr::Account& fbe_value, size_t fbe_struct_size, pmr::memory_resource* resource) const noexcept;
+    void get_fields(::protoex_pmr::Account& fbe_value, size_t fbe_struct_size, std::pmr::memory_resource* resource) const noexcept;
 
     // Set the struct value (begin phase)
     size_t set_begin();
@@ -299,9 +299,9 @@ public:
     void set_end(size_t fbe_begin);
 
     // Set the struct value
-    void set(const ::protoex_pmr::Account& fbe_value, pmr::memory_resource* resource) noexcept;
+    void set(const ::protoex_pmr::Account& fbe_value, std::pmr::memory_resource* resource) noexcept;
     // Set the struct fields values
-    void set_fields(const ::protoex_pmr::Account& fbe_value, pmr::memory_resource* resource) noexcept;
+    void set_fields(const ::protoex_pmr::Account& fbe_value, std::pmr::memory_resource* resource) noexcept;
 
 private:
     FBEBuffer& _buffer;
@@ -339,9 +339,9 @@ public:
     size_t create_end(size_t fbe_begin);
 
     // Serialize the struct value
-    size_t serialize(const ::protoex_pmr::Account& value, pmr::memory_resource* resource);
+    size_t serialize(const ::protoex_pmr::Account& value, std::pmr::memory_resource* resource);
     // Deserialize the struct value
-    size_t deserialize(::protoex_pmr::Account& value, pmr::memory_resource* resource) const noexcept;
+    size_t deserialize(::protoex_pmr::Account& value, std::pmr::memory_resource* resource) const noexcept;
 
     // Move to the next struct value
     void next(size_t prev) noexcept { model.fbe_shift(prev); }
@@ -392,9 +392,9 @@ public:
     void get_end(size_t fbe_begin) const noexcept;
 
     // Get the struct value
-    void get(::protoex_pmr::OrderMessage& fbe_value, pmr::memory_resource* resource) const noexcept;
+    void get(::protoex_pmr::OrderMessage& fbe_value, std::pmr::memory_resource* resource) const noexcept;
     // Get the struct fields values
-    void get_fields(::protoex_pmr::OrderMessage& fbe_value, size_t fbe_struct_size, pmr::memory_resource* resource) const noexcept;
+    void get_fields(::protoex_pmr::OrderMessage& fbe_value, size_t fbe_struct_size, std::pmr::memory_resource* resource) const noexcept;
 
     // Set the struct value (begin phase)
     size_t set_begin();
@@ -402,9 +402,9 @@ public:
     void set_end(size_t fbe_begin);
 
     // Set the struct value
-    void set(const ::protoex_pmr::OrderMessage& fbe_value, pmr::memory_resource* resource) noexcept;
+    void set(const ::protoex_pmr::OrderMessage& fbe_value, std::pmr::memory_resource* resource) noexcept;
     // Set the struct fields values
-    void set_fields(const ::protoex_pmr::OrderMessage& fbe_value, pmr::memory_resource* resource) noexcept;
+    void set_fields(const ::protoex_pmr::OrderMessage& fbe_value, std::pmr::memory_resource* resource) noexcept;
 
 private:
     FBEBuffer& _buffer;
@@ -437,9 +437,9 @@ public:
     size_t create_end(size_t fbe_begin);
 
     // Serialize the struct value
-    size_t serialize(const ::protoex_pmr::OrderMessage& value, pmr::memory_resource* resource);
+    size_t serialize(const ::protoex_pmr::OrderMessage& value, std::pmr::memory_resource* resource);
     // Deserialize the struct value
-    size_t deserialize(::protoex_pmr::OrderMessage& value, pmr::memory_resource* resource) const noexcept;
+    size_t deserialize(::protoex_pmr::OrderMessage& value, std::pmr::memory_resource* resource) const noexcept;
 
     // Move to the next struct value
     void next(size_t prev) noexcept { model.fbe_shift(prev); }
@@ -490,9 +490,9 @@ public:
     void get_end(size_t fbe_begin) const noexcept;
 
     // Get the struct value
-    void get(::protoex_pmr::BalanceMessage& fbe_value, pmr::memory_resource* resource) const noexcept;
+    void get(::protoex_pmr::BalanceMessage& fbe_value, std::pmr::memory_resource* resource) const noexcept;
     // Get the struct fields values
-    void get_fields(::protoex_pmr::BalanceMessage& fbe_value, size_t fbe_struct_size, pmr::memory_resource* resource) const noexcept;
+    void get_fields(::protoex_pmr::BalanceMessage& fbe_value, size_t fbe_struct_size, std::pmr::memory_resource* resource) const noexcept;
 
     // Set the struct value (begin phase)
     size_t set_begin();
@@ -500,9 +500,9 @@ public:
     void set_end(size_t fbe_begin);
 
     // Set the struct value
-    void set(const ::protoex_pmr::BalanceMessage& fbe_value, pmr::memory_resource* resource) noexcept;
+    void set(const ::protoex_pmr::BalanceMessage& fbe_value, std::pmr::memory_resource* resource) noexcept;
     // Set the struct fields values
-    void set_fields(const ::protoex_pmr::BalanceMessage& fbe_value, pmr::memory_resource* resource) noexcept;
+    void set_fields(const ::protoex_pmr::BalanceMessage& fbe_value, std::pmr::memory_resource* resource) noexcept;
 
 private:
     FBEBuffer& _buffer;
@@ -535,9 +535,9 @@ public:
     size_t create_end(size_t fbe_begin);
 
     // Serialize the struct value
-    size_t serialize(const ::protoex_pmr::BalanceMessage& value, pmr::memory_resource* resource);
+    size_t serialize(const ::protoex_pmr::BalanceMessage& value, std::pmr::memory_resource* resource);
     // Deserialize the struct value
-    size_t deserialize(::protoex_pmr::BalanceMessage& value, pmr::memory_resource* resource) const noexcept;
+    size_t deserialize(::protoex_pmr::BalanceMessage& value, std::pmr::memory_resource* resource) const noexcept;
 
     // Move to the next struct value
     void next(size_t prev) noexcept { model.fbe_shift(prev); }
@@ -588,9 +588,9 @@ public:
     void get_end(size_t fbe_begin) const noexcept;
 
     // Get the struct value
-    void get(::protoex_pmr::AccountMessage& fbe_value, pmr::memory_resource* resource) const noexcept;
+    void get(::protoex_pmr::AccountMessage& fbe_value, std::pmr::memory_resource* resource) const noexcept;
     // Get the struct fields values
-    void get_fields(::protoex_pmr::AccountMessage& fbe_value, size_t fbe_struct_size, pmr::memory_resource* resource) const noexcept;
+    void get_fields(::protoex_pmr::AccountMessage& fbe_value, size_t fbe_struct_size, std::pmr::memory_resource* resource) const noexcept;
 
     // Set the struct value (begin phase)
     size_t set_begin();
@@ -598,9 +598,9 @@ public:
     void set_end(size_t fbe_begin);
 
     // Set the struct value
-    void set(const ::protoex_pmr::AccountMessage& fbe_value, pmr::memory_resource* resource) noexcept;
+    void set(const ::protoex_pmr::AccountMessage& fbe_value, std::pmr::memory_resource* resource) noexcept;
     // Set the struct fields values
-    void set_fields(const ::protoex_pmr::AccountMessage& fbe_value, pmr::memory_resource* resource) noexcept;
+    void set_fields(const ::protoex_pmr::AccountMessage& fbe_value, std::pmr::memory_resource* resource) noexcept;
 
 private:
     FBEBuffer& _buffer;
@@ -633,9 +633,9 @@ public:
     size_t create_end(size_t fbe_begin);
 
     // Serialize the struct value
-    size_t serialize(const ::protoex_pmr::AccountMessage& value, pmr::memory_resource* resource);
+    size_t serialize(const ::protoex_pmr::AccountMessage& value, std::pmr::memory_resource* resource);
     // Deserialize the struct value
-    size_t deserialize(::protoex_pmr::AccountMessage& value, pmr::memory_resource* resource) const noexcept;
+    size_t deserialize(::protoex_pmr::AccountMessage& value, std::pmr::memory_resource* resource) const noexcept;
 
     // Move to the next struct value
     void next(size_t prev) noexcept { model.fbe_shift(prev); }

@@ -26,7 +26,7 @@
 
 namespace protoex_pmr {
 using namespace FBE;
-using allocator_type = pmr::polymorphic_allocator<char>;
+using allocator_type = std::pmr::polymorphic_allocator<char>;
 } // namespace protoex_pmr
 
 namespace FBE {
@@ -201,13 +201,13 @@ struct Account
     ::protoex_pmr::StateEx state;
     ::protoex_pmr::Balance wallet;
     std::optional<::protoex_pmr::Balance> asset;
-    pmr::vector<::protoex_pmr::Order> orders;
+    std::pmr::vector<::protoex_pmr::Order> orders;
 
     size_t fbe_type() const noexcept { return 3; }
 
     Account();
     explicit Account(allocator_type alloc);
-    Account(int32_t arg_id, const ArenaString& arg_name, const ::protoex_pmr::StateEx& arg_state, const ::protoex_pmr::Balance& arg_wallet, const std::optional<::protoex_pmr::Balance>& arg_asset, const pmr::vector<::protoex_pmr::Order>& arg_orders);
+    Account(int32_t arg_id, const ArenaString& arg_name, const ::protoex_pmr::StateEx& arg_state, const ::protoex_pmr::Balance& arg_wallet, const std::optional<::protoex_pmr::Balance>& arg_asset, const std::pmr::vector<::protoex_pmr::Order>& arg_orders);
     Account(const Account& other) = default;
     Account(Account&& other) = default;
     ~Account() = default;

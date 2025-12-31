@@ -40,13 +40,13 @@ struct Simple : FBE::Base
     int32_t depth;
     FastVec<::simple::Simple*> spv;
     FastVec<::simple::Simple> sv;
-    std::map<int32_t, ::simple::Simple*> spm;
-    std::map<int32_t, ::simple::Simple> sm;
+    FBE::map<int32_t, ::simple::Simple*> spm;
+    FBE::map<int32_t, ::simple::Simple> sm;
 
     size_t fbe_type() const noexcept { return 1; }
 
     Simple();
-    Simple(const FBEString& arg_info, std::unique_ptr<::simple::Simple> arg_simple, int32_t arg_depth, FastVec<std::unique_ptr<::simple::Simple>> arg_spv, FastVec<::simple::Simple> arg_sv, std::map<int32_t, std::unique_ptr<::simple::Simple>> arg_spm, std::map<int32_t, ::simple::Simple> arg_sm);
+    Simple(const FBEString& arg_info, std::unique_ptr<::simple::Simple> arg_simple, int32_t arg_depth, FastVec<std::unique_ptr<::simple::Simple>> arg_spv, FastVec<::simple::Simple> arg_sv, FBE::map<int32_t, std::unique_ptr<::simple::Simple>> arg_spm, FBE::map<int32_t, ::simple::Simple> arg_sm);
     Simple(const Simple& other) = default;
     Simple(Simple&& other) noexcept;
     ~Simple() override;

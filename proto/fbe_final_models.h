@@ -414,6 +414,15 @@ public:
     // Set the vector as std::set
     size_t set(const std::set<T>& values) noexcept;
 
+#if defined(USING_BTREE_MAP)
+    // Get the allocation size for FBE::set (btree_set)
+    size_t fbe_allocation_size(const FBE::set<T>& values) const noexcept;
+    // Get the vector as FBE::set (btree_set)
+    size_t get(FBE::set<T>& values) const noexcept;
+    // Set the vector as FBE::set (btree_set)
+    size_t set(const FBE::set<T>& values) noexcept;
+#endif
+
 private:
     FBEBuffer& _buffer;
     mutable size_t _offset;
@@ -452,6 +461,15 @@ public:
     size_t set(const std::map<TKey, TValue>& values) noexcept;
     // Set the map as std::unordered_map
     size_t set(const std::unordered_map<TKey, TValue>& values) noexcept;
+
+#if defined(USING_BTREE_MAP)
+    // Get the allocation size for FBE::map (btree_map)
+    size_t fbe_allocation_size(const FBE::map<TKey, TValue>& values) const noexcept;
+    // Get the map as FBE::map (btree_map)
+    size_t get(FBE::map<TKey, TValue>& values) const noexcept;
+    // Set the map as FBE::map (btree_map)
+    size_t set(const FBE::map<TKey, TValue>& values) noexcept;
+#endif
 
 private:
     FBEBuffer& _buffer;

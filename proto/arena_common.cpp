@@ -102,7 +102,7 @@ Expression::Expression()
     , alias_int()
 {}
 
-Expression::Expression(const FastVec<FBEString>& arg_keys, const FastVec<::arena_common::Alias>& arg_aliases, const std::map<int32_t, ::arena_common::Alias>& arg_alias_int)
+Expression::Expression(const FastVec<FBEString>& arg_keys, const FastVec<::arena_common::Alias>& arg_aliases, const FBE::map<int32_t, ::arena_common::Alias>& arg_alias_int)
     : keys(arg_keys)
     , aliases(arg_aliases)
     , alias_int(arg_alias_int)

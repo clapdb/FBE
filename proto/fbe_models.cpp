@@ -79,7 +79,7 @@ void FieldModel<decimal_t>::uint64x64(uint64_t a, uint64_t b, uint64_t& low64, u
     high32 = (uint32_t)high;
 }
 
-void FieldModel<decimal_t>::get(decimal_t& value, pmr::memory_resource* resource, decimal_t defaults) const noexcept
+void FieldModel<decimal_t>::get(decimal_t& value, std::pmr::memory_resource* resource, decimal_t defaults) const noexcept
 {
     if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
     {
@@ -104,7 +104,7 @@ void FieldModel<decimal_t>::get(decimal_t& value, pmr::memory_resource* resource
     value = dValue;
 }
 
-void FieldModel<decimal_t>::set(decimal_t value, pmr::memory_resource* resource) noexcept
+void FieldModel<decimal_t>::set(decimal_t value, std::pmr::memory_resource* resource) noexcept
 {
     assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
     if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
@@ -189,11 +189,11 @@ void FieldModel<decimal_t>::set(decimal_t value, pmr::memory_resource* resource)
             uint64_t pow10 = kPow10TableU64[iPower];
             uint64_t low64 = uint32x32((uint32_t)ulMant, (uint32_t)pow10);
             uint64_t high64 = uint32x32((uint32_t)(ulMant >> 32), (uint32_t)pow10);
-            *((uint32_t*)(_buffer.data() + _buffer.offset() + fbe_offset())) = (uint32_t)low64;
+            unaligned_store<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset(), (uint32_t)low64);
             high64 += low64 >> 32;
-            *((uint32_t*)(_buffer.data() + _buffer.offset() + fbe_offset() + 4)) = (uint32_t)high64;
+            unaligned_store<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset() + 4, (uint32_t)high64);
             high64 >>= 32;
-            *((uint32_t*)(_buffer.data() + _buffer.offset() + fbe_offset() + 8)) = (uint32_t)high64;
+            unaligned_store<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset() + 8, (uint32_t)high64);
         }
         else
         {
@@ -202,8 +202,8 @@ void FieldModel<decimal_t>::set(decimal_t value, pmr::memory_resource* resource)
             uint64_t low64;
             uint32_t high32;
             uint64x64(ulMant, kPow10TableU64[iPower], low64, high32);
-            *((uint64_t*)(_buffer.data() + _buffer.offset() + fbe_offset())) = low64;
-            *((uint32_t*)(_buffer.data() + _buffer.offset() + fbe_offset() + 8)) = high32;
+            unaligned_store<uint64_t>(_buffer.data() + _buffer.offset() + fbe_offset(), low64);
+            unaligned_store<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset() + 8, high32);
         }
     }
     else
@@ -275,7 +275,7 @@ void FieldModel<decimal_t>::set(decimal_t value, pmr::memory_resource* resource)
     unaligned_store<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset() + 12, flags);
 }
 
-void FieldModel<uuid_t>::get(uuid_t& value, pmr::memory_resource* resource, uuid_t defaults) const noexcept
+void FieldModel<uuid_t>::get(uuid_t& value, std::pmr::memory_resource* resource, uuid_t defaults) const noexcept
 {
     if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
     {
@@ -286,7 +286,7 @@ void FieldModel<uuid_t>::get(uuid_t& value, pmr::memory_resource* resource, uuid
     std::memcpy(value.data().data(), (const uint8_t*)(_buffer.data() + _buffer.offset() + fbe_offset()), fbe_size());
 }
 
-void FieldModel<uuid_t>::set(uuid_t value, pmr::memory_resource* resource) noexcept
+void FieldModel<uuid_t>::set(uuid_t value, std::pmr::memory_resource* resource) noexcept
 {
     assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
     if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
@@ -327,7 +327,7 @@ bool FieldModel<buffer_t>::verify() const noexcept
     return true;
 }
 
-size_t FieldModel<buffer_t>::get(void* data, size_t size, pmr::memory_resource* resource) const noexcept
+size_t FieldModel<buffer_t>::get(void* data, size_t size, std::pmr::memory_resource* resource) const noexcept
 {
     assert(((size == 0) || (data != nullptr)) && "Invalid buffer!");
     if ((size > 0) && (data == nullptr))
@@ -360,7 +360,7 @@ size_t FieldModel<buffer_t>::get(void* data, size_t size, pmr::memory_resource* 
     return result;
 }
 
-void FieldModel<buffer_t>::get(FastVec<uint8_t>& value, pmr::memory_resource* resource) const noexcept
+void FieldModel<buffer_t>::get(FastVec<uint8_t>& value, std::pmr::memory_resource* resource) const noexcept
 {
     value.clear();
 
@@ -391,7 +391,7 @@ void FieldModel<buffer_t>::get(FastVec<uint8_t>& value, pmr::memory_resource* re
     }
 }
 
-void FieldModel<buffer_t>::set(const void* data, size_t size, pmr::memory_resource* resource)
+void FieldModel<buffer_t>::set(const void* data, size_t size, std::pmr::memory_resource* resource)
 {
     assert(((size == 0) || (data != nullptr)) && "Invalid buffer!");
     if ((size > 0) && (data == nullptr))
@@ -478,7 +478,7 @@ size_t FieldModel<pmr_buffer_t>::get(void* data, size_t size) const noexcept
     return result;
 }
 
-void FieldModel<pmr_buffer_t>::get(pmr::vector<uint8_t>& value, pmr::memory_resource* resource) const noexcept
+void FieldModel<pmr_buffer_t>::get(std::pmr::vector<uint8_t>& value, std::pmr::memory_resource* resource) const noexcept
 {
     value.clear();
 
@@ -507,7 +507,7 @@ void FieldModel<pmr_buffer_t>::get(pmr::vector<uint8_t>& value, pmr::memory_reso
     value.assign(fbe_bytes, fbe_bytes + fbe_bytes_size);
 }
 
-void FieldModel<pmr_buffer_t>::set(const void* data, size_t size, pmr::memory_resource* resource)
+void FieldModel<pmr_buffer_t>::set(const void* data, size_t size, std::pmr::memory_resource* resource)
 {
     assert(((size == 0) || (data != nullptr)) && "Invalid buffer!");
     if ((size > 0) && (data == nullptr))
@@ -601,7 +601,7 @@ size_t FieldModel<FBEString>::get(char* data, size_t size) const noexcept
     return result;
 }
 
-void FieldModel<FBEString>::get(FBEString& value, pmr::memory_resource* resource) const noexcept
+void FieldModel<FBEString>::get(FBEString& value, std::pmr::memory_resource* resource) const noexcept
 {
     #if !defined(USING_SEASTAR_STRING)
     value.clear();
@@ -637,7 +637,7 @@ void FieldModel<FBEString>::get(FBEString& value, pmr::memory_resource* resource
     #endif
 }
 
-void FieldModel<FBEString>::get(FBEString& value, pmr::memory_resource* resource, const FBEString& defaults) const noexcept
+void FieldModel<FBEString>::get(FBEString& value, std::pmr::memory_resource* resource, const FBEString& defaults) const noexcept
 {
     value = defaults;
 
@@ -671,7 +671,7 @@ void FieldModel<FBEString>::get(FBEString& value, pmr::memory_resource* resource
     #endif
 }
 
-void FieldModel<FBEString>::set(const char* data, size_t size, pmr::memory_resource* resource)
+void FieldModel<FBEString>::set(const char* data, size_t size, std::pmr::memory_resource* resource)
 {
     assert(((size == 0) || (data != nullptr)) && "Invalid buffer!");
     if ((size > 0) && (data == nullptr))
@@ -697,7 +697,7 @@ void FieldModel<FBEString>::set(const char* data, size_t size, pmr::memory_resou
         memcpy((char*)(buffer_data + string_base + 4), data, fbe_string_size);
 }
 
-void FieldModel<FBEString>::set(const FBEString& value, pmr::memory_resource* resource)
+void FieldModel<FBEString>::set(const FBEString& value, std::pmr::memory_resource* resource)
 {
     size_t buffer_offset = _buffer.offset();
     assert(((buffer_offset + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
@@ -790,7 +790,7 @@ size_t FieldModel<ArenaString>::get(char* data, size_t size) const noexcept
     return result;
 }
 
-void FieldModel<ArenaString>::get(ArenaString& value, pmr::memory_resource* resource) const noexcept
+void FieldModel<ArenaString>::get(ArenaString& value, std::pmr::memory_resource* resource) const noexcept
 {
     value.clear();
 
@@ -818,7 +818,7 @@ void FieldModel<ArenaString>::get(ArenaString& value, pmr::memory_resource* reso
     value.assign((const char*)(buffer_data + string_base + 4), fbe_string_size);
 }
 
-void FieldModel<ArenaString>::get(ArenaString& value, pmr::memory_resource* resource, const ArenaString& defaults) const noexcept
+void FieldModel<ArenaString>::get(ArenaString& value, std::pmr::memory_resource* resource, const ArenaString& defaults) const noexcept
 {
     value = defaults;
 
@@ -846,7 +846,7 @@ void FieldModel<ArenaString>::get(ArenaString& value, pmr::memory_resource* reso
     value.assign((const char*)(buffer_data + string_base + 4), fbe_string_size);
 }
 
-void FieldModel<ArenaString>::set(const char* data, size_t size, pmr::memory_resource* resource)
+void FieldModel<ArenaString>::set(const char* data, size_t size, std::pmr::memory_resource* resource)
 {
     assert(((size == 0) || (data != nullptr)) && "Invalid buffer!");
     if ((size > 0) && (data == nullptr))
@@ -872,7 +872,7 @@ void FieldModel<ArenaString>::set(const char* data, size_t size, pmr::memory_res
         memcpy((char*)(buffer_data + string_base + 4), data, fbe_string_size);
 }
 
-void FieldModel<ArenaString>::set(const ArenaString& value, pmr::memory_resource* resource)
+void FieldModel<ArenaString>::set(const ArenaString& value, std::pmr::memory_resource* resource)
 {
     size_t buffer_offset = _buffer.offset();
     assert(((buffer_offset + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");

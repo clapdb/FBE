@@ -24,7 +24,7 @@
 
 namespace extra_pmr {
 using namespace FBE;
-using allocator_type = pmr::polymorphic_allocator<char>;
+using allocator_type = std::pmr::polymorphic_allocator<char>;
 } // namespace extra_pmr
 
 namespace FBE {
@@ -43,14 +43,14 @@ struct Info : FBE::Base
 
     ArenaString info;
     ::extra_pmr::Extra* extra;
-    pmr::vector<::extra_pmr::Extra*> extras;
-    pmr::vector<::extra_pmr::Extra*> extras1;
+    std::pmr::vector<::extra_pmr::Extra*> extras;
+    std::pmr::vector<::extra_pmr::Extra*> extras1;
 
     size_t fbe_type() const noexcept { return 1; }
 
     Info();
     explicit Info(allocator_type alloc);
-    Info(const ArenaString& arg_info, std::unique_ptr<::extra_pmr::Extra> arg_extra, pmr::vector<std::unique_ptr<::extra_pmr::Extra>> arg_extras, pmr::vector<std::unique_ptr<::extra_pmr::Extra>> arg_extras1);
+    Info(const ArenaString& arg_info, std::unique_ptr<::extra_pmr::Extra> arg_extra, std::pmr::vector<std::unique_ptr<::extra_pmr::Extra>> arg_extras, std::pmr::vector<std::unique_ptr<::extra_pmr::Extra>> arg_extras1);
     Info(const Info& other) = default;
     Info(Info&& other) noexcept;
     ~Info() override;
@@ -101,16 +101,16 @@ struct Extra : FBE::Base
     ::extra_pmr::Info* info;
     ::extra_pmr::Info* info2;
     ::extra_pmr::Info info3;
-    pmr::vector<::extra_pmr::Info> infov;
-    pmr::vector<::extra_pmr::Info*> infopv;
-    pmr::list<::extra_pmr::Info> infol;
-    pmr::list<::extra_pmr::Info*> infopl;
+    std::pmr::vector<::extra_pmr::Info> infov;
+    std::pmr::vector<::extra_pmr::Info*> infopv;
+    std::pmr::list<::extra_pmr::Info> infol;
+    std::pmr::list<::extra_pmr::Info*> infopl;
 
     size_t fbe_type() const noexcept { return 2; }
 
     Extra();
     explicit Extra(allocator_type alloc);
-    Extra(int64_t arg_num, const ArenaString& arg_data, std::unique_ptr<::extra_pmr::Info> arg_info, std::unique_ptr<::extra_pmr::Info> arg_info2, ::extra_pmr::Info arg_info3, pmr::vector<::extra_pmr::Info> arg_infov, pmr::vector<std::unique_ptr<::extra_pmr::Info>> arg_infopv, pmr::list<::extra_pmr::Info> arg_infol, pmr::list<std::unique_ptr<::extra_pmr::Info>> arg_infopl);
+    Extra(int64_t arg_num, const ArenaString& arg_data, std::unique_ptr<::extra_pmr::Info> arg_info, std::unique_ptr<::extra_pmr::Info> arg_info2, ::extra_pmr::Info arg_info3, std::pmr::vector<::extra_pmr::Info> arg_infov, std::pmr::vector<std::unique_ptr<::extra_pmr::Info>> arg_infopv, std::pmr::list<::extra_pmr::Info> arg_infol, std::pmr::list<std::unique_ptr<::extra_pmr::Info>> arg_infopl);
     Extra(const Extra& other) = default;
     Extra(Extra&& other) noexcept;
     ~Extra() override;

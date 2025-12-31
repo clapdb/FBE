@@ -105,12 +105,12 @@ struct Expression
 {
     FastVec<FBEString> keys;
     FastVec<::arena_common::Alias> aliases;
-    std::map<int32_t, ::arena_common::Alias> alias_int;
+    FBE::map<int32_t, ::arena_common::Alias> alias_int;
 
     size_t fbe_type() const noexcept { return 2; }
 
     Expression();
-    Expression(const FastVec<FBEString>& arg_keys, const FastVec<::arena_common::Alias>& arg_aliases, const std::map<int32_t, ::arena_common::Alias>& arg_alias_int);
+    Expression(const FastVec<FBEString>& arg_keys, const FastVec<::arena_common::Alias>& arg_aliases, const FBE::map<int32_t, ::arena_common::Alias>& arg_alias_int);
     Expression(const Expression& other) = default;
     Expression(Expression&& other) = default;
     ~Expression() = default;

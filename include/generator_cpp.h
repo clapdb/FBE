@@ -240,7 +240,17 @@ private:
     void GenerateClient_Source(const std::shared_ptr<Package>& p, bool final);
 
     bool IsKnownType(const std::string& type);
-    bool IsPrimitiveType(const std::string& type, bool optional);
+    bool IsPrimitiveType(const std::string& type, bool optional) const;
+    // Get the size of a primitive type, returns 0 for non-primitive types
+    size_t GetPrimitiveTypeSize(const std::string& type) const;
+    // Get the C++ type name for a primitive type (for unaligned_load)
+    std::string GetPrimitiveTypeCppName(const std::string& type) const;
+    // Check if a type is a fixed-size type that can be batch-processed (primitive, enum, flags, uuid)
+    bool IsFixedSizeType(const std::shared_ptr<Package>& p, const std::string& type, bool optional) const;
+    // Get the size of a fixed-size type, returns 0 for non-fixed types
+    size_t GetFixedTypeSize(const std::shared_ptr<Package>& p, const std::string& type) const;
+    // Get the C++ type name for a fixed-size type (for unaligned_load/store)
+    std::string GetFixedTypeCppName(const std::shared_ptr<Package>& p, const std::string& type) const;
     bool IsContainerType(const StructField& field);
     bool IsContainerType(const VariantValue& variant);
     bool IsStructType(const std::shared_ptr<Package>& p, const std::string& field_type);

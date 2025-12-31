@@ -23,7 +23,7 @@ Info::Info([[maybe_unused]] allocator_type alloc)
     , extras1(alloc)
 {}
 
-Info::Info(const ArenaString& arg_info, std::unique_ptr<::extra_pmr::Extra> arg_extra, pmr::vector<std::unique_ptr<::extra_pmr::Extra>> arg_extras, pmr::vector<std::unique_ptr<::extra_pmr::Extra>> arg_extras1)
+Info::Info(const ArenaString& arg_info, std::unique_ptr<::extra_pmr::Extra> arg_extra, std::pmr::vector<std::unique_ptr<::extra_pmr::Extra>> arg_extras, std::pmr::vector<std::unique_ptr<::extra_pmr::Extra>> arg_extras1)
     : info(arg_info)
     , extra(arg_extra.release())
     , extras()
@@ -171,7 +171,7 @@ Extra::Extra([[maybe_unused]] allocator_type alloc)
     , infopl(alloc)
 {}
 
-Extra::Extra(int64_t arg_num, const ArenaString& arg_data, std::unique_ptr<::extra_pmr::Info> arg_info, std::unique_ptr<::extra_pmr::Info> arg_info2, ::extra_pmr::Info arg_info3, pmr::vector<::extra_pmr::Info> arg_infov, pmr::vector<std::unique_ptr<::extra_pmr::Info>> arg_infopv, pmr::list<::extra_pmr::Info> arg_infol, pmr::list<std::unique_ptr<::extra_pmr::Info>> arg_infopl)
+Extra::Extra(int64_t arg_num, const ArenaString& arg_data, std::unique_ptr<::extra_pmr::Info> arg_info, std::unique_ptr<::extra_pmr::Info> arg_info2, ::extra_pmr::Info arg_info3, std::pmr::vector<::extra_pmr::Info> arg_infov, std::pmr::vector<std::unique_ptr<::extra_pmr::Info>> arg_infopv, std::pmr::list<::extra_pmr::Info> arg_infol, std::pmr::list<std::unique_ptr<::extra_pmr::Info>> arg_infopl)
     : num(arg_num)
     , data(arg_data)
     , info(arg_info.release())

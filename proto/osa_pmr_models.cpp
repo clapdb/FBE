@@ -128,7 +128,7 @@ void FieldModel<::osa_pmr::Extra>::get_end(size_t fbe_begin) const noexcept
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModel<::osa_pmr::Extra>::get(::osa_pmr::Extra& fbe_value, pmr::memory_resource* resource) const noexcept
+void FieldModel<::osa_pmr::Extra>::get(::osa_pmr::Extra& fbe_value, std::pmr::memory_resource* resource) const noexcept
 {
     size_t fbe_begin = get_begin();
     if (fbe_begin == 0)
@@ -139,7 +139,7 @@ void FieldModel<::osa_pmr::Extra>::get(::osa_pmr::Extra& fbe_value, pmr::memory_
     get_end(fbe_begin);
 }
 
-void FieldModel<::osa_pmr::Extra>::get_fields([[maybe_unused]] ::osa_pmr::Extra& fbe_value, [[maybe_unused]] size_t fbe_struct_size, pmr::memory_resource* resource) const noexcept
+void FieldModel<::osa_pmr::Extra>::get_fields([[maybe_unused]] ::osa_pmr::Extra& fbe_value, [[maybe_unused]] size_t fbe_struct_size, std::pmr::memory_resource* resource) const noexcept
 {
     size_t fbe_current_size = 4 + 4;
 
@@ -193,7 +193,7 @@ void FieldModel<::osa_pmr::Extra>::set_end(size_t fbe_begin)
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModel<::osa_pmr::Extra>::set(const ::osa_pmr::Extra& fbe_value, pmr::memory_resource* resource) noexcept
+void FieldModel<::osa_pmr::Extra>::set(const ::osa_pmr::Extra& fbe_value, std::pmr::memory_resource* resource) noexcept
 {
     size_t fbe_begin = set_begin();
     if (fbe_begin == 0)
@@ -203,7 +203,7 @@ void FieldModel<::osa_pmr::Extra>::set(const ::osa_pmr::Extra& fbe_value, pmr::m
     set_end(fbe_begin);
 }
 
-void FieldModel<::osa_pmr::Extra>::set_fields([[maybe_unused]] const ::osa_pmr::Extra& fbe_value, pmr::memory_resource* resource) noexcept
+void FieldModel<::osa_pmr::Extra>::set_fields([[maybe_unused]] const ::osa_pmr::Extra& fbe_value, std::pmr::memory_resource* resource) noexcept
 {
     name.set(fbe_value.name, resource);
     detail.set(fbe_value.detail, resource);
@@ -239,7 +239,7 @@ size_t ExtraModel::create_end(size_t fbe_begin)
     return fbe_full_size;
 }
 
-size_t ExtraModel::serialize(const ::osa_pmr::Extra& value, pmr::memory_resource* resource)
+size_t ExtraModel::serialize(const ::osa_pmr::Extra& value, std::pmr::memory_resource* resource)
 {
     size_t fbe_begin = create_begin();
     model.set(value, resource);
@@ -247,7 +247,7 @@ size_t ExtraModel::serialize(const ::osa_pmr::Extra& value, pmr::memory_resource
     return fbe_full_size;
 }
 
-size_t ExtraModel::deserialize(::osa_pmr::Extra& value, pmr::memory_resource* resource) const noexcept
+size_t ExtraModel::deserialize(::osa_pmr::Extra& value, std::pmr::memory_resource* resource) const noexcept
 {
     if ((this->buffer().offset() + model.fbe_offset() - 4) > this->buffer().size())
         return 0;
@@ -382,7 +382,7 @@ void FieldModel<::osa_pmr::Simple>::get_end(size_t fbe_begin) const noexcept
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModel<::osa_pmr::Simple>::get(::osa_pmr::Simple& fbe_value, pmr::memory_resource* resource) const noexcept
+void FieldModel<::osa_pmr::Simple>::get(::osa_pmr::Simple& fbe_value, std::pmr::memory_resource* resource) const noexcept
 {
     size_t fbe_begin = get_begin();
     if (fbe_begin == 0)
@@ -393,7 +393,7 @@ void FieldModel<::osa_pmr::Simple>::get(::osa_pmr::Simple& fbe_value, pmr::memor
     get_end(fbe_begin);
 }
 
-void FieldModel<::osa_pmr::Simple>::get_fields([[maybe_unused]] ::osa_pmr::Simple& fbe_value, [[maybe_unused]] size_t fbe_struct_size, pmr::memory_resource* resource) const noexcept
+void FieldModel<::osa_pmr::Simple>::get_fields([[maybe_unused]] ::osa_pmr::Simple& fbe_value, [[maybe_unused]] size_t fbe_struct_size, std::pmr::memory_resource* resource) const noexcept
 {
     size_t fbe_current_size = 4 + 4;
 
@@ -446,7 +446,7 @@ void FieldModel<::osa_pmr::Simple>::set_end(size_t fbe_begin)
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModel<::osa_pmr::Simple>::set(const ::osa_pmr::Simple& fbe_value, pmr::memory_resource* resource) noexcept
+void FieldModel<::osa_pmr::Simple>::set(const ::osa_pmr::Simple& fbe_value, std::pmr::memory_resource* resource) noexcept
 {
     size_t fbe_begin = set_begin();
     if (fbe_begin == 0)
@@ -456,7 +456,7 @@ void FieldModel<::osa_pmr::Simple>::set(const ::osa_pmr::Simple& fbe_value, pmr:
     set_end(fbe_begin);
 }
 
-void FieldModel<::osa_pmr::Simple>::set_fields([[maybe_unused]] const ::osa_pmr::Simple& fbe_value, pmr::memory_resource* resource) noexcept
+void FieldModel<::osa_pmr::Simple>::set_fields([[maybe_unused]] const ::osa_pmr::Simple& fbe_value, std::pmr::memory_resource* resource) noexcept
 {
     name.set(fbe_value.name, resource);
     depth.set(fbe_value.depth, resource);
@@ -492,7 +492,7 @@ size_t SimpleModel::create_end(size_t fbe_begin)
     return fbe_full_size;
 }
 
-size_t SimpleModel::serialize(const ::osa_pmr::Simple& value, pmr::memory_resource* resource)
+size_t SimpleModel::serialize(const ::osa_pmr::Simple& value, std::pmr::memory_resource* resource)
 {
     size_t fbe_begin = create_begin();
     model.set(value, resource);
@@ -500,7 +500,7 @@ size_t SimpleModel::serialize(const ::osa_pmr::Simple& value, pmr::memory_resour
     return fbe_full_size;
 }
 
-size_t SimpleModel::deserialize(::osa_pmr::Simple& value, pmr::memory_resource* resource) const noexcept
+size_t SimpleModel::deserialize(::osa_pmr::Simple& value, std::pmr::memory_resource* resource) const noexcept
 {
     if ((this->buffer().offset() + model.fbe_offset() - 4) > this->buffer().size())
         return 0;

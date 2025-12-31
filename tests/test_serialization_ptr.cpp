@@ -47,19 +47,19 @@ TEST_CASE("Serialization (simple self-reference)", "[Ptr-based FBE]")
     v.push_back(std::make_unique<::simple::Simple>(::simple::Simple(
         "v-info", nullptr, 1024, FastVec<std::unique_ptr<::simple::Simple>>(),
         FastVec<::simple::Simple>(),
-        std::map<int32_t, std::unique_ptr<::simple::Simple>>(),
-        std::map<int32_t, ::simple::Simple>())));
+        FBE::map<int32_t, std::unique_ptr<::simple::Simple>>(),
+        FBE::map<int32_t, ::simple::Simple>())));
 
     auto simplep = std::make_unique<::simple::Simple>(
         ::simple::Simple(
             "single-info", nullptr, 2048,
             FastVec<std::unique_ptr<::simple::Simple>>(),
             FastVec<::simple::Simple>(),
-            std::map<int32_t, std::unique_ptr<::simple::Simple>>(),
-            std::map<int32_t, ::simple::Simple>()
+            FBE::map<int32_t, std::unique_ptr<::simple::Simple>>(),
+            FBE::map<int32_t, ::simple::Simple>()
         )
     );
-    std::map<int32_t, std::unique_ptr<::simple::Simple>> pm;
+    FBE::map<int32_t, std::unique_ptr<::simple::Simple>> pm;
     pm.emplace(std::make_pair(2048, std::move(simplep)));
 
     ::simple::Simple original = {
@@ -70,29 +70,29 @@ TEST_CASE("Serialization (simple self-reference)", "[Ptr-based FBE]")
                 "info 2",
                 std::make_unique<::simple::Simple>(::simple::Simple(
                     "info 3",
-                    std::make_unique<::simple::Simple>( 
+                    std::make_unique<::simple::Simple>(
                         "info 4", nullptr, 4, std::move(v),
                         FastVec<::simple::Simple>(),
-                        std::map<int32_t, std::unique_ptr<::simple::Simple>>(),
-                        std::map<int32_t, ::simple::Simple>()
+                        FBE::map<int32_t, std::unique_ptr<::simple::Simple>>(),
+                        FBE::map<int32_t, ::simple::Simple>()
                     ),
                     3, FastVec<std::unique_ptr<::simple::Simple>>(),
                     FastVec<::simple::Simple>(),
-                    std::map<int32_t, std::unique_ptr<::simple::Simple>>(),
-                    std::map<int32_t, ::simple::Simple>())),
+                    FBE::map<int32_t, std::unique_ptr<::simple::Simple>>(),
+                    FBE::map<int32_t, ::simple::Simple>())),
                 2, FastVec<std::unique_ptr<::simple::Simple>>(),
                 FastVec<::simple::Simple>(),
-                std::map<int32_t, std::unique_ptr<::simple::Simple>>(),
-                std::map<int32_t, ::simple::Simple>())),
+                FBE::map<int32_t, std::unique_ptr<::simple::Simple>>(),
+                FBE::map<int32_t, ::simple::Simple>())),
             1, FastVec<std::unique_ptr<::simple::Simple>>(),
             FastVec<::simple::Simple>(),
-            std::map<int32_t, std::unique_ptr<::simple::Simple>>(),
-            std::map<int32_t, ::simple::Simple>()),
+            FBE::map<int32_t, std::unique_ptr<::simple::Simple>>(),
+            FBE::map<int32_t, ::simple::Simple>()),
         10,
         {},
         {},
         std::move(pm),
-        std::map<int32_t, ::simple::Simple>()};
+        FBE::map<int32_t, ::simple::Simple>()};
 
     ::simple::Simple simple = std::move(original);
     REQUIRE(original.simple == nullptr);

@@ -147,9 +147,9 @@ public:
     void get_end(size_t fbe_begin) const noexcept;
 
     // Get the struct value
-    void get(::enums_pmr::Enums& fbe_value, pmr::memory_resource* resource) const noexcept;
+    void get(::enums_pmr::Enums& fbe_value, std::pmr::memory_resource* resource) const noexcept;
     // Get the struct fields values
-    void get_fields(::enums_pmr::Enums& fbe_value, size_t fbe_struct_size, pmr::memory_resource* resource) const noexcept;
+    void get_fields(::enums_pmr::Enums& fbe_value, size_t fbe_struct_size, std::pmr::memory_resource* resource) const noexcept;
 
     // Set the struct value (begin phase)
     size_t set_begin();
@@ -157,9 +157,9 @@ public:
     void set_end(size_t fbe_begin);
 
     // Set the struct value
-    void set(const ::enums_pmr::Enums& fbe_value, pmr::memory_resource* resource) noexcept;
+    void set(const ::enums_pmr::Enums& fbe_value, std::pmr::memory_resource* resource) noexcept;
     // Set the struct fields values
-    void set_fields(const ::enums_pmr::Enums& fbe_value, pmr::memory_resource* resource) noexcept;
+    void set_fields(const ::enums_pmr::Enums& fbe_value, std::pmr::memory_resource* resource) noexcept;
 
 private:
     FBEBuffer& _buffer;
@@ -257,9 +257,9 @@ public:
     size_t create_end(size_t fbe_begin);
 
     // Serialize the struct value
-    size_t serialize(const ::enums_pmr::Enums& value, pmr::memory_resource* resource);
+    size_t serialize(const ::enums_pmr::Enums& value, std::pmr::memory_resource* resource);
     // Deserialize the struct value
-    size_t deserialize(::enums_pmr::Enums& value, pmr::memory_resource* resource) const noexcept;
+    size_t deserialize(::enums_pmr::Enums& value, std::pmr::memory_resource* resource) const noexcept;
 
     // Move to the next struct value
     void next(size_t prev) noexcept { model.fbe_shift(prev); }

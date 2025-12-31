@@ -24,7 +24,7 @@
 
 namespace cpp_only_pmr {
 using namespace FBE;
-using allocator_type = pmr::polymorphic_allocator<char>;
+using allocator_type = std::pmr::polymorphic_allocator<char>;
 } // namespace cpp_only_pmr
 
 namespace FBE {
@@ -35,7 +35,7 @@ namespace cpp_only_pmr {
 // forward declaration
 struct Struct128;
 
-using LargeNum = std::variant<std::monostate, int64_t, __int128_t, __uint128_t, pmr::vector<__int128_t>, pmr::unordered_map<__uint128_t, __int128_t>>;
+using LargeNum = std::variant<std::monostate, int64_t, __int128_t, __uint128_t, std::pmr::vector<__int128_t>, std::pmr::unordered_map<__uint128_t, __int128_t>>;
 std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const LargeNum& value);
 
 struct Struct128
@@ -46,15 +46,15 @@ struct Struct128
     std::optional<__int128_t> f2;
     __uint128_t f3;
     std::optional<__uint128_t> f4;
-    pmr::vector<__int128_t> f5;
-    pmr::unordered_map<__uint128_t, __int128_t> f6;
+    std::pmr::vector<__int128_t> f5;
+    std::pmr::unordered_map<__uint128_t, __int128_t> f6;
     ::cpp_only_pmr::LargeNum f7;
 
     size_t fbe_type() const noexcept { return 1; }
 
     Struct128();
     explicit Struct128(allocator_type alloc);
-    Struct128(__int128_t arg_f1, const std::optional<__int128_t>& arg_f2, __uint128_t arg_f3, const std::optional<__uint128_t>& arg_f4, const pmr::vector<__int128_t>& arg_f5, const pmr::unordered_map<__uint128_t, __int128_t>& arg_f6, const ::cpp_only_pmr::LargeNum& arg_f7);
+    Struct128(__int128_t arg_f1, const std::optional<__int128_t>& arg_f2, __uint128_t arg_f3, const std::optional<__uint128_t>& arg_f4, const std::pmr::vector<__int128_t>& arg_f5, const std::pmr::unordered_map<__uint128_t, __int128_t>& arg_f6, const ::cpp_only_pmr::LargeNum& arg_f7);
     Struct128(const Struct128& other) = default;
     Struct128(Struct128&& other) = default;
     ~Struct128() = default;

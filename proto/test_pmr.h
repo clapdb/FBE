@@ -26,7 +26,7 @@
 
 namespace test_pmr {
 using namespace FBE;
-using allocator_type = pmr::polymorphic_allocator<char>;
+using allocator_type = std::pmr::polymorphic_allocator<char>;
 } // namespace test_pmr
 
 namespace FBE {
@@ -517,22 +517,22 @@ struct StructVector
 {
     ArenaManagedCreateOnlyTag;
 
-    pmr::vector<uint8_t> f1;
-    pmr::vector<std::optional<uint8_t>> f2;
-    pmr::vector<FBE::pmr_buffer_t> f3;
-    pmr::vector<std::optional<FBE::pmr_buffer_t>> f4;
-    pmr::vector<::test_pmr::EnumSimple> f5;
-    pmr::vector<std::optional<::test_pmr::EnumSimple>> f6;
-    pmr::vector<::test_pmr::FlagsSimple> f7;
-    pmr::vector<std::optional<::test_pmr::FlagsSimple>> f8;
-    pmr::vector<::test_pmr::StructSimple> f9;
-    pmr::vector<std::optional<::test_pmr::StructSimple>> f10;
+    std::pmr::vector<uint8_t> f1;
+    std::pmr::vector<std::optional<uint8_t>> f2;
+    std::pmr::vector<FBE::pmr_buffer_t> f3;
+    std::pmr::vector<std::optional<FBE::pmr_buffer_t>> f4;
+    std::pmr::vector<::test_pmr::EnumSimple> f5;
+    std::pmr::vector<std::optional<::test_pmr::EnumSimple>> f6;
+    std::pmr::vector<::test_pmr::FlagsSimple> f7;
+    std::pmr::vector<std::optional<::test_pmr::FlagsSimple>> f8;
+    std::pmr::vector<::test_pmr::StructSimple> f9;
+    std::pmr::vector<std::optional<::test_pmr::StructSimple>> f10;
 
     size_t fbe_type() const noexcept { return 130; }
 
     StructVector();
     explicit StructVector(allocator_type alloc);
-    StructVector(const pmr::vector<uint8_t>& arg_f1, const pmr::vector<std::optional<uint8_t>>& arg_f2, const pmr::vector<FBE::pmr_buffer_t>& arg_f3, const pmr::vector<std::optional<FBE::pmr_buffer_t>>& arg_f4, const pmr::vector<::test_pmr::EnumSimple>& arg_f5, const pmr::vector<std::optional<::test_pmr::EnumSimple>>& arg_f6, const pmr::vector<::test_pmr::FlagsSimple>& arg_f7, const pmr::vector<std::optional<::test_pmr::FlagsSimple>>& arg_f8, const pmr::vector<::test_pmr::StructSimple>& arg_f9, const pmr::vector<std::optional<::test_pmr::StructSimple>>& arg_f10);
+    StructVector(const std::pmr::vector<uint8_t>& arg_f1, const std::pmr::vector<std::optional<uint8_t>>& arg_f2, const std::pmr::vector<FBE::pmr_buffer_t>& arg_f3, const std::pmr::vector<std::optional<FBE::pmr_buffer_t>>& arg_f4, const std::pmr::vector<::test_pmr::EnumSimple>& arg_f5, const std::pmr::vector<std::optional<::test_pmr::EnumSimple>>& arg_f6, const std::pmr::vector<::test_pmr::FlagsSimple>& arg_f7, const std::pmr::vector<std::optional<::test_pmr::FlagsSimple>>& arg_f8, const std::pmr::vector<::test_pmr::StructSimple>& arg_f9, const std::pmr::vector<std::optional<::test_pmr::StructSimple>>& arg_f10);
     StructVector(const StructVector& other) = default;
     StructVector(StructVector&& other) = default;
     ~StructVector() = default;
@@ -576,22 +576,22 @@ struct StructList
 {
     ArenaManagedCreateOnlyTag;
 
-    pmr::list<uint8_t> f1;
-    pmr::list<std::optional<uint8_t>> f2;
-    pmr::list<FBE::pmr_buffer_t> f3;
-    pmr::list<std::optional<FBE::pmr_buffer_t>> f4;
-    pmr::list<::test_pmr::EnumSimple> f5;
-    pmr::list<std::optional<::test_pmr::EnumSimple>> f6;
-    pmr::list<::test_pmr::FlagsSimple> f7;
-    pmr::list<std::optional<::test_pmr::FlagsSimple>> f8;
-    pmr::list<::test_pmr::StructSimple> f9;
-    pmr::list<std::optional<::test_pmr::StructSimple>> f10;
+    std::pmr::list<uint8_t> f1;
+    std::pmr::list<std::optional<uint8_t>> f2;
+    std::pmr::list<FBE::pmr_buffer_t> f3;
+    std::pmr::list<std::optional<FBE::pmr_buffer_t>> f4;
+    std::pmr::list<::test_pmr::EnumSimple> f5;
+    std::pmr::list<std::optional<::test_pmr::EnumSimple>> f6;
+    std::pmr::list<::test_pmr::FlagsSimple> f7;
+    std::pmr::list<std::optional<::test_pmr::FlagsSimple>> f8;
+    std::pmr::list<::test_pmr::StructSimple> f9;
+    std::pmr::list<std::optional<::test_pmr::StructSimple>> f10;
 
     size_t fbe_type() const noexcept { return 131; }
 
     StructList();
     explicit StructList(allocator_type alloc);
-    StructList(const pmr::list<uint8_t>& arg_f1, const pmr::list<std::optional<uint8_t>>& arg_f2, const pmr::list<FBE::pmr_buffer_t>& arg_f3, const pmr::list<std::optional<FBE::pmr_buffer_t>>& arg_f4, const pmr::list<::test_pmr::EnumSimple>& arg_f5, const pmr::list<std::optional<::test_pmr::EnumSimple>>& arg_f6, const pmr::list<::test_pmr::FlagsSimple>& arg_f7, const pmr::list<std::optional<::test_pmr::FlagsSimple>>& arg_f8, const pmr::list<::test_pmr::StructSimple>& arg_f9, const pmr::list<std::optional<::test_pmr::StructSimple>>& arg_f10);
+    StructList(const std::pmr::list<uint8_t>& arg_f1, const std::pmr::list<std::optional<uint8_t>>& arg_f2, const std::pmr::list<FBE::pmr_buffer_t>& arg_f3, const std::pmr::list<std::optional<FBE::pmr_buffer_t>>& arg_f4, const std::pmr::list<::test_pmr::EnumSimple>& arg_f5, const std::pmr::list<std::optional<::test_pmr::EnumSimple>>& arg_f6, const std::pmr::list<::test_pmr::FlagsSimple>& arg_f7, const std::pmr::list<std::optional<::test_pmr::FlagsSimple>>& arg_f8, const std::pmr::list<::test_pmr::StructSimple>& arg_f9, const std::pmr::list<std::optional<::test_pmr::StructSimple>>& arg_f10);
     StructList(const StructList& other) = default;
     StructList(StructList&& other) = default;
     ~StructList() = default;
@@ -635,16 +635,16 @@ struct StructSet
 {
     ArenaManagedCreateOnlyTag;
 
-    pmr::set<uint8_t> f1;
-    pmr::set<::test_pmr::EnumSimple> f2;
-    pmr::set<::test_pmr::FlagsSimple> f3;
-    pmr::set<::test_pmr::StructSimple> f4;
+    FBE::pmr::set<uint8_t> f1;
+    FBE::pmr::set<::test_pmr::EnumSimple> f2;
+    FBE::pmr::set<::test_pmr::FlagsSimple> f3;
+    FBE::pmr::set<::test_pmr::StructSimple> f4;
 
     size_t fbe_type() const noexcept { return 132; }
 
     StructSet();
     explicit StructSet(allocator_type alloc);
-    StructSet(const pmr::set<uint8_t>& arg_f1, const pmr::set<::test_pmr::EnumSimple>& arg_f2, const pmr::set<::test_pmr::FlagsSimple>& arg_f3, const pmr::set<::test_pmr::StructSimple>& arg_f4);
+    StructSet(const FBE::pmr::set<uint8_t>& arg_f1, const FBE::pmr::set<::test_pmr::EnumSimple>& arg_f2, const FBE::pmr::set<::test_pmr::FlagsSimple>& arg_f3, const FBE::pmr::set<::test_pmr::StructSimple>& arg_f4);
     StructSet(const StructSet& other) = default;
     StructSet(StructSet&& other) = default;
     ~StructSet() = default;
@@ -688,22 +688,22 @@ struct StructMap
 {
     ArenaManagedCreateOnlyTag;
 
-    pmr::map<int32_t, uint8_t> f1;
-    pmr::map<int32_t, std::optional<uint8_t>> f2;
-    pmr::map<int32_t, FBE::pmr_buffer_t> f3;
-    pmr::map<int32_t, std::optional<FBE::pmr_buffer_t>> f4;
-    pmr::map<int32_t, ::test_pmr::EnumSimple> f5;
-    pmr::map<int32_t, std::optional<::test_pmr::EnumSimple>> f6;
-    pmr::map<int32_t, ::test_pmr::FlagsSimple> f7;
-    pmr::map<int32_t, std::optional<::test_pmr::FlagsSimple>> f8;
-    pmr::map<int32_t, ::test_pmr::StructSimple> f9;
-    pmr::map<int32_t, std::optional<::test_pmr::StructSimple>> f10;
+    FBE::pmr::map<int32_t, uint8_t> f1;
+    FBE::pmr::map<int32_t, std::optional<uint8_t>> f2;
+    FBE::pmr::map<int32_t, FBE::pmr_buffer_t> f3;
+    FBE::pmr::map<int32_t, std::optional<FBE::pmr_buffer_t>> f4;
+    FBE::pmr::map<int32_t, ::test_pmr::EnumSimple> f5;
+    FBE::pmr::map<int32_t, std::optional<::test_pmr::EnumSimple>> f6;
+    FBE::pmr::map<int32_t, ::test_pmr::FlagsSimple> f7;
+    FBE::pmr::map<int32_t, std::optional<::test_pmr::FlagsSimple>> f8;
+    FBE::pmr::map<int32_t, ::test_pmr::StructSimple> f9;
+    FBE::pmr::map<int32_t, std::optional<::test_pmr::StructSimple>> f10;
 
     size_t fbe_type() const noexcept { return 140; }
 
     StructMap();
     explicit StructMap(allocator_type alloc);
-    StructMap(const pmr::map<int32_t, uint8_t>& arg_f1, const pmr::map<int32_t, std::optional<uint8_t>>& arg_f2, const pmr::map<int32_t, FBE::pmr_buffer_t>& arg_f3, const pmr::map<int32_t, std::optional<FBE::pmr_buffer_t>>& arg_f4, const pmr::map<int32_t, ::test_pmr::EnumSimple>& arg_f5, const pmr::map<int32_t, std::optional<::test_pmr::EnumSimple>>& arg_f6, const pmr::map<int32_t, ::test_pmr::FlagsSimple>& arg_f7, const pmr::map<int32_t, std::optional<::test_pmr::FlagsSimple>>& arg_f8, const pmr::map<int32_t, ::test_pmr::StructSimple>& arg_f9, const pmr::map<int32_t, std::optional<::test_pmr::StructSimple>>& arg_f10);
+    StructMap(const FBE::pmr::map<int32_t, uint8_t>& arg_f1, const FBE::pmr::map<int32_t, std::optional<uint8_t>>& arg_f2, const FBE::pmr::map<int32_t, FBE::pmr_buffer_t>& arg_f3, const FBE::pmr::map<int32_t, std::optional<FBE::pmr_buffer_t>>& arg_f4, const FBE::pmr::map<int32_t, ::test_pmr::EnumSimple>& arg_f5, const FBE::pmr::map<int32_t, std::optional<::test_pmr::EnumSimple>>& arg_f6, const FBE::pmr::map<int32_t, ::test_pmr::FlagsSimple>& arg_f7, const FBE::pmr::map<int32_t, std::optional<::test_pmr::FlagsSimple>>& arg_f8, const FBE::pmr::map<int32_t, ::test_pmr::StructSimple>& arg_f9, const FBE::pmr::map<int32_t, std::optional<::test_pmr::StructSimple>>& arg_f10);
     StructMap(const StructMap& other) = default;
     StructMap(StructMap&& other) = default;
     ~StructMap() = default;
@@ -747,22 +747,22 @@ struct StructHash
 {
     ArenaManagedCreateOnlyTag;
 
-    pmr::unordered_map<ArenaString, uint8_t> f1;
-    pmr::unordered_map<ArenaString, std::optional<uint8_t>> f2;
-    pmr::unordered_map<ArenaString, FBE::pmr_buffer_t> f3;
-    pmr::unordered_map<ArenaString, std::optional<FBE::pmr_buffer_t>> f4;
-    pmr::unordered_map<ArenaString, ::test_pmr::EnumSimple> f5;
-    pmr::unordered_map<ArenaString, std::optional<::test_pmr::EnumSimple>> f6;
-    pmr::unordered_map<ArenaString, ::test_pmr::FlagsSimple> f7;
-    pmr::unordered_map<ArenaString, std::optional<::test_pmr::FlagsSimple>> f8;
-    pmr::unordered_map<ArenaString, ::test_pmr::StructSimple> f9;
-    pmr::unordered_map<ArenaString, std::optional<::test_pmr::StructSimple>> f10;
+    std::pmr::unordered_map<ArenaString, uint8_t> f1;
+    std::pmr::unordered_map<ArenaString, std::optional<uint8_t>> f2;
+    std::pmr::unordered_map<ArenaString, FBE::pmr_buffer_t> f3;
+    std::pmr::unordered_map<ArenaString, std::optional<FBE::pmr_buffer_t>> f4;
+    std::pmr::unordered_map<ArenaString, ::test_pmr::EnumSimple> f5;
+    std::pmr::unordered_map<ArenaString, std::optional<::test_pmr::EnumSimple>> f6;
+    std::pmr::unordered_map<ArenaString, ::test_pmr::FlagsSimple> f7;
+    std::pmr::unordered_map<ArenaString, std::optional<::test_pmr::FlagsSimple>> f8;
+    std::pmr::unordered_map<ArenaString, ::test_pmr::StructSimple> f9;
+    std::pmr::unordered_map<ArenaString, std::optional<::test_pmr::StructSimple>> f10;
 
     size_t fbe_type() const noexcept { return 141; }
 
     StructHash();
     explicit StructHash(allocator_type alloc);
-    StructHash(const pmr::unordered_map<ArenaString, uint8_t>& arg_f1, const pmr::unordered_map<ArenaString, std::optional<uint8_t>>& arg_f2, const pmr::unordered_map<ArenaString, FBE::pmr_buffer_t>& arg_f3, const pmr::unordered_map<ArenaString, std::optional<FBE::pmr_buffer_t>>& arg_f4, const pmr::unordered_map<ArenaString, ::test_pmr::EnumSimple>& arg_f5, const pmr::unordered_map<ArenaString, std::optional<::test_pmr::EnumSimple>>& arg_f6, const pmr::unordered_map<ArenaString, ::test_pmr::FlagsSimple>& arg_f7, const pmr::unordered_map<ArenaString, std::optional<::test_pmr::FlagsSimple>>& arg_f8, const pmr::unordered_map<ArenaString, ::test_pmr::StructSimple>& arg_f9, const pmr::unordered_map<ArenaString, std::optional<::test_pmr::StructSimple>>& arg_f10);
+    StructHash(const std::pmr::unordered_map<ArenaString, uint8_t>& arg_f1, const std::pmr::unordered_map<ArenaString, std::optional<uint8_t>>& arg_f2, const std::pmr::unordered_map<ArenaString, FBE::pmr_buffer_t>& arg_f3, const std::pmr::unordered_map<ArenaString, std::optional<FBE::pmr_buffer_t>>& arg_f4, const std::pmr::unordered_map<ArenaString, ::test_pmr::EnumSimple>& arg_f5, const std::pmr::unordered_map<ArenaString, std::optional<::test_pmr::EnumSimple>>& arg_f6, const std::pmr::unordered_map<ArenaString, ::test_pmr::FlagsSimple>& arg_f7, const std::pmr::unordered_map<ArenaString, std::optional<::test_pmr::FlagsSimple>>& arg_f8, const std::pmr::unordered_map<ArenaString, ::test_pmr::StructSimple>& arg_f9, const std::pmr::unordered_map<ArenaString, std::optional<::test_pmr::StructSimple>>& arg_f10);
     StructHash(const StructHash& other) = default;
     StructHash(StructHash&& other) = default;
     ~StructHash() = default;
@@ -806,14 +806,14 @@ struct StructHashEx
 {
     ArenaManagedCreateOnlyTag;
 
-    pmr::unordered_map<::test_pmr::StructSimple, ::test_pmr::StructNested> f1;
-    pmr::unordered_map<::test_pmr::StructSimple, std::optional<::test_pmr::StructNested>> f2;
+    std::pmr::unordered_map<::test_pmr::StructSimple, ::test_pmr::StructNested> f1;
+    std::pmr::unordered_map<::test_pmr::StructSimple, std::optional<::test_pmr::StructNested>> f2;
 
     size_t fbe_type() const noexcept { return 142; }
 
     StructHashEx();
     explicit StructHashEx(allocator_type alloc);
-    StructHashEx(const pmr::unordered_map<::test_pmr::StructSimple, ::test_pmr::StructNested>& arg_f1, const pmr::unordered_map<::test_pmr::StructSimple, std::optional<::test_pmr::StructNested>>& arg_f2);
+    StructHashEx(const std::pmr::unordered_map<::test_pmr::StructSimple, ::test_pmr::StructNested>& arg_f1, const std::pmr::unordered_map<::test_pmr::StructSimple, std::optional<::test_pmr::StructNested>>& arg_f2);
     StructHashEx(const StructHashEx& other) = default;
     StructHashEx(StructHashEx&& other) = default;
     ~StructHashEx() = default;
@@ -1104,13 +1104,13 @@ struct VectorFieldNamedString
 {
     ArenaManagedCreateOnlyTag;
 
-    pmr::vector<ArenaString> string;
+    std::pmr::vector<ArenaString> string;
 
     size_t fbe_type() const noexcept { return 148; }
 
     VectorFieldNamedString();
     explicit VectorFieldNamedString(allocator_type alloc);
-    explicit VectorFieldNamedString(const pmr::vector<ArenaString>& arg_string);
+    explicit VectorFieldNamedString(const std::pmr::vector<ArenaString>& arg_string);
     VectorFieldNamedString(const VectorFieldNamedString& other) = default;
     VectorFieldNamedString(VectorFieldNamedString&& other) = default;
     ~VectorFieldNamedString() = default;

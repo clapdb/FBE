@@ -106,7 +106,7 @@ Detail::Detail([[maybe_unused]] allocator_type alloc)
     , extram(alloc)
 {}
 
-Detail::Detail(pmr::vector<::osa_pmr::Extra> arg_extrav, pmr::map<int32_t, ::osa_pmr::Extra> arg_extram)
+Detail::Detail(std::pmr::vector<::osa_pmr::Extra> arg_extrav, FBE::pmr::map<int32_t, ::osa_pmr::Extra> arg_extram)
     : extrav(std::move(arg_extrav))
     , extram(std::move(arg_extram))
 {}
