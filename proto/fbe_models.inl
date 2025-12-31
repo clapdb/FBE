@@ -540,11 +540,13 @@ inline void FieldModelVector<T>::get(std::set<T>& values, std::pmr::memory_resou
         return;
 
     auto fbe_model = (*this)[0];
+    // Use hint-based insertion for O(1) amortized insertion (data is already sorted)
+    auto hint = values.end();
     for (size_t i = 0; i < fbe_vector_size; ++i)
     {
         T value = T();
         fbe_model.get(value, resource);
-        values.emplace(std::move(value));
+        hint = values.emplace_hint(hint, std::move(value));
         fbe_model.fbe_shift(fbe_model.fbe_size());
     }
 }
@@ -611,16 +613,18 @@ inline void FieldModelVector<T>::get(std::pmr::set<T>& values, std::pmr::memory_
         return;
 
     auto fbe_model = (*this)[0];
+    // Use hint-based insertion for O(1) amortized insertion (data is already sorted)
+    auto hint = values.end();
     for (size_t i = 0; i < fbe_vector_size; ++i)
     {
         if constexpr (std::is_constructible_v<T, std::pmr::polymorphic_allocator<char>> and not is_variant_v<T>) {
             T value{resource};
             fbe_model.get(value, resource);
-            values.emplace(std::move(value));
+            hint = values.emplace_hint(hint, std::move(value));
         } else {
             T value = T();
             fbe_model.get(value, resource);
-            values.emplace(std::move(value));
+            hint = values.emplace_hint(hint, std::move(value));
         }
         fbe_model.fbe_shift(fbe_model.fbe_size());
     }
@@ -734,11 +738,13 @@ inline void FieldModelVector<T>::get(FBE::set<T>& values, std::pmr::memory_resou
         return;
 
     auto fbe_model = (*this)[0];
-    for (size_t i = fbe_vector_size; i-- > 0;)
+    // Use hint-based insertion for O(1) amortized insertion (data is already sorted)
+    auto hint = values.end();
+    for (size_t i = 0; i < fbe_vector_size; ++i)
     {
         T value = T();
         fbe_model.get(value, resource);
-        values.emplace(std::move(value));
+        hint = values.emplace_hint(hint, std::move(value));
         fbe_model.fbe_shift(fbe_model.fbe_size());
     }
 }
@@ -753,11 +759,13 @@ inline void FieldModelVector<T>::get(FBE::pmr::set<T>& values, std::pmr::memory_
         return;
 
     auto fbe_model = (*this)[0];
-    for (size_t i = fbe_vector_size; i-- > 0;)
+    // Use hint-based insertion for O(1) amortized insertion (data is already sorted)
+    auto hint = values.end();
+    for (size_t i = 0; i < fbe_vector_size; ++i)
     {
         T value = T();
         fbe_model.get(value, resource);
-        values.emplace(std::move(value));
+        hint = values.emplace_hint(hint, std::move(value));
         fbe_model.fbe_shift(fbe_model.fbe_size());
     }
 }

@@ -519,11 +519,13 @@ inline void FieldModelCustomVector<T, TStruct>::get(std::set<TStruct>& values, s
         return;
 
     auto fbe_model = (*this)[0];
-    for (size_t i = fbe_vector_size; i-- > 0;)
+    // Use hint-based insertion for O(1) amortized insertion (data is already sorted)
+    auto hint = values.end();
+    for (size_t i = 0; i < fbe_vector_size; ++i)
     {
         TStruct value = TStruct();
         fbe_model.get(value, resource);
-        values.emplace(std::move(value));
+        hint = values.emplace_hint(hint, std::move(value));
         fbe_model.fbe_shift(fbe_model.fbe_size());
     }
 }
@@ -538,11 +540,13 @@ inline void FieldModelCustomVector<T, TStruct>::get(std::set<TStruct*>& values, 
         return;
 
     auto fbe_model = (*this)[0];
-    for (size_t i = fbe_vector_size; i-- > 0;)
+    // Use hint-based insertion for O(1) amortized insertion (data is already sorted)
+    auto hint = values.end();
+    for (size_t i = 0; i < fbe_vector_size; ++i)
     {
         TStruct* value = nullptr;
         fbe_model.get(&value, resource);
-        values.emplace(value);
+        hint = values.emplace_hint(hint, value);
         fbe_model.fbe_shift(fbe_model.fbe_size());
     }
 }
@@ -744,11 +748,13 @@ inline void FieldModelCustomVector<T, TStruct>::get(std::pmr::set<TStruct>& valu
         return;
 
     auto fbe_model = (*this)[0];
-    for (size_t i = fbe_vector_size; i-- > 0;)
+    // Use hint-based insertion for O(1) amortized insertion (data is already sorted)
+    auto hint = values.end();
+    for (size_t i = 0; i < fbe_vector_size; ++i)
     {
         TStruct value = TStruct();
         fbe_model.get(value, resource);
-        values.emplace(std::move(value));
+        hint = values.emplace_hint(hint, std::move(value));
         fbe_model.fbe_shift(fbe_model.fbe_size());
     }
 }
@@ -763,11 +769,13 @@ inline void FieldModelCustomVector<T, TStruct>::get(std::pmr::set<TStruct*>& val
         return;
 
     auto fbe_model = (*this)[0];
-    for (size_t i = fbe_vector_size; i-- > 0;)
+    // Use hint-based insertion for O(1) amortized insertion (data is already sorted)
+    auto hint = values.end();
+    for (size_t i = 0; i < fbe_vector_size; ++i)
     {
         TStruct* value = nullptr;
         fbe_model.get(&value, resource);
-        values.emplace(value);
+        hint = values.emplace_hint(hint, value);
         fbe_model.fbe_shift(fbe_model.fbe_size());
     }
 }
