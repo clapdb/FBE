@@ -213,7 +213,7 @@ Account::Account([[maybe_unused]] allocator_type alloc)
     , orders(alloc)
 {}
 
-Account::Account(int32_t arg_id, const ArenaString& arg_name, const ::proto_pmr::State& arg_state, const ::proto_pmr::Balance& arg_wallet, const std::optional<::proto_pmr::Balance>& arg_asset, const pmr::vector<::proto_pmr::Order>& arg_orders)
+Account::Account(int32_t arg_id, const ArenaString& arg_name, const ::proto_pmr::State& arg_state, const ::proto_pmr::Balance& arg_wallet, const std::optional<::proto_pmr::Balance>& arg_asset, const std::pmr::vector<::proto_pmr::Order>& arg_orders)
     : id(arg_id)
     , name(arg_name)
     , state(arg_state)
@@ -289,7 +289,7 @@ CharMap::CharMap([[maybe_unused]] allocator_type alloc)
     : abbr(alloc)
 {}
 
-CharMap::CharMap(const pmr::unordered_map<char, ArenaString>& arg_abbr)
+CharMap::CharMap(const std::pmr::unordered_map<char, ArenaString>& arg_abbr)
     : abbr(arg_abbr)
 {}
 
@@ -482,7 +482,7 @@ PremiumAccount::PremiumAccount([[maybe_unused]] allocator_type alloc)
     , private_state(State::bad)
 {}
 
-PremiumAccount::PremiumAccount(int32_t arg_id, const ArenaString& arg_name, const ArenaString& arg_info, const ::proto_pmr::Balance& arg_private_wallet, const pmr::vector<::proto_pmr::Order>& arg_private_orders, const ::proto_pmr::State& arg_private_state)
+PremiumAccount::PremiumAccount(int32_t arg_id, const ArenaString& arg_name, const ArenaString& arg_info, const ::proto_pmr::Balance& arg_private_wallet, const std::pmr::vector<::proto_pmr::Order>& arg_private_orders, const ::proto_pmr::State& arg_private_state)
     : id(arg_id)
     , name(arg_name)
     , info(arg_info)

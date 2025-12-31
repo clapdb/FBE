@@ -23,7 +23,7 @@ Line::Line([[maybe_unused]] allocator_type alloc)
     , vo(std::nullopt)
 {}
 
-Line::Line(::variants_pmr::V arg_v, pmr::vector<::variants_pmr::V> arg_vv, pmr::unordered_map<ArenaString, ::variants_pmr::V> arg_vm, std::optional<::variants_pmr::V> arg_vo)
+Line::Line(::variants_pmr::V arg_v, std::pmr::vector<::variants_pmr::V> arg_vv, std::pmr::unordered_map<ArenaString, ::variants_pmr::V> arg_vm, std::optional<::variants_pmr::V> arg_vo)
     : v(std::move(arg_v))
     , vv(std::move(arg_vv))
     , vm(std::move(arg_vm))
@@ -139,7 +139,7 @@ Line2::Line2([[maybe_unused]] allocator_type alloc)
     : vm(alloc)
 {}
 
-Line2::Line2(pmr::unordered_map<::enums_pmr::EnumInt8, ::variants_pmr::V> arg_vm)
+Line2::Line2(std::pmr::unordered_map<::enums_pmr::EnumInt8, ::variants_pmr::V> arg_vm)
     : vm(std::move(arg_vm))
 {}
 

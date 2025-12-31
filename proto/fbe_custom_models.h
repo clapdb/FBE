@@ -59,14 +59,14 @@ public:
     virtual void set_end(size_t fbe_begin) = 0;
 
     // Set the struct value
-    virtual void set(const ::FBE::Base& fbe_value, pmr::memory_resource* resource) noexcept = 0;
+    virtual void set(const ::FBE::Base& fbe_value, std::pmr::memory_resource* resource) noexcept = 0;
     // Set the struct fields values
-    virtual void set_fields(const ::FBE::Base& fbe_value, pmr::memory_resource* resource) noexcept = 0;
+    virtual void set_fields(const ::FBE::Base& fbe_value, std::pmr::memory_resource* resource) noexcept = 0;
 
     // Get the struct value
-    virtual void get(::FBE::Base& fbe_value, pmr::memory_resource* resource) noexcept = 0;
+    virtual void get(::FBE::Base& fbe_value, std::pmr::memory_resource* resource) noexcept = 0;
     // Get the struct fields values
-    virtual void get_fields(::FBE::Base& fbe_value, size_t fbe_struct_size, pmr::memory_resource* resource) noexcept = 0;
+    virtual void get_fields(::FBE::Base& fbe_value, size_t fbe_struct_size, std::pmr::memory_resource* resource) noexcept = 0;
 };
 
 // Fast Binary Encoding field model array
@@ -105,42 +105,42 @@ public:
 
     // Get the array as C-array
     template <size_t S>
-    void get(TStruct (&values)[S], pmr::memory_resource* resource) const noexcept;
+    void get(TStruct (&values)[S], std::pmr::memory_resource* resource) const noexcept;
     template <size_t S>
-    void get(TStruct* (&values)[S], pmr::memory_resource* resource) const noexcept;
+    void get(TStruct* (&values)[S], std::pmr::memory_resource* resource) const noexcept;
     // Get the array as std::array
     template <size_t S>
-    void get(std::array<TStruct, S>& values, pmr::memory_resource* resource) const noexcept;
+    void get(std::array<TStruct, S>& values, std::pmr::memory_resource* resource) const noexcept;
     template <size_t S>
-    void get(std::array<TStruct*, S>& values, pmr::memory_resource* resource) const noexcept;
+    void get(std::array<TStruct*, S>& values, std::pmr::memory_resource* resource) const noexcept;
 
     // Set the array as C-array
     template <size_t S>
-    void set(const TStruct (&values)[S], pmr::memory_resource* resource) noexcept;
+    void set(const TStruct (&values)[S], std::pmr::memory_resource* resource) noexcept;
     template <size_t S>
-    void set(const TStruct* (&values)[S], pmr::memory_resource* resource) noexcept;
+    void set(const TStruct* (&values)[S], std::pmr::memory_resource* resource) noexcept;
     
     // Set the array as std::array
     template <size_t S>
-    void set(const std::array<TStruct, S>& values, pmr::memory_resource* resource) noexcept;
+    void set(const std::array<TStruct, S>& values, std::pmr::memory_resource* resource) noexcept;
     template <size_t S>
-    void set(const std::array<TStruct*, S>& values, pmr::memory_resource* resource) noexcept;
+    void set(const std::array<TStruct*, S>& values, std::pmr::memory_resource* resource) noexcept;
 
     // Get the array as FastVec
-    void get(FastVec<TStruct>& values, pmr::memory_resource* resource) const noexcept;
-    void get(FastVec<TStruct*>& values, pmr::memory_resource* resource) const noexcept;
+    void get(FastVec<TStruct>& values, std::pmr::memory_resource* resource) const noexcept;
+    void get(FastVec<TStruct*>& values, std::pmr::memory_resource* resource) const noexcept;
 
     // Set the array as FastVec
-    void set(const FastVec<TStruct>& values, pmr::memory_resource* resource) noexcept;
-    void set(const FastVec<TStruct*>& values, pmr::memory_resource* resource) noexcept;
+    void set(const FastVec<TStruct>& values, std::pmr::memory_resource* resource) noexcept;
+    void set(const FastVec<TStruct*>& values, std::pmr::memory_resource* resource) noexcept;
 
-    // Get the array as pmr::vector
-    void get(pmr::vector<TStruct>& values, pmr::memory_resource* resource) const noexcept;
-    void get(pmr::vector<TStruct*>& values, pmr::memory_resource* resource) const noexcept;
+    // Get the array as std::pmr::vector
+    void get(std::pmr::vector<TStruct>& values, std::pmr::memory_resource* resource) const noexcept;
+    void get(std::pmr::vector<TStruct*>& values, std::pmr::memory_resource* resource) const noexcept;
 
-    // Set the array as pmr::vector
-    void set(const pmr::vector<TStruct>& values, pmr::memory_resource* resource) noexcept;
-    void set(const pmr::vector<TStruct*>& values, pmr::memory_resource* resource) noexcept;
+    // Set the array as std::pmr::vector
+    void set(const std::pmr::vector<TStruct>& values, std::pmr::memory_resource* resource) noexcept;
+    void set(const std::pmr::vector<TStruct*>& values, std::pmr::memory_resource* resource) noexcept;
 
 private:
     FBEBuffer& _buffer;
@@ -180,42 +180,42 @@ public:
     bool verify() const noexcept;
 
     // Get the vector as FastVec
-    void get(FastVec<TStruct>& values, pmr::memory_resource* resource) const noexcept;
-    void get(FastVec<TStruct*>& values, pmr::memory_resource* resource) const noexcept;
+    void get(FastVec<TStruct>& values, std::pmr::memory_resource* resource) const noexcept;
+    void get(FastVec<TStruct*>& values, std::pmr::memory_resource* resource) const noexcept;
     // Get the vector as std::list
-    void get(std::list<TStruct>& values, pmr::memory_resource* resource) const noexcept;
-    void get(std::list<TStruct*>& values, pmr::memory_resource* resource) const noexcept;
+    void get(std::list<TStruct>& values, std::pmr::memory_resource* resource) const noexcept;
+    void get(std::list<TStruct*>& values, std::pmr::memory_resource* resource) const noexcept;
     // Get the vector as std::set
-    void get(std::set<TStruct>& values, pmr::memory_resource* resource) const noexcept;
-    void get(std::set<TStruct*>& values, pmr::memory_resource* resource) const noexcept;
+    void get(std::set<TStruct>& values, std::pmr::memory_resource* resource) const noexcept;
+    void get(std::set<TStruct*>& values, std::pmr::memory_resource* resource) const noexcept;
     // Set the vector as FastVec
-    void set(const FastVec<TStruct>& values, pmr::memory_resource* resource) noexcept;
-    void set(const FastVec<TStruct*>& values, pmr::memory_resource* resource) noexcept;
+    void set(const FastVec<TStruct>& values, std::pmr::memory_resource* resource) noexcept;
+    void set(const FastVec<TStruct*>& values, std::pmr::memory_resource* resource) noexcept;
     // Set the vector as std::list
-    void set(const std::list<TStruct>& values, pmr::memory_resource* resource) noexcept;
-    void set(const std::list<TStruct*>& values, pmr::memory_resource* resource) noexcept;
+    void set(const std::list<TStruct>& values, std::pmr::memory_resource* resource) noexcept;
+    void set(const std::list<TStruct*>& values, std::pmr::memory_resource* resource) noexcept;
     // Set the vector as std::set
-    void set(const std::set<TStruct>& values, pmr::memory_resource* resource) noexcept;
-    void set(const std::set<TStruct*>& values, pmr::memory_resource* resource) noexcept;
+    void set(const std::set<TStruct>& values, std::pmr::memory_resource* resource) noexcept;
+    void set(const std::set<TStruct*>& values, std::pmr::memory_resource* resource) noexcept;
 
-    // Get the vector as pmr::vector
-    void get(pmr::vector<TStruct>& values, pmr::memory_resource* resource) const noexcept;
-    void get(pmr::vector<TStruct*>& values, pmr::memory_resource* resource) const noexcept;
-    // Get the vector as pmr::list
-    void get(pmr::list<TStruct>& values, pmr::memory_resource* resource) const noexcept;
-    void get(pmr::list<TStruct*>& values, pmr::memory_resource* resource) const noexcept;
-    // Get the vector as pmr::set
-    void get(pmr::set<TStruct>& values, pmr::memory_resource* resource) const noexcept;
-    void get(pmr::set<TStruct*>& values, pmr::memory_resource* resource) const noexcept;
-    // Set the vector as pmr::vector
-    void set(const pmr::vector<TStruct>& values, pmr::memory_resource* resource) noexcept;
-    void set(const pmr::vector<TStruct*>& values, pmr::memory_resource* resource) noexcept;
-    // Set the vector as pmr::list
-    void set(const pmr::list<TStruct>& values, pmr::memory_resource* resource) noexcept;
-    void set(const pmr::list<TStruct*>& values, pmr::memory_resource* resource) noexcept;
-    // Set the vector as pmr::set
-    void set(const pmr::set<TStruct>& values, pmr::memory_resource* resource) noexcept;
-    void set(const pmr::set<TStruct*>& values, pmr::memory_resource* resource) noexcept;
+    // Get the vector as std::pmr::vector
+    void get(std::pmr::vector<TStruct>& values, std::pmr::memory_resource* resource) const noexcept;
+    void get(std::pmr::vector<TStruct*>& values, std::pmr::memory_resource* resource) const noexcept;
+    // Get the vector as std::pmr::list
+    void get(std::pmr::list<TStruct>& values, std::pmr::memory_resource* resource) const noexcept;
+    void get(std::pmr::list<TStruct*>& values, std::pmr::memory_resource* resource) const noexcept;
+    // Get the vector as std::pmr::set
+    void get(std::pmr::set<TStruct>& values, std::pmr::memory_resource* resource) const noexcept;
+    void get(std::pmr::set<TStruct*>& values, std::pmr::memory_resource* resource) const noexcept;
+    // Set the vector as std::pmr::vector
+    void set(const std::pmr::vector<TStruct>& values, std::pmr::memory_resource* resource) noexcept;
+    void set(const std::pmr::vector<TStruct*>& values, std::pmr::memory_resource* resource) noexcept;
+    // Set the vector as std::pmr::list
+    void set(const std::pmr::list<TStruct>& values, std::pmr::memory_resource* resource) noexcept;
+    void set(const std::pmr::list<TStruct*>& values, std::pmr::memory_resource* resource) noexcept;
+    // Set the vector as std::pmr::set
+    void set(const std::pmr::set<TStruct>& values, std::pmr::memory_resource* resource) noexcept;
+    void set(const std::pmr::set<TStruct*>& values, std::pmr::memory_resource* resource) noexcept;
 
 private:
     FBEBuffer& _buffer;
@@ -255,32 +255,47 @@ public:
     bool verify() const noexcept;
 
     // Get the map as std::map
-    void get(std::map<TKStruct, TValueStruct>& values, pmr::memory_resource* resource = nullptr) const noexcept;
-    void get(std::map<TKStruct, TValueStruct*>& values, pmr::memory_resource* resource = nullptr) const noexcept;
+    void get(std::map<TKStruct, TValueStruct>& values, std::pmr::memory_resource* resource = nullptr) const noexcept;
+    void get(std::map<TKStruct, TValueStruct*>& values, std::pmr::memory_resource* resource = nullptr) const noexcept;
     // Get the map as std::unordered_map
-    void get(std::unordered_map<TKStruct, TValueStruct>& values, pmr::memory_resource* resource = nullptr) const noexcept;
-    void get(std::unordered_map<TKStruct, TValueStruct*>& values, pmr::memory_resource* resource = nullptr) const noexcept;
+    void get(std::unordered_map<TKStruct, TValueStruct>& values, std::pmr::memory_resource* resource = nullptr) const noexcept;
+    void get(std::unordered_map<TKStruct, TValueStruct*>& values, std::pmr::memory_resource* resource = nullptr) const noexcept;
 
     // Set the map as std::map
-    void set(const std::map<TKStruct, TValueStruct>& values, pmr::memory_resource* resource) noexcept;
-    void set(const std::map<TKStruct, TValueStruct*>& values, pmr::memory_resource* resource) noexcept;
+    void set(const std::map<TKStruct, TValueStruct>& values, std::pmr::memory_resource* resource) noexcept;
+    void set(const std::map<TKStruct, TValueStruct*>& values, std::pmr::memory_resource* resource) noexcept;
     // Set the map as std::unordered_map
-    void set(const std::unordered_map<TKStruct, TValueStruct>& values, pmr::memory_resource* resource) noexcept;
-    void set(const std::unordered_map<TKStruct, TValueStruct*>& values, pmr::memory_resource* resource) noexcept;
+    void set(const std::unordered_map<TKStruct, TValueStruct>& values, std::pmr::memory_resource* resource) noexcept;
+    void set(const std::unordered_map<TKStruct, TValueStruct*>& values, std::pmr::memory_resource* resource) noexcept;
 
-    // Get the map as pmr::map
-    void get(pmr::map<TKStruct, TValueStruct>& values, pmr::memory_resource* resource = nullptr) const noexcept;
-    void get(pmr::map<TKStruct, TValueStruct*>& values, pmr::memory_resource* resource = nullptr) const noexcept;
-    // Get the map as pmr::unordered_map
-    void get(pmr::unordered_map<TKStruct, TValueStruct>& values, pmr::memory_resource* resource = nullptr) const noexcept;
-    void get(pmr::unordered_map<TKStruct, TValueStruct*>& values, pmr::memory_resource* resource = nullptr) const noexcept;
+    // Get the map as std::pmr::map
+    void get(std::pmr::map<TKStruct, TValueStruct>& values, std::pmr::memory_resource* resource = nullptr) const noexcept;
+    void get(std::pmr::map<TKStruct, TValueStruct*>& values, std::pmr::memory_resource* resource = nullptr) const noexcept;
+    // Get the map as std::pmr::unordered_map
+    void get(std::pmr::unordered_map<TKStruct, TValueStruct>& values, std::pmr::memory_resource* resource = nullptr) const noexcept;
+    void get(std::pmr::unordered_map<TKStruct, TValueStruct*>& values, std::pmr::memory_resource* resource = nullptr) const noexcept;
 
-    // Set the map as pmr::map
-    void set(const pmr::map<TKStruct, TValueStruct>& values, pmr::memory_resource* resource) noexcept;
-    void set(const pmr::map<TKStruct, TValueStruct*>& values, pmr::memory_resource* resource) noexcept;
-    // Set the map as pmr::unordered_map
-    void set(const pmr::unordered_map<TKStruct, TValueStruct>& values, pmr::memory_resource* resource) noexcept;
-    void set(const pmr::unordered_map<TKStruct, TValueStruct*>& values, pmr::memory_resource* resource) noexcept;
+    // Set the map as std::pmr::map
+    void set(const std::pmr::map<TKStruct, TValueStruct>& values, std::pmr::memory_resource* resource) noexcept;
+    void set(const std::pmr::map<TKStruct, TValueStruct*>& values, std::pmr::memory_resource* resource) noexcept;
+    // Set the map as std::pmr::unordered_map
+    void set(const std::pmr::unordered_map<TKStruct, TValueStruct>& values, std::pmr::memory_resource* resource) noexcept;
+    void set(const std::pmr::unordered_map<TKStruct, TValueStruct*>& values, std::pmr::memory_resource* resource) noexcept;
+
+#if defined(USING_BTREE_MAP)
+    // Get the map as FBE::map (btree_map with std allocator)
+    void get(FBE::map<TKStruct, TValueStruct>& values, std::pmr::memory_resource* resource = nullptr) const noexcept;
+    void get(FBE::map<TKStruct, TValueStruct*>& values, std::pmr::memory_resource* resource = nullptr) const noexcept;
+    // Get the map as FBE::pmr::map (btree_map with pmr allocator)
+    void get(FBE::pmr::map<TKStruct, TValueStruct>& values, std::pmr::memory_resource* resource = nullptr) const noexcept;
+    void get(FBE::pmr::map<TKStruct, TValueStruct*>& values, std::pmr::memory_resource* resource = nullptr) const noexcept;
+    // Set the map as FBE::map (btree_map with std allocator)
+    void set(const FBE::map<TKStruct, TValueStruct>& values, std::pmr::memory_resource* resource) noexcept;
+    void set(const FBE::map<TKStruct, TValueStruct*>& values, std::pmr::memory_resource* resource) noexcept;
+    // Set the map as FBE::pmr::map (btree_map with pmr allocator)
+    void set(const FBE::pmr::map<TKStruct, TValueStruct>& values, std::pmr::memory_resource* resource) noexcept;
+    void set(const FBE::pmr::map<TKStruct, TValueStruct*>& values, std::pmr::memory_resource* resource) noexcept;
+#endif
 
 private:
     FBEBuffer& _buffer;
@@ -320,7 +335,7 @@ public:
     void get_end(size_t fbe_begin) const noexcept;
 
     // Get the optional value
-    void get(std::optional<TStruct>& opt, pmr::memory_resource* resource) noexcept;
+    void get(std::optional<TStruct>& opt, std::pmr::memory_resource* resource) noexcept;
 
     // Set the optional value (begin phase)
     size_t set_begin(bool has_value);
@@ -328,7 +343,7 @@ public:
     void set_end(size_t fbe_begin);
 
     // Set the optional value
-    void set(const std::optional<TStruct>& opt, pmr::memory_resource* resource);
+    void set(const std::optional<TStruct>& opt, std::pmr::memory_resource* resource);
 
 private:
     FBEBuffer& _buffer;

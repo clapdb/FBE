@@ -24,7 +24,7 @@
 
 namespace arena_common_pmr {
 using namespace FBE;
-using allocator_type = pmr::polymorphic_allocator<char>;
+using allocator_type = std::pmr::polymorphic_allocator<char>;
 } // namespace arena_common_pmr
 
 namespace FBE {
@@ -110,15 +110,15 @@ struct Expression
 {
     ArenaManagedCreateOnlyTag;
 
-    pmr::vector<ArenaString> keys;
-    pmr::vector<::arena_common_pmr::Alias> aliases;
-    pmr::map<int32_t, ::arena_common_pmr::Alias> alias_int;
+    std::pmr::vector<ArenaString> keys;
+    std::pmr::vector<::arena_common_pmr::Alias> aliases;
+    FBE::pmr::map<int32_t, ::arena_common_pmr::Alias> alias_int;
 
     size_t fbe_type() const noexcept { return 2; }
 
     Expression();
     explicit Expression(allocator_type alloc);
-    Expression(const pmr::vector<ArenaString>& arg_keys, const pmr::vector<::arena_common_pmr::Alias>& arg_aliases, const pmr::map<int32_t, ::arena_common_pmr::Alias>& arg_alias_int);
+    Expression(const std::pmr::vector<ArenaString>& arg_keys, const std::pmr::vector<::arena_common_pmr::Alias>& arg_aliases, const FBE::pmr::map<int32_t, ::arena_common_pmr::Alias>& arg_alias_int);
     Expression(const Expression& other) = default;
     Expression(Expression&& other) = default;
     ~Expression() = default;

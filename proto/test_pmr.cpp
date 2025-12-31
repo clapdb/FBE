@@ -1274,7 +1274,7 @@ StructVector::StructVector([[maybe_unused]] allocator_type alloc)
     , f10(alloc)
 {}
 
-StructVector::StructVector(const pmr::vector<uint8_t>& arg_f1, const pmr::vector<std::optional<uint8_t>>& arg_f2, const pmr::vector<FBE::pmr_buffer_t>& arg_f3, const pmr::vector<std::optional<FBE::pmr_buffer_t>>& arg_f4, const pmr::vector<::test_pmr::EnumSimple>& arg_f5, const pmr::vector<std::optional<::test_pmr::EnumSimple>>& arg_f6, const pmr::vector<::test_pmr::FlagsSimple>& arg_f7, const pmr::vector<std::optional<::test_pmr::FlagsSimple>>& arg_f8, const pmr::vector<::test_pmr::StructSimple>& arg_f9, const pmr::vector<std::optional<::test_pmr::StructSimple>>& arg_f10)
+StructVector::StructVector(const std::pmr::vector<uint8_t>& arg_f1, const std::pmr::vector<std::optional<uint8_t>>& arg_f2, const std::pmr::vector<FBE::pmr_buffer_t>& arg_f3, const std::pmr::vector<std::optional<FBE::pmr_buffer_t>>& arg_f4, const std::pmr::vector<::test_pmr::EnumSimple>& arg_f5, const std::pmr::vector<std::optional<::test_pmr::EnumSimple>>& arg_f6, const std::pmr::vector<::test_pmr::FlagsSimple>& arg_f7, const std::pmr::vector<std::optional<::test_pmr::FlagsSimple>>& arg_f8, const std::pmr::vector<::test_pmr::StructSimple>& arg_f9, const std::pmr::vector<std::optional<::test_pmr::StructSimple>>& arg_f10)
     : f1(arg_f1)
     , f2(arg_f2)
     , f3(arg_f3)
@@ -1461,7 +1461,7 @@ StructList::StructList([[maybe_unused]] allocator_type alloc)
     , f10(alloc)
 {}
 
-StructList::StructList(const pmr::list<uint8_t>& arg_f1, const pmr::list<std::optional<uint8_t>>& arg_f2, const pmr::list<FBE::pmr_buffer_t>& arg_f3, const pmr::list<std::optional<FBE::pmr_buffer_t>>& arg_f4, const pmr::list<::test_pmr::EnumSimple>& arg_f5, const pmr::list<std::optional<::test_pmr::EnumSimple>>& arg_f6, const pmr::list<::test_pmr::FlagsSimple>& arg_f7, const pmr::list<std::optional<::test_pmr::FlagsSimple>>& arg_f8, const pmr::list<::test_pmr::StructSimple>& arg_f9, const pmr::list<std::optional<::test_pmr::StructSimple>>& arg_f10)
+StructList::StructList(const std::pmr::list<uint8_t>& arg_f1, const std::pmr::list<std::optional<uint8_t>>& arg_f2, const std::pmr::list<FBE::pmr_buffer_t>& arg_f3, const std::pmr::list<std::optional<FBE::pmr_buffer_t>>& arg_f4, const std::pmr::list<::test_pmr::EnumSimple>& arg_f5, const std::pmr::list<std::optional<::test_pmr::EnumSimple>>& arg_f6, const std::pmr::list<::test_pmr::FlagsSimple>& arg_f7, const std::pmr::list<std::optional<::test_pmr::FlagsSimple>>& arg_f8, const std::pmr::list<::test_pmr::StructSimple>& arg_f9, const std::pmr::list<std::optional<::test_pmr::StructSimple>>& arg_f10)
     : f1(arg_f1)
     , f2(arg_f2)
     , f3(arg_f3)
@@ -1636,7 +1636,7 @@ StructSet::StructSet([[maybe_unused]] allocator_type alloc)
     , f4(alloc)
 {}
 
-StructSet::StructSet(const pmr::set<uint8_t>& arg_f1, const pmr::set<::test_pmr::EnumSimple>& arg_f2, const pmr::set<::test_pmr::FlagsSimple>& arg_f3, const pmr::set<::test_pmr::StructSimple>& arg_f4)
+StructSet::StructSet(const FBE::pmr::set<uint8_t>& arg_f1, const FBE::pmr::set<::test_pmr::EnumSimple>& arg_f2, const FBE::pmr::set<::test_pmr::FlagsSimple>& arg_f3, const FBE::pmr::set<::test_pmr::StructSimple>& arg_f4)
     : f1(arg_f1)
     , f2(arg_f2)
     , f3(arg_f3)
@@ -1745,7 +1745,7 @@ StructMap::StructMap([[maybe_unused]] allocator_type alloc)
     , f10(alloc)
 {}
 
-StructMap::StructMap(const pmr::map<int32_t, uint8_t>& arg_f1, const pmr::map<int32_t, std::optional<uint8_t>>& arg_f2, const pmr::map<int32_t, FBE::pmr_buffer_t>& arg_f3, const pmr::map<int32_t, std::optional<FBE::pmr_buffer_t>>& arg_f4, const pmr::map<int32_t, ::test_pmr::EnumSimple>& arg_f5, const pmr::map<int32_t, std::optional<::test_pmr::EnumSimple>>& arg_f6, const pmr::map<int32_t, ::test_pmr::FlagsSimple>& arg_f7, const pmr::map<int32_t, std::optional<::test_pmr::FlagsSimple>>& arg_f8, const pmr::map<int32_t, ::test_pmr::StructSimple>& arg_f9, const pmr::map<int32_t, std::optional<::test_pmr::StructSimple>>& arg_f10)
+StructMap::StructMap(const FBE::pmr::map<int32_t, uint8_t>& arg_f1, const FBE::pmr::map<int32_t, std::optional<uint8_t>>& arg_f2, const FBE::pmr::map<int32_t, FBE::pmr_buffer_t>& arg_f3, const FBE::pmr::map<int32_t, std::optional<FBE::pmr_buffer_t>>& arg_f4, const FBE::pmr::map<int32_t, ::test_pmr::EnumSimple>& arg_f5, const FBE::pmr::map<int32_t, std::optional<::test_pmr::EnumSimple>>& arg_f6, const FBE::pmr::map<int32_t, ::test_pmr::FlagsSimple>& arg_f7, const FBE::pmr::map<int32_t, std::optional<::test_pmr::FlagsSimple>>& arg_f8, const FBE::pmr::map<int32_t, ::test_pmr::StructSimple>& arg_f9, const FBE::pmr::map<int32_t, std::optional<::test_pmr::StructSimple>>& arg_f10)
     : f1(arg_f1)
     , f2(arg_f2)
     , f3(arg_f3)
@@ -1952,7 +1952,7 @@ StructHash::StructHash([[maybe_unused]] allocator_type alloc)
     , f10(alloc)
 {}
 
-StructHash::StructHash(const pmr::unordered_map<ArenaString, uint8_t>& arg_f1, const pmr::unordered_map<ArenaString, std::optional<uint8_t>>& arg_f2, const pmr::unordered_map<ArenaString, FBE::pmr_buffer_t>& arg_f3, const pmr::unordered_map<ArenaString, std::optional<FBE::pmr_buffer_t>>& arg_f4, const pmr::unordered_map<ArenaString, ::test_pmr::EnumSimple>& arg_f5, const pmr::unordered_map<ArenaString, std::optional<::test_pmr::EnumSimple>>& arg_f6, const pmr::unordered_map<ArenaString, ::test_pmr::FlagsSimple>& arg_f7, const pmr::unordered_map<ArenaString, std::optional<::test_pmr::FlagsSimple>>& arg_f8, const pmr::unordered_map<ArenaString, ::test_pmr::StructSimple>& arg_f9, const pmr::unordered_map<ArenaString, std::optional<::test_pmr::StructSimple>>& arg_f10)
+StructHash::StructHash(const std::pmr::unordered_map<ArenaString, uint8_t>& arg_f1, const std::pmr::unordered_map<ArenaString, std::optional<uint8_t>>& arg_f2, const std::pmr::unordered_map<ArenaString, FBE::pmr_buffer_t>& arg_f3, const std::pmr::unordered_map<ArenaString, std::optional<FBE::pmr_buffer_t>>& arg_f4, const std::pmr::unordered_map<ArenaString, ::test_pmr::EnumSimple>& arg_f5, const std::pmr::unordered_map<ArenaString, std::optional<::test_pmr::EnumSimple>>& arg_f6, const std::pmr::unordered_map<ArenaString, ::test_pmr::FlagsSimple>& arg_f7, const std::pmr::unordered_map<ArenaString, std::optional<::test_pmr::FlagsSimple>>& arg_f8, const std::pmr::unordered_map<ArenaString, ::test_pmr::StructSimple>& arg_f9, const std::pmr::unordered_map<ArenaString, std::optional<::test_pmr::StructSimple>>& arg_f10)
     : f1(arg_f1)
     , f2(arg_f2)
     , f3(arg_f3)
@@ -2143,7 +2143,7 @@ StructHashEx::StructHashEx([[maybe_unused]] allocator_type alloc)
     , f2(alloc)
 {}
 
-StructHashEx::StructHashEx(const pmr::unordered_map<::test_pmr::StructSimple, ::test_pmr::StructNested>& arg_f1, const pmr::unordered_map<::test_pmr::StructSimple, std::optional<::test_pmr::StructNested>>& arg_f2)
+StructHashEx::StructHashEx(const std::pmr::unordered_map<::test_pmr::StructSimple, ::test_pmr::StructNested>& arg_f1, const std::pmr::unordered_map<::test_pmr::StructSimple, std::optional<::test_pmr::StructNested>>& arg_f2)
     : f1(arg_f1)
     , f2(arg_f2)
 {}
@@ -2428,7 +2428,7 @@ VectorFieldNamedString::VectorFieldNamedString([[maybe_unused]] allocator_type a
     : string(alloc)
 {}
 
-VectorFieldNamedString::VectorFieldNamedString(const pmr::vector<ArenaString>& arg_string)
+VectorFieldNamedString::VectorFieldNamedString(const std::pmr::vector<ArenaString>& arg_string)
     : string(arg_string)
 {}
 

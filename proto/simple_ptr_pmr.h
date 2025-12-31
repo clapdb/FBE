@@ -24,7 +24,7 @@
 
 namespace simple_pmr {
 using namespace FBE;
-using allocator_type = pmr::polymorphic_allocator<char>;
+using allocator_type = std::pmr::polymorphic_allocator<char>;
 } // namespace simple_pmr
 
 namespace FBE {
@@ -42,16 +42,16 @@ struct Simple : FBE::Base
     ArenaString info;
     ::simple_pmr::Simple* simple;
     int32_t depth;
-    pmr::vector<::simple_pmr::Simple*> spv;
-    pmr::vector<::simple_pmr::Simple> sv;
-    pmr::map<int32_t, ::simple_pmr::Simple*> spm;
-    pmr::map<int32_t, ::simple_pmr::Simple> sm;
+    std::pmr::vector<::simple_pmr::Simple*> spv;
+    std::pmr::vector<::simple_pmr::Simple> sv;
+    FBE::pmr::map<int32_t, ::simple_pmr::Simple*> spm;
+    FBE::pmr::map<int32_t, ::simple_pmr::Simple> sm;
 
     size_t fbe_type() const noexcept { return 1; }
 
     Simple();
     explicit Simple(allocator_type alloc);
-    Simple(const ArenaString& arg_info, std::unique_ptr<::simple_pmr::Simple> arg_simple, int32_t arg_depth, pmr::vector<std::unique_ptr<::simple_pmr::Simple>> arg_spv, pmr::vector<::simple_pmr::Simple> arg_sv, pmr::map<int32_t, std::unique_ptr<::simple_pmr::Simple>> arg_spm, pmr::map<int32_t, ::simple_pmr::Simple> arg_sm);
+    Simple(const ArenaString& arg_info, std::unique_ptr<::simple_pmr::Simple> arg_simple, int32_t arg_depth, std::pmr::vector<std::unique_ptr<::simple_pmr::Simple>> arg_spv, std::pmr::vector<::simple_pmr::Simple> arg_sv, FBE::pmr::map<int32_t, std::unique_ptr<::simple_pmr::Simple>> arg_spm, FBE::pmr::map<int32_t, ::simple_pmr::Simple> arg_sm);
     Simple(const Simple& other) = default;
     Simple(Simple&& other) noexcept;
     ~Simple() override;

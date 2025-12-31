@@ -38,12 +38,12 @@ struct Item
     ::arena_common::Optr optr;
     ::arena_common::Alias alias;
     FastVec<::arena_common::Expression> expressions;
-    std::map<int32_t, ::arena_common::Alias> aliases_int;
+    FBE::map<int32_t, ::arena_common::Alias> aliases_int;
 
     size_t fbe_type() const noexcept { return 1; }
 
     Item();
-    Item(const ::arena_common::Optr& arg_optr, const ::arena_common::Alias& arg_alias, const FastVec<::arena_common::Expression>& arg_expressions, const std::map<int32_t, ::arena_common::Alias>& arg_aliases_int);
+    Item(const ::arena_common::Optr& arg_optr, const ::arena_common::Alias& arg_alias, const FastVec<::arena_common::Expression>& arg_expressions, const FBE::map<int32_t, ::arena_common::Alias>& arg_aliases_int);
     Item(const Item& other) = default;
     Item(Item&& other) = default;
     ~Item() = default;

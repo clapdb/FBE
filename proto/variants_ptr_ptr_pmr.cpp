@@ -672,7 +672,7 @@ ValueContainer::ValueContainer([[maybe_unused]] allocator_type alloc)
     , vm(alloc)
 {}
 
-ValueContainer::ValueContainer(pmr::vector<::variants_ptr_pmr::V> arg_vv, pmr::unordered_map<int32_t, ::variants_ptr_pmr::V> arg_vm)
+ValueContainer::ValueContainer(std::pmr::vector<::variants_ptr_pmr::V> arg_vv, std::pmr::unordered_map<int32_t, ::variants_ptr_pmr::V> arg_vm)
     : vv(std::move(arg_vv))
     , vm(std::move(arg_vm))
 {}
@@ -773,7 +773,7 @@ Scalar1Container::Scalar1Container([[maybe_unused]] allocator_type alloc)
     : s(alloc)
 {}
 
-Scalar1Container::Scalar1Container(pmr::unordered_map<::variants_ptr_pmr::Scalar1, ::variants_ptr_pmr::Expr> arg_s)
+Scalar1Container::Scalar1Container(std::pmr::unordered_map<::variants_ptr_pmr::Scalar1, ::variants_ptr_pmr::Expr> arg_s)
     : s(std::move(arg_s))
 {}
 

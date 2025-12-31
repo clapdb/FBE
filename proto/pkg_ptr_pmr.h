@@ -26,7 +26,7 @@
 
 namespace pkg_pmr {
 using namespace FBE;
-using allocator_type = pmr::polymorphic_allocator<char>;
+using allocator_type = std::pmr::polymorphic_allocator<char>;
 } // namespace pkg_pmr
 
 namespace FBE {
@@ -94,14 +94,14 @@ struct Detail : FBE::Base
 {
     ArenaManagedCreateOnlyTag;
 
-    pmr::vector<::osa_pmr::Extra> extrav;
-    pmr::map<int32_t, ::osa_pmr::Extra> extram;
+    std::pmr::vector<::osa_pmr::Extra> extrav;
+    FBE::pmr::map<int32_t, ::osa_pmr::Extra> extram;
 
     size_t fbe_type() const noexcept { return 2; }
 
     Detail();
     explicit Detail(allocator_type alloc);
-    Detail(pmr::vector<::osa_pmr::Extra> arg_extrav, pmr::map<int32_t, ::osa_pmr::Extra> arg_extram);
+    Detail(std::pmr::vector<::osa_pmr::Extra> arg_extrav, FBE::pmr::map<int32_t, ::osa_pmr::Extra> arg_extram);
     Detail(const Detail& other) = default;
     Detail(Detail&& other) noexcept;
     ~Detail() override;

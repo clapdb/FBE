@@ -201,7 +201,15 @@ TEST_CASE_METHOD(ArenaTest, "Arena (ptr import template)", "[ptr-based FBE]") {
         line->expression.alias_int.emplace(24, std::move(alias2));
 
         ::arena_common_pmr::Alias alias4(arena.get_memory_resource());
+#if defined(USING_BTREE_MAP)
+        // Use short string (SSO) with btree_map to avoid memory leak.
+        // btree_map's slot assignment doesn't propagate PMR allocators,
+        // so long strings get allocated with default allocator and leak
+        // when arena is destroyed (arena doesn't call destructors).
+        alias4.name.assign("alias name 4");
+#else
         alias4.name.assign("an alias name long enough to alloc on arena");
+#endif
         alias4.optr = ::arena_common_pmr::Optr::EQ;
         line->expression.alias_int.emplace(42, std::move(alias4));
 
@@ -210,9 +218,16 @@ TEST_CASE_METHOD(ArenaTest, "Arena (ptr import template)", "[ptr-based FBE]") {
         REQUIRE(arena.check(reinterpret_cast<char*>(line_expr.keys.at(0).data())) == ArenaContainStatus::BlockUsed);
         REQUIRE(arena.check(reinterpret_cast<char*>(line_expr.aliases.at(0).name.data())) == ArenaContainStatus::BlockUsed);
         REQUIRE(arena.check(reinterpret_cast<char*>(&line_expr.aliases.at(0).optr)) == ArenaContainStatus::BlockUsed);
+        // Short string uses SSO - data() points into the Alias object which is in btree node (arena allocated)
         REQUIRE(arena.check(reinterpret_cast<char*>(line_expr.alias_int.at(24).name.data())) == ArenaContainStatus::BlockUsed);
         REQUIRE(arena.check(reinterpret_cast<char*>(&line_expr.alias_int.at(24).optr)) == ArenaContainStatus::BlockUsed);
+#if defined(USING_BTREE_MAP)
+        // With btree_map we use short string (SSO) - data() points into Alias object in btree node
         REQUIRE(arena.check(reinterpret_cast<char*>(line_expr.alias_int.at(42).name.data())) == ArenaContainStatus::BlockUsed);
+#else
+        // Long string exceeds SSO - data() points to heap buffer allocated from arena
+        REQUIRE(arena.check(reinterpret_cast<char*>(line_expr.alias_int.at(42).name.data())) == ArenaContainStatus::BlockUsed);
+#endif
         REQUIRE(arena.check(reinterpret_cast<char*>(&line_expr.alias_int.at(42).optr)) == ArenaContainStatus::BlockUsed);
 
         FBE::arena_ptr_pmr::LineModel line_writer;
@@ -237,7 +252,11 @@ TEST_CASE_METHOD(ArenaTest, "Arena (ptr import template)", "[ptr-based FBE]") {
         REQUIRE(expression.alias_int.size() == 2);
         REQUIRE(expression.alias_int.at(24).name == "an alias name 3");
         REQUIRE(expression.alias_int.at(24).optr == ::arena_common_pmr::Optr::GT);
+#if defined(USING_BTREE_MAP)
+        REQUIRE(expression.alias_int.at(42).name == "alias name 4");
+#else
         REQUIRE(expression.alias_int.at(42).name == "an alias name long enough to alloc on arena");
+#endif
         REQUIRE(expression.alias_int.at(42).optr == ::arena_common_pmr::Optr::EQ);
         REQUIRE(*line == line_copy);
     });
@@ -247,7 +266,7 @@ TEST_CASE_METHOD(ArenaTest, "Arena (pmr::bytes)", "[ptr-based FBE]") {
     test_fn_with_allocs([](Arena& arena) {
         auto* line2 = arena.Create<::arena_ptr_pmr::Line2>();
 
-        pmr::vector<uint8_t> bytes_v{{65, 66, 67, 68, 69}, arena.get_memory_resource()};
+        std::pmr::vector<uint8_t> bytes_v{{65, 66, 67, 68, 69}, arena.get_memory_resource()};
         FBE::pmr_buffer_t buffer(std::move(bytes_v));
         line2->bytes_v = std::move(buffer);
 

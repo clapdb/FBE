@@ -1450,7 +1450,7 @@ StructSet::StructSet()
     , f4()
 {}
 
-StructSet::StructSet(const std::set<uint8_t>& arg_f1, const std::set<::test::EnumSimple>& arg_f2, const std::set<::test::FlagsSimple>& arg_f3, const std::set<::test::StructSimple>& arg_f4)
+StructSet::StructSet(const FBE::set<uint8_t>& arg_f1, const FBE::set<::test::EnumSimple>& arg_f2, const FBE::set<::test::FlagsSimple>& arg_f3, const FBE::set<::test::StructSimple>& arg_f4)
     : f1(arg_f1)
     , f2(arg_f2)
     , f3(arg_f3)
@@ -1546,7 +1546,7 @@ StructMap::StructMap()
     , f10()
 {}
 
-StructMap::StructMap(const std::map<int32_t, uint8_t>& arg_f1, const std::map<int32_t, std::optional<uint8_t>>& arg_f2, const std::map<int32_t, FBE::buffer_t>& arg_f3, const std::map<int32_t, std::optional<FBE::buffer_t>>& arg_f4, const std::map<int32_t, ::test::EnumSimple>& arg_f5, const std::map<int32_t, std::optional<::test::EnumSimple>>& arg_f6, const std::map<int32_t, ::test::FlagsSimple>& arg_f7, const std::map<int32_t, std::optional<::test::FlagsSimple>>& arg_f8, const std::map<int32_t, ::test::StructSimple>& arg_f9, const std::map<int32_t, std::optional<::test::StructSimple>>& arg_f10)
+StructMap::StructMap(const FBE::map<int32_t, uint8_t>& arg_f1, const FBE::map<int32_t, std::optional<uint8_t>>& arg_f2, const FBE::map<int32_t, FBE::buffer_t>& arg_f3, const FBE::map<int32_t, std::optional<FBE::buffer_t>>& arg_f4, const FBE::map<int32_t, ::test::EnumSimple>& arg_f5, const FBE::map<int32_t, std::optional<::test::EnumSimple>>& arg_f6, const FBE::map<int32_t, ::test::FlagsSimple>& arg_f7, const FBE::map<int32_t, std::optional<::test::FlagsSimple>>& arg_f8, const FBE::map<int32_t, ::test::StructSimple>& arg_f9, const FBE::map<int32_t, std::optional<::test::StructSimple>>& arg_f10)
     : f1(arg_f1)
     , f2(arg_f2)
     , f3(arg_f3)

@@ -83,13 +83,13 @@ void FieldModelPMRPtr_pkg_Info::get_end(size_t fbe_begin) const noexcept
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModelPMRPtr_pkg_Info::get(::pkg_pmr::Info** fbe_value, pmr::memory_resource* resource) noexcept
+void FieldModelPMRPtr_pkg_Info::get(::pkg_pmr::Info** fbe_value, std::pmr::memory_resource* resource) noexcept
 {
     size_t fbe_begin = get_begin();
     if (fbe_begin == 0)
         return;
 
-    pmr::polymorphic_allocator<char> allocator{resource};
+    std::pmr::polymorphic_allocator<char> allocator{resource};
     auto* buffer = allocator.allocate(sizeof(FieldModelPMR_pkg_Info));
     ptr = new (buffer) FieldModelPMR_pkg_Info(_buffer, 0);
 
@@ -129,14 +129,14 @@ void FieldModelPMRPtr_pkg_Info::set_end(size_t fbe_begin)
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModelPMRPtr_pkg_Info::set(const ::pkg_pmr::Info* fbe_value, pmr::memory_resource* resource) noexcept
+void FieldModelPMRPtr_pkg_Info::set(const ::pkg_pmr::Info* fbe_value, std::pmr::memory_resource* resource) noexcept
 {
     size_t fbe_begin = set_begin(fbe_value != nullptr);
     if (fbe_begin == 0)
         return;
 
     if (fbe_value != nullptr) {
-        pmr::polymorphic_allocator<char> allocator{resource};
+        std::pmr::polymorphic_allocator<char> allocator{resource};
         auto* buffer = allocator.allocate(sizeof(FieldModelPMR_pkg_Info));
         ptr = new (buffer) FieldModelPMR_pkg_Info(_buffer, 0);
         variant_set_value(ptr, *fbe_value, resource);
@@ -264,7 +264,7 @@ void FieldModelPMR_pkg_Info::get_end(size_t fbe_begin) const noexcept
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModelPMR_pkg_Info::get(::FBE::Base& fbe_value, pmr::memory_resource* resource) noexcept
+void FieldModelPMR_pkg_Info::get(::FBE::Base& fbe_value, std::pmr::memory_resource* resource) noexcept
 {
     size_t fbe_begin = get_begin();
     if (fbe_begin == 0)
@@ -275,7 +275,7 @@ void FieldModelPMR_pkg_Info::get(::FBE::Base& fbe_value, pmr::memory_resource* r
     get_end(fbe_begin);
 }
 
-void FieldModelPMR_pkg_Info::get_fields([[maybe_unused]] ::FBE::Base& base_fbe_value, [[maybe_unused]] size_t fbe_struct_size, pmr::memory_resource* resource) noexcept
+void FieldModelPMR_pkg_Info::get_fields([[maybe_unused]] ::FBE::Base& base_fbe_value, [[maybe_unused]] size_t fbe_struct_size, std::pmr::memory_resource* resource) noexcept
 {
     ::pkg_pmr::Info& fbe_value = static_cast<::pkg_pmr::Info&>(base_fbe_value);
     size_t fbe_current_size = 4 + 4;
@@ -338,7 +338,7 @@ void FieldModelPMR_pkg_Info::set_end(size_t fbe_begin)
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModelPMR_pkg_Info::set(const ::FBE::Base& fbe_value, pmr::memory_resource* resource) noexcept
+void FieldModelPMR_pkg_Info::set(const ::FBE::Base& fbe_value, std::pmr::memory_resource* resource) noexcept
 {
     size_t fbe_begin = set_begin();
     if (fbe_begin == 0)
@@ -348,7 +348,7 @@ void FieldModelPMR_pkg_Info::set(const ::FBE::Base& fbe_value, pmr::memory_resou
     set_end(fbe_begin);
 }
 
-void FieldModelPMR_pkg_Info::set_fields([[maybe_unused]] const ::FBE::Base& base_fbe_value, pmr::memory_resource* resource) noexcept
+void FieldModelPMR_pkg_Info::set_fields([[maybe_unused]] const ::FBE::Base& base_fbe_value, std::pmr::memory_resource* resource) noexcept
 {
     [[maybe_unused]] const ::pkg_pmr::Info& fbe_value = static_cast<const ::pkg_pmr::Info&>(base_fbe_value);
     info.set(fbe_value.info, resource);
@@ -385,7 +385,7 @@ size_t InfoModel::create_end(size_t fbe_begin)
     return fbe_full_size;
 }
 
-size_t InfoModel::serialize(const ::pkg_pmr::Info& value, pmr::memory_resource* resource)
+size_t InfoModel::serialize(const ::pkg_pmr::Info& value, std::pmr::memory_resource* resource)
 {
     size_t fbe_begin = create_begin();
     model.set(value, resource);
@@ -393,7 +393,7 @@ size_t InfoModel::serialize(const ::pkg_pmr::Info& value, pmr::memory_resource* 
     return fbe_full_size;
 }
 
-size_t InfoModel::deserialize(::pkg_pmr::Info& value, pmr::memory_resource* resource) noexcept
+size_t InfoModel::deserialize(::pkg_pmr::Info& value, std::pmr::memory_resource* resource) noexcept
 {
     if ((this->buffer().offset() + model.fbe_offset() - 4) > this->buffer().size())
         return 0;
@@ -483,13 +483,13 @@ void FieldModelPMRPtr_pkg_Detail::get_end(size_t fbe_begin) const noexcept
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModelPMRPtr_pkg_Detail::get(::pkg_pmr::Detail** fbe_value, pmr::memory_resource* resource) noexcept
+void FieldModelPMRPtr_pkg_Detail::get(::pkg_pmr::Detail** fbe_value, std::pmr::memory_resource* resource) noexcept
 {
     size_t fbe_begin = get_begin();
     if (fbe_begin == 0)
         return;
 
-    pmr::polymorphic_allocator<char> allocator{resource};
+    std::pmr::polymorphic_allocator<char> allocator{resource};
     auto* buffer = allocator.allocate(sizeof(FieldModelPMR_pkg_Detail));
     ptr = new (buffer) FieldModelPMR_pkg_Detail(_buffer, 0);
 
@@ -529,14 +529,14 @@ void FieldModelPMRPtr_pkg_Detail::set_end(size_t fbe_begin)
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModelPMRPtr_pkg_Detail::set(const ::pkg_pmr::Detail* fbe_value, pmr::memory_resource* resource) noexcept
+void FieldModelPMRPtr_pkg_Detail::set(const ::pkg_pmr::Detail* fbe_value, std::pmr::memory_resource* resource) noexcept
 {
     size_t fbe_begin = set_begin(fbe_value != nullptr);
     if (fbe_begin == 0)
         return;
 
     if (fbe_value != nullptr) {
-        pmr::polymorphic_allocator<char> allocator{resource};
+        std::pmr::polymorphic_allocator<char> allocator{resource};
         auto* buffer = allocator.allocate(sizeof(FieldModelPMR_pkg_Detail));
         ptr = new (buffer) FieldModelPMR_pkg_Detail(_buffer, 0);
         variant_set_value(ptr, *fbe_value, resource);
@@ -646,7 +646,7 @@ void FieldModelPMR_pkg_Detail::get_end(size_t fbe_begin) const noexcept
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModelPMR_pkg_Detail::get(::FBE::Base& fbe_value, pmr::memory_resource* resource) noexcept
+void FieldModelPMR_pkg_Detail::get(::FBE::Base& fbe_value, std::pmr::memory_resource* resource) noexcept
 {
     size_t fbe_begin = get_begin();
     if (fbe_begin == 0)
@@ -657,7 +657,7 @@ void FieldModelPMR_pkg_Detail::get(::FBE::Base& fbe_value, pmr::memory_resource*
     get_end(fbe_begin);
 }
 
-void FieldModelPMR_pkg_Detail::get_fields([[maybe_unused]] ::FBE::Base& base_fbe_value, [[maybe_unused]] size_t fbe_struct_size, pmr::memory_resource* resource) noexcept
+void FieldModelPMR_pkg_Detail::get_fields([[maybe_unused]] ::FBE::Base& base_fbe_value, [[maybe_unused]] size_t fbe_struct_size, std::pmr::memory_resource* resource) noexcept
 {
     ::pkg_pmr::Detail& fbe_value = static_cast<::pkg_pmr::Detail&>(base_fbe_value);
     size_t fbe_current_size = 4 + 4;
@@ -704,7 +704,7 @@ void FieldModelPMR_pkg_Detail::set_end(size_t fbe_begin)
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModelPMR_pkg_Detail::set(const ::FBE::Base& fbe_value, pmr::memory_resource* resource) noexcept
+void FieldModelPMR_pkg_Detail::set(const ::FBE::Base& fbe_value, std::pmr::memory_resource* resource) noexcept
 {
     size_t fbe_begin = set_begin();
     if (fbe_begin == 0)
@@ -714,7 +714,7 @@ void FieldModelPMR_pkg_Detail::set(const ::FBE::Base& fbe_value, pmr::memory_res
     set_end(fbe_begin);
 }
 
-void FieldModelPMR_pkg_Detail::set_fields([[maybe_unused]] const ::FBE::Base& base_fbe_value, pmr::memory_resource* resource) noexcept
+void FieldModelPMR_pkg_Detail::set_fields([[maybe_unused]] const ::FBE::Base& base_fbe_value, std::pmr::memory_resource* resource) noexcept
 {
     [[maybe_unused]] const ::pkg_pmr::Detail& fbe_value = static_cast<const ::pkg_pmr::Detail&>(base_fbe_value);
     extrav.set(fbe_value.extrav, resource);
@@ -749,7 +749,7 @@ size_t DetailModel::create_end(size_t fbe_begin)
     return fbe_full_size;
 }
 
-size_t DetailModel::serialize(const ::pkg_pmr::Detail& value, pmr::memory_resource* resource)
+size_t DetailModel::serialize(const ::pkg_pmr::Detail& value, std::pmr::memory_resource* resource)
 {
     size_t fbe_begin = create_begin();
     model.set(value, resource);
@@ -757,7 +757,7 @@ size_t DetailModel::serialize(const ::pkg_pmr::Detail& value, pmr::memory_resour
     return fbe_full_size;
 }
 
-size_t DetailModel::deserialize(::pkg_pmr::Detail& value, pmr::memory_resource* resource) noexcept
+size_t DetailModel::deserialize(::pkg_pmr::Detail& value, std::pmr::memory_resource* resource) noexcept
 {
     if ((this->buffer().offset() + model.fbe_offset() - 4) > this->buffer().size())
         return 0;

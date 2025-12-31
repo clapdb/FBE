@@ -27,7 +27,7 @@
 
 namespace template_variant_pmr {
 using namespace FBE;
-using allocator_type = pmr::polymorphic_allocator<char>;
+using allocator_type = std::pmr::polymorphic_allocator<char>;
 } // namespace template_variant_pmr
 
 namespace FBE {
@@ -43,15 +43,15 @@ struct Line : FBE::Base
     ArenaManagedCreateOnlyTag;
 
     ::variants_pmr::V v;
-    pmr::vector<::variants_pmr::V> vv;
-    pmr::unordered_map<ArenaString, ::variants_pmr::V> vm;
+    std::pmr::vector<::variants_pmr::V> vv;
+    std::pmr::unordered_map<ArenaString, ::variants_pmr::V> vm;
     std::optional<::variants_pmr::V> vo;
 
     size_t fbe_type() const noexcept { return 1; }
 
     Line();
     explicit Line(allocator_type alloc);
-    Line(::variants_pmr::V arg_v, pmr::vector<::variants_pmr::V> arg_vv, pmr::unordered_map<ArenaString, ::variants_pmr::V> arg_vm, std::optional<::variants_pmr::V> arg_vo);
+    Line(::variants_pmr::V arg_v, std::pmr::vector<::variants_pmr::V> arg_vv, std::pmr::unordered_map<ArenaString, ::variants_pmr::V> arg_vm, std::optional<::variants_pmr::V> arg_vo);
     Line(const Line& other) = default;
     Line(Line&& other) noexcept;
     ~Line() override;
@@ -95,13 +95,13 @@ struct Line2 : FBE::Base
 {
     ArenaManagedCreateOnlyTag;
 
-    pmr::unordered_map<::enums_pmr::EnumInt8, ::variants_pmr::V> vm;
+    std::pmr::unordered_map<::enums_pmr::EnumInt8, ::variants_pmr::V> vm;
 
     size_t fbe_type() const noexcept { return 2; }
 
     Line2();
     explicit Line2(allocator_type alloc);
-    explicit Line2(pmr::unordered_map<::enums_pmr::EnumInt8, ::variants_pmr::V> arg_vm);
+    explicit Line2(std::pmr::unordered_map<::enums_pmr::EnumInt8, ::variants_pmr::V> arg_vm);
     Line2(const Line2& other) = default;
     Line2(Line2&& other) noexcept;
     ~Line2() override;

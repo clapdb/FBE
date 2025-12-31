@@ -122,179 +122,12 @@ size_t FinalModel<::test::StructSimple>::verify_fields() const noexcept
     size_t fbe_current_offset = 0;
     size_t fbe_field_size;
 
-    id.fbe_offset(fbe_current_offset);
-    fbe_field_size = id.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
-        return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
-
-    f1.fbe_offset(fbe_current_offset);
-    fbe_field_size = f1.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
-        return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
-
-    f2.fbe_offset(fbe_current_offset);
-    fbe_field_size = f2.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
-        return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
-
-    f3.fbe_offset(fbe_current_offset);
-    fbe_field_size = f3.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
-        return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
-
-    f4.fbe_offset(fbe_current_offset);
-    fbe_field_size = f4.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
-        return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
-
-    f5.fbe_offset(fbe_current_offset);
-    fbe_field_size = f5.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
-        return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
-
-    f6.fbe_offset(fbe_current_offset);
-    fbe_field_size = f6.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
-        return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
-
-    f7.fbe_offset(fbe_current_offset);
-    fbe_field_size = f7.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
-        return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
-
-    f8.fbe_offset(fbe_current_offset);
-    fbe_field_size = f8.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
-        return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
-
-    f9.fbe_offset(fbe_current_offset);
-    fbe_field_size = f9.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
-        return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
-
-    f10.fbe_offset(fbe_current_offset);
-    fbe_field_size = f10.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
-        return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
-
-    f11.fbe_offset(fbe_current_offset);
-    fbe_field_size = f11.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
-        return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
-
-    f12.fbe_offset(fbe_current_offset);
-    fbe_field_size = f12.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
-        return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
-
-    f13.fbe_offset(fbe_current_offset);
-    fbe_field_size = f13.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
-        return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
-
-    f14.fbe_offset(fbe_current_offset);
-    fbe_field_size = f14.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
-        return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
-
-    f15.fbe_offset(fbe_current_offset);
-    fbe_field_size = f15.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
-        return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
-
-    f16.fbe_offset(fbe_current_offset);
-    fbe_field_size = f16.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
-        return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
-
-    f17.fbe_offset(fbe_current_offset);
-    fbe_field_size = f17.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
-        return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
-
-    f18.fbe_offset(fbe_current_offset);
-    fbe_field_size = f18.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
-        return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
-
-    f19.fbe_offset(fbe_current_offset);
-    fbe_field_size = f19.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
-        return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
-
-    f20.fbe_offset(fbe_current_offset);
-    fbe_field_size = f20.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
-        return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
-
-    f21.fbe_offset(fbe_current_offset);
-    fbe_field_size = f21.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
-        return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
-
-    f22.fbe_offset(fbe_current_offset);
-    fbe_field_size = f22.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
-        return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
-
-    f23.fbe_offset(fbe_current_offset);
-    fbe_field_size = f23.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
-        return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
-
-    f24.fbe_offset(fbe_current_offset);
-    fbe_field_size = f24.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
-        return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
-
-    f25.fbe_offset(fbe_current_offset);
-    fbe_field_size = f25.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
-        return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
-
-    f26.fbe_offset(fbe_current_offset);
-    fbe_field_size = f26.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
-        return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
-
-    f27.fbe_offset(fbe_current_offset);
-    fbe_field_size = f27.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
-        return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
-
-    f28.fbe_offset(fbe_current_offset);
-    fbe_field_size = f28.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
-        return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
+    // Batch verify 29 fixed-size fields (102 bytes)
+    {
+        if ((_buffer.offset() + fbe_current_offset + 102) > _buffer.size())
+            return std::numeric_limits<std::size_t>::max();
+        fbe_current_offset += 102;
+    }
 
     f29.fbe_offset(fbe_current_offset);
     fbe_field_size = f29.verify();
@@ -320,41 +153,12 @@ size_t FinalModel<::test::StructSimple>::verify_fields() const noexcept
         return std::numeric_limits<std::size_t>::max();
     fbe_current_offset += fbe_field_size;
 
-    f33.fbe_offset(fbe_current_offset);
-    fbe_field_size = f33.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
-        return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
-
-    f34.fbe_offset(fbe_current_offset);
-    fbe_field_size = f34.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
-        return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
-
-    f35.fbe_offset(fbe_current_offset);
-    fbe_field_size = f35.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
-        return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
-
-    f36.fbe_offset(fbe_current_offset);
-    fbe_field_size = f36.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
-        return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
-
-    f37.fbe_offset(fbe_current_offset);
-    fbe_field_size = f37.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
-        return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
-
-    f38.fbe_offset(fbe_current_offset);
-    fbe_field_size = f38.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
-        return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
+    // Batch verify 6 fixed-size fields (72 bytes)
+    {
+        if ((_buffer.offset() + fbe_current_offset + 72) > _buffer.size())
+            return std::numeric_limits<std::size_t>::max();
+        fbe_current_offset += 72;
+    }
 
     f39.fbe_offset(fbe_current_offset);
     fbe_field_size = f39.verify();
@@ -409,150 +213,44 @@ size_t FinalModel<::test::StructSimple>::get_fields([[maybe_unused]] ::test::Str
     size_t fbe_current_size = 0;
     size_t fbe_field_size;
 
-    id.fbe_offset(fbe_current_offset);
-    fbe_field_size = id.get(fbe_value.id);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    f1.fbe_offset(fbe_current_offset);
-    fbe_field_size = f1.get(fbe_value.f1);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    f2.fbe_offset(fbe_current_offset);
-    fbe_field_size = f2.get(fbe_value.f2);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    f3.fbe_offset(fbe_current_offset);
-    fbe_field_size = f3.get(fbe_value.f3);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    f4.fbe_offset(fbe_current_offset);
-    fbe_field_size = f4.get(fbe_value.f4);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    f5.fbe_offset(fbe_current_offset);
-    fbe_field_size = f5.get(fbe_value.f5);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    f6.fbe_offset(fbe_current_offset);
-    fbe_field_size = f6.get(fbe_value.f6);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    f7.fbe_offset(fbe_current_offset);
-    fbe_field_size = f7.get(fbe_value.f7);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    f8.fbe_offset(fbe_current_offset);
-    fbe_field_size = f8.get(fbe_value.f8);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    f9.fbe_offset(fbe_current_offset);
-    fbe_field_size = f9.get(fbe_value.f9);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    f10.fbe_offset(fbe_current_offset);
-    fbe_field_size = f10.get(fbe_value.f10);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    f11.fbe_offset(fbe_current_offset);
-    fbe_field_size = f11.get(fbe_value.f11);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    f12.fbe_offset(fbe_current_offset);
-    fbe_field_size = f12.get(fbe_value.f12);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    f13.fbe_offset(fbe_current_offset);
-    fbe_field_size = f13.get(fbe_value.f13);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    f14.fbe_offset(fbe_current_offset);
-    fbe_field_size = f14.get(fbe_value.f14);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    f15.fbe_offset(fbe_current_offset);
-    fbe_field_size = f15.get(fbe_value.f15);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    f16.fbe_offset(fbe_current_offset);
-    fbe_field_size = f16.get(fbe_value.f16);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    f17.fbe_offset(fbe_current_offset);
-    fbe_field_size = f17.get(fbe_value.f17);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    f18.fbe_offset(fbe_current_offset);
-    fbe_field_size = f18.get(fbe_value.f18);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    f19.fbe_offset(fbe_current_offset);
-    fbe_field_size = f19.get(fbe_value.f19);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    f20.fbe_offset(fbe_current_offset);
-    fbe_field_size = f20.get(fbe_value.f20);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    f21.fbe_offset(fbe_current_offset);
-    fbe_field_size = f21.get(fbe_value.f21);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    f22.fbe_offset(fbe_current_offset);
-    fbe_field_size = f22.get(fbe_value.f22);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    f23.fbe_offset(fbe_current_offset);
-    fbe_field_size = f23.get(fbe_value.f23);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    f24.fbe_offset(fbe_current_offset);
-    fbe_field_size = f24.get(fbe_value.f24);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    f25.fbe_offset(fbe_current_offset);
-    fbe_field_size = f25.get(fbe_value.f25);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    f26.fbe_offset(fbe_current_offset);
-    fbe_field_size = f26.get(fbe_value.f26);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    f27.fbe_offset(fbe_current_offset);
-    fbe_field_size = f27.get(fbe_value.f27);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    f28.fbe_offset(fbe_current_offset);
-    fbe_field_size = f28.get(fbe_value.f28);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
+    // Batch read 29 fixed-size fields (102 bytes)
+    {
+        size_t fbe_batch_offset = _buffer.offset() + fbe_current_offset;
+        if ((fbe_batch_offset + 102) > _buffer.size())
+            return 0;
+        const uint8_t* fbe_batch_ptr = _buffer.data() + fbe_batch_offset;
+        fbe_value.id = unaligned_load<int32_t>(fbe_batch_ptr + 0);
+        fbe_value.f1 = static_cast<bool>(unaligned_load<uint8_t>(fbe_batch_ptr + 4));
+        fbe_value.f2 = static_cast<bool>(unaligned_load<uint8_t>(fbe_batch_ptr + 5));
+        fbe_value.f3 = unaligned_load<uint8_t>(fbe_batch_ptr + 6);
+        fbe_value.f4 = unaligned_load<uint8_t>(fbe_batch_ptr + 7);
+        fbe_value.f5 = unaligned_load<uint8_t>(fbe_batch_ptr + 8);
+        fbe_value.f6 = unaligned_load<uint8_t>(fbe_batch_ptr + 9);
+        fbe_value.f7 = unaligned_load<uint32_t>(fbe_batch_ptr + 10);
+        fbe_value.f8 = unaligned_load<uint32_t>(fbe_batch_ptr + 14);
+        fbe_value.f9 = unaligned_load<int8_t>(fbe_batch_ptr + 18);
+        fbe_value.f10 = unaligned_load<int8_t>(fbe_batch_ptr + 19);
+        fbe_value.f11 = unaligned_load<uint8_t>(fbe_batch_ptr + 20);
+        fbe_value.f12 = unaligned_load<uint8_t>(fbe_batch_ptr + 21);
+        fbe_value.f13 = unaligned_load<int16_t>(fbe_batch_ptr + 22);
+        fbe_value.f14 = unaligned_load<int16_t>(fbe_batch_ptr + 24);
+        fbe_value.f15 = unaligned_load<uint16_t>(fbe_batch_ptr + 26);
+        fbe_value.f16 = unaligned_load<uint16_t>(fbe_batch_ptr + 28);
+        fbe_value.f17 = unaligned_load<int32_t>(fbe_batch_ptr + 30);
+        fbe_value.f18 = unaligned_load<int32_t>(fbe_batch_ptr + 34);
+        fbe_value.f19 = unaligned_load<uint32_t>(fbe_batch_ptr + 38);
+        fbe_value.f20 = unaligned_load<uint32_t>(fbe_batch_ptr + 42);
+        fbe_value.f21 = unaligned_load<int64_t>(fbe_batch_ptr + 46);
+        fbe_value.f22 = unaligned_load<int64_t>(fbe_batch_ptr + 54);
+        fbe_value.f23 = unaligned_load<uint64_t>(fbe_batch_ptr + 62);
+        fbe_value.f24 = unaligned_load<uint64_t>(fbe_batch_ptr + 70);
+        fbe_value.f25 = unaligned_load<float>(fbe_batch_ptr + 78);
+        fbe_value.f26 = unaligned_load<float>(fbe_batch_ptr + 82);
+        fbe_value.f27 = unaligned_load<double>(fbe_batch_ptr + 86);
+        fbe_value.f28 = unaligned_load<double>(fbe_batch_ptr + 94);
+        fbe_current_offset += 102;
+        fbe_current_size += 102;
+    }
 
     f29.fbe_offset(fbe_current_offset);
     fbe_field_size = f29.get(fbe_value.f29);
@@ -574,35 +272,21 @@ size_t FinalModel<::test::StructSimple>::get_fields([[maybe_unused]] ::test::Str
     fbe_current_offset += fbe_field_size;
     fbe_current_size += fbe_field_size;
 
-    f33.fbe_offset(fbe_current_offset);
-    fbe_field_size = f33.get(fbe_value.f33);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    f34.fbe_offset(fbe_current_offset);
-    fbe_field_size = f34.get(fbe_value.f34);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    f35.fbe_offset(fbe_current_offset);
-    fbe_field_size = f35.get(fbe_value.f35);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    f36.fbe_offset(fbe_current_offset);
-    fbe_field_size = f36.get(fbe_value.f36);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    f37.fbe_offset(fbe_current_offset);
-    fbe_field_size = f37.get(fbe_value.f37);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    f38.fbe_offset(fbe_current_offset);
-    fbe_field_size = f38.get(fbe_value.f38);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
+    // Batch read 6 fixed-size fields (72 bytes)
+    {
+        size_t fbe_batch_offset = _buffer.offset() + fbe_current_offset;
+        if ((fbe_batch_offset + 72) > _buffer.size())
+            return 0;
+        const uint8_t* fbe_batch_ptr = _buffer.data() + fbe_batch_offset;
+        fbe_value.f33 = unaligned_load<uint64_t>(fbe_batch_ptr + 0);
+        fbe_value.f34 = unaligned_load<uint64_t>(fbe_batch_ptr + 8);
+        fbe_value.f35 = unaligned_load<uint64_t>(fbe_batch_ptr + 16);
+        std::memcpy(fbe_value.f36.data().data(), fbe_batch_ptr + 24, 16);
+        std::memcpy(fbe_value.f37.data().data(), fbe_batch_ptr + 40, 16);
+        std::memcpy(fbe_value.f38.data().data(), fbe_batch_ptr + 56, 16);
+        fbe_current_offset += 72;
+        fbe_current_size += 72;
+    }
 
     f39.fbe_offset(fbe_current_offset);
     fbe_field_size = f39.get(fbe_value.f39);
@@ -651,150 +335,45 @@ size_t FinalModel<::test::StructSimple>::set_fields([[maybe_unused]] const ::tes
     size_t fbe_current_size = 0;
     size_t fbe_field_size;
 
-    id.fbe_offset(fbe_current_offset);
-    fbe_field_size = id.set(fbe_value.id);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    f1.fbe_offset(fbe_current_offset);
-    fbe_field_size = f1.set(fbe_value.f1);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    f2.fbe_offset(fbe_current_offset);
-    fbe_field_size = f2.set(fbe_value.f2);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    f3.fbe_offset(fbe_current_offset);
-    fbe_field_size = f3.set(fbe_value.f3);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    f4.fbe_offset(fbe_current_offset);
-    fbe_field_size = f4.set(fbe_value.f4);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    f5.fbe_offset(fbe_current_offset);
-    fbe_field_size = f5.set(fbe_value.f5);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    f6.fbe_offset(fbe_current_offset);
-    fbe_field_size = f6.set(fbe_value.f6);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    f7.fbe_offset(fbe_current_offset);
-    fbe_field_size = f7.set(fbe_value.f7);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    f8.fbe_offset(fbe_current_offset);
-    fbe_field_size = f8.set(fbe_value.f8);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    f9.fbe_offset(fbe_current_offset);
-    fbe_field_size = f9.set(fbe_value.f9);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    f10.fbe_offset(fbe_current_offset);
-    fbe_field_size = f10.set(fbe_value.f10);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    f11.fbe_offset(fbe_current_offset);
-    fbe_field_size = f11.set(fbe_value.f11);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    f12.fbe_offset(fbe_current_offset);
-    fbe_field_size = f12.set(fbe_value.f12);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    f13.fbe_offset(fbe_current_offset);
-    fbe_field_size = f13.set(fbe_value.f13);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    f14.fbe_offset(fbe_current_offset);
-    fbe_field_size = f14.set(fbe_value.f14);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    f15.fbe_offset(fbe_current_offset);
-    fbe_field_size = f15.set(fbe_value.f15);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    f16.fbe_offset(fbe_current_offset);
-    fbe_field_size = f16.set(fbe_value.f16);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    f17.fbe_offset(fbe_current_offset);
-    fbe_field_size = f17.set(fbe_value.f17);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    f18.fbe_offset(fbe_current_offset);
-    fbe_field_size = f18.set(fbe_value.f18);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    f19.fbe_offset(fbe_current_offset);
-    fbe_field_size = f19.set(fbe_value.f19);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    f20.fbe_offset(fbe_current_offset);
-    fbe_field_size = f20.set(fbe_value.f20);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    f21.fbe_offset(fbe_current_offset);
-    fbe_field_size = f21.set(fbe_value.f21);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    f22.fbe_offset(fbe_current_offset);
-    fbe_field_size = f22.set(fbe_value.f22);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    f23.fbe_offset(fbe_current_offset);
-    fbe_field_size = f23.set(fbe_value.f23);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    f24.fbe_offset(fbe_current_offset);
-    fbe_field_size = f24.set(fbe_value.f24);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    f25.fbe_offset(fbe_current_offset);
-    fbe_field_size = f25.set(fbe_value.f25);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    f26.fbe_offset(fbe_current_offset);
-    fbe_field_size = f26.set(fbe_value.f26);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    f27.fbe_offset(fbe_current_offset);
-    fbe_field_size = f27.set(fbe_value.f27);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    f28.fbe_offset(fbe_current_offset);
-    fbe_field_size = f28.set(fbe_value.f28);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
+    // Batch write 29 fixed-size fields (102 bytes)
+    {
+        size_t fbe_batch_offset = _buffer.offset() + fbe_current_offset;
+        assert(((fbe_batch_offset + 102) <= _buffer.size()) && "Model is broken!");
+        if ((fbe_batch_offset + 102) > _buffer.size())
+            return 0;
+        uint8_t* fbe_batch_ptr = _buffer.data() + fbe_batch_offset;
+        unaligned_store<int32_t>(fbe_batch_ptr + 0, fbe_value.id);
+        unaligned_store<uint8_t>(fbe_batch_ptr + 4, static_cast<uint8_t>(fbe_value.f1));
+        unaligned_store<uint8_t>(fbe_batch_ptr + 5, static_cast<uint8_t>(fbe_value.f2));
+        unaligned_store<uint8_t>(fbe_batch_ptr + 6, fbe_value.f3);
+        unaligned_store<uint8_t>(fbe_batch_ptr + 7, fbe_value.f4);
+        unaligned_store<uint8_t>(fbe_batch_ptr + 8, fbe_value.f5);
+        unaligned_store<uint8_t>(fbe_batch_ptr + 9, fbe_value.f6);
+        unaligned_store<uint32_t>(fbe_batch_ptr + 10, fbe_value.f7);
+        unaligned_store<uint32_t>(fbe_batch_ptr + 14, fbe_value.f8);
+        unaligned_store<int8_t>(fbe_batch_ptr + 18, fbe_value.f9);
+        unaligned_store<int8_t>(fbe_batch_ptr + 19, fbe_value.f10);
+        unaligned_store<uint8_t>(fbe_batch_ptr + 20, fbe_value.f11);
+        unaligned_store<uint8_t>(fbe_batch_ptr + 21, fbe_value.f12);
+        unaligned_store<int16_t>(fbe_batch_ptr + 22, fbe_value.f13);
+        unaligned_store<int16_t>(fbe_batch_ptr + 24, fbe_value.f14);
+        unaligned_store<uint16_t>(fbe_batch_ptr + 26, fbe_value.f15);
+        unaligned_store<uint16_t>(fbe_batch_ptr + 28, fbe_value.f16);
+        unaligned_store<int32_t>(fbe_batch_ptr + 30, fbe_value.f17);
+        unaligned_store<int32_t>(fbe_batch_ptr + 34, fbe_value.f18);
+        unaligned_store<uint32_t>(fbe_batch_ptr + 38, fbe_value.f19);
+        unaligned_store<uint32_t>(fbe_batch_ptr + 42, fbe_value.f20);
+        unaligned_store<int64_t>(fbe_batch_ptr + 46, fbe_value.f21);
+        unaligned_store<int64_t>(fbe_batch_ptr + 54, fbe_value.f22);
+        unaligned_store<uint64_t>(fbe_batch_ptr + 62, fbe_value.f23);
+        unaligned_store<uint64_t>(fbe_batch_ptr + 70, fbe_value.f24);
+        unaligned_store<float>(fbe_batch_ptr + 78, fbe_value.f25);
+        unaligned_store<float>(fbe_batch_ptr + 82, fbe_value.f26);
+        unaligned_store<double>(fbe_batch_ptr + 86, fbe_value.f27);
+        unaligned_store<double>(fbe_batch_ptr + 94, fbe_value.f28);
+        fbe_current_offset += 102;
+        fbe_current_size += 102;
+    }
 
     f29.fbe_offset(fbe_current_offset);
     fbe_field_size = f29.set(fbe_value.f29);
@@ -816,35 +395,22 @@ size_t FinalModel<::test::StructSimple>::set_fields([[maybe_unused]] const ::tes
     fbe_current_offset += fbe_field_size;
     fbe_current_size += fbe_field_size;
 
-    f33.fbe_offset(fbe_current_offset);
-    fbe_field_size = f33.set(fbe_value.f33);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    f34.fbe_offset(fbe_current_offset);
-    fbe_field_size = f34.set(fbe_value.f34);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    f35.fbe_offset(fbe_current_offset);
-    fbe_field_size = f35.set(fbe_value.f35);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    f36.fbe_offset(fbe_current_offset);
-    fbe_field_size = f36.set(fbe_value.f36);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    f37.fbe_offset(fbe_current_offset);
-    fbe_field_size = f37.set(fbe_value.f37);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    f38.fbe_offset(fbe_current_offset);
-    fbe_field_size = f38.set(fbe_value.f38);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
+    // Batch write 6 fixed-size fields (72 bytes)
+    {
+        size_t fbe_batch_offset = _buffer.offset() + fbe_current_offset;
+        assert(((fbe_batch_offset + 72) <= _buffer.size()) && "Model is broken!");
+        if ((fbe_batch_offset + 72) > _buffer.size())
+            return 0;
+        uint8_t* fbe_batch_ptr = _buffer.data() + fbe_batch_offset;
+        unaligned_store<uint64_t>(fbe_batch_ptr + 0, fbe_value.f33);
+        unaligned_store<uint64_t>(fbe_batch_ptr + 8, fbe_value.f34);
+        unaligned_store<uint64_t>(fbe_batch_ptr + 16, fbe_value.f35);
+        std::memcpy(fbe_batch_ptr + 24, fbe_value.f36.data().data(), 16);
+        std::memcpy(fbe_batch_ptr + 40, fbe_value.f37.data().data(), 16);
+        std::memcpy(fbe_batch_ptr + 56, fbe_value.f38.data().data(), 16);
+        fbe_current_offset += 72;
+        fbe_current_size += 72;
+    }
 
     f39.fbe_offset(fbe_current_offset);
     fbe_field_size = f39.set(fbe_value.f39);
@@ -2304,11 +1870,10 @@ size_t FinalModel<::test::StructNested>::verify_fields() const noexcept
         return std::numeric_limits<std::size_t>::max();
     fbe_current_offset += fbe_field_size;
 
-    f1000.fbe_offset(fbe_current_offset);
-    fbe_field_size = f1000.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
+    // Inline verify of EnumSimple field f1000 (4 bytes)
+    if ((_buffer.offset() + fbe_current_offset + 4) > _buffer.size())
         return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
+    fbe_current_offset += 4;
 
     f1001.fbe_offset(fbe_current_offset);
     fbe_field_size = f1001.verify();
@@ -2316,11 +1881,10 @@ size_t FinalModel<::test::StructNested>::verify_fields() const noexcept
         return std::numeric_limits<std::size_t>::max();
     fbe_current_offset += fbe_field_size;
 
-    f1002.fbe_offset(fbe_current_offset);
-    fbe_field_size = f1002.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
+    // Inline verify of EnumTyped field f1002 (1 bytes)
+    if ((_buffer.offset() + fbe_current_offset + 1) > _buffer.size())
         return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
+    fbe_current_offset += 1;
 
     f1003.fbe_offset(fbe_current_offset);
     fbe_field_size = f1003.verify();
@@ -2328,11 +1892,10 @@ size_t FinalModel<::test::StructNested>::verify_fields() const noexcept
         return std::numeric_limits<std::size_t>::max();
     fbe_current_offset += fbe_field_size;
 
-    f1004.fbe_offset(fbe_current_offset);
-    fbe_field_size = f1004.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
+    // Inline verify of FlagsSimple field f1004 (4 bytes)
+    if ((_buffer.offset() + fbe_current_offset + 4) > _buffer.size())
         return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
+    fbe_current_offset += 4;
 
     f1005.fbe_offset(fbe_current_offset);
     fbe_field_size = f1005.verify();
@@ -2340,11 +1903,10 @@ size_t FinalModel<::test::StructNested>::verify_fields() const noexcept
         return std::numeric_limits<std::size_t>::max();
     fbe_current_offset += fbe_field_size;
 
-    f1006.fbe_offset(fbe_current_offset);
-    fbe_field_size = f1006.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
+    // Inline verify of FlagsTyped field f1006 (8 bytes)
+    if ((_buffer.offset() + fbe_current_offset + 8) > _buffer.size())
         return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
+    fbe_current_offset += 8;
 
     f1007.fbe_offset(fbe_current_offset);
     fbe_field_size = f1007.verify();
@@ -2398,40 +1960,60 @@ size_t FinalModel<::test::StructNested>::get_fields([[maybe_unused]] ::test::Str
     fbe_current_offset += fbe_field_size;
     fbe_current_size += fbe_field_size;
 
-    f1000.fbe_offset(fbe_current_offset);
-    fbe_field_size = f1000.get(fbe_value.f1000);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
+    // Inline read of EnumSimple field f1000 (4 bytes)
+    {
+        size_t fbe_field_offset = _buffer.offset() + fbe_current_offset;
+        if ((fbe_field_offset + 4) > _buffer.size())
+            return 0;
+        fbe_value.f1000 = static_cast<decltype(fbe_value.f1000)>(unaligned_load<int32_t>(_buffer.data() + fbe_field_offset));
+        fbe_current_offset += 4;
+        fbe_current_size += 4;
+    }
 
     f1001.fbe_offset(fbe_current_offset);
     fbe_field_size = f1001.get(fbe_value.f1001);
     fbe_current_offset += fbe_field_size;
     fbe_current_size += fbe_field_size;
 
-    f1002.fbe_offset(fbe_current_offset);
-    fbe_field_size = f1002.get(fbe_value.f1002);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
+    // Inline read of EnumTyped field f1002 (1 bytes)
+    {
+        size_t fbe_field_offset = _buffer.offset() + fbe_current_offset;
+        if ((fbe_field_offset + 1) > _buffer.size())
+            return 0;
+        fbe_value.f1002 = static_cast<decltype(fbe_value.f1002)>(unaligned_load<uint8_t>(_buffer.data() + fbe_field_offset));
+        fbe_current_offset += 1;
+        fbe_current_size += 1;
+    }
 
     f1003.fbe_offset(fbe_current_offset);
     fbe_field_size = f1003.get(fbe_value.f1003);
     fbe_current_offset += fbe_field_size;
     fbe_current_size += fbe_field_size;
 
-    f1004.fbe_offset(fbe_current_offset);
-    fbe_field_size = f1004.get(fbe_value.f1004);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
+    // Inline read of FlagsSimple field f1004 (4 bytes)
+    {
+        size_t fbe_field_offset = _buffer.offset() + fbe_current_offset;
+        if ((fbe_field_offset + 4) > _buffer.size())
+            return 0;
+        fbe_value.f1004 = static_cast<decltype(fbe_value.f1004)>(unaligned_load<int32_t>(_buffer.data() + fbe_field_offset));
+        fbe_current_offset += 4;
+        fbe_current_size += 4;
+    }
 
     f1005.fbe_offset(fbe_current_offset);
     fbe_field_size = f1005.get(fbe_value.f1005);
     fbe_current_offset += fbe_field_size;
     fbe_current_size += fbe_field_size;
 
-    f1006.fbe_offset(fbe_current_offset);
-    fbe_field_size = f1006.get(fbe_value.f1006);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
+    // Inline read of FlagsTyped field f1006 (8 bytes)
+    {
+        size_t fbe_field_offset = _buffer.offset() + fbe_current_offset;
+        if ((fbe_field_offset + 8) > _buffer.size())
+            return 0;
+        fbe_value.f1006 = static_cast<decltype(fbe_value.f1006)>(unaligned_load<uint64_t>(_buffer.data() + fbe_field_offset));
+        fbe_current_offset += 8;
+        fbe_current_size += 8;
+    }
 
     f1007.fbe_offset(fbe_current_offset);
     fbe_field_size = f1007.get(fbe_value.f1007);
@@ -2480,40 +2062,64 @@ size_t FinalModel<::test::StructNested>::set_fields([[maybe_unused]] const ::tes
     fbe_current_offset += fbe_field_size;
     fbe_current_size += fbe_field_size;
 
-    f1000.fbe_offset(fbe_current_offset);
-    fbe_field_size = f1000.set(fbe_value.f1000);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
+    // Inline write of EnumSimple field f1000 (4 bytes)
+    {
+        size_t fbe_field_offset = _buffer.offset() + fbe_current_offset;
+        assert(((fbe_field_offset + 4) <= _buffer.size()) && "Model is broken!");
+        if ((fbe_field_offset + 4) > _buffer.size())
+            return 0;
+        unaligned_store<int32_t>(_buffer.data() + fbe_field_offset, static_cast<int32_t>(fbe_value.f1000));
+        fbe_current_offset += 4;
+        fbe_current_size += 4;
+    }
 
     f1001.fbe_offset(fbe_current_offset);
     fbe_field_size = f1001.set(fbe_value.f1001);
     fbe_current_offset += fbe_field_size;
     fbe_current_size += fbe_field_size;
 
-    f1002.fbe_offset(fbe_current_offset);
-    fbe_field_size = f1002.set(fbe_value.f1002);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
+    // Inline write of EnumTyped field f1002 (1 bytes)
+    {
+        size_t fbe_field_offset = _buffer.offset() + fbe_current_offset;
+        assert(((fbe_field_offset + 1) <= _buffer.size()) && "Model is broken!");
+        if ((fbe_field_offset + 1) > _buffer.size())
+            return 0;
+        unaligned_store<uint8_t>(_buffer.data() + fbe_field_offset, static_cast<uint8_t>(fbe_value.f1002));
+        fbe_current_offset += 1;
+        fbe_current_size += 1;
+    }
 
     f1003.fbe_offset(fbe_current_offset);
     fbe_field_size = f1003.set(fbe_value.f1003);
     fbe_current_offset += fbe_field_size;
     fbe_current_size += fbe_field_size;
 
-    f1004.fbe_offset(fbe_current_offset);
-    fbe_field_size = f1004.set(fbe_value.f1004);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
+    // Inline write of FlagsSimple field f1004 (4 bytes)
+    {
+        size_t fbe_field_offset = _buffer.offset() + fbe_current_offset;
+        assert(((fbe_field_offset + 4) <= _buffer.size()) && "Model is broken!");
+        if ((fbe_field_offset + 4) > _buffer.size())
+            return 0;
+        unaligned_store<int32_t>(_buffer.data() + fbe_field_offset, static_cast<int32_t>(fbe_value.f1004));
+        fbe_current_offset += 4;
+        fbe_current_size += 4;
+    }
 
     f1005.fbe_offset(fbe_current_offset);
     fbe_field_size = f1005.set(fbe_value.f1005);
     fbe_current_offset += fbe_field_size;
     fbe_current_size += fbe_field_size;
 
-    f1006.fbe_offset(fbe_current_offset);
-    fbe_field_size = f1006.set(fbe_value.f1006);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
+    // Inline write of FlagsTyped field f1006 (8 bytes)
+    {
+        size_t fbe_field_offset = _buffer.offset() + fbe_current_offset;
+        assert(((fbe_field_offset + 8) <= _buffer.size()) && "Model is broken!");
+        if ((fbe_field_offset + 8) > _buffer.size())
+            return 0;
+        unaligned_store<uint64_t>(_buffer.data() + fbe_field_offset, static_cast<uint64_t>(fbe_value.f1006));
+        fbe_current_offset += 8;
+        fbe_current_size += 8;
+    }
 
     f1007.fbe_offset(fbe_current_offset);
     fbe_field_size = f1007.set(fbe_value.f1007);

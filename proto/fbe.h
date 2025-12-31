@@ -49,14 +49,16 @@
 #include <experimental/unordered_map>
 #include <experimental/string>
 #include <experimental/set>
-namespace pmr = std::experimental::pmr;
+namespace std { namespace pmr = ::std::experimental::pmr; }
 #else
 #include <memory_resource>
-namespace pmr = std::pmr;
 #endif
 #include <utility>
 #include <variant>
 #include "container/vectra.hpp"
+#if defined(USING_BTREE_MAP)
+#include "container/btree_map.hpp"
+#endif
 
 #if defined(USING_SEASTAR_STRING)
 #include <seastar/core/sstring.hh>
@@ -88,8 +90,63 @@ namespace FBE {
     #if defined(USING_SMALL_ARENA_STRING)
     using ArenaString = small::pmr::small_byte_string;
     #else
-    using ArenaString = pmr::string;
+    using ArenaString = std::pmr::string;
     #endif
+
+    template <typename Key, typename Compare = std::less<Key>, typename Allocator = std::allocator<Key>>
+    #if defined(USING_BTREE_MAP)
+    // Use fixed 256-byte node size to support forward-declared types (ptr-based FBE)
+    using set = stdb::container::btree_set<Key, Compare, Allocator, 256>;
+    #else
+    using set = std::set<Key, Compare, Allocator>;
+    #endif
+
+    template <typename Key, typename Value, typename Compare = std::less<Key>, typename Allocator = std::allocator<std::pair<const Key, Value>>>
+    #if defined(USING_BTREE_MAP)
+    // Use fixed 256-byte node size to support forward-declared types (ptr-based FBE)
+    using map = stdb::container::btree_map<Key, Value, Compare, Allocator, 256>;
+    #else
+    using map = std::map<Key, Value, Compare, Allocator>;
+    #endif
+
+    // PMR namespace for arena allocator support
+    namespace pmr {
+        template <typename Key, typename Compare = std::less<Key>>
+        #if defined(USING_BTREE_MAP)
+        using set = stdb::pmr::btree_set_compact<Key, Compare>;
+        #else
+        using set = std::pmr::set<Key, Compare>;
+        #endif
+
+        template <typename Key, typename Value, typename Compare = std::less<Key>>
+        #if defined(USING_BTREE_MAP)
+        using map = stdb::pmr::btree_map_compact<Key, Value, Compare>;
+        #else
+        using map = std::pmr::map<Key, Value, Compare>;
+        #endif
+    } // namespace pmr
+
+    // Type trait to detect primitive types that can be bulk-copied with memcpy
+    // These types have fixed size and trivial copy semantics in FinalModel
+    template <typename T>
+    struct is_fbe_final_primitive : std::false_type {};
+
+    template <> struct is_fbe_final_primitive<bool> : std::true_type {};
+    template <> struct is_fbe_final_primitive<char> : std::true_type {};
+    template <> struct is_fbe_final_primitive<wchar_t> : std::true_type {};
+    template <> struct is_fbe_final_primitive<int8_t> : std::true_type {};
+    template <> struct is_fbe_final_primitive<uint8_t> : std::true_type {};
+    template <> struct is_fbe_final_primitive<int16_t> : std::true_type {};
+    template <> struct is_fbe_final_primitive<uint16_t> : std::true_type {};
+    template <> struct is_fbe_final_primitive<int32_t> : std::true_type {};
+    template <> struct is_fbe_final_primitive<uint32_t> : std::true_type {};
+    template <> struct is_fbe_final_primitive<int64_t> : std::true_type {};
+    template <> struct is_fbe_final_primitive<uint64_t> : std::true_type {};
+    template <> struct is_fbe_final_primitive<float> : std::true_type {};
+    template <> struct is_fbe_final_primitive<double> : std::true_type {};
+
+    template <typename T>
+    inline constexpr bool is_fbe_final_primitive_v = is_fbe_final_primitive<T>::value;
 } // namespace FBE
 
 #if defined(unix) || defined(__unix) || defined(__unix__) || defined(__APPLE__)
@@ -281,17 +338,17 @@ private:
 
 //! PMR bytes buffer type
 /*!
-    Represents pmr bytes buffer which is a lightweight wrapper around pmr::vector<uint8_t>
+    Represents pmr bytes buffer which is a lightweight wrapper around std::pmr::vector<uint8_t>
     with similar interface.
 */
 class pmr_buffer_t
 {
 public:
-    using iterator = pmr::vector<uint8_t>::iterator;
-    using const_iterator = pmr::vector<uint8_t>::const_iterator;
-    using reverse_iterator = pmr::vector<uint8_t>::reverse_iterator;
-    using const_reverse_iterator = pmr::vector<uint8_t>::const_reverse_iterator;
-    using allocator_type = pmr::polymorphic_allocator<char>;
+    using iterator = std::pmr::vector<uint8_t>::iterator;
+    using const_iterator = std::pmr::vector<uint8_t>::const_iterator;
+    using reverse_iterator = std::pmr::vector<uint8_t>::reverse_iterator;
+    using const_reverse_iterator = std::pmr::vector<uint8_t>::const_reverse_iterator;
+    using allocator_type = std::pmr::polymorphic_allocator<char>;
 
     pmr_buffer_t() = default;
     explicit pmr_buffer_t(allocator_type alloc): _data(alloc) {}
@@ -299,8 +356,8 @@ public:
     explicit pmr_buffer_t(const ArenaString& str) { assign(str); }
     pmr_buffer_t(size_t size, uint8_t value) { assign(size, value); }
     pmr_buffer_t(const uint8_t* data, size_t size) { assign(data, size); }
-    explicit pmr_buffer_t(const pmr::vector<uint8_t>& other) : _data(other) {}
-    explicit pmr_buffer_t(pmr::vector<uint8_t>&& other) : _data(std::move(other)) {}
+    explicit pmr_buffer_t(const std::pmr::vector<uint8_t>& other) : _data(other) {}
+    explicit pmr_buffer_t(std::pmr::vector<uint8_t>&& other) : _data(std::move(other)) {}
     pmr_buffer_t(const pmr_buffer_t& other) = default;
     explicit pmr_buffer_t(pmr_buffer_t&& other) = default;
     pmr_buffer_t(const pmr_buffer_t& other, allocator_type alloc): _data(alloc) {
@@ -311,8 +368,8 @@ public:
     ~pmr_buffer_t() = default;
 
     pmr_buffer_t& operator=(const ArenaString& str) { assign(str); return *this; }
-    pmr_buffer_t& operator=(const pmr::vector<uint8_t>& other) { _data = other; return *this; }
-    pmr_buffer_t& operator=(pmr::vector<uint8_t>&& other) { _data = std::move(other); return *this; }
+    pmr_buffer_t& operator=(const std::pmr::vector<uint8_t>& other) { _data = other; return *this; }
+    pmr_buffer_t& operator=(std::pmr::vector<uint8_t>&& other) { _data = std::move(other); return *this; }
     pmr_buffer_t& operator=(const pmr_buffer_t& other) = default;
     pmr_buffer_t& operator=(pmr_buffer_t&& other) = default;
 
@@ -327,8 +384,8 @@ public:
     size_t size() const { return _data.size(); }
     size_t max_size() const { return _data.max_size(); }
 
-    pmr::vector<uint8_t>& buffer() noexcept { return _data; }
-    const pmr::vector<uint8_t>& buffer() const noexcept { return _data; }
+    std::pmr::vector<uint8_t>& buffer() noexcept { return _data; }
+    const std::pmr::vector<uint8_t>& buffer() const noexcept { return _data; }
     uint8_t* data() noexcept { return _data.data(); }
     const uint8_t* data() const noexcept { return _data.data(); }
     uint8_t& at(size_t index) { return _data.at(index); }
@@ -343,14 +400,14 @@ public:
     void shrink_to_fit() { _data.shrink_to_fit(); }
 
     void assign(const ArenaString& str) { assign((const uint8_t*)str.data(), str.size()); }
-    void assign(const pmr::vector<uint8_t>& vec) { assign(vec.begin(), vec.end()); }
+    void assign(const std::pmr::vector<uint8_t>& vec) { assign(vec.begin(), vec.end()); }
     void assign(size_t size, uint8_t value) { _data.assign(size, value); }
     void assign(const uint8_t* data, size_t size) { _data.assign(data, data + size); }
     template <class InputIterator>
     void assign(InputIterator first, InputIterator last) { _data.assign(first, last); }
     iterator insert(const_iterator position, uint8_t value) { return _data.insert(position, value); }
     iterator insert(const_iterator position, const ArenaString& str) { return insert(position, (const uint8_t*)str.data(), str.size()); }
-    iterator insert(const_iterator position, const pmr::vector<uint8_t>& vec) { return insert(position, vec.begin(), vec.end()); }
+    iterator insert(const_iterator position, const std::pmr::vector<uint8_t>& vec) { return insert(position, vec.begin(), vec.end()); }
     iterator insert(const_iterator position, size_t size, uint8_t value) { return _data.insert(position, size, value); }
     iterator insert(const_iterator position, const uint8_t* data, size_t size) { return _data.insert(position, data, data + size); }
     template <class InputIterator>
@@ -399,7 +456,7 @@ public:
     { os << value.string(); return os; }
 
 private:
-    pmr::vector<uint8_t> _data;
+    std::pmr::vector<uint8_t> _data;
     
 };
 
@@ -421,13 +478,13 @@ public:
     decimal_t(uint64_t value) noexcept { _value = (double)value; }
     decimal_t(float value) noexcept { _value = (double)value; }
     decimal_t(double value) noexcept { _value = value; }
-    template <typename T> requires (!std::same_as<T, pmr::memory_resource*>)
+    template <typename T> requires (!std::same_as<T, std::pmr::memory_resource*>)
     explicit decimal_t(const T& value) noexcept { _value = (double)value; }
     decimal_t(const decimal_t& value) noexcept = default;
     decimal_t(decimal_t&& value) noexcept = default;
     ~decimal_t() noexcept = default;
 
-    template <typename T> requires (!std::same_as<T, pmr::memory_resource*>)
+    template <typename T> requires (!std::same_as<T, std::pmr::memory_resource*>)
     decimal_t& operator=(const T& value) noexcept { _value = (double)value; return *this; }
     decimal_t& operator=(const decimal_t& value) noexcept = default;
     decimal_t& operator=(decimal_t&& value) noexcept = default;

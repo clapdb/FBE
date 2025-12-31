@@ -84,7 +84,7 @@ bool FieldModel<::arena_common_pmr::Expr>::verify() const noexcept
     return true;
 }
 
-void FieldModel<::arena_common_pmr::Expr>::get(::arena_common_pmr::Expr& fbe_value, pmr::memory_resource* resource) const noexcept
+void FieldModel<::arena_common_pmr::Expr>::get(::arena_common_pmr::Expr& fbe_value, std::pmr::memory_resource* resource) const noexcept
 {
     if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
         return;
@@ -157,7 +157,7 @@ void FieldModel<::arena_common_pmr::Expr>::set_end(size_t fbe_begin)
 }
 
 // Set the variant value
-void FieldModel<::arena_common_pmr::Expr>::set(const ::arena_common_pmr::Expr& fbe_value, pmr::memory_resource* resource) noexcept
+void FieldModel<::arena_common_pmr::Expr>::set(const ::arena_common_pmr::Expr& fbe_value, std::pmr::memory_resource* resource) noexcept
 {
     assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
     if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
@@ -314,7 +314,7 @@ void FieldModel<::arena_common_pmr::Alias>::get_end(size_t fbe_begin) const noex
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModel<::arena_common_pmr::Alias>::get(::arena_common_pmr::Alias& fbe_value, pmr::memory_resource* resource) const noexcept
+void FieldModel<::arena_common_pmr::Alias>::get(::arena_common_pmr::Alias& fbe_value, std::pmr::memory_resource* resource) const noexcept
 {
     size_t fbe_begin = get_begin();
     if (fbe_begin == 0)
@@ -325,7 +325,7 @@ void FieldModel<::arena_common_pmr::Alias>::get(::arena_common_pmr::Alias& fbe_v
     get_end(fbe_begin);
 }
 
-void FieldModel<::arena_common_pmr::Alias>::get_fields([[maybe_unused]] ::arena_common_pmr::Alias& fbe_value, [[maybe_unused]] size_t fbe_struct_size, pmr::memory_resource* resource) const noexcept
+void FieldModel<::arena_common_pmr::Alias>::get_fields([[maybe_unused]] ::arena_common_pmr::Alias& fbe_value, [[maybe_unused]] size_t fbe_struct_size, std::pmr::memory_resource* resource) const noexcept
 {
     size_t fbe_current_size = 4 + 4;
 
@@ -373,7 +373,7 @@ void FieldModel<::arena_common_pmr::Alias>::set_end(size_t fbe_begin)
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModel<::arena_common_pmr::Alias>::set(const ::arena_common_pmr::Alias& fbe_value, pmr::memory_resource* resource) noexcept
+void FieldModel<::arena_common_pmr::Alias>::set(const ::arena_common_pmr::Alias& fbe_value, std::pmr::memory_resource* resource) noexcept
 {
     size_t fbe_begin = set_begin();
     if (fbe_begin == 0)
@@ -383,7 +383,7 @@ void FieldModel<::arena_common_pmr::Alias>::set(const ::arena_common_pmr::Alias&
     set_end(fbe_begin);
 }
 
-void FieldModel<::arena_common_pmr::Alias>::set_fields([[maybe_unused]] const ::arena_common_pmr::Alias& fbe_value, pmr::memory_resource* resource) noexcept
+void FieldModel<::arena_common_pmr::Alias>::set_fields([[maybe_unused]] const ::arena_common_pmr::Alias& fbe_value, std::pmr::memory_resource* resource) noexcept
 {
     name.set(fbe_value.name, resource);
     optr.set(fbe_value.optr, resource);
@@ -418,7 +418,7 @@ size_t AliasModel::create_end(size_t fbe_begin)
     return fbe_full_size;
 }
 
-size_t AliasModel::serialize(const ::arena_common_pmr::Alias& value, pmr::memory_resource* resource)
+size_t AliasModel::serialize(const ::arena_common_pmr::Alias& value, std::pmr::memory_resource* resource)
 {
     size_t fbe_begin = create_begin();
     model.set(value, resource);
@@ -426,7 +426,7 @@ size_t AliasModel::serialize(const ::arena_common_pmr::Alias& value, pmr::memory
     return fbe_full_size;
 }
 
-size_t AliasModel::deserialize(::arena_common_pmr::Alias& value, pmr::memory_resource* resource) const noexcept
+size_t AliasModel::deserialize(::arena_common_pmr::Alias& value, std::pmr::memory_resource* resource) const noexcept
 {
     if ((this->buffer().offset() + model.fbe_offset() - 4) > this->buffer().size())
         return 0;
@@ -552,7 +552,7 @@ void FieldModel<::arena_common_pmr::Expression>::get_end(size_t fbe_begin) const
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModel<::arena_common_pmr::Expression>::get(::arena_common_pmr::Expression& fbe_value, pmr::memory_resource* resource) const noexcept
+void FieldModel<::arena_common_pmr::Expression>::get(::arena_common_pmr::Expression& fbe_value, std::pmr::memory_resource* resource) const noexcept
 {
     size_t fbe_begin = get_begin();
     if (fbe_begin == 0)
@@ -563,7 +563,7 @@ void FieldModel<::arena_common_pmr::Expression>::get(::arena_common_pmr::Express
     get_end(fbe_begin);
 }
 
-void FieldModel<::arena_common_pmr::Expression>::get_fields([[maybe_unused]] ::arena_common_pmr::Expression& fbe_value, [[maybe_unused]] size_t fbe_struct_size, pmr::memory_resource* resource) const noexcept
+void FieldModel<::arena_common_pmr::Expression>::get_fields([[maybe_unused]] ::arena_common_pmr::Expression& fbe_value, [[maybe_unused]] size_t fbe_struct_size, std::pmr::memory_resource* resource) const noexcept
 {
     size_t fbe_current_size = 4 + 4;
 
@@ -611,7 +611,7 @@ void FieldModel<::arena_common_pmr::Expression>::set_end(size_t fbe_begin)
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModel<::arena_common_pmr::Expression>::set(const ::arena_common_pmr::Expression& fbe_value, pmr::memory_resource* resource) noexcept
+void FieldModel<::arena_common_pmr::Expression>::set(const ::arena_common_pmr::Expression& fbe_value, std::pmr::memory_resource* resource) noexcept
 {
     size_t fbe_begin = set_begin();
     if (fbe_begin == 0)
@@ -621,7 +621,7 @@ void FieldModel<::arena_common_pmr::Expression>::set(const ::arena_common_pmr::E
     set_end(fbe_begin);
 }
 
-void FieldModel<::arena_common_pmr::Expression>::set_fields([[maybe_unused]] const ::arena_common_pmr::Expression& fbe_value, pmr::memory_resource* resource) noexcept
+void FieldModel<::arena_common_pmr::Expression>::set_fields([[maybe_unused]] const ::arena_common_pmr::Expression& fbe_value, std::pmr::memory_resource* resource) noexcept
 {
     keys.set(fbe_value.keys, resource);
     aliases.set(fbe_value.aliases, resource);
@@ -656,7 +656,7 @@ size_t ExpressionModel::create_end(size_t fbe_begin)
     return fbe_full_size;
 }
 
-size_t ExpressionModel::serialize(const ::arena_common_pmr::Expression& value, pmr::memory_resource* resource)
+size_t ExpressionModel::serialize(const ::arena_common_pmr::Expression& value, std::pmr::memory_resource* resource)
 {
     size_t fbe_begin = create_begin();
     model.set(value, resource);
@@ -664,7 +664,7 @@ size_t ExpressionModel::serialize(const ::arena_common_pmr::Expression& value, p
     return fbe_full_size;
 }
 
-size_t ExpressionModel::deserialize(::arena_common_pmr::Expression& value, pmr::memory_resource* resource) const noexcept
+size_t ExpressionModel::deserialize(::arena_common_pmr::Expression& value, std::pmr::memory_resource* resource) const noexcept
 {
     if ((this->buffer().offset() + model.fbe_offset() - 4) > this->buffer().size())
         return 0;

@@ -84,7 +84,7 @@ bool FieldModel<::variants::Expr>::verify() const noexcept
     return true;
 }
 
-void FieldModel<::variants::Expr>::get(::variants::Expr& fbe_value, pmr::memory_resource* resource) const noexcept
+void FieldModel<::variants::Expr>::get(::variants::Expr& fbe_value, std::pmr::memory_resource* resource) const noexcept
 {
     if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
         return;
@@ -157,7 +157,7 @@ void FieldModel<::variants::Expr>::set_end(size_t fbe_begin)
 }
 
 // Set the variant value
-void FieldModel<::variants::Expr>::set(const ::variants::Expr& fbe_value, pmr::memory_resource* resource) noexcept
+void FieldModel<::variants::Expr>::set(const ::variants::Expr& fbe_value, std::pmr::memory_resource* resource) noexcept
 {
     assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
     if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
@@ -333,7 +333,7 @@ bool FieldModel<::variants::V>::verify() const noexcept
     return true;
 }
 
-void FieldModel<::variants::V>::get(::variants::V& fbe_value, pmr::memory_resource* resource) const noexcept
+void FieldModel<::variants::V>::get(::variants::V& fbe_value, std::pmr::memory_resource* resource) const noexcept
 {
     if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
         return;
@@ -469,7 +469,7 @@ void FieldModel<::variants::V>::set_end(size_t fbe_begin)
 }
 
 // Set the variant value
-void FieldModel<::variants::V>::set(const ::variants::V& fbe_value, pmr::memory_resource* resource) noexcept
+void FieldModel<::variants::V>::set(const ::variants::V& fbe_value, std::pmr::memory_resource* resource) noexcept
 {
     assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
     if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
@@ -680,7 +680,7 @@ void FieldModel<::variants::Simple>::get_end(size_t fbe_begin) const noexcept
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModel<::variants::Simple>::get(::variants::Simple& fbe_value, pmr::memory_resource* resource) const noexcept
+void FieldModel<::variants::Simple>::get(::variants::Simple& fbe_value, std::pmr::memory_resource* resource) const noexcept
 {
     size_t fbe_begin = get_begin();
     if (fbe_begin == 0)
@@ -691,7 +691,7 @@ void FieldModel<::variants::Simple>::get(::variants::Simple& fbe_value, pmr::mem
     get_end(fbe_begin);
 }
 
-void FieldModel<::variants::Simple>::get_fields([[maybe_unused]] ::variants::Simple& fbe_value, [[maybe_unused]] size_t fbe_struct_size, pmr::memory_resource* resource) const noexcept
+void FieldModel<::variants::Simple>::get_fields([[maybe_unused]] ::variants::Simple& fbe_value, [[maybe_unused]] size_t fbe_struct_size, std::pmr::memory_resource* resource) const noexcept
 {
     size_t fbe_current_size = 4 + 4;
 
@@ -727,7 +727,7 @@ void FieldModel<::variants::Simple>::set_end(size_t fbe_begin)
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModel<::variants::Simple>::set(const ::variants::Simple& fbe_value, pmr::memory_resource* resource) noexcept
+void FieldModel<::variants::Simple>::set(const ::variants::Simple& fbe_value, std::pmr::memory_resource* resource) noexcept
 {
     size_t fbe_begin = set_begin();
     if (fbe_begin == 0)
@@ -737,7 +737,7 @@ void FieldModel<::variants::Simple>::set(const ::variants::Simple& fbe_value, pm
     set_end(fbe_begin);
 }
 
-void FieldModel<::variants::Simple>::set_fields([[maybe_unused]] const ::variants::Simple& fbe_value, pmr::memory_resource* resource) noexcept
+void FieldModel<::variants::Simple>::set_fields([[maybe_unused]] const ::variants::Simple& fbe_value, std::pmr::memory_resource* resource) noexcept
 {
     name.set(fbe_value.name, resource);
 }
@@ -770,7 +770,7 @@ size_t SimpleModel::create_end(size_t fbe_begin)
     return fbe_full_size;
 }
 
-size_t SimpleModel::serialize(const ::variants::Simple& value, pmr::memory_resource* resource)
+size_t SimpleModel::serialize(const ::variants::Simple& value, std::pmr::memory_resource* resource)
 {
     size_t fbe_begin = create_begin();
     model.set(value, resource);
@@ -778,7 +778,7 @@ size_t SimpleModel::serialize(const ::variants::Simple& value, pmr::memory_resou
     return fbe_full_size;
 }
 
-size_t SimpleModel::deserialize(::variants::Simple& value, pmr::memory_resource* resource) const noexcept
+size_t SimpleModel::deserialize(::variants::Simple& value, std::pmr::memory_resource* resource) const noexcept
 {
     if ((this->buffer().offset() + model.fbe_offset() - 4) > this->buffer().size())
         return 0;
@@ -886,7 +886,7 @@ void FieldModel<::variants::Value>::get_end(size_t fbe_begin) const noexcept
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModel<::variants::Value>::get(::variants::Value& fbe_value, pmr::memory_resource* resource) const noexcept
+void FieldModel<::variants::Value>::get(::variants::Value& fbe_value, std::pmr::memory_resource* resource) const noexcept
 {
     size_t fbe_begin = get_begin();
     if (fbe_begin == 0)
@@ -897,7 +897,7 @@ void FieldModel<::variants::Value>::get(::variants::Value& fbe_value, pmr::memor
     get_end(fbe_begin);
 }
 
-void FieldModel<::variants::Value>::get_fields([[maybe_unused]] ::variants::Value& fbe_value, [[maybe_unused]] size_t fbe_struct_size, pmr::memory_resource* resource) const noexcept
+void FieldModel<::variants::Value>::get_fields([[maybe_unused]] ::variants::Value& fbe_value, [[maybe_unused]] size_t fbe_struct_size, std::pmr::memory_resource* resource) const noexcept
 {
     size_t fbe_current_size = 4 + 4;
 
@@ -933,7 +933,7 @@ void FieldModel<::variants::Value>::set_end(size_t fbe_begin)
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModel<::variants::Value>::set(const ::variants::Value& fbe_value, pmr::memory_resource* resource) noexcept
+void FieldModel<::variants::Value>::set(const ::variants::Value& fbe_value, std::pmr::memory_resource* resource) noexcept
 {
     size_t fbe_begin = set_begin();
     if (fbe_begin == 0)
@@ -943,7 +943,7 @@ void FieldModel<::variants::Value>::set(const ::variants::Value& fbe_value, pmr:
     set_end(fbe_begin);
 }
 
-void FieldModel<::variants::Value>::set_fields([[maybe_unused]] const ::variants::Value& fbe_value, pmr::memory_resource* resource) noexcept
+void FieldModel<::variants::Value>::set_fields([[maybe_unused]] const ::variants::Value& fbe_value, std::pmr::memory_resource* resource) noexcept
 {
     v.set(fbe_value.v, resource);
 }
@@ -976,7 +976,7 @@ size_t ValueModel::create_end(size_t fbe_begin)
     return fbe_full_size;
 }
 
-size_t ValueModel::serialize(const ::variants::Value& value, pmr::memory_resource* resource)
+size_t ValueModel::serialize(const ::variants::Value& value, std::pmr::memory_resource* resource)
 {
     size_t fbe_begin = create_begin();
     model.set(value, resource);
@@ -984,7 +984,7 @@ size_t ValueModel::serialize(const ::variants::Value& value, pmr::memory_resourc
     return fbe_full_size;
 }
 
-size_t ValueModel::deserialize(::variants::Value& value, pmr::memory_resource* resource) const noexcept
+size_t ValueModel::deserialize(::variants::Value& value, std::pmr::memory_resource* resource) const noexcept
 {
     if ((this->buffer().offset() + model.fbe_offset() - 4) > this->buffer().size())
         return 0;

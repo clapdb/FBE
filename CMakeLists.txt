@@ -82,6 +82,11 @@ if (FBE_USING_SMALL_ARENA_STRING)
   add_definitions(-DUSING_SMALL_ARENA_STRING)
 endif()
 
+option(FBE_USING_BTREE_MAP "using btree_map/set instead of std::map/set" OFF)
+if (FBE_USING_BTREE_MAP)
+  add_definitions(-DUSING_BTREE_MAP)
+endif()
+
 # System directories
 #include_directories("${CMAKE_CURRENT_SOURCE_DIR}/CppCommon")
 include_directories(SYSTEM "${CMAKE_CURRENT_SOURCE_DIR}/modules")

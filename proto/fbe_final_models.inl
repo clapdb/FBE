@@ -115,32 +115,47 @@ template <typename T, size_t N>
 template <size_t S>
 inline size_t FinalModelArray<T, N>::fbe_allocation_size(const T (&values)[S]) const noexcept
 {
-    size_t size = 0;
-    FinalModel<T> fbe_model(_buffer, fbe_offset());
-    for (size_t i = 0; (i < S) && (i < N); ++i)
-        size += fbe_model.fbe_allocation_size(values[i]);
-    return size;
+    constexpr size_t count = (S < N) ? S : N;
+    if constexpr (is_fbe_final_primitive_v<T>) {
+        return count * sizeof(T);
+    } else {
+        size_t size = 0;
+        FinalModel<T> fbe_model(_buffer, fbe_offset());
+        for (size_t i = 0; i < count; ++i)
+            size += fbe_model.fbe_allocation_size(values[i]);
+        return size;
+    }
 }
 
 template <typename T, size_t N>
 template <size_t S>
 inline size_t FinalModelArray<T, N>::fbe_allocation_size(const std::array<T, S>& values) const noexcept
 {
-    size_t size = 0;
-    FinalModel<T> fbe_model(_buffer, fbe_offset());
-    for (size_t i = 0; (i < S) && (i < N); ++i)
-        size += fbe_model.fbe_allocation_size(values[i]);
-    return size;
+    constexpr size_t count = (S < N) ? S : N;
+    if constexpr (is_fbe_final_primitive_v<T>) {
+        return count * sizeof(T);
+    } else {
+        size_t size = 0;
+        FinalModel<T> fbe_model(_buffer, fbe_offset());
+        for (size_t i = 0; i < count; ++i)
+            size += fbe_model.fbe_allocation_size(values[i]);
+        return size;
+    }
 }
 
 template <typename T, size_t N>
 inline size_t FinalModelArray<T, N>::fbe_allocation_size(const FastVec<T>& values) const noexcept
 {
-    size_t size = 0;
-    FinalModel<T> fbe_model(_buffer, fbe_offset());
-    for (size_t i = 0; (i < values.size()) && (i < N); ++i)
-        size += fbe_model.fbe_allocation_size(values[i]);
-    return size;
+    const size_t count = std::min(values.size(), N);
+    if constexpr (is_fbe_final_primitive_v<T>) {
+        return count * sizeof(T);
+    } else {
+        size_t size = 0;
+        FinalModel<T> fbe_model(_buffer, fbe_offset());
+        for (size_t i = 0; i < count; ++i)
+            size += fbe_model.fbe_allocation_size(values[i]);
+        return size;
+    }
 }
 
 template <typename T, size_t N>
@@ -149,17 +164,25 @@ inline size_t FinalModelArray<T, N>::verify() const noexcept
     if ((_buffer.offset() + fbe_offset()) > _buffer.size())
         return std::numeric_limits<std::size_t>::max();
 
-    size_t size = 0;
-    FinalModel<T> fbe_model(_buffer, fbe_offset());
-    for (size_t i = N; i-- > 0;)
-    {
-        size_t offset = fbe_model.verify();
-        if (offset == std::numeric_limits<std::size_t>::max())
+    if constexpr (is_fbe_final_primitive_v<T>) {
+        // Bulk verification for primitive types - just check total size
+        constexpr size_t total_size = N * sizeof(T);
+        if ((_buffer.offset() + fbe_offset() + total_size) > _buffer.size())
             return std::numeric_limits<std::size_t>::max();
-        fbe_model.fbe_shift(offset);
-        size += offset;
+        return total_size;
+    } else {
+        size_t size = 0;
+        FinalModel<T> fbe_model(_buffer, fbe_offset());
+        for (size_t i = 0; i < N; ++i)
+        {
+            size_t offset = fbe_model.verify();
+            if (offset == std::numeric_limits<std::size_t>::max())
+                return std::numeric_limits<std::size_t>::max();
+            fbe_model.fbe_shift(offset);
+            size += offset;
+        }
+        return size;
     }
-    return size;
 }
 
 template <typename T, size_t N>
@@ -171,15 +194,24 @@ inline size_t FinalModelArray<T, N>::get(T (&values)[S]) const noexcept
     if (fbe_full_offset > _buffer.size())
         return 0;
 
-    size_t size = 0;
-    FinalModel<T> fbe_model(_buffer, fbe_offset());
-    for (size_t i = 0; (i < S) && (i < N); ++i)
-    {
-        size_t offset = fbe_model.get(values[i]);
-        fbe_model.fbe_shift(offset);
-        size += offset;
+    constexpr size_t count = (S < N) ? S : N;
+
+    if constexpr (is_fbe_final_primitive_v<T>) {
+        // Bulk copy for primitive types
+        constexpr size_t total_size = count * sizeof(T);
+        memcpy(values, _buffer.data() + fbe_full_offset, total_size);
+        return total_size;
+    } else {
+        size_t size = 0;
+        FinalModel<T> fbe_model(_buffer, fbe_offset());
+        for (size_t i = 0; i < count; ++i)
+        {
+            size_t offset = fbe_model.get(values[i]);
+            fbe_model.fbe_shift(offset);
+            size += offset;
+        }
+        return size;
     }
-    return size;
 }
 
 template <typename T, size_t N>
@@ -191,15 +223,24 @@ inline size_t FinalModelArray<T, N>::get(std::array<T, S>& values) const noexcep
     if (fbe_full_offset > _buffer.size())
         return 0;
 
-    size_t size = 0;
-    FinalModel<T> fbe_model(_buffer, fbe_offset());
-    for (size_t i = 0; (i < S) && (i < N); ++i)
-    {
-        size_t offset = fbe_model.get(values[i]);
-        fbe_model.fbe_shift(offset);
-        size += offset;
+    constexpr size_t count = (S < N) ? S : N;
+
+    if constexpr (is_fbe_final_primitive_v<T>) {
+        // Bulk copy for primitive types
+        constexpr size_t total_size = count * sizeof(T);
+        memcpy(values.data(), _buffer.data() + fbe_full_offset, total_size);
+        return total_size;
+    } else {
+        size_t size = 0;
+        FinalModel<T> fbe_model(_buffer, fbe_offset());
+        for (size_t i = 0; i < count; ++i)
+        {
+            size_t offset = fbe_model.get(values[i]);
+            fbe_model.fbe_shift(offset);
+            size += offset;
+        }
+        return size;
     }
-    return size;
 }
 
 template <typename T, size_t N>
@@ -214,87 +255,130 @@ inline size_t FinalModelArray<T, N>::get(FastVec<T>& values) const noexcept
 
     values.reserve(N);
 
-    size_t size = 0;
-    FinalModel<T> fbe_model(_buffer, fbe_offset());
-    for (size_t i = N; i-- > 0;)
-    {
-        T value{};
-        size_t offset = fbe_model.get(value);
-        #if defined(USING_STD_VECTOR)
-        values.emplace_back(std::move(value));
-        #else
-        values.template emplace_back<Safety::Unsafe>(std::move(value));
-        #endif
-        fbe_model.fbe_shift(offset);
-        size += offset;
+    if constexpr (is_fbe_final_primitive_v<T>) {
+        // Bulk copy for primitive types
+        constexpr size_t total_size = N * sizeof(T);
+        values.resize(N);
+        memcpy(values.data(), _buffer.data() + fbe_full_offset, total_size);
+        return total_size;
+    } else {
+        size_t size = 0;
+        FinalModel<T> fbe_model(_buffer, fbe_offset());
+        for (size_t i = 0; i < N; ++i)
+        {
+            T value{};
+            size_t offset = fbe_model.get(value);
+            #if defined(USING_STD_VECTOR)
+            values.emplace_back(std::move(value));
+            #else
+            values.template emplace_back<Safety::Unsafe>(std::move(value));
+            #endif
+            fbe_model.fbe_shift(offset);
+            size += offset;
+        }
+        return size;
     }
-    return size;
 }
 
 template <typename T, size_t N>
 template <size_t S>
 inline size_t FinalModelArray<T, N>::set(const T (&values)[S]) noexcept
 {
-    assert(((_buffer.offset() + fbe_offset()) <= _buffer.size()) && "Model is broken!");
-    if ((_buffer.offset() + fbe_offset()) > _buffer.size())
+    size_t fbe_full_offset = _buffer.offset() + fbe_offset();
+    assert((fbe_full_offset <= _buffer.size()) && "Model is broken!");
+    if (fbe_full_offset > _buffer.size())
         return 0;
 
-    size_t size = 0;
-    FinalModel<T> fbe_model(_buffer, fbe_offset());
-    for (size_t i = 0; (i < S) && (i < N); ++i)
-    {
-        size_t offset = fbe_model.set(values[i]);
-        fbe_model.fbe_shift(offset);
-        size += offset;
+    constexpr size_t count = (S < N) ? S : N;
+
+    if constexpr (is_fbe_final_primitive_v<T>) {
+        // Bulk copy for primitive types
+        constexpr size_t total_size = count * sizeof(T);
+        memcpy(_buffer.data() + fbe_full_offset, values, total_size);
+        return total_size;
+    } else {
+        size_t size = 0;
+        FinalModel<T> fbe_model(_buffer, fbe_offset());
+        for (size_t i = 0; i < count; ++i)
+        {
+            size_t offset = fbe_model.set(values[i]);
+            fbe_model.fbe_shift(offset);
+            size += offset;
+        }
+        return size;
     }
-    return size;
 }
 
 template <typename T, size_t N>
 template <size_t S>
 inline size_t FinalModelArray<T, N>::set(const std::array<T, S>& values) noexcept
 {
-    assert(((_buffer.offset() + fbe_offset()) <= _buffer.size()) && "Model is broken!");
-    if ((_buffer.offset() + fbe_offset()) > _buffer.size())
+    size_t fbe_full_offset = _buffer.offset() + fbe_offset();
+    assert((fbe_full_offset <= _buffer.size()) && "Model is broken!");
+    if (fbe_full_offset > _buffer.size())
         return 0;
 
-    size_t size = 0;
-    FinalModel<T> fbe_model(_buffer, fbe_offset());
-    for (size_t i = 0; (i < S) && (i < N); ++i)
-    {
-        size_t offset = fbe_model.set(values[i]);
-        fbe_model.fbe_shift(offset);
-        size += offset;
+    constexpr size_t count = (S < N) ? S : N;
+
+    if constexpr (is_fbe_final_primitive_v<T>) {
+        // Bulk copy for primitive types
+        constexpr size_t total_size = count * sizeof(T);
+        memcpy(_buffer.data() + fbe_full_offset, values.data(), total_size);
+        return total_size;
+    } else {
+        size_t size = 0;
+        FinalModel<T> fbe_model(_buffer, fbe_offset());
+        for (size_t i = 0; i < count; ++i)
+        {
+            size_t offset = fbe_model.set(values[i]);
+            fbe_model.fbe_shift(offset);
+            size += offset;
+        }
+        return size;
     }
-    return size;
 }
 
 template <typename T, size_t N>
 inline size_t FinalModelArray<T, N>::set(const FastVec<T>& values) noexcept
 {
-    assert(((_buffer.offset() + fbe_offset()) <= _buffer.size()) && "Model is broken!");
-    if ((_buffer.offset() + fbe_offset()) > _buffer.size())
+    size_t fbe_full_offset = _buffer.offset() + fbe_offset();
+    assert((fbe_full_offset <= _buffer.size()) && "Model is broken!");
+    if (fbe_full_offset > _buffer.size())
         return 0;
 
-    size_t size = 0;
-    FinalModel<T> fbe_model(_buffer, fbe_offset());
-    for (size_t i = 0; (i < values.size()) && (i < N); ++i)
-    {
-        size_t offset = fbe_model.set(values[i]);
-        fbe_model.fbe_shift(offset);
-        size += offset;
+    const size_t count = std::min(values.size(), N);
+
+    if constexpr (is_fbe_final_primitive_v<T>) {
+        // Bulk copy for primitive types
+        const size_t total_size = count * sizeof(T);
+        memcpy(_buffer.data() + fbe_full_offset, values.data(), total_size);
+        return total_size;
+    } else {
+        size_t size = 0;
+        FinalModel<T> fbe_model(_buffer, fbe_offset());
+        for (size_t i = 0; i < count; ++i)
+        {
+            size_t offset = fbe_model.set(values[i]);
+            fbe_model.fbe_shift(offset);
+            size += offset;
+        }
+        return size;
     }
-    return size;
 }
 
 template <typename T>
 inline size_t FinalModelVector<T>::fbe_allocation_size(const FastVec<T>& values) const noexcept
 {
-    size_t size = 4;
-    FinalModel<T> fbe_model(_buffer, fbe_offset() + 4);
-    for (const auto& value : values)
-        size += fbe_model.fbe_allocation_size(value);
-    return size;
+    if constexpr (is_fbe_final_primitive_v<T>) {
+        // Fixed size for primitive types
+        return 4 + values.size() * sizeof(T);
+    } else {
+        size_t size = 4;
+        FinalModel<T> fbe_model(_buffer, fbe_offset() + 4);
+        for (const auto& value : values)
+            size += fbe_model.fbe_allocation_size(value);
+        return size;
+    }
 }
 
 template <typename T>
@@ -325,17 +409,25 @@ inline size_t FinalModelVector<T>::verify() const noexcept
 
     uint32_t fbe_vector_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset());
 
-    size_t size = 4;
-    FinalModel<T> fbe_model(_buffer, fbe_offset() + 4);
-    for (size_t i = fbe_vector_size; i-- > 0;)
-    {
-        size_t offset = fbe_model.verify();
-        if (offset == std::numeric_limits<std::size_t>::max())
+    if constexpr (is_fbe_final_primitive_v<T>) {
+        // Bulk verification for primitive types - just check total size
+        size_t total_size = 4 + fbe_vector_size * sizeof(T);
+        if ((_buffer.offset() + fbe_offset() + total_size) > _buffer.size())
             return std::numeric_limits<std::size_t>::max();
-        fbe_model.fbe_shift(offset);
-        size += offset;
+        return total_size;
+    } else {
+        size_t size = 4;
+        FinalModel<T> fbe_model(_buffer, fbe_offset() + 4);
+        for (size_t i = 0; i < fbe_vector_size; ++i)
+        {
+            size_t offset = fbe_model.verify();
+            if (offset == std::numeric_limits<std::size_t>::max())
+                return std::numeric_limits<std::size_t>::max();
+            fbe_model.fbe_shift(offset);
+            size += offset;
+        }
+        return size;
     }
-    return size;
 }
 
 template <typename T>
@@ -352,23 +444,25 @@ inline size_t FinalModelVector<T>::get(FastVec<T>& values) const noexcept
     if (fbe_vector_size == 0)
         return 4;
 
-    values.reserve(fbe_vector_size);
-
-    size_t size = 4;
-    FinalModel<T> fbe_model(_buffer, fbe_offset() + 4);
-    for (size_t i = fbe_vector_size; i-- > 0;)
-    {
-        T value{};
-        size_t offset = fbe_model.get(value);
-        #if defined(USING_STD_VECTOR)
-        values.emplace_back(std::move(value));
-        #else
-        values.template emplace_back<Safety::Unsafe>(std::move(value));
-        #endif
-        fbe_model.fbe_shift(offset);
-        size += offset;
+    if constexpr (is_fbe_final_primitive_v<T>) {
+        // Bulk copy for primitive types
+        const size_t data_size = fbe_vector_size * sizeof(T);
+        values.resize(fbe_vector_size);
+        memcpy(values.data(), _buffer.data() + fbe_full_offset + 4, data_size);
+        return 4 + data_size;
+    } else {
+        // Pre-allocate and deserialize directly into elements
+        values.resize(fbe_vector_size);
+        size_t size = 4;
+        FinalModel<T> fbe_model(_buffer, fbe_offset() + 4);
+        for (size_t i = 0; i < fbe_vector_size; ++i)
+        {
+            size_t offset = fbe_model.get(values[i]);
+            fbe_model.fbe_shift(offset);
+            size += offset;
+        }
+        return size;
     }
-    return size;
 }
 
 template <typename T>
@@ -387,7 +481,7 @@ inline size_t FinalModelVector<T>::get(std::list<T>& values) const noexcept
 
     size_t size = 4;
     FinalModel<T> fbe_model(_buffer, fbe_offset() + 4);
-    for (size_t i = fbe_vector_size; i-- > 0;)
+    for (size_t i = 0; i < fbe_vector_size; ++i)
     {
         T value{};
         size_t offset = fbe_model.get(value);
@@ -414,7 +508,7 @@ inline size_t FinalModelVector<T>::get(std::set<T>& values) const noexcept
 
     size_t size = 4;
     FinalModel<T> fbe_model(_buffer, fbe_offset() + 4);
-    for (size_t i = fbe_vector_size; i-- > 0;)
+    for (size_t i = 0; i < fbe_vector_size; ++i)
     {
         T value{};
         size_t offset = fbe_model.get(value);
@@ -435,15 +529,22 @@ inline size_t FinalModelVector<T>::set(const FastVec<T>& values) noexcept
 
     *((uint32_t*)(_buffer.data() + fbe_full_offset)) = (uint32_t)values.size();
 
-    size_t size = 4;
-    FinalModel<T> fbe_model(_buffer, fbe_offset() + 4);
-    for (const auto& value : values)
-    {
-        size_t offset = fbe_model.set(value);
-        fbe_model.fbe_shift(offset);
-        size += offset;
+    if constexpr (is_fbe_final_primitive_v<T>) {
+        // Bulk copy for primitive types
+        const size_t data_size = values.size() * sizeof(T);
+        memcpy(_buffer.data() + fbe_full_offset + 4, values.data(), data_size);
+        return 4 + data_size;
+    } else {
+        size_t size = 4;
+        FinalModel<T> fbe_model(_buffer, fbe_offset() + 4);
+        for (const auto& value : values)
+        {
+            size_t offset = fbe_model.set(value);
+            fbe_model.fbe_shift(offset);
+            size += offset;
+        }
+        return size;
     }
-    return size;
 }
 
 template <typename T>
@@ -487,6 +588,63 @@ inline size_t FinalModelVector<T>::set(const std::set<T>& values) noexcept
     }
     return size;
 }
+
+#if defined(USING_BTREE_MAP)
+template <typename T>
+inline size_t FinalModelVector<T>::fbe_allocation_size(const FBE::set<T>& values) const noexcept
+{
+    size_t size = 4;
+    FinalModel<T> fbe_model(_buffer, fbe_offset() + 4);
+    for (const auto& value : values)
+        size += fbe_model.fbe_allocation_size(value);
+    return size;
+}
+
+template <typename T>
+inline size_t FinalModelVector<T>::get(FBE::set<T>& values) const noexcept
+{
+    values.clear();
+
+    assert(((_buffer.offset() + fbe_offset() + 4) <= _buffer.size()) && "Model is broken!");
+    if ((_buffer.offset() + fbe_offset() + 4) > _buffer.size())
+        return 0;
+
+    uint32_t fbe_vector_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset());
+
+    size_t size = 4;
+    FinalModel<T> fbe_model(_buffer, fbe_offset() + 4);
+    for (size_t i = 0; i < fbe_vector_size; ++i)
+    {
+        T value = T();
+        size_t offset = fbe_model.get(value);
+        values.emplace(std::move(value));
+        fbe_model.fbe_shift(offset);
+        size += offset;
+    }
+    return size;
+}
+
+template <typename T>
+inline size_t FinalModelVector<T>::set(const FBE::set<T>& values) noexcept
+{
+    size_t fbe_full_offset = _buffer.offset() + fbe_offset();
+    assert(((fbe_full_offset + 4) <= _buffer.size()) && "Model is broken!");
+    if ((fbe_full_offset + 4) > _buffer.size())
+        return 0;
+
+    *((uint32_t*)(_buffer.data() + fbe_full_offset)) = (uint32_t)values.size();
+
+    size_t size = 4;
+    FinalModel<T> fbe_model(_buffer, fbe_offset() + 4);
+    for (const auto& value : values)
+    {
+        size_t offset = fbe_model.set(value);
+        fbe_model.fbe_shift(offset);
+        size += offset;
+    }
+    return size;
+}
+#endif
 
 template <typename TKey, typename TValue>
 inline size_t FinalModelMap<TKey, TValue>::fbe_allocation_size(const std::map<TKey, TValue>& values) const noexcept
@@ -562,7 +720,7 @@ inline size_t FinalModelMap<TKey, TValue>::get(std::map<TKey, TValue>& values) c
     size_t size = 4;
     FinalModel<TKey> fbe_model_key(_buffer, fbe_offset() + 4);
     FinalModel<TValue> fbe_model_value(_buffer, fbe_offset() + 4);
-    for (size_t i = fbe_map_size; i-- > 0;)
+    for (size_t i = 0; i < fbe_map_size; ++i)
     {
         TKey key{};
         TValue value{};
@@ -592,10 +750,11 @@ inline size_t FinalModelMap<TKey, TValue>::get(std::unordered_map<TKey, TValue>&
     if (fbe_map_size == 0)
         return 4;
 
+    values.reserve(fbe_map_size);
     size_t size = 4;
     FinalModel<TKey> fbe_model_key(_buffer, fbe_offset() + 4);
     FinalModel<TValue> fbe_model_value(_buffer, fbe_offset() + 4);
-    for (size_t i = fbe_map_size; i-- > 0;)
+    for (size_t i = 0; i < fbe_map_size; ++i)
     {
         TKey key{};
         TValue value{};
@@ -662,5 +821,74 @@ inline size_t FinalModelMap<TKey, TValue>::set(const std::unordered_map<TKey, TV
     }
     return size;
 }
+
+#if defined(USING_BTREE_MAP)
+template <typename TKey, typename TValue>
+inline size_t FinalModelMap<TKey, TValue>::fbe_allocation_size(const FBE::map<TKey, TValue>& values) const noexcept
+{
+    size_t size = 4;
+    FinalModel<TKey> fbe_model_key(_buffer, fbe_offset() + 4);
+    FinalModel<TValue> fbe_model_value(_buffer, fbe_offset() + 4);
+    for (const auto& value : values)
+        size += fbe_model_key.fbe_allocation_size(value.first) + fbe_model_value.fbe_allocation_size(value.second);
+    return size;
+}
+
+template <typename TKey, typename TValue>
+inline size_t FinalModelMap<TKey, TValue>::get(FBE::map<TKey, TValue>& values) const noexcept
+{
+    values.clear();
+
+    assert(((_buffer.offset() + fbe_offset() + 4) <= _buffer.size()) && "Model is broken!");
+    if ((_buffer.offset() + fbe_offset() + 4) > _buffer.size())
+        return 0;
+
+    uint32_t fbe_map_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset());
+
+    size_t size = 4;
+    FinalModel<TKey> fbe_model_key(_buffer, fbe_offset() + 4);
+    FinalModel<TValue> fbe_model_value(_buffer, fbe_offset() + 4);
+    for (size_t i = 0; i < fbe_map_size; ++i)
+    {
+        TKey key = TKey();
+        TValue value = TValue();
+        size_t offset_key = fbe_model_key.get(key);
+        fbe_model_key.fbe_shift(offset_key);
+        fbe_model_value.fbe_shift(offset_key);
+        size_t offset_value = fbe_model_value.get(value);
+        fbe_model_key.fbe_shift(offset_value);
+        fbe_model_value.fbe_shift(offset_value);
+        values.emplace(std::move(key), std::move(value));
+        size += offset_key + offset_value;
+    }
+    return size;
+}
+
+template <typename TKey, typename TValue>
+inline size_t FinalModelMap<TKey, TValue>::set(const FBE::map<TKey, TValue>& values) noexcept
+{
+    size_t fbe_full_offset = _buffer.offset() + fbe_offset();
+    assert(((fbe_full_offset + 4) <= _buffer.size()) && "Model is broken!");
+    if ((fbe_full_offset + 4) > _buffer.size())
+        return 0;
+
+    *((uint32_t*)(_buffer.data() + fbe_full_offset)) = (uint32_t)values.size();
+
+    size_t size = 4;
+    FinalModel<TKey> fbe_model_key(_buffer, fbe_offset() + 4);
+    FinalModel<TValue> fbe_model_value(_buffer, fbe_offset() + 4);
+    for (const auto& value : values)
+    {
+        size_t offset_key = fbe_model_key.set(value.first);
+        fbe_model_key.fbe_shift(offset_key);
+        fbe_model_value.fbe_shift(offset_key);
+        size_t offset_value = fbe_model_value.set(value.second);
+        fbe_model_key.fbe_shift(offset_value);
+        fbe_model_value.fbe_shift(offset_value);
+        size += offset_key + offset_value;
+    }
+    return size;
+}
+#endif
 
 } // namespace FBE

@@ -610,15 +610,15 @@ namespace test {
 
 struct StructSet
 {
-    std::set<uint8_t> f1;
-    std::set<::test::EnumSimple> f2;
-    std::set<::test::FlagsSimple> f3;
-    std::set<::test::StructSimple> f4;
+    FBE::set<uint8_t> f1;
+    FBE::set<::test::EnumSimple> f2;
+    FBE::set<::test::FlagsSimple> f3;
+    FBE::set<::test::StructSimple> f4;
 
     size_t fbe_type() const noexcept { return 132; }
 
     StructSet();
-    StructSet(const std::set<uint8_t>& arg_f1, const std::set<::test::EnumSimple>& arg_f2, const std::set<::test::FlagsSimple>& arg_f3, const std::set<::test::StructSimple>& arg_f4);
+    StructSet(const FBE::set<uint8_t>& arg_f1, const FBE::set<::test::EnumSimple>& arg_f2, const FBE::set<::test::FlagsSimple>& arg_f3, const FBE::set<::test::StructSimple>& arg_f4);
     StructSet(const StructSet& other) = default;
     StructSet(StructSet&& other) = default;
     ~StructSet() = default;
@@ -660,21 +660,21 @@ namespace test {
 
 struct StructMap
 {
-    std::map<int32_t, uint8_t> f1;
-    std::map<int32_t, std::optional<uint8_t>> f2;
-    std::map<int32_t, FBE::buffer_t> f3;
-    std::map<int32_t, std::optional<FBE::buffer_t>> f4;
-    std::map<int32_t, ::test::EnumSimple> f5;
-    std::map<int32_t, std::optional<::test::EnumSimple>> f6;
-    std::map<int32_t, ::test::FlagsSimple> f7;
-    std::map<int32_t, std::optional<::test::FlagsSimple>> f8;
-    std::map<int32_t, ::test::StructSimple> f9;
-    std::map<int32_t, std::optional<::test::StructSimple>> f10;
+    FBE::map<int32_t, uint8_t> f1;
+    FBE::map<int32_t, std::optional<uint8_t>> f2;
+    FBE::map<int32_t, FBE::buffer_t> f3;
+    FBE::map<int32_t, std::optional<FBE::buffer_t>> f4;
+    FBE::map<int32_t, ::test::EnumSimple> f5;
+    FBE::map<int32_t, std::optional<::test::EnumSimple>> f6;
+    FBE::map<int32_t, ::test::FlagsSimple> f7;
+    FBE::map<int32_t, std::optional<::test::FlagsSimple>> f8;
+    FBE::map<int32_t, ::test::StructSimple> f9;
+    FBE::map<int32_t, std::optional<::test::StructSimple>> f10;
 
     size_t fbe_type() const noexcept { return 140; }
 
     StructMap();
-    StructMap(const std::map<int32_t, uint8_t>& arg_f1, const std::map<int32_t, std::optional<uint8_t>>& arg_f2, const std::map<int32_t, FBE::buffer_t>& arg_f3, const std::map<int32_t, std::optional<FBE::buffer_t>>& arg_f4, const std::map<int32_t, ::test::EnumSimple>& arg_f5, const std::map<int32_t, std::optional<::test::EnumSimple>>& arg_f6, const std::map<int32_t, ::test::FlagsSimple>& arg_f7, const std::map<int32_t, std::optional<::test::FlagsSimple>>& arg_f8, const std::map<int32_t, ::test::StructSimple>& arg_f9, const std::map<int32_t, std::optional<::test::StructSimple>>& arg_f10);
+    StructMap(const FBE::map<int32_t, uint8_t>& arg_f1, const FBE::map<int32_t, std::optional<uint8_t>>& arg_f2, const FBE::map<int32_t, FBE::buffer_t>& arg_f3, const FBE::map<int32_t, std::optional<FBE::buffer_t>>& arg_f4, const FBE::map<int32_t, ::test::EnumSimple>& arg_f5, const FBE::map<int32_t, std::optional<::test::EnumSimple>>& arg_f6, const FBE::map<int32_t, ::test::FlagsSimple>& arg_f7, const FBE::map<int32_t, std::optional<::test::FlagsSimple>>& arg_f8, const FBE::map<int32_t, ::test::StructSimple>& arg_f9, const FBE::map<int32_t, std::optional<::test::StructSimple>>& arg_f10);
     StructMap(const StructMap& other) = default;
     StructMap(StructMap&& other) = default;
     ~StructMap() = default;

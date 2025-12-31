@@ -46,9 +46,9 @@ public:
     bool verify() const noexcept { return true; }
 
     // Get the field value
-    void get(T& value, pmr::memory_resource* resource, T defaults = (T)0) const noexcept;
+    void get(T& value, std::pmr::memory_resource* resource, T defaults = (T)0) const noexcept;
     // Set the field value
-    void set(T value, pmr::memory_resource* resource) noexcept;
+    void set(T value, std::pmr::memory_resource* resource) noexcept;
 
 private:
     FBEBuffer& _buffer;
@@ -88,8 +88,8 @@ public:
 };
 
 template<typename V, typename T>
-auto variant_emplace_value(V& fbe_value, pmr::memory_resource* resource) {
-    if constexpr (std::is_integral_v<T> or std::is_floating_point_v<T> or std::is_enum_v<T> or std::is_same_v<T, std::string> or not std::is_constructible_v<T, pmr::memory_resource*>) {
+auto variant_emplace_value(V& fbe_value, std::pmr::memory_resource* resource) {
+    if constexpr (std::is_integral_v<T> or std::is_floating_point_v<T> or std::is_enum_v<T> or std::is_same_v<T, std::string> or not std::is_constructible_v<T, std::pmr::memory_resource*>) {
         fbe_value.template emplace<T>();
     } else {
         fbe_value.template emplace<T>(resource);
@@ -97,8 +97,8 @@ auto variant_emplace_value(V& fbe_value, pmr::memory_resource* resource) {
 }
 
 template<typename M, typename T>
-auto variant_get_value(M& model, T& value, pmr::memory_resource* resource) {
-    if constexpr (std::is_integral_v<T> or std::is_floating_point_v<T> or std::is_enum_v<T> or std::is_same_v<T, std::string> or not (std::is_constructible_v<T, pmr::memory_resource*> or is_variant_v<T>)) {
+auto variant_get_value(M& model, T& value, std::pmr::memory_resource* resource) {
+    if constexpr (std::is_integral_v<T> or std::is_floating_point_v<T> or std::is_enum_v<T> or std::is_same_v<T, std::string> or not (std::is_constructible_v<T, std::pmr::memory_resource*> or is_variant_v<T>)) {
         model.get(value, nullptr);
     } else {
         model.get(value, resource);
@@ -106,8 +106,8 @@ auto variant_get_value(M& model, T& value, pmr::memory_resource* resource) {
 }
 
 template<typename M, typename T>
-auto variant_get_value(M& model, T** value, pmr::memory_resource* resource) {
-    if constexpr (std::is_integral_v<T> or std::is_floating_point_v<T> or std::is_enum_v<T> or std::is_same_v<T, std::string> or not (std::is_constructible_v<T, pmr::memory_resource*> or is_variant_v<T>)) {
+auto variant_get_value(M& model, T** value, std::pmr::memory_resource* resource) {
+    if constexpr (std::is_integral_v<T> or std::is_floating_point_v<T> or std::is_enum_v<T> or std::is_same_v<T, std::string> or not (std::is_constructible_v<T, std::pmr::memory_resource*> or is_variant_v<T>)) {
         model.get(value, nullptr);
     } else {
         model.get(value, resource);
@@ -115,8 +115,8 @@ auto variant_get_value(M& model, T** value, pmr::memory_resource* resource) {
 }
 
 template<typename M, typename T>
-auto variant_set_value(M* model, T& value, pmr::memory_resource* resource) {
-    if constexpr (std::is_integral_v<T> or std::is_floating_point_v<T> or std::is_enum_v<T> or std::is_same_v<T, std::string> or not (std::is_constructible_v<T, pmr::memory_resource*> or is_variant_v<T>)) {
+auto variant_set_value(M* model, T& value, std::pmr::memory_resource* resource) {
+    if constexpr (std::is_integral_v<T> or std::is_floating_point_v<T> or std::is_enum_v<T> or std::is_same_v<T, std::string> or not (std::is_constructible_v<T, std::pmr::memory_resource*> or is_variant_v<T>)) {
         model->set(value, nullptr);
     } else {
         model->set(value, resource);
@@ -148,9 +148,9 @@ public:
     bool verify() const noexcept { return true; }
 
     // Get the decimal value
-    void get(decimal_t& value, pmr::memory_resource* resource, decimal_t defaults = decimal_t()) const noexcept;
+    void get(decimal_t& value, std::pmr::memory_resource* resource, decimal_t defaults = decimal_t()) const noexcept;
     // Set the decimal value
-    void set(decimal_t value, pmr::memory_resource* resource) noexcept;
+    void set(decimal_t value, std::pmr::memory_resource* resource) noexcept;
 
 private:
     FBEBuffer& _buffer;
@@ -184,9 +184,9 @@ public:
     bool verify() const noexcept { return true; }
 
     // Get the UUID value
-    void get(uuid_t& value, pmr::memory_resource* resource, uuid_t defaults = uuid_t::nil()) const noexcept;
+    void get(uuid_t& value, std::pmr::memory_resource* resource, uuid_t defaults = uuid_t::nil()) const noexcept;
     // Set the UUID value
-    void set(uuid_t value, pmr::memory_resource* resource) noexcept;
+    void set(uuid_t value, std::pmr::memory_resource* resource) noexcept;
 
 private:
     FBEBuffer& _buffer;
@@ -216,30 +216,30 @@ public:
     bool verify() const noexcept;
 
     // Get the bytes value
-    size_t get(void* data, size_t size, pmr::memory_resource* resource) const noexcept;
+    size_t get(void* data, size_t size, std::pmr::memory_resource* resource) const noexcept;
     // Get the bytes value
     template <size_t N>
-    size_t get(uint8_t (&data)[N], pmr::memory_resource* resource) const noexcept { return get(data, N, resource); }
+    size_t get(uint8_t (&data)[N], std::pmr::memory_resource* resource) const noexcept { return get(data, N, resource); }
     // Get the bytes value
     template <size_t N>
-    size_t get(std::array<uint8_t, N>& data, pmr::memory_resource* resource) const noexcept { return get(data.data(), data.size(), resource); }
+    size_t get(std::array<uint8_t, N>& data, std::pmr::memory_resource* resource) const noexcept { return get(data.data(), data.size(), resource); }
     // Get the bytes value
-    void get(FastVec<uint8_t>& value, pmr::memory_resource* resource) const noexcept;
+    void get(FastVec<uint8_t>& value, std::pmr::memory_resource* resource) const noexcept;
     // Get the bytes value
-    void get(buffer_t& value, pmr::memory_resource* resource) const noexcept { get(value.buffer(), resource); }
+    void get(buffer_t& value, std::pmr::memory_resource* resource) const noexcept { get(value.buffer(), resource); }
 
     // Set the bytes value
-    void set(const void* data, size_t size, pmr::memory_resource* resource);
+    void set(const void* data, size_t size, std::pmr::memory_resource* resource);
     // Set the bytes value
     template <size_t N>
-    void set(const uint8_t (&data)[N], pmr::memory_resource* resource) { set(data, N, resource); }
+    void set(const uint8_t (&data)[N], std::pmr::memory_resource* resource) { set(data, N, resource); }
     // Set the bytes value
     template <size_t N>
-    void set(const std::array<uint8_t, N>& data, pmr::memory_resource* resource) { set(data.data(), data.size(), resource); }
+    void set(const std::array<uint8_t, N>& data, std::pmr::memory_resource* resource) { set(data.data(), data.size(), resource); }
     // Set the bytes value
-    void set(const FastVec<uint8_t>& value, pmr::memory_resource* resource) { set(value.data(), value.size(), resource); }
+    void set(const FastVec<uint8_t>& value, std::pmr::memory_resource* resource) { set(value.data(), value.size(), resource); }
     // Set the bytes value
-    void set(const buffer_t& value, pmr::memory_resource* resource) { set(value.buffer(), resource); }
+    void set(const buffer_t& value, std::pmr::memory_resource* resource) { set(value.buffer(), resource); }
 
 private:
     FBEBuffer& _buffer;
@@ -272,21 +272,21 @@ public:
     size_t get(void* data, size_t size) const noexcept;
     // Get the bytes value
     template <size_t N>
-    size_t get(uint8_t (&data)[N], pmr::memory_resource* resource) const noexcept { return get(data, N); }
+    size_t get(uint8_t (&data)[N], std::pmr::memory_resource* resource) const noexcept { return get(data, N); }
     // Get the bytes value
-    void get(pmr::vector<uint8_t>& value, pmr::memory_resource* resource) const noexcept;
+    void get(std::pmr::vector<uint8_t>& value, std::pmr::memory_resource* resource) const noexcept;
     // Get the bytes value
-    void get(pmr_buffer_t& value, pmr::memory_resource* resource) const noexcept { get(value.buffer(), resource); }
+    void get(pmr_buffer_t& value, std::pmr::memory_resource* resource) const noexcept { get(value.buffer(), resource); }
 
     // Set the bytes value
-    void set(const void* data, size_t size, pmr::memory_resource* resource);
+    void set(const void* data, size_t size, std::pmr::memory_resource* resource);
     // Set the bytes value
     template <size_t N>
-    void set(const uint8_t (&data)[N], pmr::memory_resource* resource) { set(data, N, resource); }
+    void set(const uint8_t (&data)[N], std::pmr::memory_resource* resource) { set(data, N, resource); }
     // Set the bytes value
-    void set(const pmr::vector<uint8_t>& value, pmr::memory_resource* resource) { set(value.data(), value.size(), resource); }
+    void set(const std::pmr::vector<uint8_t>& value, std::pmr::memory_resource* resource) { set(value.data(), value.size(), resource); }
     // Set the bytes value
-    void set(const pmr_buffer_t& value, pmr::memory_resource* resource) { set(value.buffer(), resource); }
+    void set(const pmr_buffer_t& value, std::pmr::memory_resource* resource) { set(value.buffer(), resource); }
 
 private:
     FBEBuffer& _buffer;
@@ -319,25 +319,25 @@ public:
     size_t get(char* data, size_t size) const noexcept;
     // Get the string value
     template <size_t N>
-    size_t get(char (&data)[N], pmr::memory_resource* resource) const noexcept { return get(data, N); }
+    size_t get(char (&data)[N], std::pmr::memory_resource* resource) const noexcept { return get(data, N); }
     // Get the string value
     template <size_t N>
-    size_t get(std::array<char, N>& data, pmr::memory_resource* resource) const noexcept { return get(data.data(), data.size()); }
+    size_t get(std::array<char, N>& data, std::pmr::memory_resource* resource) const noexcept { return get(data.data(), data.size()); }
     // Get the pmr string value
-    void get(FBEString& value, pmr::memory_resource* resource) const noexcept;
+    void get(FBEString& value, std::pmr::memory_resource* resource) const noexcept;
     // Get the pmr string value
-    void get(FBEString& value, pmr::memory_resource* resource, const FBEString& defaults) const noexcept;
+    void get(FBEString& value, std::pmr::memory_resource* resource, const FBEString& defaults) const noexcept;
 
     // Set the string value
-    void set(const char* data, size_t size, pmr::memory_resource* resource);
+    void set(const char* data, size_t size, std::pmr::memory_resource* resource);
     // Set the string value
     template <size_t N>
-    void set(const char (&data)[N], pmr::memory_resource* resource) { set(data, N); }
+    void set(const char (&data)[N], std::pmr::memory_resource* resource) { set(data, N); }
     // Set the string value
     template <size_t N>
-    void set(const std::array<char, N>& data, pmr::memory_resource* resource) { set(data.data(), data.size()); }
+    void set(const std::array<char, N>& data, std::pmr::memory_resource* resource) { set(data.data(), data.size()); }
     // Set the string value
-    void set(const FBEString& value, pmr::memory_resource* resource);
+    void set(const FBEString& value, std::pmr::memory_resource* resource);
 
 private:
     FBEBuffer& _buffer;
@@ -370,25 +370,25 @@ public:
     size_t get(char* data, size_t size) const noexcept;
     // Get the string value
     template <size_t N>
-    size_t get(char (&data)[N], pmr::memory_resource* resource) const noexcept { return get(data, N); }
+    size_t get(char (&data)[N], std::pmr::memory_resource* resource) const noexcept { return get(data, N); }
     // Get the string value
     template <size_t N>
-    size_t get(std::array<char, N>& data, pmr::memory_resource* resource) const noexcept { return get(data.data(), data.size()); }
+    size_t get(std::array<char, N>& data, std::pmr::memory_resource* resource) const noexcept { return get(data.data(), data.size()); }
     // Get the pmr string value
-    void get(ArenaString& value, pmr::memory_resource* resource) const noexcept;
+    void get(ArenaString& value, std::pmr::memory_resource* resource) const noexcept;
     // Get the pmr string value
-    void get(ArenaString& value, pmr::memory_resource* resource, const ArenaString& defaults) const noexcept;
+    void get(ArenaString& value, std::pmr::memory_resource* resource, const ArenaString& defaults) const noexcept;
 
     // Set the string value
-    void set(const char* data, size_t size, pmr::memory_resource* resource);
+    void set(const char* data, size_t size, std::pmr::memory_resource* resource);
     // Set the string value
     template <size_t N>
-    void set(const char (&data)[N], pmr::memory_resource* resource) { set(data, N); }
+    void set(const char (&data)[N], std::pmr::memory_resource* resource) { set(data, N); }
     // Set the string value
     template <size_t N>
-    void set(const std::array<char, N>& data, pmr::memory_resource* resource) { set(data.data(), data.size()); }
+    void set(const std::array<char, N>& data, std::pmr::memory_resource* resource) { set(data.data(), data.size()); }
     // Set the string value
-    void set(const ArenaString& value, pmr::memory_resource* resource);
+    void set(const ArenaString& value, std::pmr::memory_resource* resource);
 
 private:
     FBEBuffer& _buffer;
@@ -429,9 +429,9 @@ public:
     void get_end(size_t fbe_begin) const noexcept;
 
     // Get the optional value
-    void get(std::optional<T>& opt, pmr::memory_resource* resource, const std::optional<T>& defaults) const noexcept;
+    void get(std::optional<T>& opt, std::pmr::memory_resource* resource, const std::optional<T>& defaults) const noexcept;
     // Get the optional value
-    void get(std::optional<T>& opt, pmr::memory_resource* resource) const noexcept;
+    void get(std::optional<T>& opt, std::pmr::memory_resource* resource) const noexcept;
 
     // Set the optional value (begin phase)
     size_t set_begin(bool has_value);
@@ -439,7 +439,7 @@ public:
     void set_end(size_t fbe_begin);
 
     // Set the optional value
-    void set(const std::optional<T>& opt, pmr::memory_resource* resource);
+    void set(const std::optional<T>& opt, std::pmr::memory_resource* resource);
 
 private:
     FBEBuffer& _buffer;
@@ -486,21 +486,21 @@ public:
 
     // Get the array as C-array
     template <size_t S>
-    void get(T (&values)[S], pmr::memory_resource* resource = nullptr) const noexcept;
+    void get(T (&values)[S], std::pmr::memory_resource* resource = nullptr) const noexcept;
     // Get the array as std::array
     template <size_t S>
-    void get(std::array<T, S>& values, pmr::memory_resource* resource = nullptr) const noexcept;
+    void get(std::array<T, S>& values, std::pmr::memory_resource* resource = nullptr) const noexcept;
     // Get the array as FastVec
-    void get(FastVec<T>& values, pmr::memory_resource* resource = nullptr) const noexcept;
+    void get(FastVec<T>& values, std::pmr::memory_resource* resource = nullptr) const noexcept;
 
     // Set the array as C-array
     template <size_t S>
-    void set(const T (&values)[S], pmr::memory_resource* resource) noexcept;
+    void set(const T (&values)[S], std::pmr::memory_resource* resource) noexcept;
     // Set the array as std::array
     template <size_t S>
-    void set(const std::array<T, S>& values, pmr::memory_resource* resource) noexcept;
+    void set(const std::array<T, S>& values, std::pmr::memory_resource* resource) noexcept;
     // Set the array as FastVec
-    void set(const FastVec<T>& values, pmr::memory_resource* resource) noexcept;
+    void set(const FastVec<T>& values, std::pmr::memory_resource* resource) noexcept;
 
 private:
     FBEBuffer& _buffer;
@@ -542,32 +542,43 @@ public:
     bool verify() const noexcept;
 
     // Get the vector as FastVec
-    void get(FastVec<T>& values, pmr::memory_resource* resource) const noexcept;
+    void get(FastVec<T>& values, std::pmr::memory_resource* resource) const noexcept;
     // Get the vector as std::list
-    void get(std::list<T>& values, pmr::memory_resource* resource) const noexcept;
+    void get(std::list<T>& values, std::pmr::memory_resource* resource) const noexcept;
     // Get the vector as std::set
-    void get(std::set<T>& values, pmr::memory_resource* resource) const noexcept;
+    void get(std::set<T>& values, std::pmr::memory_resource* resource) const noexcept;
 
-    // Get the vector as pmr::vector
-    void get(pmr::vector<T>& values, pmr::memory_resource* resource) const noexcept;
-    // Get the vector as pmr::list
-    void get(pmr::list<T>& values, pmr::memory_resource* resource) const noexcept;
-    // Get the vector as pmr::set
-    void get(pmr::set<T>& values, pmr::memory_resource* resource) const noexcept;
+    // Get the vector as std::pmr::vector
+    void get(std::pmr::vector<T>& values, std::pmr::memory_resource* resource) const noexcept;
+    // Get the vector as std::pmr::list
+    void get(std::pmr::list<T>& values, std::pmr::memory_resource* resource) const noexcept;
+    // Get the vector as std::pmr::set
+    void get(std::pmr::set<T>& values, std::pmr::memory_resource* resource) const noexcept;
 
     // Set the vector as FastVec
-    void set(const FastVec<T>& values, pmr::memory_resource* resource) noexcept;
+    void set(const FastVec<T>& values, std::pmr::memory_resource* resource) noexcept;
     // Set the vector as std::list
-    void set(const std::list<T>& values, pmr::memory_resource* resource) noexcept;
+    void set(const std::list<T>& values, std::pmr::memory_resource* resource) noexcept;
     // Set the vector as std::set
-    void set(const std::set<T>& values, pmr::memory_resource* resource) noexcept;
+    void set(const std::set<T>& values, std::pmr::memory_resource* resource) noexcept;
 
-    // Set the vector as pmr::vector
-    void set(const pmr::vector<T>& values, pmr::memory_resource* resource) noexcept;
-    // Set the vector as pmr::list
-    void set(const pmr::list<T>& values, pmr::memory_resource* resource) noexcept;
-    // Set the vector as pmr::set
-    void set(const pmr::set<T>& values, pmr::memory_resource* resource) noexcept;
+    // Set the vector as std::pmr::vector
+    void set(const std::pmr::vector<T>& values, std::pmr::memory_resource* resource) noexcept;
+    // Set the vector as std::pmr::list
+    void set(const std::pmr::list<T>& values, std::pmr::memory_resource* resource) noexcept;
+    // Set the vector as std::pmr::set
+    void set(const std::pmr::set<T>& values, std::pmr::memory_resource* resource) noexcept;
+
+#if defined(USING_BTREE_MAP)
+    // Get the vector as FBE::set (btree_set with std allocator)
+    void get(FBE::set<T>& values, std::pmr::memory_resource* resource) const noexcept;
+    // Get the vector as FBE::pmr::set (btree_set with pmr allocator)
+    void get(FBE::pmr::set<T>& values, std::pmr::memory_resource* resource) const noexcept;
+    // Set the vector as FBE::set (btree_set with std allocator)
+    void set(const FBE::set<T>& values, std::pmr::memory_resource* resource) noexcept;
+    // Set the vector as FBE::pmr::set (btree_set with pmr allocator)
+    void set(const FBE::pmr::set<T>& values, std::pmr::memory_resource* resource) noexcept;
+#endif
 
 private:
     FBEBuffer& _buffer;
@@ -608,24 +619,38 @@ public:
     bool verify() const noexcept;
 
     // Get the map as std::map
-    void get(std::map<TKey, TValue>& values, pmr::memory_resource* resource = nullptr) const noexcept;
+    void get(std::map<TKey, TValue>& values, std::pmr::memory_resource* resource = nullptr) const noexcept;
     // Get the map as std::unordered_map
-    void get(std::unordered_map<TKey, TValue>& values, pmr::memory_resource* resource = nullptr) const noexcept;
+    void get(std::unordered_map<TKey, TValue>& values, std::pmr::memory_resource* resource = nullptr) const noexcept;
 
-    // Get the map as pmr::map
-    void get(pmr::map<TKey, TValue>& values, pmr::memory_resource* resource) const noexcept;
-    // Get the map as pmr::unordered_map
-    void get(pmr::unordered_map<TKey, TValue>& values, pmr::memory_resource* resource) const noexcept;
+    // Get the map as std::pmr::map
+    void get(std::pmr::map<TKey, TValue>& values, std::pmr::memory_resource* resource) const noexcept;
+    // Get the map as std::pmr::unordered_map
+    void get(std::pmr::unordered_map<TKey, TValue>& values, std::pmr::memory_resource* resource) const noexcept;
+
+#if defined(USING_BTREE_MAP)
+    // Get the map as FBE::map (btree_map with std allocator)
+    void get(FBE::map<TKey, TValue>& values, std::pmr::memory_resource* resource) const noexcept;
+    // Get the map as FBE::pmr::map (btree_map with pmr allocator)
+    void get(FBE::pmr::map<TKey, TValue>& values, std::pmr::memory_resource* resource) const noexcept;
+#endif
 
     // Set the map as std::map
-    void set(const std::map<TKey, TValue>& values, pmr::memory_resource* resource) noexcept;
+    void set(const std::map<TKey, TValue>& values, std::pmr::memory_resource* resource) noexcept;
     // Set the map as std::unordered_map
-    void set(const std::unordered_map<TKey, TValue>& values, pmr::memory_resource* resource) noexcept;
+    void set(const std::unordered_map<TKey, TValue>& values, std::pmr::memory_resource* resource) noexcept;
 
-    // Set the map as pmr::map
-    void set(const pmr::map<TKey, TValue>& values, pmr::memory_resource* resource) noexcept;
-    // Set the map as pmr::unordered_map
-    void set(const pmr::unordered_map<TKey, TValue>& values, pmr::memory_resource* resource) noexcept;
+    // Set the map as std::pmr::map
+    void set(const std::pmr::map<TKey, TValue>& values, std::pmr::memory_resource* resource) noexcept;
+    // Set the map as std::pmr::unordered_map
+    void set(const std::pmr::unordered_map<TKey, TValue>& values, std::pmr::memory_resource* resource) noexcept;
+
+#if defined(USING_BTREE_MAP)
+    // Set the map as FBE::map (btree_map with std allocator)
+    void set(const FBE::map<TKey, TValue>& values, std::pmr::memory_resource* resource) noexcept;
+    // Set the map as FBE::pmr::map (btree_map with pmr allocator)
+    void set(const FBE::pmr::map<TKey, TValue>& values, std::pmr::memory_resource* resource) noexcept;
+#endif
 
 private:
     FBEBuffer& _buffer;

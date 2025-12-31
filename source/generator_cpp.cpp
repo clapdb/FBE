@@ -231,7 +231,7 @@ void GeneratorCpp::GenerateImports(const std::shared_ptr<Package>& p)
     WriteLineIndent("namespace " + ConvertNamespace(*p->name) + " {");
     WriteLineIndent("using namespace FBE;");
     if (Arena()) {
-        WriteLineIndent("using allocator_type = pmr::polymorphic_allocator<char>;");
+        WriteLineIndent("using allocator_type = std::pmr::polymorphic_allocator<char>;");
     }
     WriteLineIndent("} // namespace " + ConvertNamespace(*p->name));
 
@@ -3200,9 +3200,9 @@ void GeneratorCpp::GenerateStructFieldModel_Header(const std::shared_ptr<Package
     // Generate struct field model get(), get_fields() methods
     WriteLine();
     WriteLineIndent("// Get the struct value");
-    WriteLineIndent("void get(" + struct_name + "& fbe_value, pmr::memory_resource* resource) const noexcept;");
+    WriteLineIndent("void get(" + struct_name + "& fbe_value, std::pmr::memory_resource* resource) const noexcept;");
     WriteLineIndent("// Get the struct fields values");
-    WriteLineIndent("void get_fields(" + struct_name + "& fbe_value, size_t fbe_struct_size, pmr::memory_resource* resource) const noexcept;");
+    WriteLineIndent("void get_fields(" + struct_name + "& fbe_value, size_t fbe_struct_size, std::pmr::memory_resource* resource) const noexcept;");
 
     // Generate struct field model set_begin(), set_end() methods
     WriteLine();
@@ -3214,9 +3214,9 @@ void GeneratorCpp::GenerateStructFieldModel_Header(const std::shared_ptr<Package
     // Generate struct field model set(), set_fields() methods
     WriteLine();
     WriteLineIndent("// Set the struct value");
-    WriteLineIndent("void set(const " + struct_name + "& fbe_value, pmr::memory_resource* resource) noexcept;");
+    WriteLineIndent("void set(const " + struct_name + "& fbe_value, std::pmr::memory_resource* resource) noexcept;");
     WriteLineIndent("// Set the struct fields values");
-    WriteLineIndent("void set_fields(const " + struct_name + "& fbe_value, pmr::memory_resource* resource) noexcept;");
+    WriteLineIndent("void set_fields(const " + struct_name + "& fbe_value, std::pmr::memory_resource* resource) noexcept;");
 
     // Generate struct field model buffer & offset
     Indent(-1);
@@ -3450,7 +3450,7 @@ void GeneratorCpp::GenerateStructFieldModel_Source(const std::shared_ptr<Package
     WriteLine();
 
     // Generate struct field model get() method
-    WriteLineIndent("void " + model_name + "::get(" + struct_name + "& fbe_value, pmr::memory_resource* resource) const noexcept");
+    WriteLineIndent("void " + model_name + "::get(" + struct_name + "& fbe_value, std::pmr::memory_resource* resource) const noexcept");
     WriteLineIndent("{");
     Indent(1);
     WriteLineIndent("size_t fbe_begin = get_begin();");
@@ -3467,7 +3467,7 @@ void GeneratorCpp::GenerateStructFieldModel_Source(const std::shared_ptr<Package
     WriteLine();
 
     // Generate struct field model get_fields() method
-    WriteLineIndent("void " + model_name + "::get_fields([[maybe_unused]] " + struct_name + "& fbe_value, [[maybe_unused]] size_t fbe_struct_size, pmr::memory_resource* resource) const noexcept");
+    WriteLineIndent("void " + model_name + "::get_fields([[maybe_unused]] " + struct_name + "& fbe_value, [[maybe_unused]] size_t fbe_struct_size, std::pmr::memory_resource* resource) const noexcept");
     WriteLineIndent("{");
     Indent(1);
     if ((s->base && !s->base->empty()) || (s->body && !s->body->fields.empty()))
@@ -3548,7 +3548,7 @@ void GeneratorCpp::GenerateStructFieldModel_Source(const std::shared_ptr<Package
     WriteLine();
 
     // Generate struct field model set() method
-    WriteLineIndent("void " + model_name + "::set(const " + struct_name + "& fbe_value, pmr::memory_resource* resource) noexcept");
+    WriteLineIndent("void " + model_name + "::set(const " + struct_name + "& fbe_value, std::pmr::memory_resource* resource) noexcept");
     WriteLineIndent("{");
     Indent(1);
     WriteLineIndent("size_t fbe_begin = set_begin();");
@@ -3564,7 +3564,7 @@ void GeneratorCpp::GenerateStructFieldModel_Source(const std::shared_ptr<Package
     WriteLine();
 
     // Generate struct field model set_fields() method
-    WriteLineIndent("void " + model_name + "::set_fields([[maybe_unused]] const " + struct_name + "& fbe_value, pmr::memory_resource* resource) noexcept");
+    WriteLineIndent("void " + model_name + "::set_fields([[maybe_unused]] const " + struct_name + "& fbe_value, std::pmr::memory_resource* resource) noexcept");
     WriteLineIndent("{");
     Indent(1);
     if ((s->base && !s->base->empty()) || (s->body && !s->body->fields.empty()))
@@ -3621,9 +3621,9 @@ void GeneratorCpp::GenerateStructModel_Header(const std::shared_ptr<Package>& p,
     // Generate struct model serialize(), deserialize() methods
     WriteLine();
     WriteLineIndent("// Serialize the struct value");
-    WriteLineIndent("size_t serialize(const " + struct_name + "& value, pmr::memory_resource* resource);");
+    WriteLineIndent("size_t serialize(const " + struct_name + "& value, std::pmr::memory_resource* resource);");
     WriteLineIndent("// Deserialize the struct value");
-    WriteLineIndent("size_t deserialize(" + struct_name + "& value, pmr::memory_resource* resource) const noexcept;");
+    WriteLineIndent("size_t deserialize(" + struct_name + "& value, std::pmr::memory_resource* resource) const noexcept;");
 
     // Generate struct model next() method
     WriteLine();
@@ -3707,7 +3707,7 @@ void GeneratorCpp::GenerateStructModel_Source(const std::shared_ptr<Package>& p,
     WriteLine();
 
     // Generate struct model serialize() method
-    WriteLineIndent("size_t " + model_name + "::serialize(const " + struct_name + "& value, pmr::memory_resource* resource)");
+    WriteLineIndent("size_t " + model_name + "::serialize(const " + struct_name + "& value, std::pmr::memory_resource* resource)");
     WriteLineIndent("{");
     Indent(1);
     WriteLineIndent("size_t fbe_begin = create_begin();");
@@ -3719,7 +3719,7 @@ void GeneratorCpp::GenerateStructModel_Source(const std::shared_ptr<Package>& p,
     WriteLine();
 
     // Generate struct model deserialize() method
-    WriteLineIndent("size_t " + model_name + "::deserialize(" + struct_name + "& value, pmr::memory_resource* resource) const noexcept");
+    WriteLineIndent("size_t " + model_name + "::deserialize(" + struct_name + "& value, std::pmr::memory_resource* resource) const noexcept");
     WriteLineIndent("{");
     Indent(1);
     WriteLineIndent("if ((this->buffer().offset() + model.fbe_offset() - 4) > this->buffer().size())");
@@ -3904,16 +3904,72 @@ void GeneratorCpp::GenerateStructFinalModel_Source(const std::shared_ptr<Package
         }
         if (s->body)
         {
-            for (const auto& field : s->body->fields)
+            // Batch verify consecutive fixed-size fields (primitives, enums, flags, uuid)
+            for (size_t i = 0; i < s->body->fields.size();)
             {
-                WriteLine();
-                WriteLineIndent(*field->name + ".fbe_offset(fbe_current_offset);");
-                WriteLineIndent("fbe_field_size = " + *field->name + ".verify();");
-                WriteLineIndent("if (fbe_field_size == std::numeric_limits<std::size_t>::max())");
-                Indent(1);
-                WriteLineIndent("return std::numeric_limits<std::size_t>::max();");
-                Indent(-1);
-                WriteLineIndent("fbe_current_offset += fbe_field_size;");
+                const auto& field = s->body->fields[i];
+
+                // Check if this is a batchable fixed-size field (including uuid for verify)
+                if (IsFixedSizeType(p, *field->type, field->optional) && !IsContainerType(*field))
+                {
+                    // Find all consecutive fixed-size fields
+                    size_t batch_start = i;
+                    size_t batch_size = 0;
+                    while (i < s->body->fields.size())
+                    {
+                        const auto& f = s->body->fields[i];
+                        if (!IsFixedSizeType(p, *f->type, f->optional) || IsContainerType(*f))
+                            break;
+                        size_t field_size = GetFixedTypeSize(p, *f->type);
+                        if (*f->type == "uuid") field_size = 16;  // uuid is 16 bytes
+                        batch_size += field_size;
+                        i++;
+                    }
+
+                    size_t batch_count = i - batch_start;
+                    if (batch_count > 1)
+                    {
+                        // Generate batched verify for multiple fixed-size fields
+                        WriteLine();
+                        WriteLineIndent("// Batch verify " + std::to_string(batch_count) + " fixed-size fields (" + std::to_string(batch_size) + " bytes)");
+                        WriteLineIndent("{");
+                        Indent(1);
+                        WriteLineIndent("if ((_buffer.offset() + fbe_current_offset + " + std::to_string(batch_size) + ") > _buffer.size())");
+                        Indent(1);
+                        WriteLineIndent("return std::numeric_limits<std::size_t>::max();");
+                        Indent(-1);
+                        WriteLineIndent("fbe_current_offset += " + std::to_string(batch_size) + ";");
+                        Indent(-1);
+                        WriteLineIndent("}");
+                    }
+                    else
+                    {
+                        // Single fixed-size field - inline verify
+                        const auto& f = s->body->fields[batch_start];
+                        const std::string& fbe_type = *f->type;
+                        size_t field_size = (fbe_type == "uuid") ? 16 : GetFixedTypeSize(p, fbe_type);
+                        WriteLine();
+                        WriteLineIndent("// Inline verify of " + fbe_type + " field " + *f->name + " (" + std::to_string(field_size) + " bytes)");
+                        WriteLineIndent("if ((_buffer.offset() + fbe_current_offset + " + std::to_string(field_size) + ") > _buffer.size())");
+                        Indent(1);
+                        WriteLineIndent("return std::numeric_limits<std::size_t>::max();");
+                        Indent(-1);
+                        WriteLineIndent("fbe_current_offset += " + std::to_string(field_size) + ";");
+                    }
+                }
+                else
+                {
+                    // Non-fixed-size field - use original code
+                    WriteLine();
+                    WriteLineIndent(*field->name + ".fbe_offset(fbe_current_offset);");
+                    WriteLineIndent("fbe_field_size = " + *field->name + ".verify();");
+                    WriteLineIndent("if (fbe_field_size == std::numeric_limits<std::size_t>::max())");
+                    Indent(1);
+                    WriteLineIndent("return std::numeric_limits<std::size_t>::max();");
+                    Indent(-1);
+                    WriteLineIndent("fbe_current_offset += fbe_field_size;");
+                    i++;
+                }
             }
         }
         WriteLine();
@@ -3943,30 +3999,228 @@ void GeneratorCpp::GenerateStructFinalModel_Source(const std::shared_ptr<Package
     Indent(1);
     if ((s->base && !s->base->empty()) || (s->body && !s->body->fields.empty()))
     {
-        WriteLineIndent("size_t fbe_current_offset = 0;");
-        WriteLineIndent("size_t fbe_current_size = 0;");
-        WriteLineIndent("size_t fbe_field_size;");
-        if (s->base && !s->base->empty())
-        {
-            WriteLine();
-            WriteLineIndent("parent.fbe_offset(fbe_current_offset);");
-            WriteLineIndent("fbe_field_size = parent.get_fields(fbe_value);");
-            WriteLineIndent("fbe_current_offset += fbe_field_size;");
-            WriteLineIndent("fbe_current_size += fbe_field_size;");
-        }
-        if (s->body)
+        // Check if we need dynamic offset tracking (for base class or non-fixed-size fields)
+        bool has_base = s->base && !s->base->empty();
+        bool has_non_fixed = has_base;
+        if (!has_non_fixed && s->body)
         {
             for (const auto& field : s->body->fields)
             {
+                if (!IsFixedSizeType(p, *field->type, field->optional) || IsContainerType(*field))
+                {
+                    has_non_fixed = true;
+                    break;
+                }
+            }
+        }
+
+        if (has_non_fixed)
+        {
+            // Original logic with offset tracking for mixed fixed/non-fixed fields
+            WriteLineIndent("size_t fbe_current_offset = 0;");
+            WriteLineIndent("size_t fbe_current_size = 0;");
+            WriteLineIndent("size_t fbe_field_size;");
+            if (has_base)
+            {
                 WriteLine();
-                WriteLineIndent(*field->name + ".fbe_offset(fbe_current_offset);");
-                WriteLineIndent("fbe_field_size = " + *field->name + ".get(fbe_value." + *field->name + ");");
+                WriteLineIndent("parent.fbe_offset(fbe_current_offset);");
+                WriteLineIndent("fbe_field_size = parent.get_fields(fbe_value);");
                 WriteLineIndent("fbe_current_offset += fbe_field_size;");
                 WriteLineIndent("fbe_current_size += fbe_field_size;");
             }
+            if (s->body)
+            {
+                // Process fields, batching consecutive fixed-size fields
+                size_t i = 0;
+                while (i < s->body->fields.size())
+                {
+                    const auto& field = s->body->fields[i];
+                    if (IsFixedSizeType(p, *field->type, field->optional) && !IsContainerType(*field))
+                    {
+                        // Find consecutive fixed-size fields (including uuid)
+                        size_t batch_start = i;
+                        size_t batch_size = 0;
+                        std::vector<std::tuple<std::string, std::string, size_t, std::string>> batch_fields; // name, cpp_type, offset, fbe_type
+                        while (i < s->body->fields.size())
+                        {
+                            const auto& f = s->body->fields[i];
+                            if (!IsFixedSizeType(p, *f->type, f->optional) || IsContainerType(*f))
+                                break;
+                            size_t field_size = (*f->type == "uuid") ? 16 : GetFixedTypeSize(p, *f->type);
+                            batch_fields.push_back({*f->name, GetFixedTypeCppName(p, *f->type), batch_size, *f->type});
+                            batch_size += field_size;
+                            i++;
+                        }
+
+                        if (batch_fields.size() >= 2)
+                        {
+                            // Generate batched read for 2+ consecutive fixed-size fields
+                            WriteLine();
+                            WriteLineIndent("// Batch read " + std::to_string(batch_fields.size()) + " fixed-size fields (" + std::to_string(batch_size) + " bytes)");
+                            WriteLineIndent("{");
+                            Indent(1);
+                            WriteLineIndent("size_t fbe_batch_offset = _buffer.offset() + fbe_current_offset;");
+                            WriteLineIndent("if ((fbe_batch_offset + " + std::to_string(batch_size) + ") > _buffer.size())");
+                            Indent(1);
+                            WriteLineIndent("return 0;");
+                            Indent(-1);
+                            WriteLineIndent("const uint8_t* fbe_batch_ptr = _buffer.data() + fbe_batch_offset;");
+                            for (const auto& bf : batch_fields)
+                            {
+                                const std::string& fname = std::get<0>(bf);
+                                const std::string& cpp_type = std::get<1>(bf);
+                                size_t offset = std::get<2>(bf);
+                                const std::string& fbe_type = std::get<3>(bf);
+
+                                // Handle uuid special case - use memcpy
+                                if (fbe_type == "uuid")
+                                {
+                                    WriteLineIndent("std::memcpy(fbe_value." + fname + ".data().data(), fbe_batch_ptr + " +
+                                        std::to_string(offset) + ", 16);");
+                                }
+                                else
+                                {
+                                    std::string cast_prefix = "";
+                                    std::string cast_suffix = "";
+                                    // Handle bool special case - need to cast from uint8_t
+                                    if (fbe_type == "bool")
+                                    {
+                                        cast_prefix = "static_cast<bool>(";
+                                        cast_suffix = ")";
+                                    }
+                                    // Handle enum/flags - need to cast from underlying type
+                                    else if (!IsPrimitiveType(fbe_type, false))
+                                    {
+                                        // This is an enum or flags type
+                                        cast_prefix = "static_cast<decltype(fbe_value." + fname + ")>(";
+                                        cast_suffix = ")";
+                                    }
+                                    WriteLineIndent("fbe_value." + fname + " = " + cast_prefix +
+                                        "unaligned_load<" + cpp_type + ">(fbe_batch_ptr + " +
+                                        std::to_string(offset) + ")" + cast_suffix + ";");
+                                }
+                            }
+                            WriteLineIndent("fbe_current_offset += " + std::to_string(batch_size) + ";");
+                            WriteLineIndent("fbe_current_size += " + std::to_string(batch_size) + ";");
+                            Indent(-1);
+                            WriteLineIndent("}");
+                        }
+                        else
+                        {
+                            // Single fixed-size field - inline read
+                            const auto& f = s->body->fields[batch_start];
+                            const std::string& fbe_type = *f->type;
+                            size_t field_size = (fbe_type == "uuid") ? 16 : GetFixedTypeSize(p, fbe_type);
+                            WriteLine();
+                            WriteLineIndent("// Inline read of " + fbe_type + " field " + *f->name + " (" + std::to_string(field_size) + " bytes)");
+                            WriteLineIndent("{");
+                            Indent(1);
+                            WriteLineIndent("size_t fbe_field_offset = _buffer.offset() + fbe_current_offset;");
+                            WriteLineIndent("if ((fbe_field_offset + " + std::to_string(field_size) + ") > _buffer.size())");
+                            Indent(1);
+                            WriteLineIndent("return 0;");
+                            Indent(-1);
+                            if (fbe_type == "uuid")
+                            {
+                                WriteLineIndent("std::memcpy(fbe_value." + *f->name + ".data().data(), _buffer.data() + fbe_field_offset, 16);");
+                            }
+                            else
+                            {
+                                std::string cpp_type = GetFixedTypeCppName(p, fbe_type);
+                                std::string cast_prefix = "";
+                                std::string cast_suffix = "";
+                                if (fbe_type == "bool")
+                                {
+                                    cast_prefix = "static_cast<bool>(";
+                                    cast_suffix = ")";
+                                }
+                                else if (!IsPrimitiveType(fbe_type, false))
+                                {
+                                    cast_prefix = "static_cast<decltype(fbe_value." + *f->name + ")>(";
+                                    cast_suffix = ")";
+                                }
+                                WriteLineIndent("fbe_value." + *f->name + " = " + cast_prefix +
+                                    "unaligned_load<" + cpp_type + ">(_buffer.data() + fbe_field_offset)" + cast_suffix + ";");
+                            }
+                            WriteLineIndent("fbe_current_offset += " + std::to_string(field_size) + ";");
+                            WriteLineIndent("fbe_current_size += " + std::to_string(field_size) + ";");
+                            Indent(-1);
+                            WriteLineIndent("}");
+                        }
+                    }
+                    else
+                    {
+                        // Non-fixed-size field - use original code
+                        WriteLine();
+                        WriteLineIndent(*field->name + ".fbe_offset(fbe_current_offset);");
+                        WriteLineIndent("fbe_field_size = " + *field->name + ".get(fbe_value." + *field->name + ");");
+                        WriteLineIndent("fbe_current_offset += fbe_field_size;");
+                        WriteLineIndent("fbe_current_size += fbe_field_size;");
+                        i++;
+                    }
+                }
+            }
+            WriteLine();
+            WriteLineIndent("return fbe_current_size;");
         }
-        WriteLine();
-        WriteLineIndent("return fbe_current_size;");
+        else if (s->body && !s->body->fields.empty())
+        {
+            // All fields are fixed-size - generate fully optimized code with compile-time offsets
+            size_t total_size = 0;
+            std::vector<std::tuple<std::string, std::string, size_t, std::string>> all_fields; // name, cpp_type, offset, fbe_type
+            for (const auto& field : s->body->fields)
+            {
+                size_t field_size = (*field->type == "uuid") ? 16 : GetFixedTypeSize(p, *field->type);
+                all_fields.push_back({*field->name, GetFixedTypeCppName(p, *field->type), total_size, *field->type});
+                total_size += field_size;
+            }
+
+            WriteLineIndent("// All fields are fixed-size - optimized batch read (" + std::to_string(total_size) + " bytes)");
+            WriteLineIndent("size_t fbe_base_offset = _buffer.offset();");
+            WriteLineIndent("if ((fbe_base_offset + " + std::to_string(total_size) + ") > _buffer.size())");
+            Indent(1);
+            WriteLineIndent("return 0;");
+            Indent(-1);
+            WriteLineIndent("const uint8_t* fbe_data = _buffer.data() + fbe_base_offset;");
+            for (const auto& f : all_fields)
+            {
+                const std::string& fname = std::get<0>(f);
+                const std::string& cpp_type = std::get<1>(f);
+                size_t offset = std::get<2>(f);
+                const std::string& fbe_type = std::get<3>(f);
+
+                // Handle uuid special case - use memcpy
+                if (fbe_type == "uuid")
+                {
+                    WriteLineIndent("std::memcpy(fbe_value." + fname + ".data().data(), fbe_data + " +
+                        std::to_string(offset) + ", 16);");
+                }
+                else
+                {
+                    std::string cast_prefix = "";
+                    std::string cast_suffix = "";
+                    if (fbe_type == "bool")
+                    {
+                        cast_prefix = "static_cast<bool>(";
+                        cast_suffix = ")";
+                    }
+                    else if (!IsPrimitiveType(fbe_type, false))
+                    {
+                        // This is an enum or flags type
+                        cast_prefix = "static_cast<decltype(fbe_value." + fname + ")>(";
+                        cast_suffix = ")";
+                    }
+                    WriteLineIndent("fbe_value." + fname + " = " + cast_prefix +
+                        "unaligned_load<" + cpp_type + ">(fbe_data + " +
+                        std::to_string(offset) + ")" + cast_suffix + ";");
+                }
+            }
+            WriteLineIndent("return " + std::to_string(total_size) + ";");
+        }
+        else
+        {
+            WriteLineIndent("return 0;");
+        }
     }
     else
         WriteLineIndent("return 0;");
@@ -3992,30 +4246,218 @@ void GeneratorCpp::GenerateStructFinalModel_Source(const std::shared_ptr<Package
     Indent(1);
     if ((s->base && !s->base->empty()) || (s->body && !s->body->fields.empty()))
     {
-        WriteLineIndent("size_t fbe_current_offset = 0;");
-        WriteLineIndent("size_t fbe_current_size = 0;");
-        WriteLineIndent("size_t fbe_field_size;");
-        if (s->base && !s->base->empty())
-        {
-            WriteLine();
-            WriteLineIndent("parent.fbe_offset(fbe_current_offset);");
-            WriteLineIndent("fbe_field_size = parent.set_fields(fbe_value);");
-            WriteLineIndent("fbe_current_offset += fbe_field_size;");
-            WriteLineIndent("fbe_current_size += fbe_field_size;");
-        }
-        if (s->body)
+        // Check if we need dynamic offset tracking (for base class or non-fixed-size fields)
+        bool has_base = s->base && !s->base->empty();
+        bool has_non_fixed = has_base;
+        if (!has_non_fixed && s->body)
         {
             for (const auto& field : s->body->fields)
             {
+                if (!IsFixedSizeType(p, *field->type, field->optional) || IsContainerType(*field))
+                {
+                    has_non_fixed = true;
+                    break;
+                }
+            }
+        }
+
+        if (has_non_fixed)
+        {
+            // Original logic with offset tracking for mixed fixed/non-fixed fields
+            WriteLineIndent("size_t fbe_current_offset = 0;");
+            WriteLineIndent("size_t fbe_current_size = 0;");
+            WriteLineIndent("size_t fbe_field_size;");
+            if (has_base)
+            {
                 WriteLine();
-                WriteLineIndent(*field->name + ".fbe_offset(fbe_current_offset);");
-                WriteLineIndent("fbe_field_size = " + *field->name + ".set(fbe_value." + *field->name + ");");
+                WriteLineIndent("parent.fbe_offset(fbe_current_offset);");
+                WriteLineIndent("fbe_field_size = parent.set_fields(fbe_value);");
                 WriteLineIndent("fbe_current_offset += fbe_field_size;");
                 WriteLineIndent("fbe_current_size += fbe_field_size;");
             }
+            if (s->body)
+            {
+                // Process fields, batching consecutive fixed-size fields
+                size_t i = 0;
+                while (i < s->body->fields.size())
+                {
+                    const auto& field = s->body->fields[i];
+                    if (IsFixedSizeType(p, *field->type, field->optional) && !IsContainerType(*field))
+                    {
+                        // Find consecutive fixed-size fields (including uuid)
+                        size_t batch_start = i;
+                        size_t batch_size = 0;
+                        std::vector<std::tuple<std::string, std::string, size_t, std::string>> batch_fields; // name, cpp_type, offset, fbe_type
+                        while (i < s->body->fields.size())
+                        {
+                            const auto& f = s->body->fields[i];
+                            if (!IsFixedSizeType(p, *f->type, f->optional) || IsContainerType(*f))
+                                break;
+                            size_t field_size = (*f->type == "uuid") ? 16 : GetFixedTypeSize(p, *f->type);
+                            batch_fields.push_back({*f->name, GetFixedTypeCppName(p, *f->type), batch_size, *f->type});
+                            batch_size += field_size;
+                            i++;
+                        }
+
+                        if (batch_fields.size() >= 2)
+                        {
+                            // Generate batched write for 2+ consecutive fixed-size fields
+                            WriteLine();
+                            WriteLineIndent("// Batch write " + std::to_string(batch_fields.size()) + " fixed-size fields (" + std::to_string(batch_size) + " bytes)");
+                            WriteLineIndent("{");
+                            Indent(1);
+                            WriteLineIndent("size_t fbe_batch_offset = _buffer.offset() + fbe_current_offset;");
+                            WriteLineIndent("assert(((fbe_batch_offset + " + std::to_string(batch_size) + ") <= _buffer.size()) && \"Model is broken!\");");
+                            WriteLineIndent("if ((fbe_batch_offset + " + std::to_string(batch_size) + ") > _buffer.size())");
+                            Indent(1);
+                            WriteLineIndent("return 0;");
+                            Indent(-1);
+                            WriteLineIndent("uint8_t* fbe_batch_ptr = _buffer.data() + fbe_batch_offset;");
+                            for (const auto& bf : batch_fields)
+                            {
+                                const std::string& fname = std::get<0>(bf);
+                                const std::string& cpp_type = std::get<1>(bf);
+                                size_t offset = std::get<2>(bf);
+                                const std::string& fbe_type = std::get<3>(bf);
+
+                                // Handle uuid special case - use memcpy
+                                if (fbe_type == "uuid")
+                                {
+                                    WriteLineIndent("std::memcpy(fbe_batch_ptr + " + std::to_string(offset) +
+                                        ", fbe_value." + fname + ".data().data(), 16);");
+                                }
+                                else
+                                {
+                                    std::string value_expr = "fbe_value." + fname;
+                                    // For bool, cast to uint8_t before storing
+                                    if (fbe_type == "bool")
+                                    {
+                                        value_expr = "static_cast<uint8_t>(" + value_expr + ")";
+                                    }
+                                    // For enum/flags, cast to underlying type before storing
+                                    else if (!IsPrimitiveType(fbe_type, false))
+                                    {
+                                        value_expr = "static_cast<" + cpp_type + ">(" + value_expr + ")";
+                                    }
+                                    WriteLineIndent("unaligned_store<" + cpp_type + ">(fbe_batch_ptr + " +
+                                        std::to_string(offset) + ", " + value_expr + ");");
+                                }
+                            }
+                            WriteLineIndent("fbe_current_offset += " + std::to_string(batch_size) + ";");
+                            WriteLineIndent("fbe_current_size += " + std::to_string(batch_size) + ";");
+                            Indent(-1);
+                            WriteLineIndent("}");
+                        }
+                        else
+                        {
+                            // Single fixed-size field - inline write
+                            const auto& f = s->body->fields[batch_start];
+                            const std::string& fbe_type = *f->type;
+                            size_t field_size = (fbe_type == "uuid") ? 16 : GetFixedTypeSize(p, fbe_type);
+                            WriteLine();
+                            WriteLineIndent("// Inline write of " + fbe_type + " field " + *f->name + " (" + std::to_string(field_size) + " bytes)");
+                            WriteLineIndent("{");
+                            Indent(1);
+                            WriteLineIndent("size_t fbe_field_offset = _buffer.offset() + fbe_current_offset;");
+                            WriteLineIndent("assert(((fbe_field_offset + " + std::to_string(field_size) + ") <= _buffer.size()) && \"Model is broken!\");");
+                            WriteLineIndent("if ((fbe_field_offset + " + std::to_string(field_size) + ") > _buffer.size())");
+                            Indent(1);
+                            WriteLineIndent("return 0;");
+                            Indent(-1);
+                            if (fbe_type == "uuid")
+                            {
+                                WriteLineIndent("std::memcpy(_buffer.data() + fbe_field_offset, fbe_value." + *f->name + ".data().data(), 16);");
+                            }
+                            else
+                            {
+                                std::string cpp_type = GetFixedTypeCppName(p, fbe_type);
+                                std::string value_expr = "fbe_value." + *f->name;
+                                if (fbe_type == "bool")
+                                {
+                                    value_expr = "static_cast<uint8_t>(" + value_expr + ")";
+                                }
+                                else if (!IsPrimitiveType(fbe_type, false))
+                                {
+                                    value_expr = "static_cast<" + cpp_type + ">(" + value_expr + ")";
+                                }
+                                WriteLineIndent("unaligned_store<" + cpp_type + ">(_buffer.data() + fbe_field_offset, " + value_expr + ");");
+                            }
+                            WriteLineIndent("fbe_current_offset += " + std::to_string(field_size) + ";");
+                            WriteLineIndent("fbe_current_size += " + std::to_string(field_size) + ";");
+                            Indent(-1);
+                            WriteLineIndent("}");
+                        }
+                    }
+                    else
+                    {
+                        // Non-fixed-size field - use original code
+                        WriteLine();
+                        WriteLineIndent(*field->name + ".fbe_offset(fbe_current_offset);");
+                        WriteLineIndent("fbe_field_size = " + *field->name + ".set(fbe_value." + *field->name + ");");
+                        WriteLineIndent("fbe_current_offset += fbe_field_size;");
+                        WriteLineIndent("fbe_current_size += fbe_field_size;");
+                        i++;
+                    }
+                }
+            }
+            WriteLine();
+            WriteLineIndent("return fbe_current_size;");
         }
-        WriteLine();
-        WriteLineIndent("return fbe_current_size;");
+        else if (s->body && !s->body->fields.empty())
+        {
+            // All fields are fixed-size - generate fully optimized code with compile-time offsets
+            size_t total_size = 0;
+            std::vector<std::tuple<std::string, std::string, size_t, std::string>> all_fields; // name, cpp_type, offset, fbe_type
+            for (const auto& field : s->body->fields)
+            {
+                size_t field_size = (*field->type == "uuid") ? 16 : GetFixedTypeSize(p, *field->type);
+                all_fields.push_back({*field->name, GetFixedTypeCppName(p, *field->type), total_size, *field->type});
+                total_size += field_size;
+            }
+
+            WriteLineIndent("// All fields are fixed-size - optimized batch write (" + std::to_string(total_size) + " bytes)");
+            WriteLineIndent("size_t fbe_base_offset = _buffer.offset();");
+            WriteLineIndent("assert(((fbe_base_offset + " + std::to_string(total_size) + ") <= _buffer.size()) && \"Model is broken!\");");
+            WriteLineIndent("if ((fbe_base_offset + " + std::to_string(total_size) + ") > _buffer.size())");
+            Indent(1);
+            WriteLineIndent("return 0;");
+            Indent(-1);
+            WriteLineIndent("uint8_t* fbe_data = _buffer.data() + fbe_base_offset;");
+            for (const auto& f : all_fields)
+            {
+                const std::string& fname = std::get<0>(f);
+                const std::string& cpp_type = std::get<1>(f);
+                size_t offset = std::get<2>(f);
+                const std::string& fbe_type = std::get<3>(f);
+
+                // Handle uuid special case - use memcpy
+                if (fbe_type == "uuid")
+                {
+                    WriteLineIndent("std::memcpy(fbe_data + " + std::to_string(offset) +
+                        ", fbe_value." + fname + ".data().data(), 16);");
+                }
+                else
+                {
+                    std::string value_expr = "fbe_value." + fname;
+                    if (fbe_type == "bool")
+                    {
+                        value_expr = "static_cast<uint8_t>(" + value_expr + ")";
+                    }
+                    else if (!IsPrimitiveType(fbe_type, false))
+                    {
+                        // This is an enum or flags type
+                        value_expr = "static_cast<" + cpp_type + ">(" + value_expr + ")";
+                    }
+                    WriteLineIndent("unaligned_store<" + cpp_type + ">(fbe_data + " +
+                        std::to_string(offset) + ", " + value_expr + ");");
+                }
+            }
+            WriteLineIndent("return " + std::to_string(total_size) + ";");
+        }
+        else
+        {
+            WriteLineIndent("return 0;");
+        }
     }
     else
         WriteLineIndent("return 0;");
@@ -6509,7 +6951,7 @@ void GeneratorCpp::GenerateVariantFieldModel_Header(const std::shared_ptr<Packag
     // Generate variant field model get(), get_fields() methods
     WriteLine();
     WriteLineIndent("// Get the variant value");
-    WriteLineIndent("void get(" + variant_name + "& fbe_value, pmr::memory_resource* resource) const noexcept;");
+    WriteLineIndent("void get(" + variant_name + "& fbe_value, std::pmr::memory_resource* resource) const noexcept;");
 
     WriteLine();
     WriteLineIndent("// Set the variant value (begin phase)");
@@ -6520,7 +6962,7 @@ void GeneratorCpp::GenerateVariantFieldModel_Header(const std::shared_ptr<Packag
     // Generate variant field model set(), set_fields() methods
     WriteLine();
     WriteLineIndent("// Set the variant value");
-    WriteLineIndent("void set(const " + variant_name + "& fbe_value, pmr::memory_resource* resource) noexcept;");
+    WriteLineIndent("void set(const " + variant_name + "& fbe_value, std::pmr::memory_resource* resource) noexcept;");
 
     // Generate variant field model buffer & offset
     Indent(-1);
@@ -6645,7 +7087,7 @@ void GeneratorCpp::GenerateVariantFieldModel_Source(const std::shared_ptr<Packag
     WriteLine();
 
     // Generate struct field model get() method
-    WriteLineIndent("void " + class_name + "::get(" + variant_name + "& fbe_value, pmr::memory_resource* resource) const noexcept");
+    WriteLineIndent("void " + class_name + "::get(" + variant_name + "& fbe_value, std::pmr::memory_resource* resource) const noexcept");
     WriteLineIndent("{");
     Indent(1);
     WriteLineIndent("if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())");
@@ -6750,7 +7192,7 @@ void GeneratorCpp::GenerateVariantFieldModel_Source(const std::shared_ptr<Packag
 
     // Generate variant field model set() method
     WriteLineIndent("// Set the variant value");
-    WriteLineIndent("void " + class_name + "::set(const " + variant_name + "& fbe_value, pmr::memory_resource* resource) noexcept");
+    WriteLineIndent("void " + class_name + "::set(const " + variant_name + "& fbe_value, std::pmr::memory_resource* resource) noexcept");
     WriteLineIndent("{");
     Indent(1);
     WriteLineIndent("assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && \"Model is broken!\");");
@@ -6855,9 +7297,9 @@ void GeneratorCpp::GenerateStructFieldPtrModel_Header(const std::shared_ptr<Pack
     // Generate struct field model get(), get_fields() methods
     WriteLine();
     WriteLineIndent("// Get the struct value");
-    WriteLineIndent("void get(" + struct_name + "** fbe_value, pmr::memory_resource* resource) noexcept;");
+    WriteLineIndent("void get(" + struct_name + "** fbe_value, std::pmr::memory_resource* resource) noexcept;");
     WriteLineIndent("// Get the struct fields values");
-    WriteLineIndent("void get_fields(" + struct_name + "& fbe_value, size_t fbe_struct_size, pmr::memory_resource* resource) noexcept;");
+    WriteLineIndent("void get_fields(" + struct_name + "& fbe_value, size_t fbe_struct_size, std::pmr::memory_resource* resource) noexcept;");
 
     // Generate struct field model set_begin(), set_end() methods
     WriteLine();
@@ -6869,9 +7311,9 @@ void GeneratorCpp::GenerateStructFieldPtrModel_Header(const std::shared_ptr<Pack
     // Generate struct field model set(), set_fields() methods
     WriteLine();
     WriteLineIndent("// Set the struct value");
-    WriteLineIndent("void set(const " + struct_name + "* fbe_value, pmr::memory_resource* resource) noexcept;");
+    WriteLineIndent("void set(const " + struct_name + "* fbe_value, std::pmr::memory_resource* resource) noexcept;");
     WriteLineIndent("// Set the struct fields values");
-    WriteLineIndent("void set_fields(const " + struct_name + "* fbe_value, pmr::memory_resource* resource) noexcept;");
+    WriteLineIndent("void set_fields(const " + struct_name + "* fbe_value, std::pmr::memory_resource* resource) noexcept;");
 
     // Generate struct field model buffer & offset
     Indent(-1);
@@ -6947,9 +7389,9 @@ void GeneratorCpp::GeneratePtrStructFieldModel_Header(const std::shared_ptr<Pack
     // Generate struct field model get(), get_fields() methods
     WriteLine();
     WriteLineIndent("// Get the struct value");
-    WriteLineIndent("void get(::FBE::Base& fbe_value, pmr::memory_resource* resource) noexcept override;");
+    WriteLineIndent("void get(::FBE::Base& fbe_value, std::pmr::memory_resource* resource) noexcept override;");
     WriteLineIndent("// Get the struct fields values");
-    WriteLineIndent("void get_fields(::FBE::Base& fbe_value, size_t fbe_struct_size, pmr::memory_resource* resource) noexcept override;");
+    WriteLineIndent("void get_fields(::FBE::Base& fbe_value, size_t fbe_struct_size, std::pmr::memory_resource* resource) noexcept override;");
 
     // Generate struct field model set_begin(), set_end() methods
     WriteLine();
@@ -6961,9 +7403,9 @@ void GeneratorCpp::GeneratePtrStructFieldModel_Header(const std::shared_ptr<Pack
     // Generate struct field model set(), set_fields() methods
     WriteLine();
     WriteLineIndent("// Set the struct value");
-    WriteLineIndent("void set(const ::FBE::Base& fbe_value, pmr::memory_resource* resource) noexcept override;");
+    WriteLineIndent("void set(const ::FBE::Base& fbe_value, std::pmr::memory_resource* resource) noexcept override;");
     WriteLineIndent("// Set the struct fields values");
-    WriteLineIndent("void set_fields(const ::FBE::Base& fbe_value, pmr::memory_resource* resource) noexcept override;");
+    WriteLineIndent("void set_fields(const ::FBE::Base& fbe_value, std::pmr::memory_resource* resource) noexcept override;");
 
     // Generate struct field model buffer & offset
     Indent(-1);
@@ -7191,7 +7633,7 @@ void GeneratorCpp::GeneratePtrStructFieldModel_Source(const std::shared_ptr<Pack
     WriteLine();
 
     // Generate struct field model get() method
-    WriteLineIndent("void "+ class_name + "::get(::FBE::Base& fbe_value, pmr::memory_resource* resource) noexcept");
+    WriteLineIndent("void "+ class_name + "::get(::FBE::Base& fbe_value, std::pmr::memory_resource* resource) noexcept");
     WriteLineIndent("{");
     Indent(1);
     WriteLineIndent("size_t fbe_begin = get_begin();");
@@ -7208,7 +7650,7 @@ void GeneratorCpp::GeneratePtrStructFieldModel_Source(const std::shared_ptr<Pack
     WriteLine();
 
     // Generate struct field model get_fields() method
-    WriteLineIndent("void " + class_name + "::get_fields([[maybe_unused]] ::FBE::Base& base_fbe_value, [[maybe_unused]] size_t fbe_struct_size, pmr::memory_resource* resource) noexcept");
+    WriteLineIndent("void " + class_name + "::get_fields([[maybe_unused]] ::FBE::Base& base_fbe_value, [[maybe_unused]] size_t fbe_struct_size, std::pmr::memory_resource* resource) noexcept");
     WriteLineIndent("{");
     Indent(1);
     if ((s->base && !s->base->empty()) || (s->body && !s->body->fields.empty()))
@@ -7316,7 +7758,7 @@ void GeneratorCpp::GeneratePtrStructFieldModel_Source(const std::shared_ptr<Pack
     WriteLine();
 
     // Generate struct field model set() method
-    WriteLineIndent("void " + class_name + "::set(const ::FBE::Base& fbe_value, pmr::memory_resource* resource) noexcept");
+    WriteLineIndent("void " + class_name + "::set(const ::FBE::Base& fbe_value, std::pmr::memory_resource* resource) noexcept");
     WriteLineIndent("{");
     Indent(1);
     WriteLineIndent("size_t fbe_begin = set_begin();");
@@ -7332,7 +7774,7 @@ void GeneratorCpp::GeneratePtrStructFieldModel_Source(const std::shared_ptr<Pack
     WriteLine();
 
     // Generate struct field model set_fields() method
-    WriteLineIndent("void " + class_name + "::set_fields([[maybe_unused]] const ::FBE::Base& base_fbe_value, pmr::memory_resource* resource) noexcept");
+    WriteLineIndent("void " + class_name + "::set_fields([[maybe_unused]] const ::FBE::Base& base_fbe_value, std::pmr::memory_resource* resource) noexcept");
     WriteLineIndent("{");
     Indent(1);
     WriteLineIndent("[[maybe_unused]] const " + struct_name + "& fbe_value = static_cast<const " + struct_name + "&>(base_fbe_value);");
@@ -7479,7 +7921,7 @@ void GeneratorCpp::GenerateStructFieldPtrModel_Source(const std::shared_ptr<Pack
     WriteLine();
 
     // Generate struct field model get() method
-    WriteLineIndent("void " + class_name + "::get(" + struct_name + "** fbe_value, pmr::memory_resource* resource) noexcept");
+    WriteLineIndent("void " + class_name + "::get(" + struct_name + "** fbe_value, std::pmr::memory_resource* resource) noexcept");
     WriteLineIndent("{");
     Indent(1);
     WriteLineIndent("size_t fbe_begin = get_begin();");
@@ -7492,7 +7934,7 @@ void GeneratorCpp::GenerateStructFieldPtrModel_Source(const std::shared_ptr<Pack
       WriteLineIndent("if (ptr) delete ptr;");
       WriteLineIndent(std::string("ptr = new FieldModel") + "_" + *p->name + "_" + *s->name + "(_buffer, 0);");
     } else {
-        WriteLineIndent("pmr::polymorphic_allocator<char> allocator{resource};");
+        WriteLineIndent("std::pmr::polymorphic_allocator<char> allocator{resource};");
         WriteLineIndent(std::string("auto* buffer = allocator.allocate(sizeof(FieldModelPMR_") + *p->name + "_" + *s->name + "));");
         WriteLineIndent("ptr = new (buffer) FieldModelPMR_" + *p->name + "_" + *s->name + "(_buffer, 0);");
         // WriteLineIndent(std::string("ptr = new FieldModel") + (Arena() ? "PMR_" : "_") + *p->name + "_" + *s->name + "(_buffer, 0);");
@@ -7556,7 +7998,7 @@ void GeneratorCpp::GenerateStructFieldPtrModel_Source(const std::shared_ptr<Pack
     WriteLine();
 
     // Generate struct field model set() method
-    WriteLineIndent("void " + class_name + "::set(const " + struct_name + "* fbe_value, pmr::memory_resource* resource) noexcept");
+    WriteLineIndent("void " + class_name + "::set(const " + struct_name + "* fbe_value, std::pmr::memory_resource* resource) noexcept");
     WriteLineIndent("{");
     Indent(1);
     WriteLineIndent("size_t fbe_begin = set_begin(fbe_value != nullptr);");
@@ -7572,7 +8014,7 @@ void GeneratorCpp::GenerateStructFieldPtrModel_Source(const std::shared_ptr<Pack
         WriteLineIndent("if (ptr) delete ptr;");
         WriteLineIndent("ptr = temp;");
     } else {
-        WriteLineIndent(std::string("pmr::polymorphic_allocator<char> allocator{resource};"));
+        WriteLineIndent(std::string("std::pmr::polymorphic_allocator<char> allocator{resource};"));
         WriteLineIndent(std::string("auto* buffer = allocator.allocate(sizeof(FieldModelPMR_") + *p->name + "_" + *s->name + "));");
         WriteLineIndent("ptr = new (buffer) FieldModelPMR_" + *p->name + "_" + *s->name + "(_buffer, 0);");
     }
@@ -7628,9 +8070,9 @@ void GeneratorCpp::GeneratePtrStructModel_Header(const std::shared_ptr<Package>&
     // Generate struct model serialize(), deserialize() methods
     WriteLine();
     WriteLineIndent("// Serialize the struct value");
-    WriteLineIndent("size_t serialize(const " + struct_name + "& value, pmr::memory_resource* resource);");
+    WriteLineIndent("size_t serialize(const " + struct_name + "& value, std::pmr::memory_resource* resource);");
     WriteLineIndent("// Deserialize the struct value");
-    WriteLineIndent("size_t deserialize(" + struct_name + "& value, pmr::memory_resource* resource) noexcept;");
+    WriteLineIndent("size_t deserialize(" + struct_name + "& value, std::pmr::memory_resource* resource) noexcept;");
 
     // Generate struct model next() method
     WriteLine();
@@ -7714,7 +8156,7 @@ void GeneratorCpp::GeneratePtrStructModel_Source(const std::shared_ptr<Package>&
     WriteLine();
 
     // Generate struct model serialize() method
-    WriteLineIndent("size_t " + model_name + "::serialize(const " + struct_name + "& value, pmr::memory_resource* resource)");
+    WriteLineIndent("size_t " + model_name + "::serialize(const " + struct_name + "& value, std::pmr::memory_resource* resource)");
     WriteLineIndent("{");
     Indent(1);
     WriteLineIndent("size_t fbe_begin = create_begin();");
@@ -7726,7 +8168,7 @@ void GeneratorCpp::GeneratePtrStructModel_Source(const std::shared_ptr<Package>&
     WriteLine();
 
     // Generate struct model deserialize() method
-    WriteLineIndent("size_t " + model_name + "::deserialize(" + struct_name + "& value, pmr::memory_resource* resource) noexcept");
+    WriteLineIndent("size_t " + model_name + "::deserialize(" + struct_name + "& value, std::pmr::memory_resource* resource) noexcept");
     WriteLineIndent("{");
     Indent(1);
     WriteLineIndent("if ((this->buffer().offset() + model.fbe_offset() - 4) > this->buffer().size())");
@@ -7766,7 +8208,7 @@ bool GeneratorCpp::IsKnownType(const std::string& type)
             (type == "timestamp") || (type == "uuid"));
 }
 
-bool GeneratorCpp::IsPrimitiveType(const std::string& type, bool optional)
+bool GeneratorCpp::IsPrimitiveType(const std::string& type, bool optional) const
 {
     if (optional)
         return false;
@@ -7780,6 +8222,154 @@ bool GeneratorCpp::IsPrimitiveType(const std::string& type, bool optional)
             (type == "int128") || (type == "uint128") ||
             (type == "float") || (type == "double") ||
             (type == "timestamp"));
+}
+
+size_t GeneratorCpp::GetPrimitiveTypeSize(const std::string& type) const
+{
+    if (type == "bool") return 1;
+    if (type == "byte") return 1;
+    if (type == "char") return 1;
+    if (type == "wchar") return 4;
+    if (type == "int8") return 1;
+    if (type == "uint8") return 1;
+    if (type == "int16") return 2;
+    if (type == "uint16") return 2;
+    if (type == "int32") return 4;
+    if (type == "uint32") return 4;
+    if (type == "int64") return 8;
+    if (type == "uint64") return 8;
+    if (type == "int128") return 16;
+    if (type == "uint128") return 16;
+    if (type == "float") return 4;
+    if (type == "double") return 8;
+    if (type == "timestamp") return 8;
+    return 0;
+}
+
+std::string GeneratorCpp::GetPrimitiveTypeCppName(const std::string& type) const
+{
+    if (type == "bool") return "uint8_t";  // bool stored as uint8_t in buffer
+    if (type == "byte") return "uint8_t";
+    if (type == "char") return "uint8_t";
+    if (type == "wchar") return "uint32_t";
+    if (type == "int8") return "int8_t";
+    if (type == "uint8") return "uint8_t";
+    if (type == "int16") return "int16_t";
+    if (type == "uint16") return "uint16_t";
+    if (type == "int32") return "int32_t";
+    if (type == "uint32") return "uint32_t";
+    if (type == "int64") return "int64_t";
+    if (type == "uint64") return "uint64_t";
+    if (type == "int128") return "__int128_t";
+    if (type == "uint128") return "__uint128_t";
+    if (type == "float") return "float";
+    if (type == "double") return "double";
+    if (type == "timestamp") return "uint64_t";
+    return "";
+}
+
+bool GeneratorCpp::IsFixedSizeType(const std::shared_ptr<Package>& p, const std::string& type, bool optional) const
+{
+    if (optional)
+        return false;
+
+    // Check if it's a primitive type
+    if (IsPrimitiveType(type, false))
+        return true;
+
+    // Check if it's uuid (16 bytes fixed)
+    if (type == "uuid")
+        return true;
+
+    // Check if it's an enum type in this package
+    if (p && p->body)
+    {
+        for (const auto& e : p->body->enums)
+        {
+            if (*e->name == type)
+                return true;
+        }
+        // Check if it's a flags type in this package
+        for (const auto& f : p->body->flags)
+        {
+            if (*f->name == type)
+                return true;
+        }
+    }
+
+    return false;
+}
+
+size_t GeneratorCpp::GetFixedTypeSize(const std::shared_ptr<Package>& p, const std::string& type) const
+{
+    // Check primitive types first
+    size_t primitive_size = GetPrimitiveTypeSize(type);
+    if (primitive_size > 0)
+        return primitive_size;
+
+    // UUID is 16 bytes
+    if (type == "uuid")
+        return 16;
+
+    // Check enums
+    if (p && p->body)
+    {
+        for (const auto& e : p->body->enums)
+        {
+            if (*e->name == type)
+            {
+                std::string base_type = (e->base && !e->base->empty()) ? *e->base : "int32";
+                return GetPrimitiveTypeSize(base_type);
+            }
+        }
+        // Check flags
+        for (const auto& f : p->body->flags)
+        {
+            if (*f->name == type)
+            {
+                std::string base_type = (f->base && !f->base->empty()) ? *f->base : "int32";
+                return GetPrimitiveTypeSize(base_type);
+            }
+        }
+    }
+
+    return 0;
+}
+
+std::string GeneratorCpp::GetFixedTypeCppName(const std::shared_ptr<Package>& p, const std::string& type) const
+{
+    // Check primitive types first
+    std::string primitive_cpp = GetPrimitiveTypeCppName(type);
+    if (!primitive_cpp.empty())
+        return primitive_cpp;
+
+    // UUID uses memcpy, not unaligned_load, so we handle it specially
+    if (type == "uuid")
+        return "uuid_t";
+
+    // Check enums
+    if (p && p->body)
+    {
+        for (const auto& e : p->body->enums)
+        {
+            if (*e->name == type)
+            {
+                std::string base_type = (e->base && !e->base->empty()) ? *e->base : "int32";
+                return GetPrimitiveTypeCppName(base_type);
+            }
+        }
+        // Check flags
+        for (const auto& f : p->body->flags)
+        {
+            if (*f->name == type)
+            {
+                std::string base_type = (f->base && !f->base->empty()) ? *f->base : "int32";
+                return GetPrimitiveTypeCppName(base_type);
+            }
+        }
+    }
+
+    return "";
 }
 
 std::string GeneratorCpp::ConvertEnumType(const std::string& type)
@@ -7878,18 +8468,18 @@ std::string GeneratorCpp::ConvertTypeName(const std::string& package, const Stru
 {
     std::string prefix = "std";
     if (Arena()) {
-        prefix = "pmr";
+        prefix = "std::pmr";
     }
     if (field.array)
         return "std::array<" + ConvertTypeName(package, *field.type, field.optional) + ", " + std::to_string(field.N) + ">";
-    else if (field.vector) 
-        return (Arena() ? "pmr::vector<" : "FastVec<") + ConvertTypeName(package, *field.type, field.optional) + ">";
+    else if (field.vector)
+        return (Arena() ? "std::pmr::vector<" : "FastVec<") + ConvertTypeName(package, *field.type, field.optional) + ">";
     else if (field.list)
         return prefix + "::list<" + ConvertTypeName(package, *field.type, field.optional) + ">";
     else if (field.set)
-        return prefix + "::set<" + ConvertTypeName(package, *field.key, false) + ">";
+        return (Arena() ? "FBE::pmr::set<" : "FBE::set<") + ConvertTypeName(package, *field.key, false) + ">";
     else if (field.map)
-        return prefix + "::map<" + ConvertTypeName(package, *field.key, false) + ", " + ConvertTypeName(package, *field.type, field.optional) +">";
+        return (Arena() ? "FBE::pmr::map<" : "FBE::map<") + ConvertTypeName(package, *field.key, false) + ", " + ConvertTypeName(package, *field.type, field.optional) +">";
     else if (field.hash)
         return prefix + "::unordered_map<" + ConvertTypeName(package, *field.key, false) + ", " + ConvertTypeName(package, *field.type, field.optional) +">";
 
@@ -8209,7 +8799,7 @@ GeneratorCpp::ConvertPtrTypeName(const std::string &package, const StructField &
 {
     std::string prefix = "std";
     if (Arena()) {
-        prefix = "pmr";
+        prefix = "std::pmr";
     }
     bool typeptr = field.ptr;
     if (field.array)
@@ -8217,13 +8807,13 @@ GeneratorCpp::ConvertPtrTypeName(const std::string &package, const StructField &
     else if (field.optional)
         return "std::optional<" + ConvertPtrTypeName(package, *field.type) + ">";
     else if (field.vector)
-        return (Arena() ? "pmr::vector<" : "FastVec<") + ConvertPtrTypeName(package, *field.type, field.optional, typeptr, as_argument) + ">";
+        return (Arena() ? "std::pmr::vector<" : "FastVec<") + ConvertPtrTypeName(package, *field.type, field.optional, typeptr, as_argument) + ">";
     else if (field.list)
         return prefix + "::list<" + ConvertPtrTypeName(package, *field.type, field.optional, typeptr, as_argument) + ">";
     else if (field.set)
-        return prefix + "::set<" + ConvertPtrTypeName(package, *field.key, false, typeptr, as_argument) + ">";
+        return (Arena() ? "FBE::pmr::set<" : "FBE::set<") + ConvertPtrTypeName(package, *field.key, false, typeptr, as_argument) + ">";
     else if (field.map)
-        return prefix + "::map<" + ConvertPtrTypeName(package, *field.key, false, false, as_argument) + ", " + ConvertPtrTypeName(package, *field.type, field.optional, typeptr, as_argument) +">";
+        return (Arena() ? "FBE::pmr::map<" : "FBE::map<") + ConvertPtrTypeName(package, *field.key, false, false, as_argument) + ", " + ConvertPtrTypeName(package, *field.type, field.optional, typeptr, as_argument) +">";
     else if (field.hash)
         return prefix + "::unordered_map<" + ConvertPtrTypeName(package, *field.key, false, false, as_argument) + ", " + ConvertPtrTypeName(package, *field.type, field.optional, typeptr, as_argument) +">";
     auto s = ConvertPtrTypeName(package, *field.type, field.optional, typeptr, as_argument);
@@ -8234,14 +8824,14 @@ std::string GeneratorCpp::ConvertVariantTypeName(const std::string& package, con
 {
     std::string prefix = "std";
     if (Arena()) {
-        prefix = "pmr";
+        prefix = "std::pmr";
     }
     if (variant.vector)
-        return (Arena() ? "pmr::vector<" : "FastVec<") + ConvertPtrTypeName(package, *variant.type, false, variant.ptr, false) + ">";
+        return (Arena() ? "std::pmr::vector<" : "FastVec<") + ConvertPtrTypeName(package, *variant.type, false, variant.ptr, false) + ">";
     else if (variant.list)
         return prefix + "::list<" + ConvertPtrTypeName(package, *variant.type, false, variant.ptr, false) + ">";
     else if (variant.map)
-        return prefix + "::map<" + ConvertPtrTypeName(package, *variant.key, false, false, false) + ", " + ConvertPtrTypeName(package, *variant.type, false, variant.ptr, false) +">";
+        return (Arena() ? "FBE::pmr::map<" : "FBE::map<") + ConvertPtrTypeName(package, *variant.key, false, false, false) + ", " + ConvertPtrTypeName(package, *variant.type, false, variant.ptr, false) +">";
     else if (variant.hash)
         return prefix + "::unordered_map<" + ConvertPtrTypeName(package, *variant.key, false, false, false) + ", " + ConvertPtrTypeName(package, *variant.type, false, variant.ptr, false) +">";
     return ConvertPtrTypeName(package, *variant.type, false, variant.ptr, false);

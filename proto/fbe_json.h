@@ -410,6 +410,40 @@ struct ValueWriter<TWriter, std::unordered_map<TKey, TValue>>
     }
 };
 
+#if defined(USING_BTREE_MAP)
+template <class TWriter, typename T>
+struct ValueWriter<TWriter, FBE::set<T>>
+{
+    static bool to_json(TWriter& writer, const FBE::set<T>& values, bool scope = true)
+    {
+        writer.StartArray();
+        for (const auto& value : values)
+            if (!FBE::JSON::to_json(writer, value, true))
+                return false;
+        writer.EndArray();
+        return true;
+    }
+};
+
+template <class TWriter, typename TKey, typename TValue>
+struct ValueWriter<TWriter, FBE::map<TKey, TValue>>
+{
+    static bool to_json(TWriter& writer, const FBE::map<TKey, TValue>& values, bool scope = true)
+    {
+        writer.StartObject();
+        for (const auto& value : values)
+        {
+            if (!FBE::JSON::to_json_key(writer, value.first))
+                return false;
+            if (!FBE::JSON::to_json(writer, value.second, true))
+                return false;
+        }
+        writer.EndObject();
+        return true;
+    }
+};
+#endif
+
 template <class TJson, typename T>
 struct ValueReader
 {
@@ -1028,6 +1062,57 @@ struct ValueReader<TJson, std::unordered_map<TKey, TValue>>
         return true;
     }
 };
+
+#if defined(USING_BTREE_MAP)
+template <class TJson, typename T>
+struct ValueReader<TJson, FBE::set<T>>
+{
+    static bool from_json(const TJson& json, FBE::set<T>& values)
+    {
+        values.clear();
+
+        // Schema validation
+        if (json.IsNull() || !json.IsArray())
+            return false;
+
+        // Collect set items
+        for (const auto& item : json.GetArray())
+        {
+            T temp = T();
+            if (!FBE::JSON::from_json(item, temp))
+                return false;
+            values.emplace(temp);
+        }
+        return true;
+    }
+};
+
+template <class TJson, typename TKey, typename TValue>
+struct ValueReader<TJson, FBE::map<TKey, TValue>>
+{
+    static bool from_json(const TJson& json, FBE::map<TKey, TValue>& values)
+    {
+        values.clear();
+
+        // Schema validation
+        if (json.IsNull() || !json.IsObject())
+            return false;
+
+        // Collect map items
+        for (auto it = json.MemberBegin(); it != json.MemberEnd(); ++it)
+        {
+            TKey key;
+            TValue value;
+            if (!FBE::JSON::from_json_key(it->name, key))
+                return false;
+            if (!FBE::JSON::from_json(it->value, value))
+                return false;
+            values.emplace(key, value);
+        }
+        return true;
+    }
+};
+#endif
 
 template <class TJson, typename T>
 struct NodeReader

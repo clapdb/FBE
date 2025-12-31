@@ -128,7 +128,7 @@ void FieldModel<::arena_pmr::Item>::get_end(size_t fbe_begin) const noexcept
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModel<::arena_pmr::Item>::get(::arena_pmr::Item& fbe_value, pmr::memory_resource* resource) const noexcept
+void FieldModel<::arena_pmr::Item>::get(::arena_pmr::Item& fbe_value, std::pmr::memory_resource* resource) const noexcept
 {
     size_t fbe_begin = get_begin();
     if (fbe_begin == 0)
@@ -139,7 +139,7 @@ void FieldModel<::arena_pmr::Item>::get(::arena_pmr::Item& fbe_value, pmr::memor
     get_end(fbe_begin);
 }
 
-void FieldModel<::arena_pmr::Item>::get_fields([[maybe_unused]] ::arena_pmr::Item& fbe_value, [[maybe_unused]] size_t fbe_struct_size, pmr::memory_resource* resource) const noexcept
+void FieldModel<::arena_pmr::Item>::get_fields([[maybe_unused]] ::arena_pmr::Item& fbe_value, [[maybe_unused]] size_t fbe_struct_size, std::pmr::memory_resource* resource) const noexcept
 {
     size_t fbe_current_size = 4 + 4;
 
@@ -193,7 +193,7 @@ void FieldModel<::arena_pmr::Item>::set_end(size_t fbe_begin)
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModel<::arena_pmr::Item>::set(const ::arena_pmr::Item& fbe_value, pmr::memory_resource* resource) noexcept
+void FieldModel<::arena_pmr::Item>::set(const ::arena_pmr::Item& fbe_value, std::pmr::memory_resource* resource) noexcept
 {
     size_t fbe_begin = set_begin();
     if (fbe_begin == 0)
@@ -203,7 +203,7 @@ void FieldModel<::arena_pmr::Item>::set(const ::arena_pmr::Item& fbe_value, pmr:
     set_end(fbe_begin);
 }
 
-void FieldModel<::arena_pmr::Item>::set_fields([[maybe_unused]] const ::arena_pmr::Item& fbe_value, pmr::memory_resource* resource) noexcept
+void FieldModel<::arena_pmr::Item>::set_fields([[maybe_unused]] const ::arena_pmr::Item& fbe_value, std::pmr::memory_resource* resource) noexcept
 {
     optr.set(fbe_value.optr, resource);
     alias.set(fbe_value.alias, resource);
@@ -239,7 +239,7 @@ size_t ItemModel::create_end(size_t fbe_begin)
     return fbe_full_size;
 }
 
-size_t ItemModel::serialize(const ::arena_pmr::Item& value, pmr::memory_resource* resource)
+size_t ItemModel::serialize(const ::arena_pmr::Item& value, std::pmr::memory_resource* resource)
 {
     size_t fbe_begin = create_begin();
     model.set(value, resource);
@@ -247,7 +247,7 @@ size_t ItemModel::serialize(const ::arena_pmr::Item& value, pmr::memory_resource
     return fbe_full_size;
 }
 
-size_t ItemModel::deserialize(::arena_pmr::Item& value, pmr::memory_resource* resource) const noexcept
+size_t ItemModel::deserialize(::arena_pmr::Item& value, std::pmr::memory_resource* resource) const noexcept
 {
     if ((this->buffer().offset() + model.fbe_offset() - 4) > this->buffer().size())
         return 0;
@@ -355,7 +355,7 @@ void FieldModel<::arena_pmr::Item2>::get_end(size_t fbe_begin) const noexcept
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModel<::arena_pmr::Item2>::get(::arena_pmr::Item2& fbe_value, pmr::memory_resource* resource) const noexcept
+void FieldModel<::arena_pmr::Item2>::get(::arena_pmr::Item2& fbe_value, std::pmr::memory_resource* resource) const noexcept
 {
     size_t fbe_begin = get_begin();
     if (fbe_begin == 0)
@@ -366,7 +366,7 @@ void FieldModel<::arena_pmr::Item2>::get(::arena_pmr::Item2& fbe_value, pmr::mem
     get_end(fbe_begin);
 }
 
-void FieldModel<::arena_pmr::Item2>::get_fields([[maybe_unused]] ::arena_pmr::Item2& fbe_value, [[maybe_unused]] size_t fbe_struct_size, pmr::memory_resource* resource) const noexcept
+void FieldModel<::arena_pmr::Item2>::get_fields([[maybe_unused]] ::arena_pmr::Item2& fbe_value, [[maybe_unused]] size_t fbe_struct_size, std::pmr::memory_resource* resource) const noexcept
 {
     size_t fbe_current_size = 4 + 4;
 
@@ -402,7 +402,7 @@ void FieldModel<::arena_pmr::Item2>::set_end(size_t fbe_begin)
     _buffer.unshift(fbe_begin);
 }
 
-void FieldModel<::arena_pmr::Item2>::set(const ::arena_pmr::Item2& fbe_value, pmr::memory_resource* resource) noexcept
+void FieldModel<::arena_pmr::Item2>::set(const ::arena_pmr::Item2& fbe_value, std::pmr::memory_resource* resource) noexcept
 {
     size_t fbe_begin = set_begin();
     if (fbe_begin == 0)
@@ -412,7 +412,7 @@ void FieldModel<::arena_pmr::Item2>::set(const ::arena_pmr::Item2& fbe_value, pm
     set_end(fbe_begin);
 }
 
-void FieldModel<::arena_pmr::Item2>::set_fields([[maybe_unused]] const ::arena_pmr::Item2& fbe_value, pmr::memory_resource* resource) noexcept
+void FieldModel<::arena_pmr::Item2>::set_fields([[maybe_unused]] const ::arena_pmr::Item2& fbe_value, std::pmr::memory_resource* resource) noexcept
 {
     bytes_v.set(fbe_value.bytes_v, resource);
 }
@@ -445,7 +445,7 @@ size_t Item2Model::create_end(size_t fbe_begin)
     return fbe_full_size;
 }
 
-size_t Item2Model::serialize(const ::arena_pmr::Item2& value, pmr::memory_resource* resource)
+size_t Item2Model::serialize(const ::arena_pmr::Item2& value, std::pmr::memory_resource* resource)
 {
     size_t fbe_begin = create_begin();
     model.set(value, resource);
@@ -453,7 +453,7 @@ size_t Item2Model::serialize(const ::arena_pmr::Item2& value, pmr::memory_resour
     return fbe_full_size;
 }
 
-size_t Item2Model::deserialize(::arena_pmr::Item2& value, pmr::memory_resource* resource) const noexcept
+size_t Item2Model::deserialize(::arena_pmr::Item2& value, std::pmr::memory_resource* resource) const noexcept
 {
     if ((this->buffer().offset() + model.fbe_offset() - 4) > this->buffer().size())
         return 0;

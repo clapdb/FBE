@@ -61,9 +61,9 @@ public:
     void get_end(size_t fbe_begin) const noexcept;
 
     // Get the struct value
-    void get(::arena::Item& fbe_value, pmr::memory_resource* resource) const noexcept;
+    void get(::arena::Item& fbe_value, std::pmr::memory_resource* resource) const noexcept;
     // Get the struct fields values
-    void get_fields(::arena::Item& fbe_value, size_t fbe_struct_size, pmr::memory_resource* resource) const noexcept;
+    void get_fields(::arena::Item& fbe_value, size_t fbe_struct_size, std::pmr::memory_resource* resource) const noexcept;
 
     // Set the struct value (begin phase)
     size_t set_begin();
@@ -71,9 +71,9 @@ public:
     void set_end(size_t fbe_begin);
 
     // Set the struct value
-    void set(const ::arena::Item& fbe_value, pmr::memory_resource* resource) noexcept;
+    void set(const ::arena::Item& fbe_value, std::pmr::memory_resource* resource) noexcept;
     // Set the struct fields values
-    void set_fields(const ::arena::Item& fbe_value, pmr::memory_resource* resource) noexcept;
+    void set_fields(const ::arena::Item& fbe_value, std::pmr::memory_resource* resource) noexcept;
 
 private:
     FBEBuffer& _buffer;
@@ -109,9 +109,9 @@ public:
     size_t create_end(size_t fbe_begin);
 
     // Serialize the struct value
-    size_t serialize(const ::arena::Item& value, pmr::memory_resource* resource);
+    size_t serialize(const ::arena::Item& value, std::pmr::memory_resource* resource);
     // Deserialize the struct value
-    size_t deserialize(::arena::Item& value, pmr::memory_resource* resource) const noexcept;
+    size_t deserialize(::arena::Item& value, std::pmr::memory_resource* resource) const noexcept;
 
     // Move to the next struct value
     void next(size_t prev) noexcept { model.fbe_shift(prev); }
@@ -162,9 +162,9 @@ public:
     void get_end(size_t fbe_begin) const noexcept;
 
     // Get the struct value
-    void get(::arena::Item2& fbe_value, pmr::memory_resource* resource) const noexcept;
+    void get(::arena::Item2& fbe_value, std::pmr::memory_resource* resource) const noexcept;
     // Get the struct fields values
-    void get_fields(::arena::Item2& fbe_value, size_t fbe_struct_size, pmr::memory_resource* resource) const noexcept;
+    void get_fields(::arena::Item2& fbe_value, size_t fbe_struct_size, std::pmr::memory_resource* resource) const noexcept;
 
     // Set the struct value (begin phase)
     size_t set_begin();
@@ -172,9 +172,9 @@ public:
     void set_end(size_t fbe_begin);
 
     // Set the struct value
-    void set(const ::arena::Item2& fbe_value, pmr::memory_resource* resource) noexcept;
+    void set(const ::arena::Item2& fbe_value, std::pmr::memory_resource* resource) noexcept;
     // Set the struct fields values
-    void set_fields(const ::arena::Item2& fbe_value, pmr::memory_resource* resource) noexcept;
+    void set_fields(const ::arena::Item2& fbe_value, std::pmr::memory_resource* resource) noexcept;
 
 private:
     FBEBuffer& _buffer;
@@ -207,9 +207,9 @@ public:
     size_t create_end(size_t fbe_begin);
 
     // Serialize the struct value
-    size_t serialize(const ::arena::Item2& value, pmr::memory_resource* resource);
+    size_t serialize(const ::arena::Item2& value, std::pmr::memory_resource* resource);
     // Deserialize the struct value
-    size_t deserialize(::arena::Item2& value, pmr::memory_resource* resource) const noexcept;
+    size_t deserialize(::arena::Item2& value, std::pmr::memory_resource* resource) const noexcept;
 
     // Move to the next struct value
     void next(size_t prev) noexcept { model.fbe_shift(prev); }

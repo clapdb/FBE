@@ -352,3 +352,345 @@ TEST_CASE("Benchmark: Final Model Performance", "[FBE][Benchmark][Final]")
 
     REQUIRE(true);  // Always pass - this is for benchmarking
 }
+
+TEST_CASE("Benchmark: Primitive Array Performance", "[FBE][Benchmark][PrimitiveArray]")
+{
+    constexpr int ITERATIONS = 1000000;
+    constexpr size_t ARRAY_SIZE = 1000;
+
+    std::cout << "\n=== FBE Primitive Array Benchmark (memcpy optimized) ===" << std::endl;
+    std::cout << "Iterations: " << ITERATIONS << ", Array size: " << ARRAY_SIZE << std::endl;
+    std::cout << std::fixed << std::setprecision(2);
+
+    // Prepare source data
+    FBE::FastVec<int32_t> int32_source;
+    int32_source.reserve(ARRAY_SIZE);
+    for (size_t i = 0; i < ARRAY_SIZE; i++) {
+        int32_source.push_back(static_cast<int32_t>(i * 12345));
+    }
+
+    FBE::FastVec<double> double_source;
+    double_source.reserve(ARRAY_SIZE);
+    for (size_t i = 0; i < ARRAY_SIZE; i++) {
+        double_source.push_back(static_cast<double>(i) * 3.14159);
+    }
+
+    // FinalModelVector<int32_t> serialize (memcpy)
+    {
+        FBE::FBEBuffer buffer;
+        buffer.allocate(4 + ARRAY_SIZE * sizeof(int32_t) + 100);
+        FBE::FinalModelVector<int32_t> model(buffer, 0);
+
+        double ns = benchmark("int32[] Final serialize", ITERATIONS, [&]() {
+            model.fbe_offset(0);
+            model.set(int32_source);
+        });
+        std::cout << "int32[" << ARRAY_SIZE << "] serialize (memcpy):    " << std::setw(8) << ns << " ns/op" << std::endl;
+    }
+
+    // Pure memcpy comparison (no FBE overhead)
+    {
+        FBE::FBEBuffer buffer;
+        buffer.allocate(4 + ARRAY_SIZE * sizeof(int32_t) + 100);
+        uint8_t* data = buffer.data();
+
+        double ns = benchmark("int32[] serialize (pure memcpy)", ITERATIONS, [&]() {
+            *((uint32_t*)data) = (uint32_t)int32_source.size();
+            memcpy(data + 4, int32_source.data(), ARRAY_SIZE * sizeof(int32_t));
+        });
+        std::cout << "int32[" << ARRAY_SIZE << "] serialize (memcpy raw):" << std::setw(8) << ns << " ns/op" << std::endl;
+    }
+
+    // Simulate old loop-based serialize for comparison
+    {
+        FBE::FBEBuffer buffer;
+        buffer.allocate(4 + ARRAY_SIZE * sizeof(int32_t) + 100);
+        uint8_t* data = buffer.data();
+
+        double ns = benchmark("int32[] serialize (loop)", ITERATIONS, [&]() {
+            *((uint32_t*)data) = (uint32_t)int32_source.size();
+            int32_t* dest = (int32_t*)(data + 4);
+            for (size_t i = 0; i < ARRAY_SIZE; ++i) {
+                dest[i] = int32_source[i];
+            }
+        });
+        std::cout << "int32[" << ARRAY_SIZE << "] serialize (loop):      " << std::setw(8) << ns << " ns/op" << std::endl;
+    }
+
+    // FinalModelVector<int32_t> deserialize (memcpy)
+    {
+        FBE::FBEBuffer buffer;
+        buffer.allocate(4 + ARRAY_SIZE * sizeof(int32_t) + 100);
+        FBE::FinalModelVector<int32_t> model(buffer, 0);
+        model.set(int32_source);
+
+        FBE::FastVec<int32_t> result;
+        result.reserve(ARRAY_SIZE);
+        double ns = benchmark("int32[] Final deserialize", ITERATIONS, [&]() {
+            result.clear();
+            model.fbe_offset(0);
+            model.get(result);
+        });
+        std::cout << "int32[" << ARRAY_SIZE << "] deserialize (memcpy):  " << std::setw(8) << ns << " ns/op" << std::endl;
+        REQUIRE(result.size() == ARRAY_SIZE);
+        REQUIRE(result[0] == 0);
+        REQUIRE(result[1] == 12345);
+    }
+
+    // Simulate old loop-based deserialize for comparison
+    {
+        FBE::FBEBuffer buffer;
+        buffer.allocate(4 + ARRAY_SIZE * sizeof(int32_t) + 100);
+        FBE::FinalModelVector<int32_t> model(buffer, 0);
+        model.set(int32_source);
+        uint8_t* data = buffer.data();
+
+        FBE::FastVec<int32_t> result;
+        result.reserve(ARRAY_SIZE);
+        double ns = benchmark("int32[] deserialize (loop)", ITERATIONS, [&]() {
+            result.clear();
+            result.resize(ARRAY_SIZE);
+            int32_t* src = (int32_t*)(data + 4);
+            for (size_t i = 0; i < ARRAY_SIZE; ++i) {
+                result[i] = src[i];
+            }
+        });
+        std::cout << "int32[" << ARRAY_SIZE << "] deserialize (loop):    " << std::setw(8) << ns << " ns/op" << std::endl;
+    }
+
+    // FinalModelVector verify (optimized O(1) check)
+    {
+        FBE::FBEBuffer buffer;
+        buffer.allocate(4 + ARRAY_SIZE * sizeof(int32_t) + 100);
+        FBE::FinalModelVector<int32_t> model(buffer, 0);
+        model.set(int32_source);
+
+        double ns = benchmark("int32[] Final verify", ITERATIONS, [&]() {
+            model.fbe_offset(0);
+            auto size = model.verify();
+            (void)size;
+        });
+        std::cout << "int32[" << ARRAY_SIZE << "] verify (O(1)):         " << std::setw(8) << ns << " ns/op" << std::endl;
+    }
+
+    // double array tests
+    std::cout << std::endl;
+
+    // FinalModelVector<double> serialize (memcpy)
+    {
+        FBE::FBEBuffer buffer;
+        buffer.allocate(4 + ARRAY_SIZE * sizeof(double) + 100);
+        FBE::FinalModelVector<double> model(buffer, 0);
+
+        double ns = benchmark("double[] Final serialize", ITERATIONS, [&]() {
+            model.fbe_offset(0);
+            model.set(double_source);
+        });
+        std::cout << "double[" << ARRAY_SIZE << "] serialize (memcpy):   " << std::setw(8) << ns << " ns/op" << std::endl;
+    }
+
+    // FinalModelVector<double> deserialize (memcpy)
+    {
+        FBE::FBEBuffer buffer;
+        buffer.allocate(4 + ARRAY_SIZE * sizeof(double) + 100);
+        FBE::FinalModelVector<double> model(buffer, 0);
+        model.set(double_source);
+
+        FBE::FastVec<double> result;
+        result.reserve(ARRAY_SIZE);
+        double ns = benchmark("double[] Final deserialize", ITERATIONS, [&]() {
+            result.clear();
+            model.fbe_offset(0);
+            model.get(result);
+        });
+        std::cout << "double[" << ARRAY_SIZE << "] deserialize (memcpy): " << std::setw(8) << ns << " ns/op" << std::endl;
+        REQUIRE(result.size() == ARRAY_SIZE);
+    }
+
+    std::cout << "======================================" << std::endl;
+
+    REQUIRE(true);
+}
+
+TEST_CASE("Benchmark: Complex Types Performance", "[FBE][Benchmark][Complex]")
+{
+    constexpr int ITERATIONS = 100000;
+
+    std::cout << "\n=== FBE Complex Types Benchmark ===" << std::endl;
+    std::cout << "Iterations: " << ITERATIONS << std::endl;
+    std::cout << std::fixed << std::setprecision(2);
+
+    // StructArray - Fixed arrays of primitives, enums, and structs
+    {
+        test::StructArray source;
+        for (int i = 0; i < 2; i++) source.f1[i] = static_cast<uint8_t>(i);
+        for (int i = 0; i < 2; i++) source.f2[i] = static_cast<uint8_t>(i + 10);
+        for (int i = 0; i < 2; i++) source.f3[i] = FBE::buffer_t(100, static_cast<uint8_t>(i));
+        for (int i = 0; i < 2; i++) source.f5[i] = static_cast<test::EnumSimple>(i % 3);
+        for (int i = 0; i < 2; i++) source.f7[i] = test::FlagsSimple::FLAG_VALUE_1;
+        test::StructSimple s1, s2;
+        s1.id = 1; s2.id = 2;
+        source.f9[0] = s1; source.f9[1] = s2;
+
+        FBE::test::StructArrayModel writer;
+        double ns_ser = benchmark("StructArray serialize", ITERATIONS, [&]() {
+            writer.reset();
+            writer.serialize(source, nullptr);
+        });
+        std::cout << "StructArray serialize:     " << std::setw(10) << ns_ser << " ns/op" << std::endl;
+
+        FBE::test::StructArrayModel reader;
+        reader.attach(writer.buffer());
+        test::StructArray result;
+        double ns_de = benchmark("StructArray deserialize", ITERATIONS, [&]() {
+            reader.deserialize(result, nullptr);
+        });
+        std::cout << "StructArray deserialize:   " << std::setw(10) << ns_de << " ns/op" << std::endl;
+    }
+
+    // StructMap - Maps with int32_t keys and various value types
+    {
+        test::StructMap source;
+        for (int i = 0; i < 50; i++) {
+            source.f1[static_cast<int32_t>(i)] = static_cast<uint8_t>(i & 0xFF);
+            source.f2[static_cast<int32_t>(i)] = static_cast<uint8_t>(i);
+            source.f3[static_cast<int32_t>(i)] = FBE::buffer_t(100, static_cast<uint8_t>(i));
+            source.f4[static_cast<int32_t>(i)] = FBE::buffer_t(50, static_cast<uint8_t>(i));
+        }
+
+        FBE::test::StructMapModel writer;
+        double ns_ser = benchmark("StructMap serialize (50 entries)", ITERATIONS / 10, [&]() {
+            writer.reset();
+            writer.serialize(source, nullptr);
+        });
+        std::cout << "StructMap serialize:       " << std::setw(10) << ns_ser << " ns/op (50 entries)" << std::endl;
+
+        FBE::test::StructMapModel reader;
+        reader.attach(writer.buffer());
+        test::StructMap result;
+        double ns_de = benchmark("StructMap deserialize (50 entries)", ITERATIONS / 10, [&]() {
+            result.f1.clear(); result.f2.clear(); result.f3.clear(); result.f4.clear();
+            reader.deserialize(result, nullptr);
+        });
+        std::cout << "StructMap deserialize:     " << std::setw(10) << ns_de << " ns/op (50 entries)" << std::endl;
+    }
+
+    // StructHash - Hash maps with string keys and various value types
+    {
+        test::StructHash source;
+        for (int i = 0; i < 50; i++) {
+            std::string key = "key" + std::to_string(i);
+            source.f1[key] = static_cast<uint8_t>(i & 0xFF);
+            source.f2[key] = static_cast<uint8_t>(i);
+            source.f3[key] = FBE::buffer_t(100, static_cast<uint8_t>(i));
+            source.f4[key] = FBE::buffer_t(50, static_cast<uint8_t>(i));
+        }
+
+        FBE::test::StructHashModel writer;
+        double ns_ser = benchmark("StructHash serialize (50 entries)", ITERATIONS / 10, [&]() {
+            writer.reset();
+            writer.serialize(source, nullptr);
+        });
+        std::cout << "StructHash serialize:      " << std::setw(10) << ns_ser << " ns/op (50 entries)" << std::endl;
+
+        FBE::test::StructHashModel reader;
+        reader.attach(writer.buffer());
+        test::StructHash result;
+        double ns_de = benchmark("StructHash deserialize (50 entries)", ITERATIONS / 10, [&]() {
+            result.f1.clear(); result.f2.clear(); result.f3.clear(); result.f4.clear();
+            reader.deserialize(result, nullptr);
+        });
+        std::cout << "StructHash deserialize:    " << std::setw(10) << ns_de << " ns/op (50 entries)" << std::endl;
+    }
+
+    // StructVector - Vector of primitives, enums, and structs
+    {
+        test::StructVector source;
+        for (int i = 0; i < 100; i++) {
+            source.f1.push_back(static_cast<uint8_t>(i & 0xFF));
+            source.f5.push_back(static_cast<test::EnumSimple>(i % 3));
+            test::StructSimple s;
+            s.id = i;
+            s.f1 = (i % 2) != 0;
+            s.f2 = 'A' + (i % 26);
+            s.f25 = static_cast<float>(i) * 1.5f;
+            source.f9.push_back(s);
+        }
+
+        FBE::test::StructVectorModel writer;
+        double ns_ser = benchmark("StructVector serialize (100 structs)", ITERATIONS / 10, [&]() {
+            writer.reset();
+            writer.serialize(source, nullptr);
+        });
+        std::cout << "StructVector (structs):    " << std::setw(10) << ns_ser << " ns/op serialize" << std::endl;
+
+        FBE::test::StructVectorModel reader;
+        reader.attach(writer.buffer());
+        test::StructVector result;
+        double ns_de = benchmark("StructVector deserialize (100 structs)", ITERATIONS / 10, [&]() {
+            result.f1.clear(); result.f5.clear(); result.f9.clear();
+            reader.deserialize(result, nullptr);
+        });
+        std::cout << "StructVector (structs):    " << std::setw(10) << ns_de << " ns/op deserialize" << std::endl;
+    }
+
+    // Deep nested structure
+    {
+        test::StructNested source;
+        source.f1 = true;
+        source.f2 = 42;
+        // StructNested contains deeply nested StructOptional, StructSimple, etc.
+
+        FBE::test::StructNestedModel writer;
+        double ns_ser = benchmark("StructNested serialize", ITERATIONS, [&]() {
+            writer.reset();
+            writer.serialize(source, nullptr);
+        });
+        std::cout << "StructNested serialize:    " << std::setw(10) << ns_ser << " ns/op (deep nesting)" << std::endl;
+
+        FBE::test::StructNestedModel reader;
+        reader.attach(writer.buffer());
+        test::StructNested result;
+        double ns_de = benchmark("StructNested deserialize", ITERATIONS, [&]() {
+            reader.deserialize(result, nullptr);
+        });
+        std::cout << "StructNested deserialize:  " << std::setw(10) << ns_de << " ns/op (deep nesting)" << std::endl;
+    }
+
+    // Compare primitive vector vs struct vector (same element count)
+    {
+        constexpr size_t N = 100;
+
+        // Primitive vector
+        test::StructVector prim_source;
+        for (size_t i = 0; i < N; i++) {
+            prim_source.f1.push_back(static_cast<uint8_t>(i));
+        }
+        FBE::test::StructVectorModel prim_writer;
+        double prim_ns = benchmark("Primitive vector serialize", ITERATIONS, [&]() {
+            prim_writer.reset();
+            prim_writer.serialize(prim_source, nullptr);
+        });
+        std::cout << "\nVector comparison (100 elements):" << std::endl;
+        std::cout << "  uint8_t[] serialize:     " << std::setw(10) << prim_ns << " ns/op" << std::endl;
+
+        // Struct vector (same count)
+        test::StructVector struct_source;
+        for (size_t i = 0; i < N; i++) {
+            test::StructSimple s;
+            s.id = static_cast<int32_t>(i);
+            struct_source.f9.push_back(s);
+        }
+        FBE::test::StructVectorModel struct_writer;
+        double struct_ns = benchmark("Struct vector serialize", ITERATIONS / 10, [&]() {
+            struct_writer.reset();
+            struct_writer.serialize(struct_source, nullptr);
+        });
+        std::cout << "  StructSimple[] serialize:" << std::setw(10) << struct_ns << " ns/op" << std::endl;
+        std::cout << "  Ratio (struct/primitive):" << std::setw(10) << (struct_ns / prim_ns) << "x" << std::endl;
+    }
+
+    std::cout << "======================================" << std::endl;
+
+    REQUIRE(true);
+}

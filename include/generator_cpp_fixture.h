@@ -46,14 +46,16 @@ class GeneratorCPPFixture {
 #include <experimental/unordered_map>
 #include <experimental/string>
 #include <experimental/set>
-namespace pmr = std::experimental::pmr;
+namespace std { namespace pmr = ::std::experimental::pmr; }
 #else
 #include <memory_resource>
-namespace pmr = std::pmr;
 #endif
 #include <utility>
 #include <variant>
 #include "container/vectra.hpp"
+#if defined(USING_BTREE_MAP)
+#include "container/btree_map.hpp"
+#endif
 
 #if defined(USING_SEASTAR_STRING)
 #include <seastar/core/sstring.hh>
@@ -85,8 +87,63 @@ namespace FBE {
     #if defined(USING_SMALL_ARENA_STRING)
     using ArenaString = small::pmr::small_byte_string;
     #else
-    using ArenaString = pmr::string;
+    using ArenaString = std::pmr::string;
     #endif
+
+    template <typename Key, typename Compare = std::less<Key>, typename Allocator = std::allocator<Key>>
+    #if defined(USING_BTREE_MAP)
+    // Use fixed 256-byte node size to support forward-declared types (ptr-based FBE)
+    using set = stdb::container::btree_set<Key, Compare, Allocator, 256>;
+    #else
+    using set = std::set<Key, Compare, Allocator>;
+    #endif
+
+    template <typename Key, typename Value, typename Compare = std::less<Key>, typename Allocator = std::allocator<std::pair<const Key, Value>>>
+    #if defined(USING_BTREE_MAP)
+    // Use fixed 256-byte node size to support forward-declared types (ptr-based FBE)
+    using map = stdb::container::btree_map<Key, Value, Compare, Allocator, 256>;
+    #else
+    using map = std::map<Key, Value, Compare, Allocator>;
+    #endif
+
+    // PMR namespace for arena allocator support
+    namespace pmr {
+        template <typename Key, typename Compare = std::less<Key>>
+        #if defined(USING_BTREE_MAP)
+        using set = stdb::pmr::btree_set_compact<Key, Compare>;
+        #else
+        using set = std::pmr::set<Key, Compare>;
+        #endif
+
+        template <typename Key, typename Value, typename Compare = std::less<Key>>
+        #if defined(USING_BTREE_MAP)
+        using map = stdb::pmr::btree_map_compact<Key, Value, Compare>;
+        #else
+        using map = std::pmr::map<Key, Value, Compare>;
+        #endif
+    } // namespace pmr
+
+    // Type trait to detect primitive types that can be bulk-copied with memcpy
+    // These types have fixed size and trivial copy semantics in FinalModel
+    template <typename T>
+    struct is_fbe_final_primitive : std::false_type {};
+
+    template <> struct is_fbe_final_primitive<bool> : std::true_type {};
+    template <> struct is_fbe_final_primitive<char> : std::true_type {};
+    template <> struct is_fbe_final_primitive<wchar_t> : std::true_type {};
+    template <> struct is_fbe_final_primitive<int8_t> : std::true_type {};
+    template <> struct is_fbe_final_primitive<uint8_t> : std::true_type {};
+    template <> struct is_fbe_final_primitive<int16_t> : std::true_type {};
+    template <> struct is_fbe_final_primitive<uint16_t> : std::true_type {};
+    template <> struct is_fbe_final_primitive<int32_t> : std::true_type {};
+    template <> struct is_fbe_final_primitive<uint32_t> : std::true_type {};
+    template <> struct is_fbe_final_primitive<int64_t> : std::true_type {};
+    template <> struct is_fbe_final_primitive<uint64_t> : std::true_type {};
+    template <> struct is_fbe_final_primitive<float> : std::true_type {};
+    template <> struct is_fbe_final_primitive<double> : std::true_type {};
+
+    template <typename T>
+    inline constexpr bool is_fbe_final_primitive_v = is_fbe_final_primitive<T>::value;
 } // namespace FBE
 
 #if defined(unix) || defined(__unix) || defined(__unix__) || defined(__APPLE__)
@@ -301,17 +358,17 @@ buffer_t buffer_t::base64decode(const std::string& str)
       return R"CODE(
 //! PMR bytes buffer type
 /*!
-    Represents pmr bytes buffer which is a lightweight wrapper around pmr::vector<uint8_t>
+    Represents pmr bytes buffer which is a lightweight wrapper around std::pmr::vector<uint8_t>
     with similar interface.
 */
 class pmr_buffer_t
 {
 public:
-    using iterator = pmr::vector<uint8_t>::iterator;
-    using const_iterator = pmr::vector<uint8_t>::const_iterator;
-    using reverse_iterator = pmr::vector<uint8_t>::reverse_iterator;
-    using const_reverse_iterator = pmr::vector<uint8_t>::const_reverse_iterator;
-    using allocator_type = pmr::polymorphic_allocator<char>;
+    using iterator = std::pmr::vector<uint8_t>::iterator;
+    using const_iterator = std::pmr::vector<uint8_t>::const_iterator;
+    using reverse_iterator = std::pmr::vector<uint8_t>::reverse_iterator;
+    using const_reverse_iterator = std::pmr::vector<uint8_t>::const_reverse_iterator;
+    using allocator_type = std::pmr::polymorphic_allocator<char>;
 
     pmr_buffer_t() = default;
     explicit pmr_buffer_t(allocator_type alloc): _data(alloc) {}
@@ -319,8 +376,8 @@ public:
     explicit pmr_buffer_t(const ArenaString& str) { assign(str); }
     pmr_buffer_t(size_t size, uint8_t value) { assign(size, value); }
     pmr_buffer_t(const uint8_t* data, size_t size) { assign(data, size); }
-    explicit pmr_buffer_t(const pmr::vector<uint8_t>& other) : _data(other) {}
-    explicit pmr_buffer_t(pmr::vector<uint8_t>&& other) : _data(std::move(other)) {}
+    explicit pmr_buffer_t(const std::pmr::vector<uint8_t>& other) : _data(other) {}
+    explicit pmr_buffer_t(std::pmr::vector<uint8_t>&& other) : _data(std::move(other)) {}
     pmr_buffer_t(const pmr_buffer_t& other) = default;
     explicit pmr_buffer_t(pmr_buffer_t&& other) = default;
     pmr_buffer_t(const pmr_buffer_t& other, allocator_type alloc): _data(alloc) {
@@ -331,8 +388,8 @@ public:
     ~pmr_buffer_t() = default;
 
     pmr_buffer_t& operator=(const ArenaString& str) { assign(str); return *this; }
-    pmr_buffer_t& operator=(const pmr::vector<uint8_t>& other) { _data = other; return *this; }
-    pmr_buffer_t& operator=(pmr::vector<uint8_t>&& other) { _data = std::move(other); return *this; }
+    pmr_buffer_t& operator=(const std::pmr::vector<uint8_t>& other) { _data = other; return *this; }
+    pmr_buffer_t& operator=(std::pmr::vector<uint8_t>&& other) { _data = std::move(other); return *this; }
     pmr_buffer_t& operator=(const pmr_buffer_t& other) = default;
     pmr_buffer_t& operator=(pmr_buffer_t&& other) = default;
 
@@ -347,8 +404,8 @@ public:
     size_t size() const { return _data.size(); }
     size_t max_size() const { return _data.max_size(); }
 
-    pmr::vector<uint8_t>& buffer() noexcept { return _data; }
-    const pmr::vector<uint8_t>& buffer() const noexcept { return _data; }
+    std::pmr::vector<uint8_t>& buffer() noexcept { return _data; }
+    const std::pmr::vector<uint8_t>& buffer() const noexcept { return _data; }
     uint8_t* data() noexcept { return _data.data(); }
     const uint8_t* data() const noexcept { return _data.data(); }
     uint8_t& at(size_t index) { return _data.at(index); }
@@ -363,14 +420,14 @@ public:
     void shrink_to_fit() { _data.shrink_to_fit(); }
 
     void assign(const ArenaString& str) { assign((const uint8_t*)str.data(), str.size()); }
-    void assign(const pmr::vector<uint8_t>& vec) { assign(vec.begin(), vec.end()); }
+    void assign(const std::pmr::vector<uint8_t>& vec) { assign(vec.begin(), vec.end()); }
     void assign(size_t size, uint8_t value) { _data.assign(size, value); }
     void assign(const uint8_t* data, size_t size) { _data.assign(data, data + size); }
     template <class InputIterator>
     void assign(InputIterator first, InputIterator last) { _data.assign(first, last); }
     iterator insert(const_iterator position, uint8_t value) { return _data.insert(position, value); }
     iterator insert(const_iterator position, const ArenaString& str) { return insert(position, (const uint8_t*)str.data(), str.size()); }
-    iterator insert(const_iterator position, const pmr::vector<uint8_t>& vec) { return insert(position, vec.begin(), vec.end()); }
+    iterator insert(const_iterator position, const std::pmr::vector<uint8_t>& vec) { return insert(position, vec.begin(), vec.end()); }
     iterator insert(const_iterator position, size_t size, uint8_t value) { return _data.insert(position, size, value); }
     iterator insert(const_iterator position, const uint8_t* data, size_t size) { return _data.insert(position, data, data + size); }
     template <class InputIterator>
@@ -419,7 +476,7 @@ public:
     { os << value.string(); return os; }
 
 private:
-    pmr::vector<uint8_t> _data;
+    std::pmr::vector<uint8_t> _data;
     
 };
 )CODE";
@@ -505,13 +562,13 @@ public:
     decimal_t(uint64_t value) noexcept { _value = (double)value; }
     decimal_t(float value) noexcept { _value = (double)value; }
     decimal_t(double value) noexcept { _value = value; }
-    template <typename T> requires (!std::same_as<T, pmr::memory_resource*>)
+    template <typename T> requires (!std::same_as<T, std::pmr::memory_resource*>)
     explicit decimal_t(const T& value) noexcept { _value = (double)value; }
     decimal_t(const decimal_t& value) noexcept = default;
     decimal_t(decimal_t&& value) noexcept = default;
     ~decimal_t() noexcept = default;
 
-    template <typename T> requires (!std::same_as<T, pmr::memory_resource*>)
+    template <typename T> requires (!std::same_as<T, std::pmr::memory_resource*>)
     decimal_t& operator=(const T& value) noexcept { _value = (double)value; return *this; }
     decimal_t& operator=(const decimal_t& value) noexcept = default;
     decimal_t& operator=(decimal_t&& value) noexcept = default;
@@ -1374,9 +1431,9 @@ public:
     bool verify() const noexcept { return true; }
 
     // Get the field value
-    void get(T& value, pmr::memory_resource* resource, T defaults = (T)0) const noexcept;
+    void get(T& value, std::pmr::memory_resource* resource, T defaults = (T)0) const noexcept;
     // Set the field value
-    void set(T value, pmr::memory_resource* resource) noexcept;
+    void set(T value, std::pmr::memory_resource* resource) noexcept;
 
 private:
     FBEBuffer& _buffer;
@@ -1416,8 +1473,8 @@ public:
 };
 
 template<typename V, typename T>
-auto variant_emplace_value(V& fbe_value, pmr::memory_resource* resource) {
-    if constexpr (std::is_integral_v<T> or std::is_floating_point_v<T> or std::is_enum_v<T> or std::is_same_v<T, std::string> or not std::is_constructible_v<T, pmr::memory_resource*>) {
+auto variant_emplace_value(V& fbe_value, std::pmr::memory_resource* resource) {
+    if constexpr (std::is_integral_v<T> or std::is_floating_point_v<T> or std::is_enum_v<T> or std::is_same_v<T, std::string> or not std::is_constructible_v<T, std::pmr::memory_resource*>) {
         fbe_value.template emplace<T>();
     } else {
         fbe_value.template emplace<T>(resource);
@@ -1425,8 +1482,8 @@ auto variant_emplace_value(V& fbe_value, pmr::memory_resource* resource) {
 }
 
 template<typename M, typename T>
-auto variant_get_value(M& model, T& value, pmr::memory_resource* resource) {
-    if constexpr (std::is_integral_v<T> or std::is_floating_point_v<T> or std::is_enum_v<T> or std::is_same_v<T, std::string> or not (std::is_constructible_v<T, pmr::memory_resource*> or is_variant_v<T>)) {
+auto variant_get_value(M& model, T& value, std::pmr::memory_resource* resource) {
+    if constexpr (std::is_integral_v<T> or std::is_floating_point_v<T> or std::is_enum_v<T> or std::is_same_v<T, std::string> or not (std::is_constructible_v<T, std::pmr::memory_resource*> or is_variant_v<T>)) {
         model.get(value, nullptr);
     } else {
         model.get(value, resource);
@@ -1434,8 +1491,8 @@ auto variant_get_value(M& model, T& value, pmr::memory_resource* resource) {
 }
 
 template<typename M, typename T>
-auto variant_get_value(M& model, T** value, pmr::memory_resource* resource) {
-    if constexpr (std::is_integral_v<T> or std::is_floating_point_v<T> or std::is_enum_v<T> or std::is_same_v<T, std::string> or not (std::is_constructible_v<T, pmr::memory_resource*> or is_variant_v<T>)) {
+auto variant_get_value(M& model, T** value, std::pmr::memory_resource* resource) {
+    if constexpr (std::is_integral_v<T> or std::is_floating_point_v<T> or std::is_enum_v<T> or std::is_same_v<T, std::string> or not (std::is_constructible_v<T, std::pmr::memory_resource*> or is_variant_v<T>)) {
         model.get(value, nullptr);
     } else {
         model.get(value, resource);
@@ -1443,8 +1500,8 @@ auto variant_get_value(M& model, T** value, pmr::memory_resource* resource) {
 }
 
 template<typename M, typename T>
-auto variant_set_value(M* model, T& value, pmr::memory_resource* resource) {
-    if constexpr (std::is_integral_v<T> or std::is_floating_point_v<T> or std::is_enum_v<T> or std::is_same_v<T, std::string> or not (std::is_constructible_v<T, pmr::memory_resource*> or is_variant_v<T>)) {
+auto variant_set_value(M* model, T& value, std::pmr::memory_resource* resource) {
+    if constexpr (std::is_integral_v<T> or std::is_floating_point_v<T> or std::is_enum_v<T> or std::is_same_v<T, std::string> or not (std::is_constructible_v<T, std::pmr::memory_resource*> or is_variant_v<T>)) {
         model->set(value, nullptr);
     } else {
         model->set(value, resource);
@@ -1458,7 +1515,7 @@ auto variant_set_value(M* model, T& value, pmr::memory_resource* resource) {
     static std::string GenerateFBEFieldModel_Inline() {
       return R"CODE(
 template <typename T, typename TBase>
-inline void FieldModelBase<T, TBase>::get(T& value, pmr::memory_resource* resource, T defaults) const noexcept
+inline void FieldModelBase<T, TBase>::get(T& value, std::pmr::memory_resource* resource, T defaults) const noexcept
 {
     size_t fbe_full_offset = _buffer.offset() + fbe_offset();
     if ((fbe_full_offset + fbe_size()) > _buffer.size())
@@ -1471,7 +1528,7 @@ inline void FieldModelBase<T, TBase>::get(T& value, pmr::memory_resource* resour
 }
 
 template <typename T, typename TBase>
-inline void FieldModelBase<T, TBase>::set(T value, pmr::memory_resource* resource) noexcept
+inline void FieldModelBase<T, TBase>::set(T value, std::pmr::memory_resource* resource) noexcept
 {
     size_t fbe_full_offset = _buffer.offset() + fbe_offset();
     assert(((fbe_full_offset + fbe_size()) <= _buffer.size()) && "Model is broken!");
@@ -1508,9 +1565,9 @@ public:
     bool verify() const noexcept { return true; }
 
     // Get the decimal value
-    void get(decimal_t& value, pmr::memory_resource* resource, decimal_t defaults = decimal_t()) const noexcept;
+    void get(decimal_t& value, std::pmr::memory_resource* resource, decimal_t defaults = decimal_t()) const noexcept;
     // Set the decimal value
-    void set(decimal_t value, pmr::memory_resource* resource) noexcept;
+    void set(decimal_t value, std::pmr::memory_resource* resource) noexcept;
 
 private:
     FBEBuffer& _buffer;
@@ -1595,7 +1652,7 @@ void FieldModel<decimal_t>::uint64x64(uint64_t a, uint64_t b, uint64_t& low64, u
     high32 = (uint32_t)high;
 }
 
-void FieldModel<decimal_t>::get(decimal_t& value, pmr::memory_resource* resource, decimal_t defaults) const noexcept
+void FieldModel<decimal_t>::get(decimal_t& value, std::pmr::memory_resource* resource, decimal_t defaults) const noexcept
 {
     if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
     {
@@ -1620,7 +1677,7 @@ void FieldModel<decimal_t>::get(decimal_t& value, pmr::memory_resource* resource
     value = dValue;
 }
 
-void FieldModel<decimal_t>::set(decimal_t value, pmr::memory_resource* resource) noexcept
+void FieldModel<decimal_t>::set(decimal_t value, std::pmr::memory_resource* resource) noexcept
 {
     assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
     if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
@@ -1818,9 +1875,9 @@ public:
     bool verify() const noexcept { return true; }
 
     // Get the UUID value
-    void get(uuid_t& value, pmr::memory_resource* resource, uuid_t defaults = uuid_t::nil()) const noexcept;
+    void get(uuid_t& value, std::pmr::memory_resource* resource, uuid_t defaults = uuid_t::nil()) const noexcept;
     // Set the UUID value
-    void set(uuid_t value, pmr::memory_resource* resource) noexcept;
+    void set(uuid_t value, std::pmr::memory_resource* resource) noexcept;
 
 private:
     FBEBuffer& _buffer;
@@ -1831,7 +1888,7 @@ private:
 
     static std::string GenerateFBEFieldModelUUID_Source() {
       return R"CODE(
-void FieldModel<uuid_t>::get(uuid_t& value, pmr::memory_resource* resource, uuid_t defaults) const noexcept
+void FieldModel<uuid_t>::get(uuid_t& value, std::pmr::memory_resource* resource, uuid_t defaults) const noexcept
 {
     if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
     {
@@ -1842,7 +1899,7 @@ void FieldModel<uuid_t>::get(uuid_t& value, pmr::memory_resource* resource, uuid
     std::memcpy(value.data().data(), (const uint8_t*)(_buffer.data() + _buffer.offset() + fbe_offset()), fbe_size());
 }
 
-void FieldModel<uuid_t>::set(uuid_t value, pmr::memory_resource* resource) noexcept
+void FieldModel<uuid_t>::set(uuid_t value, std::pmr::memory_resource* resource) noexcept
 {
     assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
     if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
@@ -1878,30 +1935,30 @@ public:
     bool verify() const noexcept;
 
     // Get the bytes value
-    size_t get(void* data, size_t size, pmr::memory_resource* resource) const noexcept;
+    size_t get(void* data, size_t size, std::pmr::memory_resource* resource) const noexcept;
     // Get the bytes value
     template <size_t N>
-    size_t get(uint8_t (&data)[N], pmr::memory_resource* resource) const noexcept { return get(data, N, resource); }
+    size_t get(uint8_t (&data)[N], std::pmr::memory_resource* resource) const noexcept { return get(data, N, resource); }
     // Get the bytes value
     template <size_t N>
-    size_t get(std::array<uint8_t, N>& data, pmr::memory_resource* resource) const noexcept { return get(data.data(), data.size(), resource); }
+    size_t get(std::array<uint8_t, N>& data, std::pmr::memory_resource* resource) const noexcept { return get(data.data(), data.size(), resource); }
     // Get the bytes value
-    void get(FastVec<uint8_t>& value, pmr::memory_resource* resource) const noexcept;
+    void get(FastVec<uint8_t>& value, std::pmr::memory_resource* resource) const noexcept;
     // Get the bytes value
-    void get(buffer_t& value, pmr::memory_resource* resource) const noexcept { get(value.buffer(), resource); }
+    void get(buffer_t& value, std::pmr::memory_resource* resource) const noexcept { get(value.buffer(), resource); }
 
     // Set the bytes value
-    void set(const void* data, size_t size, pmr::memory_resource* resource);
+    void set(const void* data, size_t size, std::pmr::memory_resource* resource);
     // Set the bytes value
     template <size_t N>
-    void set(const uint8_t (&data)[N], pmr::memory_resource* resource) { set(data, N, resource); }
+    void set(const uint8_t (&data)[N], std::pmr::memory_resource* resource) { set(data, N, resource); }
     // Set the bytes value
     template <size_t N>
-    void set(const std::array<uint8_t, N>& data, pmr::memory_resource* resource) { set(data.data(), data.size(), resource); }
+    void set(const std::array<uint8_t, N>& data, std::pmr::memory_resource* resource) { set(data.data(), data.size(), resource); }
     // Set the bytes value
-    void set(const FastVec<uint8_t>& value, pmr::memory_resource* resource) { set(value.data(), value.size(), resource); }
+    void set(const FastVec<uint8_t>& value, std::pmr::memory_resource* resource) { set(value.data(), value.size(), resource); }
     // Set the bytes value
-    void set(const buffer_t& value, pmr::memory_resource* resource) { set(value.buffer(), resource); }
+    void set(const buffer_t& value, std::pmr::memory_resource* resource) { set(value.buffer(), resource); }
 
 private:
     FBEBuffer& _buffer;
@@ -1944,7 +2001,7 @@ bool FieldModel<buffer_t>::verify() const noexcept
     return true;
 }
 
-size_t FieldModel<buffer_t>::get(void* data, size_t size, pmr::memory_resource* resource) const noexcept
+size_t FieldModel<buffer_t>::get(void* data, size_t size, std::pmr::memory_resource* resource) const noexcept
 {
     assert(((size == 0) || (data != nullptr)) && "Invalid buffer!");
     if ((size > 0) && (data == nullptr))
@@ -1977,7 +2034,7 @@ size_t FieldModel<buffer_t>::get(void* data, size_t size, pmr::memory_resource* 
     return result;
 }
 
-void FieldModel<buffer_t>::get(FastVec<uint8_t>& value, pmr::memory_resource* resource) const noexcept
+void FieldModel<buffer_t>::get(FastVec<uint8_t>& value, std::pmr::memory_resource* resource) const noexcept
 {
     value.clear();
 
@@ -2008,7 +2065,7 @@ void FieldModel<buffer_t>::get(FastVec<uint8_t>& value, pmr::memory_resource* re
     }
 }
 
-void FieldModel<buffer_t>::set(const void* data, size_t size, pmr::memory_resource* resource)
+void FieldModel<buffer_t>::set(const void* data, size_t size, std::pmr::memory_resource* resource)
 {
     assert(((size == 0) || (data != nullptr)) && "Invalid buffer!");
     if ((size > 0) && (data == nullptr))
@@ -2061,21 +2118,21 @@ public:
     size_t get(void* data, size_t size) const noexcept;
     // Get the bytes value
     template <size_t N>
-    size_t get(uint8_t (&data)[N], pmr::memory_resource* resource) const noexcept { return get(data, N); }
+    size_t get(uint8_t (&data)[N], std::pmr::memory_resource* resource) const noexcept { return get(data, N); }
     // Get the bytes value
-    void get(pmr::vector<uint8_t>& value, pmr::memory_resource* resource) const noexcept;
+    void get(std::pmr::vector<uint8_t>& value, std::pmr::memory_resource* resource) const noexcept;
     // Get the bytes value
-    void get(pmr_buffer_t& value, pmr::memory_resource* resource) const noexcept { get(value.buffer(), resource); }
+    void get(pmr_buffer_t& value, std::pmr::memory_resource* resource) const noexcept { get(value.buffer(), resource); }
 
     // Set the bytes value
-    void set(const void* data, size_t size, pmr::memory_resource* resource);
+    void set(const void* data, size_t size, std::pmr::memory_resource* resource);
     // Set the bytes value
     template <size_t N>
-    void set(const uint8_t (&data)[N], pmr::memory_resource* resource) { set(data, N, resource); }
+    void set(const uint8_t (&data)[N], std::pmr::memory_resource* resource) { set(data, N, resource); }
     // Set the bytes value
-    void set(const pmr::vector<uint8_t>& value, pmr::memory_resource* resource) { set(value.data(), value.size(), resource); }
+    void set(const std::pmr::vector<uint8_t>& value, std::pmr::memory_resource* resource) { set(value.data(), value.size(), resource); }
     // Set the bytes value
-    void set(const pmr_buffer_t& value, pmr::memory_resource* resource) { set(value.buffer(), resource); }
+    void set(const pmr_buffer_t& value, std::pmr::memory_resource* resource) { set(value.buffer(), resource); }
 
 private:
     FBEBuffer& _buffer;
@@ -2150,7 +2207,7 @@ size_t FieldModel<pmr_buffer_t>::get(void* data, size_t size) const noexcept
     return result;
 }
 
-void FieldModel<pmr_buffer_t>::get(pmr::vector<uint8_t>& value, pmr::memory_resource* resource) const noexcept
+void FieldModel<pmr_buffer_t>::get(std::pmr::vector<uint8_t>& value, std::pmr::memory_resource* resource) const noexcept
 {
     value.clear();
 
@@ -2179,7 +2236,7 @@ void FieldModel<pmr_buffer_t>::get(pmr::vector<uint8_t>& value, pmr::memory_reso
     value.assign(fbe_bytes, fbe_bytes + fbe_bytes_size);
 }
 
-void FieldModel<pmr_buffer_t>::set(const void* data, size_t size, pmr::memory_resource* resource)
+void FieldModel<pmr_buffer_t>::set(const void* data, size_t size, std::pmr::memory_resource* resource)
 {
     assert(((size == 0) || (data != nullptr)) && "Invalid buffer!");
     if ((size > 0) && (data == nullptr))
@@ -2232,25 +2289,25 @@ public:
     size_t get(char* data, size_t size) const noexcept;
     // Get the string value
     template <size_t N>
-    size_t get(char (&data)[N], pmr::memory_resource* resource) const noexcept { return get(data, N); }
+    size_t get(char (&data)[N], std::pmr::memory_resource* resource) const noexcept { return get(data, N); }
     // Get the string value
     template <size_t N>
-    size_t get(std::array<char, N>& data, pmr::memory_resource* resource) const noexcept { return get(data.data(), data.size()); }
+    size_t get(std::array<char, N>& data, std::pmr::memory_resource* resource) const noexcept { return get(data.data(), data.size()); }
     // Get the pmr string value
-    void get(FBEString& value, pmr::memory_resource* resource) const noexcept;
+    void get(FBEString& value, std::pmr::memory_resource* resource) const noexcept;
     // Get the pmr string value
-    void get(FBEString& value, pmr::memory_resource* resource, const FBEString& defaults) const noexcept;
+    void get(FBEString& value, std::pmr::memory_resource* resource, const FBEString& defaults) const noexcept;
 
     // Set the string value
-    void set(const char* data, size_t size, pmr::memory_resource* resource);
+    void set(const char* data, size_t size, std::pmr::memory_resource* resource);
     // Set the string value
     template <size_t N>
-    void set(const char (&data)[N], pmr::memory_resource* resource) { set(data, N); }
+    void set(const char (&data)[N], std::pmr::memory_resource* resource) { set(data, N); }
     // Set the string value
     template <size_t N>
-    void set(const std::array<char, N>& data, pmr::memory_resource* resource) { set(data.data(), data.size()); }
+    void set(const std::array<char, N>& data, std::pmr::memory_resource* resource) { set(data.data(), data.size()); }
     // Set the string value
-    void set(const FBEString& value, pmr::memory_resource* resource);
+    void set(const FBEString& value, std::pmr::memory_resource* resource);
 
 private:
     FBEBuffer& _buffer;
@@ -2287,25 +2344,25 @@ public:
     size_t get(char* data, size_t size) const noexcept;
     // Get the string value
     template <size_t N>
-    size_t get(char (&data)[N], pmr::memory_resource* resource) const noexcept { return get(data, N); }
+    size_t get(char (&data)[N], std::pmr::memory_resource* resource) const noexcept { return get(data, N); }
     // Get the string value
     template <size_t N>
-    size_t get(std::array<char, N>& data, pmr::memory_resource* resource) const noexcept { return get(data.data(), data.size()); }
+    size_t get(std::array<char, N>& data, std::pmr::memory_resource* resource) const noexcept { return get(data.data(), data.size()); }
     // Get the pmr string value
-    void get(ArenaString& value, pmr::memory_resource* resource) const noexcept;
+    void get(ArenaString& value, std::pmr::memory_resource* resource) const noexcept;
     // Get the pmr string value
-    void get(ArenaString& value, pmr::memory_resource* resource, const ArenaString& defaults) const noexcept;
+    void get(ArenaString& value, std::pmr::memory_resource* resource, const ArenaString& defaults) const noexcept;
 
     // Set the string value
-    void set(const char* data, size_t size, pmr::memory_resource* resource);
+    void set(const char* data, size_t size, std::pmr::memory_resource* resource);
     // Set the string value
     template <size_t N>
-    void set(const char (&data)[N], pmr::memory_resource* resource) { set(data, N); }
+    void set(const char (&data)[N], std::pmr::memory_resource* resource) { set(data, N); }
     // Set the string value
     template <size_t N>
-    void set(const std::array<char, N>& data, pmr::memory_resource* resource) { set(data.data(), data.size()); }
+    void set(const std::array<char, N>& data, std::pmr::memory_resource* resource) { set(data.data(), data.size()); }
     // Set the string value
-    void set(const ArenaString& value, pmr::memory_resource* resource);
+    void set(const ArenaString& value, std::pmr::memory_resource* resource);
 
 private:
     FBEBuffer& _buffer;
@@ -2387,7 +2444,7 @@ size_t FieldModel<FBEString>::get(char* data, size_t size) const noexcept
     return result;
 }
 
-void FieldModel<FBEString>::get(FBEString& value, pmr::memory_resource* resource) const noexcept
+void FieldModel<FBEString>::get(FBEString& value, std::pmr::memory_resource* resource) const noexcept
 {
     #if !defined(USING_SEASTAR_STRING)
     value.clear();
@@ -2423,7 +2480,7 @@ void FieldModel<FBEString>::get(FBEString& value, pmr::memory_resource* resource
     #endif
 }
 
-void FieldModel<FBEString>::get(FBEString& value, pmr::memory_resource* resource, const FBEString& defaults) const noexcept
+void FieldModel<FBEString>::get(FBEString& value, std::pmr::memory_resource* resource, const FBEString& defaults) const noexcept
 {
     value = defaults;
 
@@ -2457,7 +2514,7 @@ void FieldModel<FBEString>::get(FBEString& value, pmr::memory_resource* resource
     #endif
 }
 
-void FieldModel<FBEString>::set(const char* data, size_t size, pmr::memory_resource* resource)
+void FieldModel<FBEString>::set(const char* data, size_t size, std::pmr::memory_resource* resource)
 {
     assert(((size == 0) || (data != nullptr)) && "Invalid buffer!");
     if ((size > 0) && (data == nullptr))
@@ -2483,7 +2540,7 @@ void FieldModel<FBEString>::set(const char* data, size_t size, pmr::memory_resou
         memcpy((char*)(buffer_data + string_base + 4), data, fbe_string_size);
 }
 
-void FieldModel<FBEString>::set(const FBEString& value, pmr::memory_resource* resource)
+void FieldModel<FBEString>::set(const FBEString& value, std::pmr::memory_resource* resource)
 {
     size_t buffer_offset = _buffer.offset();
     assert(((buffer_offset + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
@@ -2580,7 +2637,7 @@ size_t FieldModel<ArenaString>::get(char* data, size_t size) const noexcept
     return result;
 }
 
-void FieldModel<ArenaString>::get(ArenaString& value, pmr::memory_resource* resource) const noexcept
+void FieldModel<ArenaString>::get(ArenaString& value, std::pmr::memory_resource* resource) const noexcept
 {
     value.clear();
 
@@ -2608,7 +2665,7 @@ void FieldModel<ArenaString>::get(ArenaString& value, pmr::memory_resource* reso
     value.assign((const char*)(buffer_data + string_base + 4), fbe_string_size);
 }
 
-void FieldModel<ArenaString>::get(ArenaString& value, pmr::memory_resource* resource, const ArenaString& defaults) const noexcept
+void FieldModel<ArenaString>::get(ArenaString& value, std::pmr::memory_resource* resource, const ArenaString& defaults) const noexcept
 {
     value = defaults;
 
@@ -2636,7 +2693,7 @@ void FieldModel<ArenaString>::get(ArenaString& value, pmr::memory_resource* reso
     value.assign((const char*)(buffer_data + string_base + 4), fbe_string_size);
 }
 
-void FieldModel<ArenaString>::set(const char* data, size_t size, pmr::memory_resource* resource)
+void FieldModel<ArenaString>::set(const char* data, size_t size, std::pmr::memory_resource* resource)
 {
     assert(((size == 0) || (data != nullptr)) && "Invalid buffer!");
     if ((size > 0) && (data == nullptr))
@@ -2662,7 +2719,7 @@ void FieldModel<ArenaString>::set(const char* data, size_t size, pmr::memory_res
         memcpy((char*)(buffer_data + string_base + 4), data, fbe_string_size);
 }
 
-void FieldModel<ArenaString>::set(const ArenaString& value, pmr::memory_resource* resource)
+void FieldModel<ArenaString>::set(const ArenaString& value, std::pmr::memory_resource* resource)
 {
     size_t buffer_offset = _buffer.offset();
     assert(((buffer_offset + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
@@ -2722,9 +2779,9 @@ public:
     void get_end(size_t fbe_begin) const noexcept;
 
     // Get the optional value
-    void get(std::optional<T>& opt, pmr::memory_resource* resource, const std::optional<T>& defaults) const noexcept;
+    void get(std::optional<T>& opt, std::pmr::memory_resource* resource, const std::optional<T>& defaults) const noexcept;
     // Get the optional value
-    void get(std::optional<T>& opt, pmr::memory_resource* resource) const noexcept;
+    void get(std::optional<T>& opt, std::pmr::memory_resource* resource) const noexcept;
 
     // Set the optional value (begin phase)
     size_t set_begin(bool has_value);
@@ -2732,7 +2789,7 @@ public:
     void set_end(size_t fbe_begin);
 
     // Set the optional value
-    void set(const std::optional<T>& opt, pmr::memory_resource* resource);
+    void set(const std::optional<T>& opt, std::pmr::memory_resource* resource);
 
 private:
     FBEBuffer& _buffer;
@@ -2815,14 +2872,14 @@ inline void FieldModel<std::optional<T>>::get_end(size_t fbe_begin) const noexce
 }
 
 template <typename T>
-inline void FieldModel<std::optional<T>>::get(std::optional<T>& opt, pmr::memory_resource* resource, const std::optional<T>& defaults) const noexcept
+inline void FieldModel<std::optional<T>>::get(std::optional<T>& opt, std::pmr::memory_resource* resource, const std::optional<T>& defaults) const noexcept
 {
     opt = defaults;
 
     size_t fbe_begin = get_begin();
     if (fbe_begin == 0)
         return;
-    if constexpr(std::is_constructible_v<T, pmr::memory_resource*> and not is_variant_v<T>) {
+    if constexpr(std::is_constructible_v<T, std::pmr::memory_resource*> and not is_variant_v<T>) {
         T temp = T(resource);
 
         value.get(temp, resource);
@@ -2840,13 +2897,13 @@ inline void FieldModel<std::optional<T>>::get(std::optional<T>& opt, pmr::memory
 }
 
 template <typename T>
-inline void FieldModel<std::optional<T>>::get(std::optional<T>& opt, pmr::memory_resource* resource) const noexcept
+inline void FieldModel<std::optional<T>>::get(std::optional<T>& opt, std::pmr::memory_resource* resource) const noexcept
 {
     size_t fbe_begin = get_begin();
     if (fbe_begin == 0)
         return;
 
-    if constexpr(std::is_constructible_v<T, pmr::memory_resource*> and not is_variant_v<T>) {
+    if constexpr(std::is_constructible_v<T, std::pmr::memory_resource*> and not is_variant_v<T>) {
         T temp = T(resource);
 
         value.get(temp, resource);
@@ -2894,7 +2951,7 @@ inline void FieldModel<std::optional<T>>::set_end(size_t fbe_begin)
 }
 
 template <typename T>
-inline void FieldModel<std::optional<T>>::set(const std::optional<T>& opt, pmr::memory_resource* resource)
+inline void FieldModel<std::optional<T>>::set(const std::optional<T>& opt, std::pmr::memory_resource* resource)
 {
     size_t fbe_begin = set_begin(opt.has_value());
     if (fbe_begin == 0)
@@ -2946,21 +3003,21 @@ public:
 
     // Get the array as C-array
     template <size_t S>
-    void get(T (&values)[S], pmr::memory_resource* resource = nullptr) const noexcept;
+    void get(T (&values)[S], std::pmr::memory_resource* resource = nullptr) const noexcept;
     // Get the array as std::array
     template <size_t S>
-    void get(std::array<T, S>& values, pmr::memory_resource* resource = nullptr) const noexcept;
+    void get(std::array<T, S>& values, std::pmr::memory_resource* resource = nullptr) const noexcept;
     // Get the array as FastVec
-    void get(FastVec<T>& values, pmr::memory_resource* resource = nullptr) const noexcept;
+    void get(FastVec<T>& values, std::pmr::memory_resource* resource = nullptr) const noexcept;
 
     // Set the array as C-array
     template <size_t S>
-    void set(const T (&values)[S], pmr::memory_resource* resource) noexcept;
+    void set(const T (&values)[S], std::pmr::memory_resource* resource) noexcept;
     // Set the array as std::array
     template <size_t S>
-    void set(const std::array<T, S>& values, pmr::memory_resource* resource) noexcept;
+    void set(const std::array<T, S>& values, std::pmr::memory_resource* resource) noexcept;
     // Set the array as FastVec
-    void set(const FastVec<T>& values, pmr::memory_resource* resource) noexcept;
+    void set(const FastVec<T>& values, std::pmr::memory_resource* resource) noexcept;
 
 private:
     FBEBuffer& _buffer;
@@ -3003,105 +3060,156 @@ inline bool FieldModelArray<T, N>::verify() const noexcept
     if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
         return false;
 
-    FieldModel<T> fbe_model(_buffer, fbe_offset());
-    for (size_t i = N; i-- > 0;)
-    {
-        if (!fbe_model.verify())
-            return false;
-        fbe_model.fbe_shift(fbe_model.fbe_size());
-    }
-
-    return true;
-}
-
-template <typename T, size_t N>
-template <size_t S>
-inline void FieldModelArray<T, N>::get(T (&values)[S], pmr::memory_resource* resource) const noexcept
-{
-    auto fbe_model = (*this)[0];
-    for (size_t i = 0; (i < S) && (i < N); ++i)
-    {
-        fbe_model.get(values[i], resource);
-        fbe_model.fbe_shift(fbe_model.fbe_size());
+    if constexpr (is_fbe_final_primitive_v<T>) {
+        // Primitive types always verify successfully if buffer size is sufficient
+        return true;
+    } else {
+        FieldModel<T> fbe_model(_buffer, fbe_offset());
+        for (size_t i = 0; i < N; ++i)
+        {
+            if (!fbe_model.verify())
+                return false;
+            fbe_model.fbe_shift(fbe_model.fbe_size());
+        }
+        return true;
     }
 }
 
 template <typename T, size_t N>
 template <size_t S>
-inline void FieldModelArray<T, N>::get(std::array<T, S>& values, pmr::memory_resource* resource) const noexcept
+inline void FieldModelArray<T, N>::get(T (&values)[S], std::pmr::memory_resource* resource) const noexcept
 {
-    auto fbe_model = (*this)[0];
-    for (size_t i = 0; (i < S) && (i < N); ++i)
-    {
-        fbe_model.get(values[i], resource);
-        fbe_model.fbe_shift(fbe_model.fbe_size());
+    constexpr size_t count = (S < N) ? S : N;
+
+    if constexpr (is_fbe_final_primitive_v<T>) {
+        // Bulk copy for primitive types
+        const uint8_t* src = _buffer.data() + _buffer.offset() + fbe_offset();
+        memcpy(values, src, count * sizeof(T));
+    } else {
+        auto fbe_model = (*this)[0];
+        for (size_t i = 0; i < count; ++i)
+        {
+            fbe_model.get(values[i], resource);
+            fbe_model.fbe_shift(fbe_model.fbe_size());
+        }
     }
 }
 
 template <typename T, size_t N>
-inline void FieldModelArray<T, N>::get(FastVec<T>& values, pmr::memory_resource* resource) const noexcept
+template <size_t S>
+inline void FieldModelArray<T, N>::get(std::array<T, S>& values, std::pmr::memory_resource* resource) const noexcept
+{
+    constexpr size_t count = (S < N) ? S : N;
+
+    if constexpr (is_fbe_final_primitive_v<T>) {
+        // Bulk copy for primitive types
+        const uint8_t* src = _buffer.data() + _buffer.offset() + fbe_offset();
+        memcpy(values.data(), src, count * sizeof(T));
+    } else {
+        auto fbe_model = (*this)[0];
+        for (size_t i = 0; i < count; ++i)
+        {
+            fbe_model.get(values[i], resource);
+            fbe_model.fbe_shift(fbe_model.fbe_size());
+        }
+    }
+}
+
+template <typename T, size_t N>
+inline void FieldModelArray<T, N>::get(FastVec<T>& values, std::pmr::memory_resource* resource) const noexcept
 {
     values.clear();
     values.reserve(N);
 
-    auto fbe_model = (*this)[0];
-    for (size_t i = N; i-- > 0;)
-    {
-        T value = T();
-        fbe_model.get(value, resource);
-        #if defined(USING_STD_VECTOR)
-        values.emplace_back(value);
-        #else
-        values.template emplace_back<Safety::Unsafe>(value);
-        #endif
-        fbe_model.fbe_shift(fbe_model.fbe_size());
+    if constexpr (is_fbe_final_primitive_v<T>) {
+        // Bulk copy for primitive types
+        const uint8_t* src = _buffer.data() + _buffer.offset() + fbe_offset();
+        values.resize(N);
+        memcpy(values.data(), src, N * sizeof(T));
+    } else {
+        auto fbe_model = (*this)[0];
+        for (size_t i = 0; i < N; ++i)
+        {
+            T value = T();
+            fbe_model.get(value, resource);
+            #if defined(USING_STD_VECTOR)
+            values.emplace_back(std::move(value));
+            #else
+            values.template emplace_back<Safety::Unsafe>(std::move(value));
+            #endif
+            fbe_model.fbe_shift(fbe_model.fbe_size());
+        }
     }
 }
 
 template <typename T, size_t N>
 template <size_t S>
-inline void FieldModelArray<T, N>::set(const T (&values)[S], pmr::memory_resource* resource) noexcept
+inline void FieldModelArray<T, N>::set(const T (&values)[S], std::pmr::memory_resource* resource) noexcept
 {
     assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
     if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
         return;
 
-    auto fbe_model = (*this)[0];
-    for (size_t i = 0; (i < S) && (i < N); ++i)
-    {
-        fbe_model.set(values[i], resource);
-        fbe_model.fbe_shift(fbe_model.fbe_size());
+    constexpr size_t count = (S < N) ? S : N;
+
+    if constexpr (is_fbe_final_primitive_v<T>) {
+        // Bulk copy for primitive types
+        uint8_t* dest = _buffer.data() + _buffer.offset() + fbe_offset();
+        memcpy(dest, values, count * sizeof(T));
+    } else {
+        auto fbe_model = (*this)[0];
+        for (size_t i = 0; i < count; ++i)
+        {
+            fbe_model.set(values[i], resource);
+            fbe_model.fbe_shift(fbe_model.fbe_size());
+        }
     }
 }
 
 template <typename T, size_t N>
 template <size_t S>
-inline void FieldModelArray<T, N>::set(const std::array<T, S>& values, pmr::memory_resource* resource) noexcept
+inline void FieldModelArray<T, N>::set(const std::array<T, S>& values, std::pmr::memory_resource* resource) noexcept
 {
     assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
     if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
         return;
 
-    auto fbe_model = (*this)[0];
-    for (size_t i = 0; (i < S) && (i < N); ++i)
-    {
-        fbe_model.set(values[i], resource);
-        fbe_model.fbe_shift(fbe_model.fbe_size());
+    constexpr size_t count = (S < N) ? S : N;
+
+    if constexpr (is_fbe_final_primitive_v<T>) {
+        // Bulk copy for primitive types
+        uint8_t* dest = _buffer.data() + _buffer.offset() + fbe_offset();
+        memcpy(dest, values.data(), count * sizeof(T));
+    } else {
+        auto fbe_model = (*this)[0];
+        for (size_t i = 0; i < count; ++i)
+        {
+            fbe_model.set(values[i], resource);
+            fbe_model.fbe_shift(fbe_model.fbe_size());
+        }
     }
 }
 
 template <typename T, size_t N>
-inline void FieldModelArray<T, N>::set(const FastVec<T>& values, pmr::memory_resource* resource) noexcept
+inline void FieldModelArray<T, N>::set(const FastVec<T>& values, std::pmr::memory_resource* resource) noexcept
 {
     assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
     if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
         return;
 
-    auto fbe_model = (*this)[0];
-    for (size_t i = 0; (i < values.size()) && (i < N); ++i)
-    {
-        fbe_model.set(values[i], resource);
-        fbe_model.fbe_shift(fbe_model.fbe_size());
+    const size_t count = std::min(values.size(), N);
+
+    if constexpr (is_fbe_final_primitive_v<T>) {
+        // Bulk copy for primitive types
+        uint8_t* dest = _buffer.data() + _buffer.offset() + fbe_offset();
+        memcpy(dest, values.data(), count * sizeof(T));
+    } else {
+        auto fbe_model = (*this)[0];
+        for (size_t i = 0; i < count; ++i)
+        {
+            fbe_model.set(values[i], resource);
+            fbe_model.fbe_shift(fbe_model.fbe_size());
+        }
     }
 }
 )CODE";
@@ -3143,32 +3251,43 @@ public:
     bool verify() const noexcept;
 
     // Get the vector as FastVec
-    void get(FastVec<T>& values, pmr::memory_resource* resource) const noexcept;
+    void get(FastVec<T>& values, std::pmr::memory_resource* resource) const noexcept;
     // Get the vector as std::list
-    void get(std::list<T>& values, pmr::memory_resource* resource) const noexcept;
+    void get(std::list<T>& values, std::pmr::memory_resource* resource) const noexcept;
     // Get the vector as std::set
-    void get(std::set<T>& values, pmr::memory_resource* resource) const noexcept;
+    void get(std::set<T>& values, std::pmr::memory_resource* resource) const noexcept;
 
-    // Get the vector as pmr::vector
-    void get(pmr::vector<T>& values, pmr::memory_resource* resource) const noexcept;
-    // Get the vector as pmr::list
-    void get(pmr::list<T>& values, pmr::memory_resource* resource) const noexcept;
-    // Get the vector as pmr::set
-    void get(pmr::set<T>& values, pmr::memory_resource* resource) const noexcept;
+    // Get the vector as std::pmr::vector
+    void get(std::pmr::vector<T>& values, std::pmr::memory_resource* resource) const noexcept;
+    // Get the vector as std::pmr::list
+    void get(std::pmr::list<T>& values, std::pmr::memory_resource* resource) const noexcept;
+    // Get the vector as std::pmr::set
+    void get(std::pmr::set<T>& values, std::pmr::memory_resource* resource) const noexcept;
 
     // Set the vector as FastVec
-    void set(const FastVec<T>& values, pmr::memory_resource* resource) noexcept;
+    void set(const FastVec<T>& values, std::pmr::memory_resource* resource) noexcept;
     // Set the vector as std::list
-    void set(const std::list<T>& values, pmr::memory_resource* resource) noexcept;
+    void set(const std::list<T>& values, std::pmr::memory_resource* resource) noexcept;
     // Set the vector as std::set
-    void set(const std::set<T>& values, pmr::memory_resource* resource) noexcept;
+    void set(const std::set<T>& values, std::pmr::memory_resource* resource) noexcept;
 
-    // Set the vector as pmr::vector
-    void set(const pmr::vector<T>& values, pmr::memory_resource* resource) noexcept;
-    // Set the vector as pmr::list
-    void set(const pmr::list<T>& values, pmr::memory_resource* resource) noexcept;
-    // Set the vector as pmr::set
-    void set(const pmr::set<T>& values, pmr::memory_resource* resource) noexcept;
+    // Set the vector as std::pmr::vector
+    void set(const std::pmr::vector<T>& values, std::pmr::memory_resource* resource) noexcept;
+    // Set the vector as std::pmr::list
+    void set(const std::pmr::list<T>& values, std::pmr::memory_resource* resource) noexcept;
+    // Set the vector as std::pmr::set
+    void set(const std::pmr::set<T>& values, std::pmr::memory_resource* resource) noexcept;
+
+#if defined(USING_BTREE_MAP)
+    // Get the vector as FBE::set (btree_set with std allocator)
+    void get(FBE::set<T>& values, std::pmr::memory_resource* resource) const noexcept;
+    // Get the vector as FBE::pmr::set (btree_set with pmr allocator)
+    void get(FBE::pmr::set<T>& values, std::pmr::memory_resource* resource) const noexcept;
+    // Set the vector as FBE::set (btree_set with std allocator)
+    void set(const FBE::set<T>& values, std::pmr::memory_resource* resource) noexcept;
+    // Set the vector as FBE::pmr::set (btree_set with pmr allocator)
+    void set(const FBE::pmr::set<T>& values, std::pmr::memory_resource* resource) noexcept;
+#endif
 
 private:
     FBEBuffer& _buffer;
@@ -3273,19 +3392,24 @@ inline bool FieldModelVector<T>::verify() const noexcept
 
     uint32_t fbe_vector_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_vector_offset);
 
-    FieldModel<T> fbe_model(_buffer, fbe_vector_offset + 4);
-    for (size_t i = fbe_vector_size; i-- > 0;)
-    {
-        if (!fbe_model.verify())
-            return false;
-        fbe_model.fbe_shift(fbe_model.fbe_size());
+    if constexpr (is_fbe_final_primitive_v<T>) {
+        // Bulk verification for primitive types - just check total size
+        size_t total_size = fbe_vector_size * sizeof(T);
+        return ((_buffer.offset() + fbe_vector_offset + 4 + total_size) <= _buffer.size());
+    } else {
+        FieldModel<T> fbe_model(_buffer, fbe_vector_offset + 4);
+        for (size_t i = 0; i < fbe_vector_size; ++i)
+        {
+            if (!fbe_model.verify())
+                return false;
+            fbe_model.fbe_shift(fbe_model.fbe_size());
+        }
+        return true;
     }
-
-    return true;
 }
 
 template <typename T>
-inline void FieldModelVector<T>::get(FastVec<T>& values, pmr::memory_resource* resource) const noexcept
+inline void FieldModelVector<T>::get(FastVec<T>& values, std::pmr::memory_resource* resource) const noexcept
 {
     values.clear();
 
@@ -3293,24 +3417,26 @@ inline void FieldModelVector<T>::get(FastVec<T>& values, pmr::memory_resource* r
     if (fbe_vector_size == 0)
         return;
 
-    values.reserve(fbe_vector_size);
-
-    auto fbe_model = (*this)[0];
-    for (size_t i = fbe_vector_size; i-- > 0;)
-    {
-        T value = T();
-        fbe_model.get(value, resource);
-        #if defined(USING_STD_VECTOR)
-        values.emplace_back(std::move(value));
-        #else
-        values.template emplace_back<Safety::Unsafe>(std::move(value));
-        #endif
-        fbe_model.fbe_shift(fbe_model.fbe_size());
+    if constexpr (is_fbe_final_primitive_v<T>) {
+        // Bulk copy for primitive types
+        uint32_t fbe_vector_offset = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset());
+        const uint8_t* src = _buffer.data() + _buffer.offset() + fbe_vector_offset + 4;
+        values.resize(fbe_vector_size);
+        memcpy(values.data(), src, fbe_vector_size * sizeof(T));
+    } else {
+        // Pre-allocate and deserialize directly into elements (avoids temporaries)
+        values.resize(fbe_vector_size);
+        auto fbe_model = (*this)[0];
+        for (size_t i = 0; i < fbe_vector_size; ++i)
+        {
+            fbe_model.get(values[i], resource);
+            fbe_model.fbe_shift(fbe_model.fbe_size());
+        }
     }
 }
 
 template <typename T>
-inline void FieldModelVector<T>::get(std::list<T>& values, pmr::memory_resource* resource) const noexcept
+inline void FieldModelVector<T>::get(std::list<T>& values, std::pmr::memory_resource* resource) const noexcept
 {
     values.clear();
 
@@ -3319,7 +3445,7 @@ inline void FieldModelVector<T>::get(std::list<T>& values, pmr::memory_resource*
         return;
 
     auto fbe_model = (*this)[0];
-    for (size_t i = fbe_vector_size; i-- > 0;)
+    for (size_t i = 0; i < fbe_vector_size; ++i)
     {
         T value = T();
         fbe_model.get(value, resource);
@@ -3329,7 +3455,201 @@ inline void FieldModelVector<T>::get(std::list<T>& values, pmr::memory_resource*
 }
 
 template <typename T>
-inline void FieldModelVector<T>::get(std::set<T>& values, pmr::memory_resource* resource) const noexcept
+inline void FieldModelVector<T>::get(std::set<T>& values, std::pmr::memory_resource* resource) const noexcept
+{
+    values.clear();
+
+    size_t fbe_vector_size = size();
+    if (fbe_vector_size == 0)
+        return;
+
+    auto fbe_model = (*this)[0];
+    for (size_t i = 0; i < fbe_vector_size; ++i)
+    {
+        T value = T();
+        fbe_model.get(value, resource);
+        values.emplace(std::move(value));
+        fbe_model.fbe_shift(fbe_model.fbe_size());
+    }
+}
+
+template <typename T>
+inline void FieldModelVector<T>::get(std::pmr::vector<T>& values, std::pmr::memory_resource* resource) const noexcept
+{
+    values.clear();
+
+    size_t fbe_vector_size = size();
+    if (fbe_vector_size == 0)
+        return;
+
+    if constexpr (is_fbe_final_primitive_v<T>) {
+        // Bulk copy for primitive types
+        uint32_t fbe_vector_offset = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset());
+        const uint8_t* src = _buffer.data() + _buffer.offset() + fbe_vector_offset + 4;
+        values.resize(fbe_vector_size);
+        memcpy(values.data(), src, fbe_vector_size * sizeof(T));
+    } else {
+        // Pre-allocate and deserialize directly into elements
+        values.resize(fbe_vector_size);
+        auto fbe_model = (*this)[0];
+        for (size_t i = 0; i < fbe_vector_size; ++i)
+        {
+            fbe_model.get(values[i], resource);
+            fbe_model.fbe_shift(fbe_model.fbe_size());
+        }
+    }
+}
+
+template <typename T>
+inline void FieldModelVector<T>::get(std::pmr::list<T>& values, std::pmr::memory_resource* resource) const noexcept
+{
+    values.clear();
+
+    size_t fbe_vector_size = size();
+    if (fbe_vector_size == 0)
+        return;
+
+    auto fbe_model = (*this)[0];
+    for (size_t i = 0; i < fbe_vector_size; ++i)
+    {
+        if constexpr (std::is_constructible_v<T, std::pmr::polymorphic_allocator<char>> and not is_variant_v<T>) {
+            T value{resource};
+            fbe_model.get(value, resource);
+            values.emplace_back(std::move(value));
+        } else {
+            T value = T();
+            fbe_model.get(value, resource);
+            values.emplace_back(std::move(value));
+        }
+        fbe_model.fbe_shift(fbe_model.fbe_size());
+    }
+}
+
+template <typename T>
+inline void FieldModelVector<T>::get(std::pmr::set<T>& values, std::pmr::memory_resource* resource) const noexcept
+{
+    values.clear();
+
+    size_t fbe_vector_size = size();
+    if (fbe_vector_size == 0)
+        return;
+
+    auto fbe_model = (*this)[0];
+    for (size_t i = 0; i < fbe_vector_size; ++i)
+    {
+        if constexpr (std::is_constructible_v<T, std::pmr::polymorphic_allocator<char>> and not is_variant_v<T>) {
+            T value{resource};
+            fbe_model.get(value, resource);
+            values.emplace(std::move(value));
+        } else {
+            T value = T();
+            fbe_model.get(value, resource);
+            values.emplace(std::move(value));
+        }
+        fbe_model.fbe_shift(fbe_model.fbe_size());
+    }
+}
+
+template <typename T>
+inline void FieldModelVector<T>::set(const FastVec<T>& values, std::pmr::memory_resource* resource) noexcept
+{
+    assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
+    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+        return;
+
+    auto fbe_model = resize(values.size());
+    if constexpr (is_fbe_final_primitive_v<T>) {
+        // Bulk copy for primitive types - resize() already zeroed the buffer
+        // fbe_model points to fbe_vector_offset + 4
+        uint8_t* dest = _buffer.data() + _buffer.offset() + fbe_model.fbe_offset();
+        memcpy(dest, values.data(), values.size() * sizeof(T));
+    } else {
+        for (const auto& value : values)
+        {
+            fbe_model.set(value, resource);
+            fbe_model.fbe_shift(fbe_model.fbe_size());
+        }
+    }
+}
+
+template <typename T>
+inline void FieldModelVector<T>::set(const std::list<T>& values, std::pmr::memory_resource* resource) noexcept
+{
+    assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
+    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+        return;
+
+    auto fbe_model = resize(values.size());
+    for (const auto& value : values)
+    {
+        fbe_model.set(value, resource);
+        fbe_model.fbe_shift(fbe_model.fbe_size());
+    }
+}
+
+template <typename T>
+inline void FieldModelVector<T>::set(const std::set<T>& values, std::pmr::memory_resource* resource) noexcept
+{
+    assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
+    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+        return;
+
+    auto fbe_model = resize(values.size());
+    for (const auto& value : values)
+    {
+        fbe_model.set(value, resource);
+        fbe_model.fbe_shift(fbe_model.fbe_size());
+    }
+}
+
+template <typename T>
+inline void FieldModelVector<T>::set(const std::pmr::vector<T>& values, std::pmr::memory_resource* resource) noexcept
+{
+    assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
+    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+        return;
+
+    auto fbe_model = resize(values.size());
+    for (const auto& value : values)
+    {
+        fbe_model.set(value, resource);
+        fbe_model.fbe_shift(fbe_model.fbe_size());
+    }
+}
+
+template <typename T>
+inline void FieldModelVector<T>::set(const std::pmr::list<T>& values, std::pmr::memory_resource* resource) noexcept
+{
+    assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
+    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+        return;
+
+    auto fbe_model = resize(values.size());
+    for (const auto& value : values)
+    {
+        fbe_model.set(value, resource);
+        fbe_model.fbe_shift(fbe_model.fbe_size());
+    }
+}
+
+template <typename T>
+inline void FieldModelVector<T>::set(const std::pmr::set<T>& values, std::pmr::memory_resource* resource) noexcept
+{
+    assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
+    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+        return;
+
+    auto fbe_model = resize(values.size());
+    for (const auto& value : values)
+    {
+        fbe_model.set(value, resource);
+        fbe_model.fbe_shift(fbe_model.fbe_size());
+    }
+}
+
+#if defined(USING_BTREE_MAP)
+template <typename T>
+inline void FieldModelVector<T>::get(FBE::set<T>& values, std::pmr::memory_resource* resource) const noexcept
 {
     values.clear();
 
@@ -3348,35 +3668,7 @@ inline void FieldModelVector<T>::get(std::set<T>& values, pmr::memory_resource* 
 }
 
 template <typename T>
-inline void FieldModelVector<T>::get(pmr::vector<T>& values, pmr::memory_resource* resource) const noexcept
-{
-    values.clear();
-
-    size_t fbe_vector_size = size();
-    if (fbe_vector_size == 0)
-        return;
-
-    values.reserve(fbe_vector_size);
-
-    auto fbe_model = (*this)[0];
-    for (size_t i = fbe_vector_size; i-- > 0;)
-    {
-        if constexpr (std::is_constructible_v<T, pmr::polymorphic_allocator<char>> and not is_variant_v<T>) {
-            T value{resource};
-            fbe_model.get(value, resource);
-            values.emplace_back(std::move(value));
-            fbe_model.fbe_shift(fbe_model.fbe_size());
-        } else {
-            T value = T();
-            fbe_model.get(value, resource);
-            values.emplace_back(std::move(value));
-            fbe_model.fbe_shift(fbe_model.fbe_size());
-        }
-    }
-}
-
-template <typename T>
-inline void FieldModelVector<T>::get(pmr::list<T>& values, pmr::memory_resource* resource) const noexcept
+inline void FieldModelVector<T>::get(FBE::pmr::set<T>& values, std::pmr::memory_resource* resource) const noexcept
 {
     values.clear();
 
@@ -3387,49 +3679,15 @@ inline void FieldModelVector<T>::get(pmr::list<T>& values, pmr::memory_resource*
     auto fbe_model = (*this)[0];
     for (size_t i = fbe_vector_size; i-- > 0;)
     {
-        if constexpr (std::is_constructible_v<T, pmr::polymorphic_allocator<char>> and not is_variant_v<T>) {
-            T value{resource};
-            fbe_model.get(value, resource);
-            values.emplace_back(std::move(value));
-            fbe_model.fbe_shift(fbe_model.fbe_size());
-        } else {
-            T value = T();
-            fbe_model.get(value, resource);
-            values.emplace_back(std::move(value));
-            fbe_model.fbe_shift(fbe_model.fbe_size());
-        }
+        T value = T();
+        fbe_model.get(value, resource);
+        values.emplace(std::move(value));
+        fbe_model.fbe_shift(fbe_model.fbe_size());
     }
 }
 
 template <typename T>
-inline void FieldModelVector<T>::get(pmr::set<T>& values, pmr::memory_resource* resource) const noexcept
-{
-    values.clear();
-
-    size_t fbe_vector_size = size();
-    if (fbe_vector_size == 0)
-        return;
-
-    auto fbe_model = (*this)[0];
-    for (size_t i = fbe_vector_size; i-- > 0;)
-    {
-
-        if constexpr (std::is_constructible_v<T, pmr::polymorphic_allocator<char>> and not is_variant_v<T>) {
-            T value{resource};
-            fbe_model.get(value, resource);
-            values.emplace(std::move(value));
-            fbe_model.fbe_shift(fbe_model.fbe_size());
-        } else {
-            T value = T();
-            fbe_model.get(value, resource);
-            values.emplace(std::move(value));
-            fbe_model.fbe_shift(fbe_model.fbe_size());
-        }
-    }
-}
-
-template <typename T>
-inline void FieldModelVector<T>::set(const FastVec<T>& values, pmr::memory_resource* resource) noexcept
+inline void FieldModelVector<T>::set(const FBE::set<T>& values, std::pmr::memory_resource* resource) noexcept
 {
     assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
     if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
@@ -3444,7 +3702,7 @@ inline void FieldModelVector<T>::set(const FastVec<T>& values, pmr::memory_resou
 }
 
 template <typename T>
-inline void FieldModelVector<T>::set(const std::list<T>& values, pmr::memory_resource* resource) noexcept
+inline void FieldModelVector<T>::set(const FBE::pmr::set<T>& values, std::pmr::memory_resource* resource) noexcept
 {
     assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
     if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
@@ -3457,66 +3715,7 @@ inline void FieldModelVector<T>::set(const std::list<T>& values, pmr::memory_res
         fbe_model.fbe_shift(fbe_model.fbe_size());
     }
 }
-
-template <typename T>
-inline void FieldModelVector<T>::set(const std::set<T>& values, pmr::memory_resource* resource) noexcept
-{
-    assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
-    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
-        return;
-
-    auto fbe_model = resize(values.size());
-    for (const auto& value : values)
-    {
-        fbe_model.set(value, resource);
-        fbe_model.fbe_shift(fbe_model.fbe_size());
-    }
-}
-
-template <typename T>
-inline void FieldModelVector<T>::set(const pmr::vector<T>& values, pmr::memory_resource* resource) noexcept
-{
-    assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
-    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
-        return;
-
-    auto fbe_model = resize(values.size());
-    for (const auto& value : values)
-    {
-        fbe_model.set(value, resource);
-        fbe_model.fbe_shift(fbe_model.fbe_size());
-    }
-}
-
-template <typename T>
-inline void FieldModelVector<T>::set(const pmr::list<T>& values, pmr::memory_resource* resource) noexcept
-{
-    assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
-    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
-        return;
-
-    auto fbe_model = resize(values.size());
-    for (const auto& value : values)
-    {
-        fbe_model.set(value, resource);
-        fbe_model.fbe_shift(fbe_model.fbe_size());
-    }
-}
-
-template <typename T>
-inline void FieldModelVector<T>::set(const pmr::set<T>& values, pmr::memory_resource* resource) noexcept
-{
-    assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
-    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
-        return;
-
-    auto fbe_model = resize(values.size());
-    for (const auto& value : values)
-    {
-        fbe_model.set(value, resource);
-        fbe_model.fbe_shift(fbe_model.fbe_size());
-    }
-}
+#endif
 )CODE";
     }
 
@@ -3556,24 +3755,38 @@ public:
     bool verify() const noexcept;
 
     // Get the map as std::map
-    void get(std::map<TKey, TValue>& values, pmr::memory_resource* resource = nullptr) const noexcept;
+    void get(std::map<TKey, TValue>& values, std::pmr::memory_resource* resource = nullptr) const noexcept;
     // Get the map as std::unordered_map
-    void get(std::unordered_map<TKey, TValue>& values, pmr::memory_resource* resource = nullptr) const noexcept;
+    void get(std::unordered_map<TKey, TValue>& values, std::pmr::memory_resource* resource = nullptr) const noexcept;
 
-    // Get the map as pmr::map
-    void get(pmr::map<TKey, TValue>& values, pmr::memory_resource* resource) const noexcept;
-    // Get the map as pmr::unordered_map
-    void get(pmr::unordered_map<TKey, TValue>& values, pmr::memory_resource* resource) const noexcept;
+    // Get the map as std::pmr::map
+    void get(std::pmr::map<TKey, TValue>& values, std::pmr::memory_resource* resource) const noexcept;
+    // Get the map as std::pmr::unordered_map
+    void get(std::pmr::unordered_map<TKey, TValue>& values, std::pmr::memory_resource* resource) const noexcept;
+
+#if defined(USING_BTREE_MAP)
+    // Get the map as FBE::map (btree_map with std allocator)
+    void get(FBE::map<TKey, TValue>& values, std::pmr::memory_resource* resource) const noexcept;
+    // Get the map as FBE::pmr::map (btree_map with pmr allocator)
+    void get(FBE::pmr::map<TKey, TValue>& values, std::pmr::memory_resource* resource) const noexcept;
+#endif
 
     // Set the map as std::map
-    void set(const std::map<TKey, TValue>& values, pmr::memory_resource* resource) noexcept;
+    void set(const std::map<TKey, TValue>& values, std::pmr::memory_resource* resource) noexcept;
     // Set the map as std::unordered_map
-    void set(const std::unordered_map<TKey, TValue>& values, pmr::memory_resource* resource) noexcept;
+    void set(const std::unordered_map<TKey, TValue>& values, std::pmr::memory_resource* resource) noexcept;
 
-    // Set the map as pmr::map
-    void set(const pmr::map<TKey, TValue>& values, pmr::memory_resource* resource) noexcept;
-    // Set the map as pmr::unordered_map
-    void set(const pmr::unordered_map<TKey, TValue>& values, pmr::memory_resource* resource) noexcept;
+    // Set the map as std::pmr::map
+    void set(const std::pmr::map<TKey, TValue>& values, std::pmr::memory_resource* resource) noexcept;
+    // Set the map as std::pmr::unordered_map
+    void set(const std::pmr::unordered_map<TKey, TValue>& values, std::pmr::memory_resource* resource) noexcept;
+
+#if defined(USING_BTREE_MAP)
+    // Set the map as FBE::map (btree_map with std allocator)
+    void set(const FBE::map<TKey, TValue>& values, std::pmr::memory_resource* resource) noexcept;
+    // Set the map as FBE::pmr::map (btree_map with pmr allocator)
+    void set(const FBE::pmr::map<TKey, TValue>& values, std::pmr::memory_resource* resource) noexcept;
+#endif
 
 private:
     FBEBuffer& _buffer;
@@ -3581,7 +3794,7 @@ private:
 };
 )CODE";
     }
-    
+
     static std::string GenerateFBEFieldModelMap_Inline() {
       return R"CODE(
 template <typename TKey, typename TValue>
@@ -3701,7 +3914,7 @@ inline bool FieldModelMap<TKey, TValue>::verify() const noexcept
 }
 
 template <typename TKey, typename TValue>
-inline void FieldModelMap<TKey, TValue>::get(std::map<TKey, TValue>& values, pmr::memory_resource* resource) const noexcept
+inline void FieldModelMap<TKey, TValue>::get(std::map<TKey, TValue>& values, std::pmr::memory_resource* resource) const noexcept
 {
     values.clear();
 
@@ -3710,20 +3923,21 @@ inline void FieldModelMap<TKey, TValue>::get(std::map<TKey, TValue>& values, pmr
         return;
 
     auto fbe_model = (*this)[0];
-    for (size_t i = fbe_map_size; i-- > 0;)
+    size_t fbe_model_stride = fbe_model.first.fbe_size() + fbe_model.second.fbe_size();
+    for (size_t i = 0; i < fbe_map_size; ++i)
     {
         TKey key;
         TValue value;
         fbe_model.first.get(key, resource);
         fbe_model.second.get(value, resource);
         values.emplace(std::move(key), std::move(value));
-        fbe_model.first.fbe_shift(fbe_model.first.fbe_size() + fbe_model.second.fbe_size());
-        fbe_model.second.fbe_shift(fbe_model.first.fbe_size() + fbe_model.second.fbe_size());
+        fbe_model.first.fbe_shift(fbe_model_stride);
+        fbe_model.second.fbe_shift(fbe_model_stride);
     }
 }
 
 template <typename TKey, typename TValue>
-inline void FieldModelMap<TKey, TValue>::get(std::unordered_map<TKey, TValue>& values, pmr::memory_resource* resource) const noexcept
+inline void FieldModelMap<TKey, TValue>::get(std::unordered_map<TKey, TValue>& values, std::pmr::memory_resource* resource) const noexcept
 {
     values.clear();
 
@@ -3731,21 +3945,23 @@ inline void FieldModelMap<TKey, TValue>::get(std::unordered_map<TKey, TValue>& v
     if (fbe_map_size == 0)
         return;
 
+    values.reserve(fbe_map_size);
     auto fbe_model = (*this)[0];
-    for (size_t i = fbe_map_size; i-- > 0;)
+    size_t fbe_model_stride = fbe_model.first.fbe_size() + fbe_model.second.fbe_size();
+    for (size_t i = 0; i < fbe_map_size; ++i)
     {
         TKey key;
         TValue value;
         fbe_model.first.get(key, resource);
         fbe_model.second.get(value, resource);
         values.emplace(std::move(key), std::move(value));
-        fbe_model.first.fbe_shift(fbe_model.first.fbe_size() + fbe_model.second.fbe_size());
-        fbe_model.second.fbe_shift(fbe_model.first.fbe_size() + fbe_model.second.fbe_size());
+        fbe_model.first.fbe_shift(fbe_model_stride);
+        fbe_model.second.fbe_shift(fbe_model_stride);
     }
 }
 
 template <typename TKey, typename TValue>
-inline void FieldModelMap<TKey, TValue>::get(pmr::map<TKey, TValue>& values, pmr::memory_resource* resource) const noexcept
+inline void FieldModelMap<TKey, TValue>::get(std::pmr::map<TKey, TValue>& values, std::pmr::memory_resource* resource) const noexcept
 {
     values.clear();
 
@@ -3754,30 +3970,46 @@ inline void FieldModelMap<TKey, TValue>::get(pmr::map<TKey, TValue>& values, pmr
         return;
 
     auto fbe_model = (*this)[0];
-    for (size_t i = fbe_map_size; i-- > 0;)
+    size_t fbe_model_stride = fbe_model.first.fbe_size() + fbe_model.second.fbe_size();
+    for (size_t i = 0; i < fbe_map_size; ++i)
     {
-        std::unique_ptr<TKey> key_ptr = nullptr;
-        std::unique_ptr<TValue> value_ptr = nullptr;
-        if constexpr (std::is_constructible_v<TKey, pmr::polymorphic_allocator<char>> and not is_variant_v<TKey>) {
-            key_ptr = std::make_unique<TKey>(resource);
-        } else {
-            key_ptr = std::make_unique<TKey>();
-        }
-        if constexpr (std::is_constructible_v<TValue, pmr::polymorphic_allocator<char>> and not is_variant_v<TValue>) {
-            value_ptr = std::make_unique<TValue>(resource);
-        } else {
-            value_ptr = std::make_unique<TValue>();
-        }
-        fbe_model.first.get(*key_ptr, resource);
-        fbe_model.second.get(*value_ptr, resource);
-        values.emplace(std::move(*key_ptr), std::move(*value_ptr));
-        fbe_model.first.fbe_shift(fbe_model.first.fbe_size() + fbe_model.second.fbe_size());
-        fbe_model.second.fbe_shift(fbe_model.first.fbe_size() + fbe_model.second.fbe_size());
+        TKey key;
+        TValue value;
+        fbe_model.first.get(key, resource);
+        fbe_model.second.get(value, resource);
+        values.emplace(std::move(key), std::move(value));
+        fbe_model.first.fbe_shift(fbe_model_stride);
+        fbe_model.second.fbe_shift(fbe_model_stride);
     }
 }
 
 template <typename TKey, typename TValue>
-inline void FieldModelMap<TKey, TValue>::get(pmr::unordered_map<TKey, TValue>& values, pmr::memory_resource* resource) const noexcept
+inline void FieldModelMap<TKey, TValue>::get(std::pmr::unordered_map<TKey, TValue>& values, std::pmr::memory_resource* resource) const noexcept
+{
+    values.clear();
+
+    size_t fbe_map_size = size();
+    if (fbe_map_size == 0)
+        return;
+
+    values.reserve(fbe_map_size);
+    auto fbe_model = (*this)[0];
+    size_t fbe_model_stride = fbe_model.first.fbe_size() + fbe_model.second.fbe_size();
+    for (size_t i = 0; i < fbe_map_size; ++i)
+    {
+        TKey key;
+        TValue value;
+        fbe_model.first.get(key, resource);
+        fbe_model.second.get(value, resource);
+        values.emplace(std::move(key), std::move(value));
+        fbe_model.first.fbe_shift(fbe_model_stride);
+        fbe_model.second.fbe_shift(fbe_model_stride);
+    }
+}
+
+#if defined(USING_BTREE_MAP)
+template <typename TKey, typename TValue>
+inline void FieldModelMap<TKey, TValue>::get(FBE::map<TKey, TValue>& values, std::pmr::memory_resource* resource) const noexcept
 {
     values.clear();
 
@@ -3786,30 +4018,45 @@ inline void FieldModelMap<TKey, TValue>::get(pmr::unordered_map<TKey, TValue>& v
         return;
 
     auto fbe_model = (*this)[0];
-    for (size_t i = fbe_map_size; i-- > 0;)
+    size_t fbe_model_stride = fbe_model.first.fbe_size() + fbe_model.second.fbe_size();
+    for (size_t i = 0; i < fbe_map_size; ++i)
     {
-        std::unique_ptr<TKey> key_ptr = nullptr;
-        std::unique_ptr<TValue> value_ptr = nullptr;
-        if constexpr (std::is_constructible_v<TKey, pmr::polymorphic_allocator<char>> and not is_variant_v<TKey>) {
-            key_ptr = std::make_unique<TKey>(resource);
-        } else {
-            key_ptr = std::make_unique<TKey>();
-        }
-        if constexpr (std::is_constructible_v<TValue, pmr::polymorphic_allocator<char>> and not is_variant_v<TValue>) {
-            value_ptr = std::make_unique<TValue>(resource);
-        } else {
-            value_ptr = std::make_unique<TValue>();
-        }
-        fbe_model.first.get(*key_ptr, resource);
-        fbe_model.second.get(*value_ptr, resource);
-        values.emplace(std::move(*key_ptr), std::move(*value_ptr));
-        fbe_model.first.fbe_shift(fbe_model.first.fbe_size() + fbe_model.second.fbe_size());
-        fbe_model.second.fbe_shift(fbe_model.first.fbe_size() + fbe_model.second.fbe_size());
+        TKey key;
+        TValue value;
+        fbe_model.first.get(key, resource);
+        fbe_model.second.get(value, resource);
+        values.emplace(std::move(key), std::move(value));
+        fbe_model.first.fbe_shift(fbe_model_stride);
+        fbe_model.second.fbe_shift(fbe_model_stride);
     }
 }
 
 template <typename TKey, typename TValue>
-inline void FieldModelMap<TKey, TValue>::set(const std::map<TKey, TValue>& values, pmr::memory_resource* resource) noexcept
+inline void FieldModelMap<TKey, TValue>::get(FBE::pmr::map<TKey, TValue>& values, std::pmr::memory_resource* resource) const noexcept
+{
+    values.clear();
+
+    size_t fbe_map_size = size();
+    if (fbe_map_size == 0)
+        return;
+
+    auto fbe_model = (*this)[0];
+    size_t fbe_model_stride = fbe_model.first.fbe_size() + fbe_model.second.fbe_size();
+    for (size_t i = 0; i < fbe_map_size; ++i)
+    {
+        TKey key;
+        TValue value;
+        fbe_model.first.get(key, resource);
+        fbe_model.second.get(value, resource);
+        values.emplace(std::move(key), std::move(value));
+        fbe_model.first.fbe_shift(fbe_model_stride);
+        fbe_model.second.fbe_shift(fbe_model_stride);
+    }
+}
+#endif
+
+template <typename TKey, typename TValue>
+inline void FieldModelMap<TKey, TValue>::set(const std::map<TKey, TValue>& values, std::pmr::memory_resource* resource) noexcept
 {
     assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
     if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
@@ -3826,7 +4073,7 @@ inline void FieldModelMap<TKey, TValue>::set(const std::map<TKey, TValue>& value
 }
 
 template <typename TKey, typename TValue>
-inline void FieldModelMap<TKey, TValue>::set(const std::unordered_map<TKey, TValue>& values, pmr::memory_resource* resource) noexcept
+inline void FieldModelMap<TKey, TValue>::set(const std::unordered_map<TKey, TValue>& values, std::pmr::memory_resource* resource) noexcept
 {
     assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
     if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
@@ -3843,7 +4090,7 @@ inline void FieldModelMap<TKey, TValue>::set(const std::unordered_map<TKey, TVal
 }
 
 template <typename TKey, typename TValue>
-inline void FieldModelMap<TKey, TValue>::set(const pmr::map<TKey, TValue>& values, pmr::memory_resource* resource) noexcept
+inline void FieldModelMap<TKey, TValue>::set(const std::pmr::map<TKey, TValue>& values, std::pmr::memory_resource* resource) noexcept
 {
     assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
     if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
@@ -3860,7 +4107,7 @@ inline void FieldModelMap<TKey, TValue>::set(const pmr::map<TKey, TValue>& value
 }
 
 template <typename TKey, typename TValue>
-inline void FieldModelMap<TKey, TValue>::set(const pmr::unordered_map<TKey, TValue>& values, pmr::memory_resource* resource) noexcept
+inline void FieldModelMap<TKey, TValue>::set(const std::pmr::unordered_map<TKey, TValue>& values, std::pmr::memory_resource* resource) noexcept
 {
     assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
     if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
@@ -3875,9 +4122,45 @@ inline void FieldModelMap<TKey, TValue>::set(const pmr::unordered_map<TKey, TVal
         fbe_model.second.fbe_shift(fbe_model.first.fbe_size() + fbe_model.second.fbe_size());
     }
 }
+
+#if defined(USING_BTREE_MAP)
+template <typename TKey, typename TValue>
+inline void FieldModelMap<TKey, TValue>::set(const FBE::map<TKey, TValue>& values, std::pmr::memory_resource* resource) noexcept
+{
+    assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
+    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+        return;
+
+    auto fbe_model = resize(values.size());
+    for (const auto& value : values)
+    {
+        fbe_model.first.set(value.first, resource);
+        fbe_model.first.fbe_shift(fbe_model.first.fbe_size() + fbe_model.second.fbe_size());
+        fbe_model.second.set(value.second, resource);
+        fbe_model.second.fbe_shift(fbe_model.first.fbe_size() + fbe_model.second.fbe_size());
+    }
+}
+
+template <typename TKey, typename TValue>
+inline void FieldModelMap<TKey, TValue>::set(const FBE::pmr::map<TKey, TValue>& values, std::pmr::memory_resource* resource) noexcept
+{
+    assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
+    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+        return;
+
+    auto fbe_model = resize(values.size());
+    for (const auto& value : values)
+    {
+        fbe_model.first.set(value.first, resource);
+        fbe_model.first.fbe_shift(fbe_model.first.fbe_size() + fbe_model.second.fbe_size());
+        fbe_model.second.set(value.second, resource);
+        fbe_model.second.fbe_shift(fbe_model.first.fbe_size() + fbe_model.second.fbe_size());
+    }
+}
+#endif
 )CODE";
     }
-    
+
     static std::string GenerateFBEFinalModel_Header() {
       return R"CODE(
 // Fast Binary Encoding base final model
@@ -4891,32 +5174,47 @@ template <typename T, size_t N>
 template <size_t S>
 inline size_t FinalModelArray<T, N>::fbe_allocation_size(const T (&values)[S]) const noexcept
 {
-    size_t size = 0;
-    FinalModel<T> fbe_model(_buffer, fbe_offset());
-    for (size_t i = 0; (i < S) && (i < N); ++i)
-        size += fbe_model.fbe_allocation_size(values[i]);
-    return size;
+    constexpr size_t count = (S < N) ? S : N;
+    if constexpr (is_fbe_final_primitive_v<T>) {
+        return count * sizeof(T);
+    } else {
+        size_t size = 0;
+        FinalModel<T> fbe_model(_buffer, fbe_offset());
+        for (size_t i = 0; i < count; ++i)
+            size += fbe_model.fbe_allocation_size(values[i]);
+        return size;
+    }
 }
 
 template <typename T, size_t N>
 template <size_t S>
 inline size_t FinalModelArray<T, N>::fbe_allocation_size(const std::array<T, S>& values) const noexcept
 {
-    size_t size = 0;
-    FinalModel<T> fbe_model(_buffer, fbe_offset());
-    for (size_t i = 0; (i < S) && (i < N); ++i)
-        size += fbe_model.fbe_allocation_size(values[i]);
-    return size;
+    constexpr size_t count = (S < N) ? S : N;
+    if constexpr (is_fbe_final_primitive_v<T>) {
+        return count * sizeof(T);
+    } else {
+        size_t size = 0;
+        FinalModel<T> fbe_model(_buffer, fbe_offset());
+        for (size_t i = 0; i < count; ++i)
+            size += fbe_model.fbe_allocation_size(values[i]);
+        return size;
+    }
 }
 
 template <typename T, size_t N>
 inline size_t FinalModelArray<T, N>::fbe_allocation_size(const FastVec<T>& values) const noexcept
 {
-    size_t size = 0;
-    FinalModel<T> fbe_model(_buffer, fbe_offset());
-    for (size_t i = 0; (i < values.size()) && (i < N); ++i)
-        size += fbe_model.fbe_allocation_size(values[i]);
-    return size;
+    const size_t count = std::min(values.size(), N);
+    if constexpr (is_fbe_final_primitive_v<T>) {
+        return count * sizeof(T);
+    } else {
+        size_t size = 0;
+        FinalModel<T> fbe_model(_buffer, fbe_offset());
+        for (size_t i = 0; i < count; ++i)
+            size += fbe_model.fbe_allocation_size(values[i]);
+        return size;
+    }
 }
 
 template <typename T, size_t N>
@@ -4925,17 +5223,25 @@ inline size_t FinalModelArray<T, N>::verify() const noexcept
     if ((_buffer.offset() + fbe_offset()) > _buffer.size())
         return std::numeric_limits<std::size_t>::max();
 
-    size_t size = 0;
-    FinalModel<T> fbe_model(_buffer, fbe_offset());
-    for (size_t i = N; i-- > 0;)
-    {
-        size_t offset = fbe_model.verify();
-        if (offset == std::numeric_limits<std::size_t>::max())
+    if constexpr (is_fbe_final_primitive_v<T>) {
+        // Bulk verification for primitive types - just check total size
+        constexpr size_t total_size = N * sizeof(T);
+        if ((_buffer.offset() + fbe_offset() + total_size) > _buffer.size())
             return std::numeric_limits<std::size_t>::max();
-        fbe_model.fbe_shift(offset);
-        size += offset;
+        return total_size;
+    } else {
+        size_t size = 0;
+        FinalModel<T> fbe_model(_buffer, fbe_offset());
+        for (size_t i = 0; i < N; ++i)
+        {
+            size_t offset = fbe_model.verify();
+            if (offset == std::numeric_limits<std::size_t>::max())
+                return std::numeric_limits<std::size_t>::max();
+            fbe_model.fbe_shift(offset);
+            size += offset;
+        }
+        return size;
     }
-    return size;
 }
 
 template <typename T, size_t N>
@@ -4947,15 +5253,24 @@ inline size_t FinalModelArray<T, N>::get(T (&values)[S]) const noexcept
     if (fbe_full_offset > _buffer.size())
         return 0;
 
-    size_t size = 0;
-    FinalModel<T> fbe_model(_buffer, fbe_offset());
-    for (size_t i = 0; (i < S) && (i < N); ++i)
-    {
-        size_t offset = fbe_model.get(values[i]);
-        fbe_model.fbe_shift(offset);
-        size += offset;
+    constexpr size_t count = (S < N) ? S : N;
+
+    if constexpr (is_fbe_final_primitive_v<T>) {
+        // Bulk copy for primitive types
+        constexpr size_t total_size = count * sizeof(T);
+        memcpy(values, _buffer.data() + fbe_full_offset, total_size);
+        return total_size;
+    } else {
+        size_t size = 0;
+        FinalModel<T> fbe_model(_buffer, fbe_offset());
+        for (size_t i = 0; i < count; ++i)
+        {
+            size_t offset = fbe_model.get(values[i]);
+            fbe_model.fbe_shift(offset);
+            size += offset;
+        }
+        return size;
     }
-    return size;
 }
 
 template <typename T, size_t N>
@@ -4967,15 +5282,24 @@ inline size_t FinalModelArray<T, N>::get(std::array<T, S>& values) const noexcep
     if (fbe_full_offset > _buffer.size())
         return 0;
 
-    size_t size = 0;
-    FinalModel<T> fbe_model(_buffer, fbe_offset());
-    for (size_t i = 0; (i < S) && (i < N); ++i)
-    {
-        size_t offset = fbe_model.get(values[i]);
-        fbe_model.fbe_shift(offset);
-        size += offset;
+    constexpr size_t count = (S < N) ? S : N;
+
+    if constexpr (is_fbe_final_primitive_v<T>) {
+        // Bulk copy for primitive types
+        constexpr size_t total_size = count * sizeof(T);
+        memcpy(values.data(), _buffer.data() + fbe_full_offset, total_size);
+        return total_size;
+    } else {
+        size_t size = 0;
+        FinalModel<T> fbe_model(_buffer, fbe_offset());
+        for (size_t i = 0; i < count; ++i)
+        {
+            size_t offset = fbe_model.get(values[i]);
+            fbe_model.fbe_shift(offset);
+            size += offset;
+        }
+        return size;
     }
-    return size;
 }
 
 template <typename T, size_t N>
@@ -4990,77 +5314,115 @@ inline size_t FinalModelArray<T, N>::get(FastVec<T>& values) const noexcept
 
     values.reserve(N);
 
-    size_t size = 0;
-    FinalModel<T> fbe_model(_buffer, fbe_offset());
-    for (size_t i = N; i-- > 0;)
-    {
-        T value{};
-        size_t offset = fbe_model.get(value);
-        #if defined(USING_STD_VECTOR)
-        values.emplace_back(std::move(value));
-        #else
-        values.template emplace_back<Safety::Unsafe>(std::move(value));
-        #endif
-        fbe_model.fbe_shift(offset);
-        size += offset;
+    if constexpr (is_fbe_final_primitive_v<T>) {
+        // Bulk copy for primitive types
+        constexpr size_t total_size = N * sizeof(T);
+        values.resize(N);
+        memcpy(values.data(), _buffer.data() + fbe_full_offset, total_size);
+        return total_size;
+    } else {
+        size_t size = 0;
+        FinalModel<T> fbe_model(_buffer, fbe_offset());
+        for (size_t i = 0; i < N; ++i)
+        {
+            T value{};
+            size_t offset = fbe_model.get(value);
+            #if defined(USING_STD_VECTOR)
+            values.emplace_back(std::move(value));
+            #else
+            values.template emplace_back<Safety::Unsafe>(std::move(value));
+            #endif
+            fbe_model.fbe_shift(offset);
+            size += offset;
+        }
+        return size;
     }
-    return size;
 }
 
 template <typename T, size_t N>
 template <size_t S>
 inline size_t FinalModelArray<T, N>::set(const T (&values)[S]) noexcept
 {
-    assert(((_buffer.offset() + fbe_offset()) <= _buffer.size()) && "Model is broken!");
-    if ((_buffer.offset() + fbe_offset()) > _buffer.size())
+    size_t fbe_full_offset = _buffer.offset() + fbe_offset();
+    assert((fbe_full_offset <= _buffer.size()) && "Model is broken!");
+    if (fbe_full_offset > _buffer.size())
         return 0;
 
-    size_t size = 0;
-    FinalModel<T> fbe_model(_buffer, fbe_offset());
-    for (size_t i = 0; (i < S) && (i < N); ++i)
-    {
-        size_t offset = fbe_model.set(values[i]);
-        fbe_model.fbe_shift(offset);
-        size += offset;
+    constexpr size_t count = (S < N) ? S : N;
+
+    if constexpr (is_fbe_final_primitive_v<T>) {
+        // Bulk copy for primitive types
+        constexpr size_t total_size = count * sizeof(T);
+        memcpy(_buffer.data() + fbe_full_offset, values, total_size);
+        return total_size;
+    } else {
+        size_t size = 0;
+        FinalModel<T> fbe_model(_buffer, fbe_offset());
+        for (size_t i = 0; i < count; ++i)
+        {
+            size_t offset = fbe_model.set(values[i]);
+            fbe_model.fbe_shift(offset);
+            size += offset;
+        }
+        return size;
     }
-    return size;
 }
 
 template <typename T, size_t N>
 template <size_t S>
 inline size_t FinalModelArray<T, N>::set(const std::array<T, S>& values) noexcept
 {
-    assert(((_buffer.offset() + fbe_offset()) <= _buffer.size()) && "Model is broken!");
-    if ((_buffer.offset() + fbe_offset()) > _buffer.size())
+    size_t fbe_full_offset = _buffer.offset() + fbe_offset();
+    assert((fbe_full_offset <= _buffer.size()) && "Model is broken!");
+    if (fbe_full_offset > _buffer.size())
         return 0;
 
-    size_t size = 0;
-    FinalModel<T> fbe_model(_buffer, fbe_offset());
-    for (size_t i = 0; (i < S) && (i < N); ++i)
-    {
-        size_t offset = fbe_model.set(values[i]);
-        fbe_model.fbe_shift(offset);
-        size += offset;
+    constexpr size_t count = (S < N) ? S : N;
+
+    if constexpr (is_fbe_final_primitive_v<T>) {
+        // Bulk copy for primitive types
+        constexpr size_t total_size = count * sizeof(T);
+        memcpy(_buffer.data() + fbe_full_offset, values.data(), total_size);
+        return total_size;
+    } else {
+        size_t size = 0;
+        FinalModel<T> fbe_model(_buffer, fbe_offset());
+        for (size_t i = 0; i < count; ++i)
+        {
+            size_t offset = fbe_model.set(values[i]);
+            fbe_model.fbe_shift(offset);
+            size += offset;
+        }
+        return size;
     }
-    return size;
 }
 
 template <typename T, size_t N>
 inline size_t FinalModelArray<T, N>::set(const FastVec<T>& values) noexcept
 {
-    assert(((_buffer.offset() + fbe_offset()) <= _buffer.size()) && "Model is broken!");
-    if ((_buffer.offset() + fbe_offset()) > _buffer.size())
+    size_t fbe_full_offset = _buffer.offset() + fbe_offset();
+    assert((fbe_full_offset <= _buffer.size()) && "Model is broken!");
+    if (fbe_full_offset > _buffer.size())
         return 0;
 
-    size_t size = 0;
-    FinalModel<T> fbe_model(_buffer, fbe_offset());
-    for (size_t i = 0; (i < values.size()) && (i < N); ++i)
-    {
-        size_t offset = fbe_model.set(values[i]);
-        fbe_model.fbe_shift(offset);
-        size += offset;
+    const size_t count = std::min(values.size(), N);
+
+    if constexpr (is_fbe_final_primitive_v<T>) {
+        // Bulk copy for primitive types
+        const size_t total_size = count * sizeof(T);
+        memcpy(_buffer.data() + fbe_full_offset, values.data(), total_size);
+        return total_size;
+    } else {
+        size_t size = 0;
+        FinalModel<T> fbe_model(_buffer, fbe_offset());
+        for (size_t i = 0; i < count; ++i)
+        {
+            size_t offset = fbe_model.set(values[i]);
+            fbe_model.fbe_shift(offset);
+            size += offset;
+        }
+        return size;
     }
-    return size;
 }
 )CODE";
     }
@@ -5106,6 +5468,15 @@ public:
     // Set the vector as std::set
     size_t set(const std::set<T>& values) noexcept;
 
+#if defined(USING_BTREE_MAP)
+    // Get the allocation size for FBE::set (btree_set)
+    size_t fbe_allocation_size(const FBE::set<T>& values) const noexcept;
+    // Get the vector as FBE::set (btree_set)
+    size_t get(FBE::set<T>& values) const noexcept;
+    // Set the vector as FBE::set (btree_set)
+    size_t set(const FBE::set<T>& values) noexcept;
+#endif
+
 private:
     FBEBuffer& _buffer;
     mutable size_t _offset;
@@ -5118,11 +5489,16 @@ private:
 template <typename T>
 inline size_t FinalModelVector<T>::fbe_allocation_size(const FastVec<T>& values) const noexcept
 {
-    size_t size = 4;
-    FinalModel<T> fbe_model(_buffer, fbe_offset() + 4);
-    for (const auto& value : values)
-        size += fbe_model.fbe_allocation_size(value);
-    return size;
+    if constexpr (is_fbe_final_primitive_v<T>) {
+        // Fixed size for primitive types
+        return 4 + values.size() * sizeof(T);
+    } else {
+        size_t size = 4;
+        FinalModel<T> fbe_model(_buffer, fbe_offset() + 4);
+        for (const auto& value : values)
+            size += fbe_model.fbe_allocation_size(value);
+        return size;
+    }
 }
 
 template <typename T>
@@ -5153,17 +5529,25 @@ inline size_t FinalModelVector<T>::verify() const noexcept
 
     uint32_t fbe_vector_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset());
 
-    size_t size = 4;
-    FinalModel<T> fbe_model(_buffer, fbe_offset() + 4);
-    for (size_t i = fbe_vector_size; i-- > 0;)
-    {
-        size_t offset = fbe_model.verify();
-        if (offset == std::numeric_limits<std::size_t>::max())
+    if constexpr (is_fbe_final_primitive_v<T>) {
+        // Bulk verification for primitive types - just check total size
+        size_t total_size = 4 + fbe_vector_size * sizeof(T);
+        if ((_buffer.offset() + fbe_offset() + total_size) > _buffer.size())
             return std::numeric_limits<std::size_t>::max();
-        fbe_model.fbe_shift(offset);
-        size += offset;
+        return total_size;
+    } else {
+        size_t size = 4;
+        FinalModel<T> fbe_model(_buffer, fbe_offset() + 4);
+        for (size_t i = 0; i < fbe_vector_size; ++i)
+        {
+            size_t offset = fbe_model.verify();
+            if (offset == std::numeric_limits<std::size_t>::max())
+                return std::numeric_limits<std::size_t>::max();
+            fbe_model.fbe_shift(offset);
+            size += offset;
+        }
+        return size;
     }
-    return size;
 }
 
 template <typename T>
@@ -5180,23 +5564,25 @@ inline size_t FinalModelVector<T>::get(FastVec<T>& values) const noexcept
     if (fbe_vector_size == 0)
         return 4;
 
-    values.reserve(fbe_vector_size);
-
-    size_t size = 4;
-    FinalModel<T> fbe_model(_buffer, fbe_offset() + 4);
-    for (size_t i = fbe_vector_size; i-- > 0;)
-    {
-        T value{};
-        size_t offset = fbe_model.get(value);
-        #if defined(USING_STD_VECTOR)
-        values.emplace_back(std::move(value));
-        #else
-        values.template emplace_back<Safety::Unsafe>(std::move(value));
-        #endif
-        fbe_model.fbe_shift(offset);
-        size += offset;
+    if constexpr (is_fbe_final_primitive_v<T>) {
+        // Bulk copy for primitive types
+        const size_t data_size = fbe_vector_size * sizeof(T);
+        values.resize(fbe_vector_size);
+        memcpy(values.data(), _buffer.data() + fbe_full_offset + 4, data_size);
+        return 4 + data_size;
+    } else {
+        // Pre-allocate and deserialize directly into elements
+        values.resize(fbe_vector_size);
+        size_t size = 4;
+        FinalModel<T> fbe_model(_buffer, fbe_offset() + 4);
+        for (size_t i = 0; i < fbe_vector_size; ++i)
+        {
+            size_t offset = fbe_model.get(values[i]);
+            fbe_model.fbe_shift(offset);
+            size += offset;
+        }
+        return size;
     }
-    return size;
 }
 
 template <typename T>
@@ -5215,7 +5601,7 @@ inline size_t FinalModelVector<T>::get(std::list<T>& values) const noexcept
 
     size_t size = 4;
     FinalModel<T> fbe_model(_buffer, fbe_offset() + 4);
-    for (size_t i = fbe_vector_size; i-- > 0;)
+    for (size_t i = 0; i < fbe_vector_size; ++i)
     {
         T value{};
         size_t offset = fbe_model.get(value);
@@ -5242,7 +5628,7 @@ inline size_t FinalModelVector<T>::get(std::set<T>& values) const noexcept
 
     size_t size = 4;
     FinalModel<T> fbe_model(_buffer, fbe_offset() + 4);
-    for (size_t i = fbe_vector_size; i-- > 0;)
+    for (size_t i = 0; i < fbe_vector_size; ++i)
     {
         T value{};
         size_t offset = fbe_model.get(value);
@@ -5263,15 +5649,22 @@ inline size_t FinalModelVector<T>::set(const FastVec<T>& values) noexcept
 
     *((uint32_t*)(_buffer.data() + fbe_full_offset)) = (uint32_t)values.size();
 
-    size_t size = 4;
-    FinalModel<T> fbe_model(_buffer, fbe_offset() + 4);
-    for (const auto& value : values)
-    {
-        size_t offset = fbe_model.set(value);
-        fbe_model.fbe_shift(offset);
-        size += offset;
+    if constexpr (is_fbe_final_primitive_v<T>) {
+        // Bulk copy for primitive types
+        const size_t data_size = values.size() * sizeof(T);
+        memcpy(_buffer.data() + fbe_full_offset + 4, values.data(), data_size);
+        return 4 + data_size;
+    } else {
+        size_t size = 4;
+        FinalModel<T> fbe_model(_buffer, fbe_offset() + 4);
+        for (const auto& value : values)
+        {
+            size_t offset = fbe_model.set(value);
+            fbe_model.fbe_shift(offset);
+            size += offset;
+        }
+        return size;
     }
-    return size;
 }
 
 template <typename T>
@@ -5315,6 +5708,63 @@ inline size_t FinalModelVector<T>::set(const std::set<T>& values) noexcept
     }
     return size;
 }
+
+#if defined(USING_BTREE_MAP)
+template <typename T>
+inline size_t FinalModelVector<T>::fbe_allocation_size(const FBE::set<T>& values) const noexcept
+{
+    size_t size = 4;
+    FinalModel<T> fbe_model(_buffer, fbe_offset() + 4);
+    for (const auto& value : values)
+        size += fbe_model.fbe_allocation_size(value);
+    return size;
+}
+
+template <typename T>
+inline size_t FinalModelVector<T>::get(FBE::set<T>& values) const noexcept
+{
+    values.clear();
+
+    assert(((_buffer.offset() + fbe_offset() + 4) <= _buffer.size()) && "Model is broken!");
+    if ((_buffer.offset() + fbe_offset() + 4) > _buffer.size())
+        return 0;
+
+    uint32_t fbe_vector_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset());
+
+    size_t size = 4;
+    FinalModel<T> fbe_model(_buffer, fbe_offset() + 4);
+    for (size_t i = 0; i < fbe_vector_size; ++i)
+    {
+        T value = T();
+        size_t offset = fbe_model.get(value);
+        values.emplace(std::move(value));
+        fbe_model.fbe_shift(offset);
+        size += offset;
+    }
+    return size;
+}
+
+template <typename T>
+inline size_t FinalModelVector<T>::set(const FBE::set<T>& values) noexcept
+{
+    size_t fbe_full_offset = _buffer.offset() + fbe_offset();
+    assert(((fbe_full_offset + 4) <= _buffer.size()) && "Model is broken!");
+    if ((fbe_full_offset + 4) > _buffer.size())
+        return 0;
+
+    *((uint32_t*)(_buffer.data() + fbe_full_offset)) = (uint32_t)values.size();
+
+    size_t size = 4;
+    FinalModel<T> fbe_model(_buffer, fbe_offset() + 4);
+    for (const auto& value : values)
+    {
+        size_t offset = fbe_model.set(value);
+        fbe_model.fbe_shift(offset);
+        size += offset;
+    }
+    return size;
+}
+#endif
 )CODE";
     }
 
@@ -5353,6 +5803,15 @@ public:
     size_t set(const std::map<TKey, TValue>& values) noexcept;
     // Set the map as std::unordered_map
     size_t set(const std::unordered_map<TKey, TValue>& values) noexcept;
+
+#if defined(USING_BTREE_MAP)
+    // Get the allocation size for FBE::map (btree_map)
+    size_t fbe_allocation_size(const FBE::map<TKey, TValue>& values) const noexcept;
+    // Get the map as FBE::map (btree_map)
+    size_t get(FBE::map<TKey, TValue>& values) const noexcept;
+    // Set the map as FBE::map (btree_map)
+    size_t set(const FBE::map<TKey, TValue>& values) noexcept;
+#endif
 
 private:
     FBEBuffer& _buffer;
@@ -5437,7 +5896,7 @@ inline size_t FinalModelMap<TKey, TValue>::get(std::map<TKey, TValue>& values) c
     size_t size = 4;
     FinalModel<TKey> fbe_model_key(_buffer, fbe_offset() + 4);
     FinalModel<TValue> fbe_model_value(_buffer, fbe_offset() + 4);
-    for (size_t i = fbe_map_size; i-- > 0;)
+    for (size_t i = 0; i < fbe_map_size; ++i)
     {
         TKey key{};
         TValue value{};
@@ -5467,10 +5926,11 @@ inline size_t FinalModelMap<TKey, TValue>::get(std::unordered_map<TKey, TValue>&
     if (fbe_map_size == 0)
         return 4;
 
+    values.reserve(fbe_map_size);
     size_t size = 4;
     FinalModel<TKey> fbe_model_key(_buffer, fbe_offset() + 4);
     FinalModel<TValue> fbe_model_value(_buffer, fbe_offset() + 4);
-    for (size_t i = fbe_map_size; i-- > 0;)
+    for (size_t i = 0; i < fbe_map_size; ++i)
     {
         TKey key{};
         TValue value{};
@@ -5537,6 +5997,75 @@ inline size_t FinalModelMap<TKey, TValue>::set(const std::unordered_map<TKey, TV
     }
     return size;
 }
+
+#if defined(USING_BTREE_MAP)
+template <typename TKey, typename TValue>
+inline size_t FinalModelMap<TKey, TValue>::fbe_allocation_size(const FBE::map<TKey, TValue>& values) const noexcept
+{
+    size_t size = 4;
+    FinalModel<TKey> fbe_model_key(_buffer, fbe_offset() + 4);
+    FinalModel<TValue> fbe_model_value(_buffer, fbe_offset() + 4);
+    for (const auto& value : values)
+        size += fbe_model_key.fbe_allocation_size(value.first) + fbe_model_value.fbe_allocation_size(value.second);
+    return size;
+}
+
+template <typename TKey, typename TValue>
+inline size_t FinalModelMap<TKey, TValue>::get(FBE::map<TKey, TValue>& values) const noexcept
+{
+    values.clear();
+
+    assert(((_buffer.offset() + fbe_offset() + 4) <= _buffer.size()) && "Model is broken!");
+    if ((_buffer.offset() + fbe_offset() + 4) > _buffer.size())
+        return 0;
+
+    uint32_t fbe_map_size = unaligned_load<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset());
+
+    size_t size = 4;
+    FinalModel<TKey> fbe_model_key(_buffer, fbe_offset() + 4);
+    FinalModel<TValue> fbe_model_value(_buffer, fbe_offset() + 4);
+    for (size_t i = 0; i < fbe_map_size; ++i)
+    {
+        TKey key = TKey();
+        TValue value = TValue();
+        size_t offset_key = fbe_model_key.get(key);
+        fbe_model_key.fbe_shift(offset_key);
+        fbe_model_value.fbe_shift(offset_key);
+        size_t offset_value = fbe_model_value.get(value);
+        fbe_model_key.fbe_shift(offset_value);
+        fbe_model_value.fbe_shift(offset_value);
+        values.emplace(std::move(key), std::move(value));
+        size += offset_key + offset_value;
+    }
+    return size;
+}
+
+template <typename TKey, typename TValue>
+inline size_t FinalModelMap<TKey, TValue>::set(const FBE::map<TKey, TValue>& values) noexcept
+{
+    size_t fbe_full_offset = _buffer.offset() + fbe_offset();
+    assert(((fbe_full_offset + 4) <= _buffer.size()) && "Model is broken!");
+    if ((fbe_full_offset + 4) > _buffer.size())
+        return 0;
+
+    *((uint32_t*)(_buffer.data() + fbe_full_offset)) = (uint32_t)values.size();
+
+    size_t size = 4;
+    FinalModel<TKey> fbe_model_key(_buffer, fbe_offset() + 4);
+    FinalModel<TValue> fbe_model_value(_buffer, fbe_offset() + 4);
+    for (const auto& value : values)
+    {
+        size_t offset_key = fbe_model_key.set(value.first);
+        fbe_model_key.fbe_shift(offset_key);
+        fbe_model_value.fbe_shift(offset_key);
+        size_t offset_value = fbe_model_value.set(value.second);
+        fbe_model_key.fbe_shift(offset_value);
+        fbe_model_value.fbe_shift(offset_value);
+        size += offset_key + offset_value;
+    }
+    return size;
+}
+#endif
 )CODE";
     }
 
@@ -6298,6 +6827,40 @@ struct ValueWriter<TWriter, std::unordered_map<TKey, TValue>>
     }
 };
 
+#if defined(USING_BTREE_MAP)
+template <class TWriter, typename T>
+struct ValueWriter<TWriter, FBE::set<T>>
+{
+    static bool to_json(TWriter& writer, const FBE::set<T>& values, bool scope = true)
+    {
+        writer.StartArray();
+        for (const auto& value : values)
+            if (!FBE::JSON::to_json(writer, value, true))
+                return false;
+        writer.EndArray();
+        return true;
+    }
+};
+
+template <class TWriter, typename TKey, typename TValue>
+struct ValueWriter<TWriter, FBE::map<TKey, TValue>>
+{
+    static bool to_json(TWriter& writer, const FBE::map<TKey, TValue>& values, bool scope = true)
+    {
+        writer.StartObject();
+        for (const auto& value : values)
+        {
+            if (!FBE::JSON::to_json_key(writer, value.first))
+                return false;
+            if (!FBE::JSON::to_json(writer, value.second, true))
+                return false;
+        }
+        writer.EndObject();
+        return true;
+    }
+};
+#endif
+
 template <class TJson, typename T>
 struct ValueReader
 {
@@ -6917,6 +7480,57 @@ struct ValueReader<TJson, std::unordered_map<TKey, TValue>>
     }
 };
 
+#if defined(USING_BTREE_MAP)
+template <class TJson, typename T>
+struct ValueReader<TJson, FBE::set<T>>
+{
+    static bool from_json(const TJson& json, FBE::set<T>& values)
+    {
+        values.clear();
+
+        // Schema validation
+        if (json.IsNull() || !json.IsArray())
+            return false;
+
+        // Collect set items
+        for (const auto& item : json.GetArray())
+        {
+            T temp = T();
+            if (!FBE::JSON::from_json(item, temp))
+                return false;
+            values.emplace(temp);
+        }
+        return true;
+    }
+};
+
+template <class TJson, typename TKey, typename TValue>
+struct ValueReader<TJson, FBE::map<TKey, TValue>>
+{
+    static bool from_json(const TJson& json, FBE::map<TKey, TValue>& values)
+    {
+        values.clear();
+
+        // Schema validation
+        if (json.IsNull() || !json.IsObject())
+            return false;
+
+        // Collect map items
+        for (auto it = json.MemberBegin(); it != json.MemberEnd(); ++it)
+        {
+            TKey key;
+            TValue value;
+            if (!FBE::JSON::from_json_key(it->name, key))
+                return false;
+            if (!FBE::JSON::from_json(it->value, value))
+                return false;
+            values.emplace(key, value);
+        }
+        return true;
+    }
+};
+#endif
+
 template <class TJson, typename T>
 struct NodeReader
 {
@@ -7009,14 +7623,14 @@ public:
     virtual void set_end(size_t fbe_begin) = 0;
 
     // Set the struct value
-    virtual void set(const ::FBE::Base& fbe_value, pmr::memory_resource* resource) noexcept = 0;
+    virtual void set(const ::FBE::Base& fbe_value, std::pmr::memory_resource* resource) noexcept = 0;
     // Set the struct fields values
-    virtual void set_fields(const ::FBE::Base& fbe_value, pmr::memory_resource* resource) noexcept = 0;
+    virtual void set_fields(const ::FBE::Base& fbe_value, std::pmr::memory_resource* resource) noexcept = 0;
 
     // Get the struct value
-    virtual void get(::FBE::Base& fbe_value, pmr::memory_resource* resource) noexcept = 0;
+    virtual void get(::FBE::Base& fbe_value, std::pmr::memory_resource* resource) noexcept = 0;
     // Get the struct fields values
-    virtual void get_fields(::FBE::Base& fbe_value, size_t fbe_struct_size, pmr::memory_resource* resource) noexcept = 0;
+    virtual void get_fields(::FBE::Base& fbe_value, size_t fbe_struct_size, std::pmr::memory_resource* resource) noexcept = 0;
 };
 )CODE";
     }
@@ -7056,7 +7670,7 @@ public:
     void get_end(size_t fbe_begin) const noexcept;
 
     // Get the optional value
-    void get(std::optional<TStruct>& opt, pmr::memory_resource* resource) noexcept;
+    void get(std::optional<TStruct>& opt, std::pmr::memory_resource* resource) noexcept;
 
     // Set the optional value (begin phase)
     size_t set_begin(bool has_value);
@@ -7064,7 +7678,7 @@ public:
     void set_end(size_t fbe_begin);
 
     // Set the optional value
-    void set(const std::optional<TStruct>& opt, pmr::memory_resource* resource);
+    void set(const std::optional<TStruct>& opt, std::pmr::memory_resource* resource);
 
 private:
     FBEBuffer& _buffer;
@@ -7147,14 +7761,14 @@ inline void FieldModelStructOptional<T, TStruct>::get_end(size_t fbe_begin) cons
 }
 
 template <typename T, typename TStruct>
-inline void FieldModelStructOptional<T, TStruct>::get(std::optional<TStruct>& opt, pmr::memory_resource* resource) noexcept
+inline void FieldModelStructOptional<T, TStruct>::get(std::optional<TStruct>& opt, std::pmr::memory_resource* resource) noexcept
 {
 
     size_t fbe_begin = get_begin();
     if (fbe_begin == 0)
         return;
     
-    if constexpr(std::is_constructible_v<TStruct, pmr::memory_resource*> and not is_variant_v<TStruct>) {
+    if constexpr(std::is_constructible_v<TStruct, std::pmr::memory_resource*> and not is_variant_v<TStruct>) {
         TStruct temp = TStruct(resource);
         value.get(temp, resource);
         opt.emplace(std::move(temp));
@@ -7200,7 +7814,7 @@ inline void FieldModelStructOptional<T, TStruct>::set_end(size_t fbe_begin)
 }
 
 template <typename T, typename TStruct>
-inline void FieldModelStructOptional<T, TStruct>::set(const std::optional<TStruct>& opt, pmr::memory_resource* resource)
+inline void FieldModelStructOptional<T, TStruct>::set(const std::optional<TStruct>& opt, std::pmr::memory_resource* resource)
 {
     size_t fbe_begin = set_begin(opt.has_value());
     if (fbe_begin == 0)
@@ -7252,42 +7866,42 @@ public:
 
     // Get the array as C-array
     template <size_t S>
-    void get(TStruct (&values)[S], pmr::memory_resource* resource) const noexcept;
+    void get(TStruct (&values)[S], std::pmr::memory_resource* resource) const noexcept;
     template <size_t S>
-    void get(TStruct* (&values)[S], pmr::memory_resource* resource) const noexcept;
+    void get(TStruct* (&values)[S], std::pmr::memory_resource* resource) const noexcept;
     // Get the array as std::array
     template <size_t S>
-    void get(std::array<TStruct, S>& values, pmr::memory_resource* resource) const noexcept;
+    void get(std::array<TStruct, S>& values, std::pmr::memory_resource* resource) const noexcept;
     template <size_t S>
-    void get(std::array<TStruct*, S>& values, pmr::memory_resource* resource) const noexcept;
+    void get(std::array<TStruct*, S>& values, std::pmr::memory_resource* resource) const noexcept;
 
     // Set the array as C-array
     template <size_t S>
-    void set(const TStruct (&values)[S], pmr::memory_resource* resource) noexcept;
+    void set(const TStruct (&values)[S], std::pmr::memory_resource* resource) noexcept;
     template <size_t S>
-    void set(const TStruct* (&values)[S], pmr::memory_resource* resource) noexcept;
+    void set(const TStruct* (&values)[S], std::pmr::memory_resource* resource) noexcept;
     
     // Set the array as std::array
     template <size_t S>
-    void set(const std::array<TStruct, S>& values, pmr::memory_resource* resource) noexcept;
+    void set(const std::array<TStruct, S>& values, std::pmr::memory_resource* resource) noexcept;
     template <size_t S>
-    void set(const std::array<TStruct*, S>& values, pmr::memory_resource* resource) noexcept;
+    void set(const std::array<TStruct*, S>& values, std::pmr::memory_resource* resource) noexcept;
 )CODE";
 
     std::string code_extra = R"CODE(
     // Get the array as FastVec
-    void get(FastVec<TStruct>& values, pmr::memory_resource* resource) const noexcept;
-    void get(FastVec<TStruct*>& values, pmr::memory_resource* resource) const noexcept;
+    void get(FastVec<TStruct>& values, std::pmr::memory_resource* resource) const noexcept;
+    void get(FastVec<TStruct*>& values, std::pmr::memory_resource* resource) const noexcept;
 
     // Set the array as FastVec
-    void set(const FastVec<TStruct>& values, pmr::memory_resource* resource) noexcept;
-    void set(const FastVec<TStruct*>& values, pmr::memory_resource* resource) noexcept;
+    void set(const FastVec<TStruct>& values, std::pmr::memory_resource* resource) noexcept;
+    void set(const FastVec<TStruct*>& values, std::pmr::memory_resource* resource) noexcept;
 )CODE";
 
     code += code_extra;
 
-    code_extra = std::regex_replace(code_extra, std::regex("FastVec"), "pmr::vector");
-    code_extra = std::regex_replace(code_extra, std::regex("std::list"), "pmr::list");
+    code_extra = std::regex_replace(code_extra, std::regex("FastVec"), "std::pmr::vector");
+    code_extra = std::regex_replace(code_extra, std::regex("std::list"), "std::pmr::list");
     code += code_extra;
 
     code += R"CODE(
@@ -7348,7 +7962,7 @@ inline bool FieldModelCustomArray<T, TStruct, N>::verify() const noexcept
 
 template <typename T, typename TStruct, size_t N>
 template <size_t S>
-inline void FieldModelCustomArray<T, TStruct, N>::get(TStruct (&values)[S], pmr::memory_resource* resource) const noexcept
+inline void FieldModelCustomArray<T, TStruct, N>::get(TStruct (&values)[S], std::pmr::memory_resource* resource) const noexcept
 {
     auto fbe_model = (*this)[0];
     for (size_t i = 0; (i < S) && (i < N); ++i)
@@ -7360,7 +7974,7 @@ inline void FieldModelCustomArray<T, TStruct, N>::get(TStruct (&values)[S], pmr:
 
 template <typename T, typename TStruct, size_t N>
 template <size_t S>
-inline void FieldModelCustomArray<T, TStruct, N>::get(TStruct* (&values)[S], pmr::memory_resource* resource) const noexcept
+inline void FieldModelCustomArray<T, TStruct, N>::get(TStruct* (&values)[S], std::pmr::memory_resource* resource) const noexcept
 {
     auto fbe_model = (*this)[0];
     for (size_t i = 0; (i < S) && (i < N); ++i)
@@ -7374,7 +7988,7 @@ inline void FieldModelCustomArray<T, TStruct, N>::get(TStruct* (&values)[S], pmr
 
 template <typename T, typename TStruct, size_t N>
 template <size_t S>
-inline void FieldModelCustomArray<T, TStruct, N>::get(std::array<TStruct, S>& values, pmr::memory_resource* resource) const noexcept
+inline void FieldModelCustomArray<T, TStruct, N>::get(std::array<TStruct, S>& values, std::pmr::memory_resource* resource) const noexcept
 {
     auto fbe_model = (*this)[0];
     for (size_t i = 0; (i < S) && (i < N); ++i)
@@ -7386,7 +8000,7 @@ inline void FieldModelCustomArray<T, TStruct, N>::get(std::array<TStruct, S>& va
 
 template <typename T, typename TStruct, size_t N>
 template <size_t S>
-inline void FieldModelCustomArray<T, TStruct, N>::get(std::array<TStruct*, S>& values, pmr::memory_resource* resource) const noexcept
+inline void FieldModelCustomArray<T, TStruct, N>::get(std::array<TStruct*, S>& values, std::pmr::memory_resource* resource) const noexcept
 {
     auto fbe_model = (*this)[0];
     for (size_t i = 0; (i < S) && (i < N); ++i)
@@ -7400,7 +8014,7 @@ inline void FieldModelCustomArray<T, TStruct, N>::get(std::array<TStruct*, S>& v
 
 template <typename T, typename TStruct, size_t N>
 template <size_t S>
-inline void FieldModelCustomArray<T, TStruct, N>::set(const TStruct (&values)[S], pmr::memory_resource* resource) noexcept
+inline void FieldModelCustomArray<T, TStruct, N>::set(const TStruct (&values)[S], std::pmr::memory_resource* resource) noexcept
 {
     assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
     if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
@@ -7416,7 +8030,7 @@ inline void FieldModelCustomArray<T, TStruct, N>::set(const TStruct (&values)[S]
 
 template <typename T, typename TStruct, size_t N>
 template <size_t S>
-inline void FieldModelCustomArray<T, TStruct, N>::set(const TStruct* (&values)[S], pmr::memory_resource* resource) noexcept
+inline void FieldModelCustomArray<T, TStruct, N>::set(const TStruct* (&values)[S], std::pmr::memory_resource* resource) noexcept
 {
     assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
     if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
@@ -7432,7 +8046,7 @@ inline void FieldModelCustomArray<T, TStruct, N>::set(const TStruct* (&values)[S
 
 template <typename T, typename TStruct, size_t N>
 template <size_t S>
-inline void FieldModelCustomArray<T, TStruct, N>::set(const std::array<TStruct, S>& values, pmr::memory_resource* resource) noexcept
+inline void FieldModelCustomArray<T, TStruct, N>::set(const std::array<TStruct, S>& values, std::pmr::memory_resource* resource) noexcept
 {
     assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
     if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
@@ -7448,7 +8062,7 @@ inline void FieldModelCustomArray<T, TStruct, N>::set(const std::array<TStruct, 
 
 template <typename T, typename TStruct, size_t N>
 template <size_t S>
-inline void FieldModelCustomArray<T, TStruct, N>::set(const std::array<TStruct*, S>& values, pmr::memory_resource* resource) noexcept
+inline void FieldModelCustomArray<T, TStruct, N>::set(const std::array<TStruct*, S>& values, std::pmr::memory_resource* resource) noexcept
 {
     assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
     if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
@@ -7465,7 +8079,7 @@ inline void FieldModelCustomArray<T, TStruct, N>::set(const std::array<TStruct*,
 
       std::string code_extra = R"CODE(
 template <typename T, typename TStruct, size_t N>
-inline void FieldModelCustomArray<T, TStruct, N>::get(FastVec<TStruct>& values, pmr::memory_resource* resource) const noexcept
+inline void FieldModelCustomArray<T, TStruct, N>::get(FastVec<TStruct>& values, std::pmr::memory_resource* resource) const noexcept
 {
     values.clear();
     values.reserve(N);
@@ -7485,7 +8099,7 @@ inline void FieldModelCustomArray<T, TStruct, N>::get(FastVec<TStruct>& values, 
 }
 
 template <typename T, typename TStruct, size_t N>
-inline void FieldModelCustomArray<T, TStruct, N>::get(FastVec<TStruct*>& values, pmr::memory_resource* resource) const noexcept
+inline void FieldModelCustomArray<T, TStruct, N>::get(FastVec<TStruct*>& values, std::pmr::memory_resource* resource) const noexcept
 {
     values.clear();
     values.reserve(N);
@@ -7505,7 +8119,7 @@ inline void FieldModelCustomArray<T, TStruct, N>::get(FastVec<TStruct*>& values,
 }
 
 template <typename T, typename TStruct, size_t N>
-inline void FieldModelCustomArray<T, TStruct, N>::set(const FastVec<TStruct>& values, pmr::memory_resource* resource) noexcept
+inline void FieldModelCustomArray<T, TStruct, N>::set(const FastVec<TStruct>& values, std::pmr::memory_resource* resource) noexcept
 {
     assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
     if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
@@ -7520,7 +8134,7 @@ inline void FieldModelCustomArray<T, TStruct, N>::set(const FastVec<TStruct>& va
 }
 
 template <typename T, typename TStruct, size_t N>
-inline void FieldModelCustomArray<T, TStruct, N>::set(const FastVec<TStruct*>& values, pmr::memory_resource* resource) noexcept
+inline void FieldModelCustomArray<T, TStruct, N>::set(const FastVec<TStruct*>& values, std::pmr::memory_resource* resource) noexcept
 {
     assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
     if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
@@ -7536,9 +8150,9 @@ inline void FieldModelCustomArray<T, TStruct, N>::set(const FastVec<TStruct*>& v
 )CODE";
       code += code_extra;
 
-      code_extra = std::regex_replace(code_extra, std::regex("FastVec"), "pmr::vector");
+      code_extra = std::regex_replace(code_extra, std::regex("FastVec"), "std::pmr::vector");
       code_extra = std::regex_replace(code_extra, std::regex("values.template emplace_back<Safety::Unsafe>"), "values.emplace_back");
-      code_extra = std::regex_replace(code_extra, std::regex("std::list"), "pmr::list");
+      code_extra = std::regex_replace(code_extra, std::regex("std::list"), "std::pmr::list");
       code += code_extra;
       return code;
     }
@@ -7579,30 +8193,30 @@ public:
 
     std::string code_extra = R"CODE(
     // Get the vector as FastVec
-    void get(FastVec<TStruct>& values, pmr::memory_resource* resource) const noexcept;
-    void get(FastVec<TStruct*>& values, pmr::memory_resource* resource) const noexcept;
+    void get(FastVec<TStruct>& values, std::pmr::memory_resource* resource) const noexcept;
+    void get(FastVec<TStruct*>& values, std::pmr::memory_resource* resource) const noexcept;
     // Get the vector as std::list
-    void get(std::list<TStruct>& values, pmr::memory_resource* resource) const noexcept;
-    void get(std::list<TStruct*>& values, pmr::memory_resource* resource) const noexcept;
+    void get(std::list<TStruct>& values, std::pmr::memory_resource* resource) const noexcept;
+    void get(std::list<TStruct*>& values, std::pmr::memory_resource* resource) const noexcept;
     // Get the vector as std::set
-    void get(std::set<TStruct>& values, pmr::memory_resource* resource) const noexcept;
-    void get(std::set<TStruct*>& values, pmr::memory_resource* resource) const noexcept;
+    void get(std::set<TStruct>& values, std::pmr::memory_resource* resource) const noexcept;
+    void get(std::set<TStruct*>& values, std::pmr::memory_resource* resource) const noexcept;
     // Set the vector as FastVec
-    void set(const FastVec<TStruct>& values, pmr::memory_resource* resource) noexcept;
-    void set(const FastVec<TStruct*>& values, pmr::memory_resource* resource) noexcept;
+    void set(const FastVec<TStruct>& values, std::pmr::memory_resource* resource) noexcept;
+    void set(const FastVec<TStruct*>& values, std::pmr::memory_resource* resource) noexcept;
     // Set the vector as std::list
-    void set(const std::list<TStruct>& values, pmr::memory_resource* resource) noexcept;
-    void set(const std::list<TStruct*>& values, pmr::memory_resource* resource) noexcept;
+    void set(const std::list<TStruct>& values, std::pmr::memory_resource* resource) noexcept;
+    void set(const std::list<TStruct*>& values, std::pmr::memory_resource* resource) noexcept;
     // Set the vector as std::set
-    void set(const std::set<TStruct>& values, pmr::memory_resource* resource) noexcept;
-    void set(const std::set<TStruct*>& values, pmr::memory_resource* resource) noexcept;
+    void set(const std::set<TStruct>& values, std::pmr::memory_resource* resource) noexcept;
+    void set(const std::set<TStruct*>& values, std::pmr::memory_resource* resource) noexcept;
 )CODE";
 
       code += code_extra;
 
-      code_extra = std::regex_replace(code_extra, std::regex("FastVec"), "pmr::vector");
-      code_extra = std::regex_replace(code_extra, std::regex("std::list"), "pmr::list");
-      code_extra = std::regex_replace(code_extra, std::regex("std::set"), "pmr::set");
+      code_extra = std::regex_replace(code_extra, std::regex("FastVec"), "std::pmr::vector");
+      code_extra = std::regex_replace(code_extra, std::regex("std::list"), "std::pmr::list");
+      code_extra = std::regex_replace(code_extra, std::regex("std::set"), "std::pmr::set");
       code += code_extra;
 
 
@@ -7725,7 +8339,7 @@ inline bool FieldModelCustomVector<T, TStruct>::verify() const noexcept
 
       std::string code_extra = R"CODE(
 template <typename T, typename TStruct>
-inline void FieldModelCustomVector<T, TStruct>::get(FastVec<TStruct>& values, pmr::memory_resource* resource) const noexcept
+inline void FieldModelCustomVector<T, TStruct>::get(FastVec<TStruct>& values, std::pmr::memory_resource* resource) const noexcept
 {
     values.clear();
 
@@ -7738,7 +8352,7 @@ inline void FieldModelCustomVector<T, TStruct>::get(FastVec<TStruct>& values, pm
     auto fbe_model = (*this)[0];
     for (size_t i = fbe_vector_size; i-- > 0;)
     {
-        if constexpr(std::is_constructible_v<TStruct, pmr::memory_resource*> and not is_variant_v<TStruct>) {
+        if constexpr(std::is_constructible_v<TStruct, std::pmr::memory_resource*> and not is_variant_v<TStruct>) {
             TStruct value = TStruct(resource);
             fbe_model.get(value, resource);
             #if defined(USING_STD_VECTOR)
@@ -7760,7 +8374,7 @@ inline void FieldModelCustomVector<T, TStruct>::get(FastVec<TStruct>& values, pm
 }
 
 template <typename T, typename TStruct>
-inline void FieldModelCustomVector<T, TStruct>::get(FastVec<TStruct*>& values, pmr::memory_resource* resource) const noexcept
+inline void FieldModelCustomVector<T, TStruct>::get(FastVec<TStruct*>& values, std::pmr::memory_resource* resource) const noexcept
 {
     values.clear();
 
@@ -7785,7 +8399,7 @@ inline void FieldModelCustomVector<T, TStruct>::get(FastVec<TStruct*>& values, p
 }
 
 template <typename T, typename TStruct>
-inline void FieldModelCustomVector<T, TStruct>::get(std::list<TStruct>& values, pmr::memory_resource* resource) const noexcept
+inline void FieldModelCustomVector<T, TStruct>::get(std::list<TStruct>& values, std::pmr::memory_resource* resource) const noexcept
 {
     values.clear();
 
@@ -7804,7 +8418,7 @@ inline void FieldModelCustomVector<T, TStruct>::get(std::list<TStruct>& values, 
 }
 
 template <typename T, typename TStruct>
-inline void FieldModelCustomVector<T, TStruct>::get(std::list<TStruct*>& values, pmr::memory_resource* resource) const noexcept
+inline void FieldModelCustomVector<T, TStruct>::get(std::list<TStruct*>& values, std::pmr::memory_resource* resource) const noexcept
 {
     values.clear();
 
@@ -7823,7 +8437,7 @@ inline void FieldModelCustomVector<T, TStruct>::get(std::list<TStruct*>& values,
 }
 
 template <typename T, typename TStruct>
-inline void FieldModelCustomVector<T, TStruct>::get(std::set<TStruct>& values, pmr::memory_resource* resource) const noexcept
+inline void FieldModelCustomVector<T, TStruct>::get(std::set<TStruct>& values, std::pmr::memory_resource* resource) const noexcept
 {
     values.clear();
 
@@ -7842,7 +8456,7 @@ inline void FieldModelCustomVector<T, TStruct>::get(std::set<TStruct>& values, p
 }
 
 template <typename T, typename TStruct>
-inline void FieldModelCustomVector<T, TStruct>::get(std::set<TStruct*>& values, pmr::memory_resource* resource) const noexcept
+inline void FieldModelCustomVector<T, TStruct>::get(std::set<TStruct*>& values, std::pmr::memory_resource* resource) const noexcept
 {
     values.clear();
 
@@ -7860,7 +8474,7 @@ inline void FieldModelCustomVector<T, TStruct>::get(std::set<TStruct*>& values, 
     }
 }
 template <typename T, typename TStruct>
-inline void FieldModelCustomVector<T, TStruct>::set(const FastVec<TStruct>& values, pmr::memory_resource* resource) noexcept
+inline void FieldModelCustomVector<T, TStruct>::set(const FastVec<TStruct>& values, std::pmr::memory_resource* resource) noexcept
 {
     assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
     if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
@@ -7875,7 +8489,7 @@ inline void FieldModelCustomVector<T, TStruct>::set(const FastVec<TStruct>& valu
 }
 
 template <typename T, typename TStruct>
-inline void FieldModelCustomVector<T, TStruct>::set(const FastVec<TStruct*>& values, pmr::memory_resource* resource) noexcept
+inline void FieldModelCustomVector<T, TStruct>::set(const FastVec<TStruct*>& values, std::pmr::memory_resource* resource) noexcept
 {
     assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
     if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
@@ -7890,7 +8504,7 @@ inline void FieldModelCustomVector<T, TStruct>::set(const FastVec<TStruct*>& val
 }
 
 template <typename T, typename TStruct>
-inline void FieldModelCustomVector<T, TStruct>::set(const std::list<TStruct>& values, pmr::memory_resource* resource) noexcept
+inline void FieldModelCustomVector<T, TStruct>::set(const std::list<TStruct>& values, std::pmr::memory_resource* resource) noexcept
 {
     assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
     if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
@@ -7905,7 +8519,7 @@ inline void FieldModelCustomVector<T, TStruct>::set(const std::list<TStruct>& va
 }
 
 template <typename T, typename TStruct>
-inline void FieldModelCustomVector<T, TStruct>::set(const std::list<TStruct*>& values, pmr::memory_resource* resource) noexcept
+inline void FieldModelCustomVector<T, TStruct>::set(const std::list<TStruct*>& values, std::pmr::memory_resource* resource) noexcept
 {
     assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
     if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
@@ -7920,7 +8534,7 @@ inline void FieldModelCustomVector<T, TStruct>::set(const std::list<TStruct*>& v
 }
 
 template <typename T, typename TStruct>
-inline void FieldModelCustomVector<T, TStruct>::set(const std::set<TStruct>& values, pmr::memory_resource* resource) noexcept
+inline void FieldModelCustomVector<T, TStruct>::set(const std::set<TStruct>& values, std::pmr::memory_resource* resource) noexcept
 {
     assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
     if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
@@ -7935,7 +8549,7 @@ inline void FieldModelCustomVector<T, TStruct>::set(const std::set<TStruct>& val
 }
 
 template <typename T, typename TStruct>
-inline void FieldModelCustomVector<T, TStruct>::set(const std::set<TStruct*>& values, pmr::memory_resource* resource) noexcept
+inline void FieldModelCustomVector<T, TStruct>::set(const std::set<TStruct*>& values, std::pmr::memory_resource* resource) noexcept
 {
     assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
     if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
@@ -7952,10 +8566,10 @@ inline void FieldModelCustomVector<T, TStruct>::set(const std::set<TStruct*>& va
 
       code += code_extra;
 
-      code_extra = std::regex_replace(code_extra, std::regex("FastVec"), "pmr::vector");
+      code_extra = std::regex_replace(code_extra, std::regex("FastVec"), "std::pmr::vector");
       code_extra = std::regex_replace(code_extra, std::regex("values.template emplace_back<Safety::Unsafe>"), "values.emplace_back");
-      code_extra = std::regex_replace(code_extra, std::regex("std::list"), "pmr::list");
-      code_extra = std::regex_replace(code_extra, std::regex("std::set"), "pmr::set");
+      code_extra = std::regex_replace(code_extra, std::regex("std::list"), "std::pmr::list");
+      code_extra = std::regex_replace(code_extra, std::regex("std::set"), "std::pmr::set");
       code += code_extra;
       return code;
     }
@@ -7997,27 +8611,42 @@ public:
 
       std::string code_extra = R"CODE(
     // Get the map as std::map
-    void get(std::map<TKStruct, TValueStruct>& values, pmr::memory_resource* resource = nullptr) const noexcept;
-    void get(std::map<TKStruct, TValueStruct*>& values, pmr::memory_resource* resource = nullptr) const noexcept;
+    void get(std::map<TKStruct, TValueStruct>& values, std::pmr::memory_resource* resource = nullptr) const noexcept;
+    void get(std::map<TKStruct, TValueStruct*>& values, std::pmr::memory_resource* resource = nullptr) const noexcept;
     // Get the map as std::unordered_map
-    void get(std::unordered_map<TKStruct, TValueStruct>& values, pmr::memory_resource* resource = nullptr) const noexcept;
-    void get(std::unordered_map<TKStruct, TValueStruct*>& values, pmr::memory_resource* resource = nullptr) const noexcept;
+    void get(std::unordered_map<TKStruct, TValueStruct>& values, std::pmr::memory_resource* resource = nullptr) const noexcept;
+    void get(std::unordered_map<TKStruct, TValueStruct*>& values, std::pmr::memory_resource* resource = nullptr) const noexcept;
 
     // Set the map as std::map
-    void set(const std::map<TKStruct, TValueStruct>& values, pmr::memory_resource* resource) noexcept;
-    void set(const std::map<TKStruct, TValueStruct*>& values, pmr::memory_resource* resource) noexcept;
+    void set(const std::map<TKStruct, TValueStruct>& values, std::pmr::memory_resource* resource) noexcept;
+    void set(const std::map<TKStruct, TValueStruct*>& values, std::pmr::memory_resource* resource) noexcept;
     // Set the map as std::unordered_map
-    void set(const std::unordered_map<TKStruct, TValueStruct>& values, pmr::memory_resource* resource) noexcept;
-    void set(const std::unordered_map<TKStruct, TValueStruct*>& values, pmr::memory_resource* resource) noexcept;
+    void set(const std::unordered_map<TKStruct, TValueStruct>& values, std::pmr::memory_resource* resource) noexcept;
+    void set(const std::unordered_map<TKStruct, TValueStruct*>& values, std::pmr::memory_resource* resource) noexcept;
 )CODE";
 
       code += code_extra;
 
-      code_extra = std::regex_replace(code_extra, std::regex("std::map"), "pmr::map");
-      code_extra = std::regex_replace(code_extra, std::regex("std::unordered_map"), "pmr::unordered_map");
+      code_extra = std::regex_replace(code_extra, std::regex("std::map"), "std::pmr::map");
+      code_extra = std::regex_replace(code_extra, std::regex("std::unordered_map"), "std::pmr::unordered_map");
       code += code_extra;
 
       code += R"CODE(
+#if defined(USING_BTREE_MAP)
+    // Get the map as FBE::map (btree_map with std allocator)
+    void get(FBE::map<TKStruct, TValueStruct>& values, std::pmr::memory_resource* resource = nullptr) const noexcept;
+    void get(FBE::map<TKStruct, TValueStruct*>& values, std::pmr::memory_resource* resource = nullptr) const noexcept;
+    // Get the map as FBE::pmr::map (btree_map with pmr allocator)
+    void get(FBE::pmr::map<TKStruct, TValueStruct>& values, std::pmr::memory_resource* resource = nullptr) const noexcept;
+    void get(FBE::pmr::map<TKStruct, TValueStruct*>& values, std::pmr::memory_resource* resource = nullptr) const noexcept;
+    // Set the map as FBE::map (btree_map with std allocator)
+    void set(const FBE::map<TKStruct, TValueStruct>& values, std::pmr::memory_resource* resource) noexcept;
+    void set(const FBE::map<TKStruct, TValueStruct*>& values, std::pmr::memory_resource* resource) noexcept;
+    // Set the map as FBE::pmr::map (btree_map with pmr allocator)
+    void set(const FBE::pmr::map<TKStruct, TValueStruct>& values, std::pmr::memory_resource* resource) noexcept;
+    void set(const FBE::pmr::map<TKStruct, TValueStruct*>& values, std::pmr::memory_resource* resource) noexcept;
+#endif
+
 private:
     FBEBuffer& _buffer;
     size_t _offset;
@@ -8146,7 +8775,7 @@ inline bool FieldModelCustomMap<TKey, TValue, TKStruct, TValueStruct>::verify() 
 
       std::string code_extra = R"CODE(
 template <typename TKey, typename TValue, typename TKStruct, typename TValueStruct>
-inline void FieldModelCustomMap<TKey, TValue, TKStruct, TValueStruct>::get(std::map<TKStruct, TValueStruct>& values, pmr::memory_resource* resource) const noexcept
+inline void FieldModelCustomMap<TKey, TValue, TKStruct, TValueStruct>::get(std::map<TKStruct, TValueStruct>& values, std::pmr::memory_resource* resource) const noexcept
 {
     values.clear();
 
@@ -8168,7 +8797,7 @@ inline void FieldModelCustomMap<TKey, TValue, TKStruct, TValueStruct>::get(std::
 }
 
 template <typename TKey, typename TValue, typename TKStruct, typename TValueStruct>
-inline void FieldModelCustomMap<TKey, TValue, TKStruct, TValueStruct>::get(std::map<TKStruct, TValueStruct*>& values, pmr::memory_resource* resource) const noexcept
+inline void FieldModelCustomMap<TKey, TValue, TKStruct, TValueStruct>::get(std::map<TKStruct, TValueStruct*>& values, std::pmr::memory_resource* resource) const noexcept
 {
     values.clear();
 
@@ -8190,7 +8819,7 @@ inline void FieldModelCustomMap<TKey, TValue, TKStruct, TValueStruct>::get(std::
 }
 
 template <typename TKey, typename TValue, typename TKStruct, typename TValueStruct>
-inline void FieldModelCustomMap<TKey, TValue, TKStruct, TValueStruct>::get(std::unordered_map<TKStruct, TValueStruct>& values, pmr::memory_resource* resource) const noexcept
+inline void FieldModelCustomMap<TKey, TValue, TKStruct, TValueStruct>::get(std::unordered_map<TKStruct, TValueStruct>& values, std::pmr::memory_resource* resource) const noexcept
 {
     values.clear();
 
@@ -8212,7 +8841,7 @@ inline void FieldModelCustomMap<TKey, TValue, TKStruct, TValueStruct>::get(std::
 }
 
 template <typename TKey, typename TValue, typename TKStruct, typename TValueStruct>
-inline void FieldModelCustomMap<TKey, TValue, TKStruct, TValueStruct>::get(std::unordered_map<TKStruct, TValueStruct*>& values, pmr::memory_resource* resource) const noexcept
+inline void FieldModelCustomMap<TKey, TValue, TKStruct, TValueStruct>::get(std::unordered_map<TKStruct, TValueStruct*>& values, std::pmr::memory_resource* resource) const noexcept
 {
     values.clear();
 
@@ -8234,7 +8863,7 @@ inline void FieldModelCustomMap<TKey, TValue, TKStruct, TValueStruct>::get(std::
 }
 
 template <typename TKey, typename TValue, typename TKStruct, typename TValueStruct>
-inline void FieldModelCustomMap<TKey, TValue, TKStruct, TValueStruct>::set(const std::map<TKStruct, TValueStruct>& values, pmr::memory_resource* resource) noexcept
+inline void FieldModelCustomMap<TKey, TValue, TKStruct, TValueStruct>::set(const std::map<TKStruct, TValueStruct>& values, std::pmr::memory_resource* resource) noexcept
 {
     assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
     if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
@@ -8251,7 +8880,7 @@ inline void FieldModelCustomMap<TKey, TValue, TKStruct, TValueStruct>::set(const
 }
 
 template <typename TKey, typename TValue, typename TKStruct, typename TValueStruct>
-inline void FieldModelCustomMap<TKey, TValue, TKStruct, TValueStruct>::set(const std::map<TKStruct, TValueStruct*>& values, pmr::memory_resource* resource) noexcept
+inline void FieldModelCustomMap<TKey, TValue, TKStruct, TValueStruct>::set(const std::map<TKStruct, TValueStruct*>& values, std::pmr::memory_resource* resource) noexcept
 {
     assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
     if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
@@ -8268,7 +8897,7 @@ inline void FieldModelCustomMap<TKey, TValue, TKStruct, TValueStruct>::set(const
 }
 
 template <typename TKey, typename TValue, typename TKStruct, typename TValueStruct>
-inline void FieldModelCustomMap<TKey, TValue, TKStruct, TValueStruct>::set(const std::unordered_map<TKStruct, TValueStruct>& values, pmr::memory_resource* resource) noexcept
+inline void FieldModelCustomMap<TKey, TValue, TKStruct, TValueStruct>::set(const std::unordered_map<TKStruct, TValueStruct>& values, std::pmr::memory_resource* resource) noexcept
 {
     assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
     if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
@@ -8285,7 +8914,7 @@ inline void FieldModelCustomMap<TKey, TValue, TKStruct, TValueStruct>::set(const
 }
 
 template <typename TKey, typename TValue, typename TKStruct, typename TValueStruct>
-inline void FieldModelCustomMap<TKey, TValue, TKStruct, TValueStruct>::set(const std::unordered_map<TKStruct, TValueStruct*>& values, pmr::memory_resource* resource) noexcept
+inline void FieldModelCustomMap<TKey, TValue, TKStruct, TValueStruct>::set(const std::unordered_map<TKStruct, TValueStruct*>& values, std::pmr::memory_resource* resource) noexcept
 {
     assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
     if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
@@ -8304,9 +8933,169 @@ inline void FieldModelCustomMap<TKey, TValue, TKStruct, TValueStruct>::set(const
 
       code += code_extra;
 
-      code_extra = std::regex_replace(code_extra, std::regex("std::map"), "pmr::map");
-      code_extra = std::regex_replace(code_extra, std::regex("std::unordered_map"), "pmr::unordered_map");
+      code_extra = std::regex_replace(code_extra, std::regex("std::map"), "std::pmr::map");
+      code_extra = std::regex_replace(code_extra, std::regex("std::unordered_map"), "std::pmr::unordered_map");
       code += code_extra;
+
+      code += R"CODE(
+#if defined(USING_BTREE_MAP)
+template <typename TKey, typename TValue, typename TKStruct, typename TValueStruct>
+inline void FieldModelCustomMap<TKey, TValue, TKStruct, TValueStruct>::get(FBE::map<TKStruct, TValueStruct>& values, std::pmr::memory_resource* resource) const noexcept
+{
+    values.clear();
+
+    size_t fbe_map_size = size();
+    if (fbe_map_size == 0)
+        return;
+
+    auto fbe_model = (*this)[0];
+    for (size_t i = fbe_map_size; i-- > 0;)
+    {
+        TKStruct key;
+        TValueStruct value;
+        fbe_model.first.get(key, nullptr);
+        fbe_model.second.get(value, nullptr);
+        values.emplace(std::move(key), std::move(value));
+        fbe_model.first.fbe_shift(fbe_model.first.fbe_size() + fbe_model.second.fbe_size());
+        fbe_model.second.fbe_shift(fbe_model.first.fbe_size() + fbe_model.second.fbe_size());
+    }
+}
+
+template <typename TKey, typename TValue, typename TKStruct, typename TValueStruct>
+inline void FieldModelCustomMap<TKey, TValue, TKStruct, TValueStruct>::get(FBE::map<TKStruct, TValueStruct*>& values, std::pmr::memory_resource* resource) const noexcept
+{
+    values.clear();
+
+    size_t fbe_map_size = size();
+    if (fbe_map_size == 0)
+        return;
+
+    auto fbe_model = (*this)[0];
+    for (size_t i = fbe_map_size; i-- > 0;)
+    {
+        TKStruct key;
+        TValueStruct* value = nullptr;
+        fbe_model.first.get(key, nullptr);
+        fbe_model.second.get(&value, nullptr);
+        values.emplace(std::move(key), value);
+        fbe_model.first.fbe_shift(fbe_model.first.fbe_size() + fbe_model.second.fbe_size());
+        fbe_model.second.fbe_shift(fbe_model.first.fbe_size() + fbe_model.second.fbe_size());
+    }
+}
+
+template <typename TKey, typename TValue, typename TKStruct, typename TValueStruct>
+inline void FieldModelCustomMap<TKey, TValue, TKStruct, TValueStruct>::set(const FBE::map<TKStruct, TValueStruct>& values, std::pmr::memory_resource* resource) noexcept
+{
+    assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
+    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+        return;
+
+    auto fbe_model = resize(values.size());
+    for (const auto& value : values)
+    {
+        fbe_model.first.set(value.first, resource);
+        fbe_model.first.fbe_shift(fbe_model.first.fbe_size() + fbe_model.second.fbe_size());
+        fbe_model.second.set(value.second, resource);
+        fbe_model.second.fbe_shift(fbe_model.first.fbe_size() + fbe_model.second.fbe_size());
+    }
+}
+
+template <typename TKey, typename TValue, typename TKStruct, typename TValueStruct>
+inline void FieldModelCustomMap<TKey, TValue, TKStruct, TValueStruct>::set(const FBE::map<TKStruct, TValueStruct*>& values, std::pmr::memory_resource* resource) noexcept
+{
+    assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
+    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+        return;
+
+    auto fbe_model = resize(values.size());
+    for (const auto& value : values)
+    {
+        fbe_model.first.set(value.first, resource);
+        fbe_model.first.fbe_shift(fbe_model.first.fbe_size() + fbe_model.second.fbe_size());
+        fbe_model.second.set(value.second, resource);
+        fbe_model.second.fbe_shift(fbe_model.first.fbe_size() + fbe_model.second.fbe_size());
+    }
+}
+
+template <typename TKey, typename TValue, typename TKStruct, typename TValueStruct>
+inline void FieldModelCustomMap<TKey, TValue, TKStruct, TValueStruct>::get(FBE::pmr::map<TKStruct, TValueStruct>& values, std::pmr::memory_resource* resource) const noexcept
+{
+    values.clear();
+
+    size_t fbe_map_size = size();
+    if (fbe_map_size == 0)
+        return;
+
+    auto fbe_model = (*this)[0];
+    for (size_t i = fbe_map_size; i-- > 0;)
+    {
+        TKStruct key = TKStruct();
+        TValueStruct value = TValueStruct();
+        fbe_model.first.get(key, resource);
+        fbe_model.second.get(value, resource);
+        values.emplace(std::move(key), std::move(value));
+        fbe_model.first.fbe_shift(fbe_model.first.fbe_size() + fbe_model.second.fbe_size());
+        fbe_model.second.fbe_shift(fbe_model.first.fbe_size() + fbe_model.second.fbe_size());
+    }
+}
+
+template <typename TKey, typename TValue, typename TKStruct, typename TValueStruct>
+inline void FieldModelCustomMap<TKey, TValue, TKStruct, TValueStruct>::get(FBE::pmr::map<TKStruct, TValueStruct*>& values, std::pmr::memory_resource* resource) const noexcept
+{
+    values.clear();
+
+    size_t fbe_map_size = size();
+    if (fbe_map_size == 0)
+        return;
+
+    auto fbe_model = (*this)[0];
+    for (size_t i = fbe_map_size; i-- > 0;)
+    {
+        TKStruct key = TKStruct();
+        TValueStruct* value = nullptr;
+        fbe_model.first.get(key, resource);
+        fbe_model.second.get(&value, resource);
+        values.emplace(std::move(key), value);
+        fbe_model.first.fbe_shift(fbe_model.first.fbe_size() + fbe_model.second.fbe_size());
+        fbe_model.second.fbe_shift(fbe_model.first.fbe_size() + fbe_model.second.fbe_size());
+    }
+}
+
+template <typename TKey, typename TValue, typename TKStruct, typename TValueStruct>
+inline void FieldModelCustomMap<TKey, TValue, TKStruct, TValueStruct>::set(const FBE::pmr::map<TKStruct, TValueStruct>& values, std::pmr::memory_resource* resource) noexcept
+{
+    assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
+    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+        return;
+
+    auto fbe_model = resize(values.size());
+    for (const auto& value : values)
+    {
+        fbe_model.first.set(value.first, resource);
+        fbe_model.first.fbe_shift(fbe_model.first.fbe_size() + fbe_model.second.fbe_size());
+        fbe_model.second.set(value.second, resource);
+        fbe_model.second.fbe_shift(fbe_model.first.fbe_size() + fbe_model.second.fbe_size());
+    }
+}
+
+template <typename TKey, typename TValue, typename TKStruct, typename TValueStruct>
+inline void FieldModelCustomMap<TKey, TValue, TKStruct, TValueStruct>::set(const FBE::pmr::map<TKStruct, TValueStruct*>& values, std::pmr::memory_resource* resource) noexcept
+{
+    assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
+    if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
+        return;
+
+    auto fbe_model = resize(values.size());
+    for (const auto& value : values)
+    {
+        fbe_model.first.set(value.first, resource);
+        fbe_model.first.fbe_shift(fbe_model.first.fbe_size() + fbe_model.second.fbe_size());
+        fbe_model.second.set(value.second, resource);
+        fbe_model.second.fbe_shift(fbe_model.first.fbe_size() + fbe_model.second.fbe_size());
+    }
+}
+#endif
+)CODE";
       return code;
     }
 };

@@ -26,7 +26,7 @@
 
 namespace arena_pmr {
 using namespace FBE;
-using allocator_type = pmr::polymorphic_allocator<char>;
+using allocator_type = std::pmr::polymorphic_allocator<char>;
 } // namespace arena_pmr
 
 namespace FBE {
@@ -41,14 +41,14 @@ struct Item
 
     ::arena_common_pmr::Optr optr;
     ::arena_common_pmr::Alias alias;
-    pmr::vector<::arena_common_pmr::Expression> expressions;
-    pmr::map<int32_t, ::arena_common_pmr::Alias> aliases_int;
+    std::pmr::vector<::arena_common_pmr::Expression> expressions;
+    FBE::pmr::map<int32_t, ::arena_common_pmr::Alias> aliases_int;
 
     size_t fbe_type() const noexcept { return 1; }
 
     Item();
     explicit Item(allocator_type alloc);
-    Item(const ::arena_common_pmr::Optr& arg_optr, const ::arena_common_pmr::Alias& arg_alias, const pmr::vector<::arena_common_pmr::Expression>& arg_expressions, const pmr::map<int32_t, ::arena_common_pmr::Alias>& arg_aliases_int);
+    Item(const ::arena_common_pmr::Optr& arg_optr, const ::arena_common_pmr::Alias& arg_alias, const std::pmr::vector<::arena_common_pmr::Expression>& arg_expressions, const FBE::pmr::map<int32_t, ::arena_common_pmr::Alias>& arg_aliases_int);
     Item(const Item& other) = default;
     Item(Item&& other) = default;
     ~Item() = default;
