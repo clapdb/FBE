@@ -527,7 +527,7 @@ inline size_t FinalModelVector<T>::set(const FastVec<T>& values) noexcept
     if ((fbe_full_offset + 4) > _buffer.size())
         return 0;
 
-    *((uint32_t*)(_buffer.data() + fbe_full_offset)) = (uint32_t)values.size();
+    unaligned_store<uint32_t>(_buffer.data() + fbe_full_offset, (uint32_t)values.size());
 
     if constexpr (is_fbe_final_primitive_v<T>) {
         // Bulk copy for primitive types
@@ -555,7 +555,7 @@ inline size_t FinalModelVector<T>::set(const std::list<T>& values) noexcept
     if ((fbe_full_offset + 4) > _buffer.size())
         return 0;
 
-    *((uint32_t*)(_buffer.data() + fbe_full_offset)) = (uint32_t)values.size();
+    unaligned_store<uint32_t>(_buffer.data() + fbe_full_offset, (uint32_t)values.size());
 
     size_t size = 4;
     FinalModel<T> fbe_model(_buffer, fbe_offset() + 4);
@@ -576,7 +576,7 @@ inline size_t FinalModelVector<T>::set(const std::set<T>& values) noexcept
     if ((fbe_full_offset + 4) > _buffer.size())
         return 0;
 
-    *((uint32_t*)(_buffer.data() + fbe_full_offset)) = (uint32_t)values.size();
+    unaligned_store<uint32_t>(_buffer.data() + fbe_full_offset, (uint32_t)values.size());
 
     size_t size = 4;
     FinalModel<T> fbe_model(_buffer, fbe_offset() + 4);
@@ -632,7 +632,7 @@ inline size_t FinalModelVector<T>::set(const FBE::set<T>& values) noexcept
     if ((fbe_full_offset + 4) > _buffer.size())
         return 0;
 
-    *((uint32_t*)(_buffer.data() + fbe_full_offset)) = (uint32_t)values.size();
+    unaligned_store<uint32_t>(_buffer.data() + fbe_full_offset, (uint32_t)values.size());
 
     size_t size = 4;
     FinalModel<T> fbe_model(_buffer, fbe_offset() + 4);
@@ -778,7 +778,7 @@ inline size_t FinalModelMap<TKey, TValue>::set(const std::map<TKey, TValue>& val
     if ((fbe_full_offset + 4) > _buffer.size())
         return 0;
 
-    *((uint32_t*)(_buffer.data() + fbe_full_offset)) = (uint32_t)values.size();
+    unaligned_store<uint32_t>(_buffer.data() + fbe_full_offset, (uint32_t)values.size());
 
     size_t size = 4;
     FinalModel<TKey> fbe_model_key(_buffer, fbe_offset() + 4);
@@ -804,7 +804,7 @@ inline size_t FinalModelMap<TKey, TValue>::set(const std::unordered_map<TKey, TV
     if ((fbe_full_offset + 4) > _buffer.size())
         return 0;
 
-    *((uint32_t*)(_buffer.data() + fbe_full_offset)) = (uint32_t)values.size();
+    unaligned_store<uint32_t>(_buffer.data() + fbe_full_offset, (uint32_t)values.size());
 
     size_t size = 4;
     FinalModel<TKey> fbe_model_key(_buffer, fbe_offset() + 4);
@@ -872,7 +872,7 @@ inline size_t FinalModelMap<TKey, TValue>::set(const FBE::map<TKey, TValue>& val
     if ((fbe_full_offset + 4) > _buffer.size())
         return 0;
 
-    *((uint32_t*)(_buffer.data() + fbe_full_offset)) = (uint32_t)values.size();
+    unaligned_store<uint32_t>(_buffer.data() + fbe_full_offset, (uint32_t)values.size());
 
     size_t size = 4;
     FinalModel<TKey> fbe_model_key(_buffer, fbe_offset() + 4);

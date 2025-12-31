@@ -189,11 +189,11 @@ void FieldModel<decimal_t>::set(decimal_t value, std::pmr::memory_resource* reso
             uint64_t pow10 = kPow10TableU64[iPower];
             uint64_t low64 = uint32x32((uint32_t)ulMant, (uint32_t)pow10);
             uint64_t high64 = uint32x32((uint32_t)(ulMant >> 32), (uint32_t)pow10);
-            *((uint32_t*)(_buffer.data() + _buffer.offset() + fbe_offset())) = (uint32_t)low64;
+            unaligned_store<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset(), (uint32_t)low64);
             high64 += low64 >> 32;
-            *((uint32_t*)(_buffer.data() + _buffer.offset() + fbe_offset() + 4)) = (uint32_t)high64;
+            unaligned_store<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset() + 4, (uint32_t)high64);
             high64 >>= 32;
-            *((uint32_t*)(_buffer.data() + _buffer.offset() + fbe_offset() + 8)) = (uint32_t)high64;
+            unaligned_store<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset() + 8, (uint32_t)high64);
         }
         else
         {
@@ -202,8 +202,8 @@ void FieldModel<decimal_t>::set(decimal_t value, std::pmr::memory_resource* reso
             uint64_t low64;
             uint32_t high32;
             uint64x64(ulMant, kPow10TableU64[iPower], low64, high32);
-            *((uint64_t*)(_buffer.data() + _buffer.offset() + fbe_offset())) = low64;
-            *((uint32_t*)(_buffer.data() + _buffer.offset() + fbe_offset() + 8)) = high32;
+            unaligned_store<uint64_t>(_buffer.data() + _buffer.offset() + fbe_offset(), low64);
+            unaligned_store<uint32_t>(_buffer.data() + _buffer.offset() + fbe_offset() + 8, high32);
         }
     }
     else
