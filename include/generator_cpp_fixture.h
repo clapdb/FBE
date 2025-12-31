@@ -3924,13 +3924,16 @@ inline void FieldModelMap<TKey, TValue>::get(std::map<TKey, TValue>& values, std
 
     auto fbe_model = (*this)[0];
     size_t fbe_model_stride = fbe_model.first.fbe_size() + fbe_model.second.fbe_size();
+    // Use hint-based insertion: serialized data is already sorted (from std::map),
+    // so inserting at end() is O(1) amortized instead of O(log n)
+    auto hint = values.end();
     for (size_t i = 0; i < fbe_map_size; ++i)
     {
         TKey key;
         TValue value;
         fbe_model.first.get(key, resource);
         fbe_model.second.get(value, resource);
-        values.emplace(std::move(key), std::move(value));
+        hint = values.emplace_hint(hint, std::move(key), std::move(value));
         fbe_model.first.fbe_shift(fbe_model_stride);
         fbe_model.second.fbe_shift(fbe_model_stride);
     }
@@ -3971,13 +3974,15 @@ inline void FieldModelMap<TKey, TValue>::get(std::pmr::map<TKey, TValue>& values
 
     auto fbe_model = (*this)[0];
     size_t fbe_model_stride = fbe_model.first.fbe_size() + fbe_model.second.fbe_size();
+    // Use hint-based insertion for O(1) amortized insertion
+    auto hint = values.end();
     for (size_t i = 0; i < fbe_map_size; ++i)
     {
         TKey key;
         TValue value;
         fbe_model.first.get(key, resource);
         fbe_model.second.get(value, resource);
-        values.emplace(std::move(key), std::move(value));
+        hint = values.emplace_hint(hint, std::move(key), std::move(value));
         fbe_model.first.fbe_shift(fbe_model_stride);
         fbe_model.second.fbe_shift(fbe_model_stride);
     }
@@ -4019,13 +4024,15 @@ inline void FieldModelMap<TKey, TValue>::get(FBE::map<TKey, TValue>& values, std
 
     auto fbe_model = (*this)[0];
     size_t fbe_model_stride = fbe_model.first.fbe_size() + fbe_model.second.fbe_size();
+    // Use hint-based insertion for O(1) amortized insertion
+    auto hint = values.end();
     for (size_t i = 0; i < fbe_map_size; ++i)
     {
         TKey key;
         TValue value;
         fbe_model.first.get(key, resource);
         fbe_model.second.get(value, resource);
-        values.emplace(std::move(key), std::move(value));
+        hint = values.emplace_hint(hint, std::move(key), std::move(value));
         fbe_model.first.fbe_shift(fbe_model_stride);
         fbe_model.second.fbe_shift(fbe_model_stride);
     }
@@ -4042,13 +4049,15 @@ inline void FieldModelMap<TKey, TValue>::get(FBE::pmr::map<TKey, TValue>& values
 
     auto fbe_model = (*this)[0];
     size_t fbe_model_stride = fbe_model.first.fbe_size() + fbe_model.second.fbe_size();
+    // Use hint-based insertion for O(1) amortized insertion
+    auto hint = values.end();
     for (size_t i = 0; i < fbe_map_size; ++i)
     {
         TKey key;
         TValue value;
         fbe_model.first.get(key, resource);
         fbe_model.second.get(value, resource);
-        values.emplace(std::move(key), std::move(value));
+        hint = values.emplace_hint(hint, std::move(key), std::move(value));
         fbe_model.first.fbe_shift(fbe_model_stride);
         fbe_model.second.fbe_shift(fbe_model_stride);
     }
