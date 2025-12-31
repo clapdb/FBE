@@ -128,10 +128,10 @@ namespace FBE {
 
     // Type trait to detect primitive types that can be bulk-copied with memcpy
     // These types have fixed size and trivial copy semantics in FinalModel
+    // Note: bool is excluded because std::vector<bool> is a special template that doesn't support .data()
     template <typename T>
     struct is_fbe_final_primitive : std::false_type {};
 
-    template <> struct is_fbe_final_primitive<bool> : std::true_type {};
     template <> struct is_fbe_final_primitive<char> : std::true_type {};
     template <> struct is_fbe_final_primitive<wchar_t> : std::true_type {};
     template <> struct is_fbe_final_primitive<int8_t> : std::true_type {};
