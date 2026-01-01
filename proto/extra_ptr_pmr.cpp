@@ -31,18 +31,10 @@ Info::Info(const ArenaString& arg_info, std::unique_ptr<::extra_pmr::Extra> arg_
 {
     extras.reserve(arg_extras.size());
     for (auto& it : arg_extras)
-        #if defined(USING_STD_VECTOR)
         extras.emplace_back(it.release());
-        #else
-        extras.emplace_back(it.release());
-        #endif
     extras1.reserve(arg_extras1.size());
     for (auto& it : arg_extras1)
-        #if defined(USING_STD_VECTOR)
         extras1.emplace_back(it.release());
-        #else
-        extras1.emplace_back(it.release());
-        #endif
 }
 
 Info::Info([[maybe_unused]] Info&& other) noexcept
@@ -184,11 +176,7 @@ Extra::Extra(int64_t arg_num, const ArenaString& arg_data, std::unique_ptr<::ext
 {
     infopv.reserve(arg_infopv.size());
     for (auto& it : arg_infopv)
-        #if defined(USING_STD_VECTOR)
         infopv.emplace_back(it.release());
-        #else
-        infopv.emplace_back(it.release());
-        #endif
     for (auto& it : arg_infopl)
         infopl.emplace_back(it.release());
 }

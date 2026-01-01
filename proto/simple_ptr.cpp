@@ -30,11 +30,7 @@ Simple::Simple(const FBEString& arg_info, std::unique_ptr<::simple::Simple> arg_
 {
     spv.reserve(arg_spv.size());
     for (auto& it : arg_spv)
-        #if defined(USING_STD_VECTOR)
         spv.emplace_back(it.release());
-        #else
-        spv.emplace_back<Safety::Unsafe>(it.release());
-        #endif
     for (auto& it: arg_spm)
         spm.emplace(it.first, it.second.release());
 }

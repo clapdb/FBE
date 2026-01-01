@@ -38,7 +38,7 @@ size_t FinalModel<::osa::Extra>::verify() const noexcept
 size_t FinalModel<::osa::Extra>::verify_fields() const noexcept
 {
     size_t fbe_current_offset = 0;
-    size_t fbe_field_size;
+    [[maybe_unused]] size_t fbe_field_size;
 
     name.fbe_offset(fbe_current_offset);
     fbe_field_size = name.verify();
@@ -52,17 +52,12 @@ size_t FinalModel<::osa::Extra>::verify_fields() const noexcept
         return std::numeric_limits<std::size_t>::max();
     fbe_current_offset += fbe_field_size;
 
-    sex.fbe_offset(fbe_current_offset);
-    fbe_field_size = sex.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
-        return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
-
-    flag.fbe_offset(fbe_current_offset);
-    fbe_field_size = flag.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
-        return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
+    // Batch verify 2 fixed-size fields (8 bytes)
+    {
+        if ((_buffer.offset() + fbe_current_offset + 8) > _buffer.size())
+            return std::numeric_limits<std::size_t>::max();
+        fbe_current_offset += 8;
+    }
 
     return fbe_current_offset;
 }
@@ -79,7 +74,7 @@ size_t FinalModel<::osa::Extra>::get_fields([[maybe_unused]] ::osa::Extra& fbe_v
 {
     size_t fbe_current_offset = 0;
     size_t fbe_current_size = 0;
-    size_t fbe_field_size;
+    [[maybe_unused]] size_t fbe_field_size;
 
     name.fbe_offset(fbe_current_offset);
     fbe_field_size = name.get(fbe_value.name);
@@ -91,15 +86,17 @@ size_t FinalModel<::osa::Extra>::get_fields([[maybe_unused]] ::osa::Extra& fbe_v
     fbe_current_offset += fbe_field_size;
     fbe_current_size += fbe_field_size;
 
-    sex.fbe_offset(fbe_current_offset);
-    fbe_field_size = sex.get(fbe_value.sex);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    flag.fbe_offset(fbe_current_offset);
-    fbe_field_size = flag.get(fbe_value.flag);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
+    // Batch read 2 fixed-size fields (8 bytes)
+    {
+        size_t fbe_batch_offset = _buffer.offset() + fbe_current_offset;
+        if ((fbe_batch_offset + 8) > _buffer.size())
+            return 0;
+        const uint8_t* fbe_batch_ptr = _buffer.data() + fbe_batch_offset;
+        fbe_value.sex = static_cast<decltype(fbe_value.sex)>(unaligned_load<int32_t>(fbe_batch_ptr + 0));
+        fbe_value.flag = static_cast<decltype(fbe_value.flag)>(unaligned_load<int32_t>(fbe_batch_ptr + 4));
+        fbe_current_offset += 8;
+        fbe_current_size += 8;
+    }
 
     return fbe_current_size;
 }
@@ -116,7 +113,7 @@ size_t FinalModel<::osa::Extra>::set_fields([[maybe_unused]] const ::osa::Extra&
 {
     size_t fbe_current_offset = 0;
     size_t fbe_current_size = 0;
-    size_t fbe_field_size;
+    [[maybe_unused]] size_t fbe_field_size;
 
     name.fbe_offset(fbe_current_offset);
     fbe_field_size = name.set(fbe_value.name);
@@ -128,15 +125,18 @@ size_t FinalModel<::osa::Extra>::set_fields([[maybe_unused]] const ::osa::Extra&
     fbe_current_offset += fbe_field_size;
     fbe_current_size += fbe_field_size;
 
-    sex.fbe_offset(fbe_current_offset);
-    fbe_field_size = sex.set(fbe_value.sex);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    flag.fbe_offset(fbe_current_offset);
-    fbe_field_size = flag.set(fbe_value.flag);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
+    // Batch write 2 fixed-size fields (8 bytes)
+    {
+        size_t fbe_batch_offset = _buffer.offset() + fbe_current_offset;
+        assert(((fbe_batch_offset + 8) <= _buffer.size()) && "Model is broken!");
+        if ((fbe_batch_offset + 8) > _buffer.size())
+            return 0;
+        uint8_t* fbe_batch_ptr = _buffer.data() + fbe_batch_offset;
+        unaligned_store<int32_t>(fbe_batch_ptr + 0, static_cast<int32_t>(fbe_value.sex));
+        unaligned_store<int32_t>(fbe_batch_ptr + 4, static_cast<int32_t>(fbe_value.flag));
+        fbe_current_offset += 8;
+        fbe_current_size += 8;
+    }
 
     return fbe_current_size;
 }
@@ -222,7 +222,7 @@ size_t FinalModel<::osa::Simple>::verify() const noexcept
 size_t FinalModel<::osa::Simple>::verify_fields() const noexcept
 {
     size_t fbe_current_offset = 0;
-    size_t fbe_field_size;
+    [[maybe_unused]] size_t fbe_field_size;
 
     name.fbe_offset(fbe_current_offset);
     fbe_field_size = name.verify();
@@ -230,11 +230,10 @@ size_t FinalModel<::osa::Simple>::verify_fields() const noexcept
         return std::numeric_limits<std::size_t>::max();
     fbe_current_offset += fbe_field_size;
 
-    depth.fbe_offset(fbe_current_offset);
-    fbe_field_size = depth.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
+    // Inline verify of int32 field depth (4 bytes)
+    if ((_buffer.offset() + fbe_current_offset + 4) > _buffer.size())
         return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
+    fbe_current_offset += 4;
 
     sa.fbe_offset(fbe_current_offset);
     fbe_field_size = sa.verify();
@@ -242,11 +241,10 @@ size_t FinalModel<::osa::Simple>::verify_fields() const noexcept
         return std::numeric_limits<std::size_t>::max();
     fbe_current_offset += fbe_field_size;
 
-    sex.fbe_offset(fbe_current_offset);
-    fbe_field_size = sex.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
+    // Inline verify of Sex field sex (4 bytes)
+    if ((_buffer.offset() + fbe_current_offset + 4) > _buffer.size())
         return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
+    fbe_current_offset += 4;
 
     return fbe_current_offset;
 }
@@ -263,27 +261,37 @@ size_t FinalModel<::osa::Simple>::get_fields([[maybe_unused]] ::osa::Simple& fbe
 {
     size_t fbe_current_offset = 0;
     size_t fbe_current_size = 0;
-    size_t fbe_field_size;
+    [[maybe_unused]] size_t fbe_field_size;
 
     name.fbe_offset(fbe_current_offset);
     fbe_field_size = name.get(fbe_value.name);
     fbe_current_offset += fbe_field_size;
     fbe_current_size += fbe_field_size;
 
-    depth.fbe_offset(fbe_current_offset);
-    fbe_field_size = depth.get(fbe_value.depth);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
+    // Inline read of int32 field depth (4 bytes)
+    {
+        size_t fbe_field_offset = _buffer.offset() + fbe_current_offset;
+        if ((fbe_field_offset + 4) > _buffer.size())
+            return 0;
+        fbe_value.depth = unaligned_load<int32_t>(_buffer.data() + fbe_field_offset);
+        fbe_current_offset += 4;
+        fbe_current_size += 4;
+    }
 
     sa.fbe_offset(fbe_current_offset);
     fbe_field_size = sa.get(fbe_value.sa);
     fbe_current_offset += fbe_field_size;
     fbe_current_size += fbe_field_size;
 
-    sex.fbe_offset(fbe_current_offset);
-    fbe_field_size = sex.get(fbe_value.sex);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
+    // Inline read of Sex field sex (4 bytes)
+    {
+        size_t fbe_field_offset = _buffer.offset() + fbe_current_offset;
+        if ((fbe_field_offset + 4) > _buffer.size())
+            return 0;
+        fbe_value.sex = static_cast<decltype(fbe_value.sex)>(unaligned_load<int32_t>(_buffer.data() + fbe_field_offset));
+        fbe_current_offset += 4;
+        fbe_current_size += 4;
+    }
 
     return fbe_current_size;
 }
@@ -300,27 +308,39 @@ size_t FinalModel<::osa::Simple>::set_fields([[maybe_unused]] const ::osa::Simpl
 {
     size_t fbe_current_offset = 0;
     size_t fbe_current_size = 0;
-    size_t fbe_field_size;
+    [[maybe_unused]] size_t fbe_field_size;
 
     name.fbe_offset(fbe_current_offset);
     fbe_field_size = name.set(fbe_value.name);
     fbe_current_offset += fbe_field_size;
     fbe_current_size += fbe_field_size;
 
-    depth.fbe_offset(fbe_current_offset);
-    fbe_field_size = depth.set(fbe_value.depth);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
+    // Inline write of int32 field depth (4 bytes)
+    {
+        size_t fbe_field_offset = _buffer.offset() + fbe_current_offset;
+        assert(((fbe_field_offset + 4) <= _buffer.size()) && "Model is broken!");
+        if ((fbe_field_offset + 4) > _buffer.size())
+            return 0;
+        unaligned_store<int32_t>(_buffer.data() + fbe_field_offset, fbe_value.depth);
+        fbe_current_offset += 4;
+        fbe_current_size += 4;
+    }
 
     sa.fbe_offset(fbe_current_offset);
     fbe_field_size = sa.set(fbe_value.sa);
     fbe_current_offset += fbe_field_size;
     fbe_current_size += fbe_field_size;
 
-    sex.fbe_offset(fbe_current_offset);
-    fbe_field_size = sex.set(fbe_value.sex);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
+    // Inline write of Sex field sex (4 bytes)
+    {
+        size_t fbe_field_offset = _buffer.offset() + fbe_current_offset;
+        assert(((fbe_field_offset + 4) <= _buffer.size()) && "Model is broken!");
+        if ((fbe_field_offset + 4) > _buffer.size())
+            return 0;
+        unaligned_store<int32_t>(_buffer.data() + fbe_field_offset, static_cast<int32_t>(fbe_value.sex));
+        fbe_current_offset += 4;
+        fbe_current_size += 4;
+    }
 
     return fbe_current_size;
 }

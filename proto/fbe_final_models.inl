@@ -271,7 +271,7 @@ inline size_t FinalModelArray<T, N>::get(FastVec<T>& values) const noexcept
             #if defined(USING_STD_VECTOR)
             values.emplace_back(std::move(value));
             #else
-            values.template emplace_back<Safety::Unsafe>(std::move(value));
+            values.template emplace_back(std::move(value));
             #endif
             fbe_model.fbe_shift(offset);
             size += offset;
@@ -450,6 +450,20 @@ inline size_t FinalModelVector<T>::get(FastVec<T>& values) const noexcept
         values.resize(fbe_vector_size);
         memcpy(values.data(), _buffer.data() + fbe_full_offset + 4, data_size);
         return 4 + data_size;
+    } else if constexpr (std::is_same_v<T, bool>) {
+        // Special case for vector<bool> - uses proxy objects, can't pass by reference
+        values.resize(fbe_vector_size);
+        size_t size = 4;
+        FinalModel<T> fbe_model(_buffer, fbe_offset() + 4);
+        for (size_t i = 0; i < fbe_vector_size; ++i)
+        {
+            T temp{};
+            size_t offset = fbe_model.get(temp);
+            values[i] = temp;
+            fbe_model.fbe_shift(offset);
+            size += offset;
+        }
+        return size;
     } else {
         // Pre-allocate and deserialize directly into elements
         values.resize(fbe_vector_size);
@@ -508,11 +522,13 @@ inline size_t FinalModelVector<T>::get(std::set<T>& values) const noexcept
 
     size_t size = 4;
     FinalModel<T> fbe_model(_buffer, fbe_offset() + 4);
+    // Use hint-based insertion for O(1) amortized insertion (data is already sorted)
+    auto hint = values.end();
     for (size_t i = 0; i < fbe_vector_size; ++i)
     {
         T value{};
         size_t offset = fbe_model.get(value);
-        values.emplace(std::move(value));
+        hint = values.emplace_hint(hint, std::move(value));
         fbe_model.fbe_shift(offset);
         size += offset;
     }
@@ -613,11 +629,13 @@ inline size_t FinalModelVector<T>::get(FBE::set<T>& values) const noexcept
 
     size_t size = 4;
     FinalModel<T> fbe_model(_buffer, fbe_offset() + 4);
+    // Use hint-based insertion for O(1) amortized insertion (data is already sorted)
+    auto hint = values.end();
     for (size_t i = 0; i < fbe_vector_size; ++i)
     {
         T value = T();
         size_t offset = fbe_model.get(value);
-        values.emplace(std::move(value));
+        hint = values.emplace_hint(hint, std::move(value));
         fbe_model.fbe_shift(offset);
         size += offset;
     }

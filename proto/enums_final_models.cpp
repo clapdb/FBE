@@ -162,403 +162,14 @@ size_t FinalModel<::enums::Enums>::verify() const noexcept
 size_t FinalModel<::enums::Enums>::verify_fields() const noexcept
 {
     size_t fbe_current_offset = 0;
-    size_t fbe_field_size;
-
-    byte0.fbe_offset(fbe_current_offset);
-    fbe_field_size = byte0.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
-        return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
-
-    byte1.fbe_offset(fbe_current_offset);
-    fbe_field_size = byte1.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
-        return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
-
-    byte2.fbe_offset(fbe_current_offset);
-    fbe_field_size = byte2.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
-        return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
-
-    byte3.fbe_offset(fbe_current_offset);
-    fbe_field_size = byte3.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
-        return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
-
-    byte4.fbe_offset(fbe_current_offset);
-    fbe_field_size = byte4.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
-        return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
-
-    byte5.fbe_offset(fbe_current_offset);
-    fbe_field_size = byte5.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
-        return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
-
-    char0.fbe_offset(fbe_current_offset);
-    fbe_field_size = char0.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
-        return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
-
-    char1.fbe_offset(fbe_current_offset);
-    fbe_field_size = char1.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
-        return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
-
-    char2.fbe_offset(fbe_current_offset);
-    fbe_field_size = char2.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
-        return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
-
-    char3.fbe_offset(fbe_current_offset);
-    fbe_field_size = char3.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
-        return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
-
-    char4.fbe_offset(fbe_current_offset);
-    fbe_field_size = char4.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
-        return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
-
-    char5.fbe_offset(fbe_current_offset);
-    fbe_field_size = char5.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
-        return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
-
-    wchar0.fbe_offset(fbe_current_offset);
-    fbe_field_size = wchar0.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
-        return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
-
-    wchar1.fbe_offset(fbe_current_offset);
-    fbe_field_size = wchar1.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
-        return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
-
-    wchar2.fbe_offset(fbe_current_offset);
-    fbe_field_size = wchar2.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
-        return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
-
-    wchar3.fbe_offset(fbe_current_offset);
-    fbe_field_size = wchar3.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
-        return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
-
-    wchar4.fbe_offset(fbe_current_offset);
-    fbe_field_size = wchar4.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
-        return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
-
-    wchar5.fbe_offset(fbe_current_offset);
-    fbe_field_size = wchar5.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
-        return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
-
-    int8b0.fbe_offset(fbe_current_offset);
-    fbe_field_size = int8b0.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
-        return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
-
-    int8b1.fbe_offset(fbe_current_offset);
-    fbe_field_size = int8b1.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
-        return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
-
-    int8b2.fbe_offset(fbe_current_offset);
-    fbe_field_size = int8b2.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
-        return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
-
-    int8b3.fbe_offset(fbe_current_offset);
-    fbe_field_size = int8b3.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
-        return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
-
-    int8b4.fbe_offset(fbe_current_offset);
-    fbe_field_size = int8b4.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
-        return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
-
-    int8b5.fbe_offset(fbe_current_offset);
-    fbe_field_size = int8b5.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
-        return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
-
-    uint8b0.fbe_offset(fbe_current_offset);
-    fbe_field_size = uint8b0.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
-        return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
-
-    uint8b1.fbe_offset(fbe_current_offset);
-    fbe_field_size = uint8b1.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
-        return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
-
-    uint8b2.fbe_offset(fbe_current_offset);
-    fbe_field_size = uint8b2.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
-        return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
-
-    uint8b3.fbe_offset(fbe_current_offset);
-    fbe_field_size = uint8b3.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
-        return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
-
-    uint8b4.fbe_offset(fbe_current_offset);
-    fbe_field_size = uint8b4.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
-        return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
-
-    uint8b5.fbe_offset(fbe_current_offset);
-    fbe_field_size = uint8b5.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
-        return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
-
-    int16b0.fbe_offset(fbe_current_offset);
-    fbe_field_size = int16b0.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
-        return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
-
-    int16b1.fbe_offset(fbe_current_offset);
-    fbe_field_size = int16b1.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
-        return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
-
-    int16b2.fbe_offset(fbe_current_offset);
-    fbe_field_size = int16b2.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
-        return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
-
-    int16b3.fbe_offset(fbe_current_offset);
-    fbe_field_size = int16b3.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
-        return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
-
-    int16b4.fbe_offset(fbe_current_offset);
-    fbe_field_size = int16b4.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
-        return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
-
-    int16b5.fbe_offset(fbe_current_offset);
-    fbe_field_size = int16b5.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
-        return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
-
-    uint16b0.fbe_offset(fbe_current_offset);
-    fbe_field_size = uint16b0.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
-        return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
-
-    uint16b1.fbe_offset(fbe_current_offset);
-    fbe_field_size = uint16b1.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
-        return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
-
-    uint16b2.fbe_offset(fbe_current_offset);
-    fbe_field_size = uint16b2.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
-        return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
-
-    uint16b3.fbe_offset(fbe_current_offset);
-    fbe_field_size = uint16b3.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
-        return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
-
-    uint16b4.fbe_offset(fbe_current_offset);
-    fbe_field_size = uint16b4.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
-        return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
-
-    uint16b5.fbe_offset(fbe_current_offset);
-    fbe_field_size = uint16b5.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
-        return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
-
-    int32b0.fbe_offset(fbe_current_offset);
-    fbe_field_size = int32b0.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
-        return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
-
-    int32b1.fbe_offset(fbe_current_offset);
-    fbe_field_size = int32b1.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
-        return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
-
-    int32b2.fbe_offset(fbe_current_offset);
-    fbe_field_size = int32b2.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
-        return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
-
-    int32b3.fbe_offset(fbe_current_offset);
-    fbe_field_size = int32b3.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
-        return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
-
-    int32b4.fbe_offset(fbe_current_offset);
-    fbe_field_size = int32b4.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
-        return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
-
-    int32b5.fbe_offset(fbe_current_offset);
-    fbe_field_size = int32b5.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
-        return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
-
-    uint32b0.fbe_offset(fbe_current_offset);
-    fbe_field_size = uint32b0.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
-        return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
-
-    uint32b1.fbe_offset(fbe_current_offset);
-    fbe_field_size = uint32b1.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
-        return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
-
-    uint32b2.fbe_offset(fbe_current_offset);
-    fbe_field_size = uint32b2.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
-        return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
-
-    uint32b3.fbe_offset(fbe_current_offset);
-    fbe_field_size = uint32b3.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
-        return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
-
-    uint32b4.fbe_offset(fbe_current_offset);
-    fbe_field_size = uint32b4.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
-        return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
-
-    uint32b5.fbe_offset(fbe_current_offset);
-    fbe_field_size = uint32b5.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
-        return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
-
-    int64b0.fbe_offset(fbe_current_offset);
-    fbe_field_size = int64b0.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
-        return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
-
-    int64b1.fbe_offset(fbe_current_offset);
-    fbe_field_size = int64b1.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
-        return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
-
-    int64b2.fbe_offset(fbe_current_offset);
-    fbe_field_size = int64b2.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
-        return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
-
-    int64b3.fbe_offset(fbe_current_offset);
-    fbe_field_size = int64b3.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
-        return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
-
-    int64b4.fbe_offset(fbe_current_offset);
-    fbe_field_size = int64b4.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
-        return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
-
-    int64b5.fbe_offset(fbe_current_offset);
-    fbe_field_size = int64b5.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
-        return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
-
-    uint64b0.fbe_offset(fbe_current_offset);
-    fbe_field_size = uint64b0.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
-        return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
-
-    uint64b1.fbe_offset(fbe_current_offset);
-    fbe_field_size = uint64b1.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
-        return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
-
-    uint64b2.fbe_offset(fbe_current_offset);
-    fbe_field_size = uint64b2.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
-        return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
-
-    uint64b3.fbe_offset(fbe_current_offset);
-    fbe_field_size = uint64b3.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
-        return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
-
-    uint64b4.fbe_offset(fbe_current_offset);
-    fbe_field_size = uint64b4.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
-        return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
-
-    uint64b5.fbe_offset(fbe_current_offset);
-    fbe_field_size = uint64b5.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
-        return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
+    [[maybe_unused]] size_t fbe_field_size;
+
+    // Batch verify 66 fixed-size fields (216 bytes)
+    {
+        if ((_buffer.offset() + fbe_current_offset + 216) > _buffer.size())
+            return std::numeric_limits<std::size_t>::max();
+        fbe_current_offset += 216;
+    }
 
     return fbe_current_offset;
 }
@@ -573,341 +184,78 @@ size_t FinalModel<::enums::Enums>::get(::enums::Enums& fbe_value) const noexcept
 
 size_t FinalModel<::enums::Enums>::get_fields([[maybe_unused]] ::enums::Enums& fbe_value) const noexcept
 {
-    size_t fbe_current_offset = 0;
-    size_t fbe_current_size = 0;
-    size_t fbe_field_size;
-
-    byte0.fbe_offset(fbe_current_offset);
-    fbe_field_size = byte0.get(fbe_value.byte0);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    byte1.fbe_offset(fbe_current_offset);
-    fbe_field_size = byte1.get(fbe_value.byte1);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    byte2.fbe_offset(fbe_current_offset);
-    fbe_field_size = byte2.get(fbe_value.byte2);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    byte3.fbe_offset(fbe_current_offset);
-    fbe_field_size = byte3.get(fbe_value.byte3);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    byte4.fbe_offset(fbe_current_offset);
-    fbe_field_size = byte4.get(fbe_value.byte4);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    byte5.fbe_offset(fbe_current_offset);
-    fbe_field_size = byte5.get(fbe_value.byte5);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    char0.fbe_offset(fbe_current_offset);
-    fbe_field_size = char0.get(fbe_value.char0);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    char1.fbe_offset(fbe_current_offset);
-    fbe_field_size = char1.get(fbe_value.char1);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    char2.fbe_offset(fbe_current_offset);
-    fbe_field_size = char2.get(fbe_value.char2);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    char3.fbe_offset(fbe_current_offset);
-    fbe_field_size = char3.get(fbe_value.char3);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    char4.fbe_offset(fbe_current_offset);
-    fbe_field_size = char4.get(fbe_value.char4);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    char5.fbe_offset(fbe_current_offset);
-    fbe_field_size = char5.get(fbe_value.char5);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    wchar0.fbe_offset(fbe_current_offset);
-    fbe_field_size = wchar0.get(fbe_value.wchar0);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    wchar1.fbe_offset(fbe_current_offset);
-    fbe_field_size = wchar1.get(fbe_value.wchar1);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    wchar2.fbe_offset(fbe_current_offset);
-    fbe_field_size = wchar2.get(fbe_value.wchar2);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    wchar3.fbe_offset(fbe_current_offset);
-    fbe_field_size = wchar3.get(fbe_value.wchar3);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    wchar4.fbe_offset(fbe_current_offset);
-    fbe_field_size = wchar4.get(fbe_value.wchar4);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    wchar5.fbe_offset(fbe_current_offset);
-    fbe_field_size = wchar5.get(fbe_value.wchar5);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    int8b0.fbe_offset(fbe_current_offset);
-    fbe_field_size = int8b0.get(fbe_value.int8b0);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    int8b1.fbe_offset(fbe_current_offset);
-    fbe_field_size = int8b1.get(fbe_value.int8b1);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    int8b2.fbe_offset(fbe_current_offset);
-    fbe_field_size = int8b2.get(fbe_value.int8b2);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    int8b3.fbe_offset(fbe_current_offset);
-    fbe_field_size = int8b3.get(fbe_value.int8b3);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    int8b4.fbe_offset(fbe_current_offset);
-    fbe_field_size = int8b4.get(fbe_value.int8b4);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    int8b5.fbe_offset(fbe_current_offset);
-    fbe_field_size = int8b5.get(fbe_value.int8b5);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    uint8b0.fbe_offset(fbe_current_offset);
-    fbe_field_size = uint8b0.get(fbe_value.uint8b0);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    uint8b1.fbe_offset(fbe_current_offset);
-    fbe_field_size = uint8b1.get(fbe_value.uint8b1);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    uint8b2.fbe_offset(fbe_current_offset);
-    fbe_field_size = uint8b2.get(fbe_value.uint8b2);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    uint8b3.fbe_offset(fbe_current_offset);
-    fbe_field_size = uint8b3.get(fbe_value.uint8b3);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    uint8b4.fbe_offset(fbe_current_offset);
-    fbe_field_size = uint8b4.get(fbe_value.uint8b4);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    uint8b5.fbe_offset(fbe_current_offset);
-    fbe_field_size = uint8b5.get(fbe_value.uint8b5);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    int16b0.fbe_offset(fbe_current_offset);
-    fbe_field_size = int16b0.get(fbe_value.int16b0);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    int16b1.fbe_offset(fbe_current_offset);
-    fbe_field_size = int16b1.get(fbe_value.int16b1);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    int16b2.fbe_offset(fbe_current_offset);
-    fbe_field_size = int16b2.get(fbe_value.int16b2);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    int16b3.fbe_offset(fbe_current_offset);
-    fbe_field_size = int16b3.get(fbe_value.int16b3);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    int16b4.fbe_offset(fbe_current_offset);
-    fbe_field_size = int16b4.get(fbe_value.int16b4);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    int16b5.fbe_offset(fbe_current_offset);
-    fbe_field_size = int16b5.get(fbe_value.int16b5);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    uint16b0.fbe_offset(fbe_current_offset);
-    fbe_field_size = uint16b0.get(fbe_value.uint16b0);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    uint16b1.fbe_offset(fbe_current_offset);
-    fbe_field_size = uint16b1.get(fbe_value.uint16b1);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    uint16b2.fbe_offset(fbe_current_offset);
-    fbe_field_size = uint16b2.get(fbe_value.uint16b2);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    uint16b3.fbe_offset(fbe_current_offset);
-    fbe_field_size = uint16b3.get(fbe_value.uint16b3);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    uint16b4.fbe_offset(fbe_current_offset);
-    fbe_field_size = uint16b4.get(fbe_value.uint16b4);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    uint16b5.fbe_offset(fbe_current_offset);
-    fbe_field_size = uint16b5.get(fbe_value.uint16b5);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    int32b0.fbe_offset(fbe_current_offset);
-    fbe_field_size = int32b0.get(fbe_value.int32b0);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    int32b1.fbe_offset(fbe_current_offset);
-    fbe_field_size = int32b1.get(fbe_value.int32b1);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    int32b2.fbe_offset(fbe_current_offset);
-    fbe_field_size = int32b2.get(fbe_value.int32b2);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    int32b3.fbe_offset(fbe_current_offset);
-    fbe_field_size = int32b3.get(fbe_value.int32b3);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    int32b4.fbe_offset(fbe_current_offset);
-    fbe_field_size = int32b4.get(fbe_value.int32b4);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    int32b5.fbe_offset(fbe_current_offset);
-    fbe_field_size = int32b5.get(fbe_value.int32b5);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    uint32b0.fbe_offset(fbe_current_offset);
-    fbe_field_size = uint32b0.get(fbe_value.uint32b0);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    uint32b1.fbe_offset(fbe_current_offset);
-    fbe_field_size = uint32b1.get(fbe_value.uint32b1);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    uint32b2.fbe_offset(fbe_current_offset);
-    fbe_field_size = uint32b2.get(fbe_value.uint32b2);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    uint32b3.fbe_offset(fbe_current_offset);
-    fbe_field_size = uint32b3.get(fbe_value.uint32b3);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    uint32b4.fbe_offset(fbe_current_offset);
-    fbe_field_size = uint32b4.get(fbe_value.uint32b4);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    uint32b5.fbe_offset(fbe_current_offset);
-    fbe_field_size = uint32b5.get(fbe_value.uint32b5);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    int64b0.fbe_offset(fbe_current_offset);
-    fbe_field_size = int64b0.get(fbe_value.int64b0);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    int64b1.fbe_offset(fbe_current_offset);
-    fbe_field_size = int64b1.get(fbe_value.int64b1);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    int64b2.fbe_offset(fbe_current_offset);
-    fbe_field_size = int64b2.get(fbe_value.int64b2);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    int64b3.fbe_offset(fbe_current_offset);
-    fbe_field_size = int64b3.get(fbe_value.int64b3);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    int64b4.fbe_offset(fbe_current_offset);
-    fbe_field_size = int64b4.get(fbe_value.int64b4);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    int64b5.fbe_offset(fbe_current_offset);
-    fbe_field_size = int64b5.get(fbe_value.int64b5);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    uint64b0.fbe_offset(fbe_current_offset);
-    fbe_field_size = uint64b0.get(fbe_value.uint64b0);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    uint64b1.fbe_offset(fbe_current_offset);
-    fbe_field_size = uint64b1.get(fbe_value.uint64b1);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    uint64b2.fbe_offset(fbe_current_offset);
-    fbe_field_size = uint64b2.get(fbe_value.uint64b2);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    uint64b3.fbe_offset(fbe_current_offset);
-    fbe_field_size = uint64b3.get(fbe_value.uint64b3);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    uint64b4.fbe_offset(fbe_current_offset);
-    fbe_field_size = uint64b4.get(fbe_value.uint64b4);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    uint64b5.fbe_offset(fbe_current_offset);
-    fbe_field_size = uint64b5.get(fbe_value.uint64b5);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    return fbe_current_size;
+    // All fields are fixed-size - optimized batch read (216 bytes)
+    size_t fbe_base_offset = _buffer.offset();
+    if ((fbe_base_offset + 216) > _buffer.size())
+        return 0;
+    const uint8_t* fbe_data = _buffer.data() + fbe_base_offset;
+    fbe_value.byte0 = static_cast<decltype(fbe_value.byte0)>(unaligned_load<uint8_t>(fbe_data + 0));
+    fbe_value.byte1 = static_cast<decltype(fbe_value.byte1)>(unaligned_load<uint8_t>(fbe_data + 1));
+    fbe_value.byte2 = static_cast<decltype(fbe_value.byte2)>(unaligned_load<uint8_t>(fbe_data + 2));
+    fbe_value.byte3 = static_cast<decltype(fbe_value.byte3)>(unaligned_load<uint8_t>(fbe_data + 3));
+    fbe_value.byte4 = static_cast<decltype(fbe_value.byte4)>(unaligned_load<uint8_t>(fbe_data + 4));
+    fbe_value.byte5 = static_cast<decltype(fbe_value.byte5)>(unaligned_load<uint8_t>(fbe_data + 5));
+    fbe_value.char0 = static_cast<decltype(fbe_value.char0)>(unaligned_load<uint8_t>(fbe_data + 6));
+    fbe_value.char1 = static_cast<decltype(fbe_value.char1)>(unaligned_load<uint8_t>(fbe_data + 7));
+    fbe_value.char2 = static_cast<decltype(fbe_value.char2)>(unaligned_load<uint8_t>(fbe_data + 8));
+    fbe_value.char3 = static_cast<decltype(fbe_value.char3)>(unaligned_load<uint8_t>(fbe_data + 9));
+    fbe_value.char4 = static_cast<decltype(fbe_value.char4)>(unaligned_load<uint8_t>(fbe_data + 10));
+    fbe_value.char5 = static_cast<decltype(fbe_value.char5)>(unaligned_load<uint8_t>(fbe_data + 11));
+    fbe_value.wchar0 = static_cast<decltype(fbe_value.wchar0)>(unaligned_load<uint32_t>(fbe_data + 12));
+    fbe_value.wchar1 = static_cast<decltype(fbe_value.wchar1)>(unaligned_load<uint32_t>(fbe_data + 16));
+    fbe_value.wchar2 = static_cast<decltype(fbe_value.wchar2)>(unaligned_load<uint32_t>(fbe_data + 20));
+    fbe_value.wchar3 = static_cast<decltype(fbe_value.wchar3)>(unaligned_load<uint32_t>(fbe_data + 24));
+    fbe_value.wchar4 = static_cast<decltype(fbe_value.wchar4)>(unaligned_load<uint32_t>(fbe_data + 28));
+    fbe_value.wchar5 = static_cast<decltype(fbe_value.wchar5)>(unaligned_load<uint32_t>(fbe_data + 32));
+    fbe_value.int8b0 = static_cast<decltype(fbe_value.int8b0)>(unaligned_load<int8_t>(fbe_data + 36));
+    fbe_value.int8b1 = static_cast<decltype(fbe_value.int8b1)>(unaligned_load<int8_t>(fbe_data + 37));
+    fbe_value.int8b2 = static_cast<decltype(fbe_value.int8b2)>(unaligned_load<int8_t>(fbe_data + 38));
+    fbe_value.int8b3 = static_cast<decltype(fbe_value.int8b3)>(unaligned_load<int8_t>(fbe_data + 39));
+    fbe_value.int8b4 = static_cast<decltype(fbe_value.int8b4)>(unaligned_load<int8_t>(fbe_data + 40));
+    fbe_value.int8b5 = static_cast<decltype(fbe_value.int8b5)>(unaligned_load<int8_t>(fbe_data + 41));
+    fbe_value.uint8b0 = static_cast<decltype(fbe_value.uint8b0)>(unaligned_load<uint8_t>(fbe_data + 42));
+    fbe_value.uint8b1 = static_cast<decltype(fbe_value.uint8b1)>(unaligned_load<uint8_t>(fbe_data + 43));
+    fbe_value.uint8b2 = static_cast<decltype(fbe_value.uint8b2)>(unaligned_load<uint8_t>(fbe_data + 44));
+    fbe_value.uint8b3 = static_cast<decltype(fbe_value.uint8b3)>(unaligned_load<uint8_t>(fbe_data + 45));
+    fbe_value.uint8b4 = static_cast<decltype(fbe_value.uint8b4)>(unaligned_load<uint8_t>(fbe_data + 46));
+    fbe_value.uint8b5 = static_cast<decltype(fbe_value.uint8b5)>(unaligned_load<uint8_t>(fbe_data + 47));
+    fbe_value.int16b0 = static_cast<decltype(fbe_value.int16b0)>(unaligned_load<int16_t>(fbe_data + 48));
+    fbe_value.int16b1 = static_cast<decltype(fbe_value.int16b1)>(unaligned_load<int16_t>(fbe_data + 50));
+    fbe_value.int16b2 = static_cast<decltype(fbe_value.int16b2)>(unaligned_load<int16_t>(fbe_data + 52));
+    fbe_value.int16b3 = static_cast<decltype(fbe_value.int16b3)>(unaligned_load<int16_t>(fbe_data + 54));
+    fbe_value.int16b4 = static_cast<decltype(fbe_value.int16b4)>(unaligned_load<int16_t>(fbe_data + 56));
+    fbe_value.int16b5 = static_cast<decltype(fbe_value.int16b5)>(unaligned_load<int16_t>(fbe_data + 58));
+    fbe_value.uint16b0 = static_cast<decltype(fbe_value.uint16b0)>(unaligned_load<uint16_t>(fbe_data + 60));
+    fbe_value.uint16b1 = static_cast<decltype(fbe_value.uint16b1)>(unaligned_load<uint16_t>(fbe_data + 62));
+    fbe_value.uint16b2 = static_cast<decltype(fbe_value.uint16b2)>(unaligned_load<uint16_t>(fbe_data + 64));
+    fbe_value.uint16b3 = static_cast<decltype(fbe_value.uint16b3)>(unaligned_load<uint16_t>(fbe_data + 66));
+    fbe_value.uint16b4 = static_cast<decltype(fbe_value.uint16b4)>(unaligned_load<uint16_t>(fbe_data + 68));
+    fbe_value.uint16b5 = static_cast<decltype(fbe_value.uint16b5)>(unaligned_load<uint16_t>(fbe_data + 70));
+    fbe_value.int32b0 = static_cast<decltype(fbe_value.int32b0)>(unaligned_load<int32_t>(fbe_data + 72));
+    fbe_value.int32b1 = static_cast<decltype(fbe_value.int32b1)>(unaligned_load<int32_t>(fbe_data + 76));
+    fbe_value.int32b2 = static_cast<decltype(fbe_value.int32b2)>(unaligned_load<int32_t>(fbe_data + 80));
+    fbe_value.int32b3 = static_cast<decltype(fbe_value.int32b3)>(unaligned_load<int32_t>(fbe_data + 84));
+    fbe_value.int32b4 = static_cast<decltype(fbe_value.int32b4)>(unaligned_load<int32_t>(fbe_data + 88));
+    fbe_value.int32b5 = static_cast<decltype(fbe_value.int32b5)>(unaligned_load<int32_t>(fbe_data + 92));
+    fbe_value.uint32b0 = static_cast<decltype(fbe_value.uint32b0)>(unaligned_load<uint32_t>(fbe_data + 96));
+    fbe_value.uint32b1 = static_cast<decltype(fbe_value.uint32b1)>(unaligned_load<uint32_t>(fbe_data + 100));
+    fbe_value.uint32b2 = static_cast<decltype(fbe_value.uint32b2)>(unaligned_load<uint32_t>(fbe_data + 104));
+    fbe_value.uint32b3 = static_cast<decltype(fbe_value.uint32b3)>(unaligned_load<uint32_t>(fbe_data + 108));
+    fbe_value.uint32b4 = static_cast<decltype(fbe_value.uint32b4)>(unaligned_load<uint32_t>(fbe_data + 112));
+    fbe_value.uint32b5 = static_cast<decltype(fbe_value.uint32b5)>(unaligned_load<uint32_t>(fbe_data + 116));
+    fbe_value.int64b0 = static_cast<decltype(fbe_value.int64b0)>(unaligned_load<int64_t>(fbe_data + 120));
+    fbe_value.int64b1 = static_cast<decltype(fbe_value.int64b1)>(unaligned_load<int64_t>(fbe_data + 128));
+    fbe_value.int64b2 = static_cast<decltype(fbe_value.int64b2)>(unaligned_load<int64_t>(fbe_data + 136));
+    fbe_value.int64b3 = static_cast<decltype(fbe_value.int64b3)>(unaligned_load<int64_t>(fbe_data + 144));
+    fbe_value.int64b4 = static_cast<decltype(fbe_value.int64b4)>(unaligned_load<int64_t>(fbe_data + 152));
+    fbe_value.int64b5 = static_cast<decltype(fbe_value.int64b5)>(unaligned_load<int64_t>(fbe_data + 160));
+    fbe_value.uint64b0 = static_cast<decltype(fbe_value.uint64b0)>(unaligned_load<uint64_t>(fbe_data + 168));
+    fbe_value.uint64b1 = static_cast<decltype(fbe_value.uint64b1)>(unaligned_load<uint64_t>(fbe_data + 176));
+    fbe_value.uint64b2 = static_cast<decltype(fbe_value.uint64b2)>(unaligned_load<uint64_t>(fbe_data + 184));
+    fbe_value.uint64b3 = static_cast<decltype(fbe_value.uint64b3)>(unaligned_load<uint64_t>(fbe_data + 192));
+    fbe_value.uint64b4 = static_cast<decltype(fbe_value.uint64b4)>(unaligned_load<uint64_t>(fbe_data + 200));
+    fbe_value.uint64b5 = static_cast<decltype(fbe_value.uint64b5)>(unaligned_load<uint64_t>(fbe_data + 208));
+    return 216;
 }
 
 size_t FinalModel<::enums::Enums>::set(const ::enums::Enums& fbe_value) noexcept
@@ -920,341 +268,79 @@ size_t FinalModel<::enums::Enums>::set(const ::enums::Enums& fbe_value) noexcept
 
 size_t FinalModel<::enums::Enums>::set_fields([[maybe_unused]] const ::enums::Enums& fbe_value) noexcept
 {
-    size_t fbe_current_offset = 0;
-    size_t fbe_current_size = 0;
-    size_t fbe_field_size;
-
-    byte0.fbe_offset(fbe_current_offset);
-    fbe_field_size = byte0.set(fbe_value.byte0);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    byte1.fbe_offset(fbe_current_offset);
-    fbe_field_size = byte1.set(fbe_value.byte1);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    byte2.fbe_offset(fbe_current_offset);
-    fbe_field_size = byte2.set(fbe_value.byte2);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    byte3.fbe_offset(fbe_current_offset);
-    fbe_field_size = byte3.set(fbe_value.byte3);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    byte4.fbe_offset(fbe_current_offset);
-    fbe_field_size = byte4.set(fbe_value.byte4);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    byte5.fbe_offset(fbe_current_offset);
-    fbe_field_size = byte5.set(fbe_value.byte5);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    char0.fbe_offset(fbe_current_offset);
-    fbe_field_size = char0.set(fbe_value.char0);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    char1.fbe_offset(fbe_current_offset);
-    fbe_field_size = char1.set(fbe_value.char1);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    char2.fbe_offset(fbe_current_offset);
-    fbe_field_size = char2.set(fbe_value.char2);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    char3.fbe_offset(fbe_current_offset);
-    fbe_field_size = char3.set(fbe_value.char3);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    char4.fbe_offset(fbe_current_offset);
-    fbe_field_size = char4.set(fbe_value.char4);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    char5.fbe_offset(fbe_current_offset);
-    fbe_field_size = char5.set(fbe_value.char5);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    wchar0.fbe_offset(fbe_current_offset);
-    fbe_field_size = wchar0.set(fbe_value.wchar0);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    wchar1.fbe_offset(fbe_current_offset);
-    fbe_field_size = wchar1.set(fbe_value.wchar1);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    wchar2.fbe_offset(fbe_current_offset);
-    fbe_field_size = wchar2.set(fbe_value.wchar2);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    wchar3.fbe_offset(fbe_current_offset);
-    fbe_field_size = wchar3.set(fbe_value.wchar3);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    wchar4.fbe_offset(fbe_current_offset);
-    fbe_field_size = wchar4.set(fbe_value.wchar4);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    wchar5.fbe_offset(fbe_current_offset);
-    fbe_field_size = wchar5.set(fbe_value.wchar5);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    int8b0.fbe_offset(fbe_current_offset);
-    fbe_field_size = int8b0.set(fbe_value.int8b0);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    int8b1.fbe_offset(fbe_current_offset);
-    fbe_field_size = int8b1.set(fbe_value.int8b1);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    int8b2.fbe_offset(fbe_current_offset);
-    fbe_field_size = int8b2.set(fbe_value.int8b2);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    int8b3.fbe_offset(fbe_current_offset);
-    fbe_field_size = int8b3.set(fbe_value.int8b3);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    int8b4.fbe_offset(fbe_current_offset);
-    fbe_field_size = int8b4.set(fbe_value.int8b4);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    int8b5.fbe_offset(fbe_current_offset);
-    fbe_field_size = int8b5.set(fbe_value.int8b5);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    uint8b0.fbe_offset(fbe_current_offset);
-    fbe_field_size = uint8b0.set(fbe_value.uint8b0);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    uint8b1.fbe_offset(fbe_current_offset);
-    fbe_field_size = uint8b1.set(fbe_value.uint8b1);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    uint8b2.fbe_offset(fbe_current_offset);
-    fbe_field_size = uint8b2.set(fbe_value.uint8b2);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    uint8b3.fbe_offset(fbe_current_offset);
-    fbe_field_size = uint8b3.set(fbe_value.uint8b3);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    uint8b4.fbe_offset(fbe_current_offset);
-    fbe_field_size = uint8b4.set(fbe_value.uint8b4);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    uint8b5.fbe_offset(fbe_current_offset);
-    fbe_field_size = uint8b5.set(fbe_value.uint8b5);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    int16b0.fbe_offset(fbe_current_offset);
-    fbe_field_size = int16b0.set(fbe_value.int16b0);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    int16b1.fbe_offset(fbe_current_offset);
-    fbe_field_size = int16b1.set(fbe_value.int16b1);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    int16b2.fbe_offset(fbe_current_offset);
-    fbe_field_size = int16b2.set(fbe_value.int16b2);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    int16b3.fbe_offset(fbe_current_offset);
-    fbe_field_size = int16b3.set(fbe_value.int16b3);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    int16b4.fbe_offset(fbe_current_offset);
-    fbe_field_size = int16b4.set(fbe_value.int16b4);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    int16b5.fbe_offset(fbe_current_offset);
-    fbe_field_size = int16b5.set(fbe_value.int16b5);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    uint16b0.fbe_offset(fbe_current_offset);
-    fbe_field_size = uint16b0.set(fbe_value.uint16b0);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    uint16b1.fbe_offset(fbe_current_offset);
-    fbe_field_size = uint16b1.set(fbe_value.uint16b1);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    uint16b2.fbe_offset(fbe_current_offset);
-    fbe_field_size = uint16b2.set(fbe_value.uint16b2);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    uint16b3.fbe_offset(fbe_current_offset);
-    fbe_field_size = uint16b3.set(fbe_value.uint16b3);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    uint16b4.fbe_offset(fbe_current_offset);
-    fbe_field_size = uint16b4.set(fbe_value.uint16b4);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    uint16b5.fbe_offset(fbe_current_offset);
-    fbe_field_size = uint16b5.set(fbe_value.uint16b5);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    int32b0.fbe_offset(fbe_current_offset);
-    fbe_field_size = int32b0.set(fbe_value.int32b0);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    int32b1.fbe_offset(fbe_current_offset);
-    fbe_field_size = int32b1.set(fbe_value.int32b1);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    int32b2.fbe_offset(fbe_current_offset);
-    fbe_field_size = int32b2.set(fbe_value.int32b2);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    int32b3.fbe_offset(fbe_current_offset);
-    fbe_field_size = int32b3.set(fbe_value.int32b3);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    int32b4.fbe_offset(fbe_current_offset);
-    fbe_field_size = int32b4.set(fbe_value.int32b4);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    int32b5.fbe_offset(fbe_current_offset);
-    fbe_field_size = int32b5.set(fbe_value.int32b5);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    uint32b0.fbe_offset(fbe_current_offset);
-    fbe_field_size = uint32b0.set(fbe_value.uint32b0);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    uint32b1.fbe_offset(fbe_current_offset);
-    fbe_field_size = uint32b1.set(fbe_value.uint32b1);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    uint32b2.fbe_offset(fbe_current_offset);
-    fbe_field_size = uint32b2.set(fbe_value.uint32b2);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    uint32b3.fbe_offset(fbe_current_offset);
-    fbe_field_size = uint32b3.set(fbe_value.uint32b3);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    uint32b4.fbe_offset(fbe_current_offset);
-    fbe_field_size = uint32b4.set(fbe_value.uint32b4);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    uint32b5.fbe_offset(fbe_current_offset);
-    fbe_field_size = uint32b5.set(fbe_value.uint32b5);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    int64b0.fbe_offset(fbe_current_offset);
-    fbe_field_size = int64b0.set(fbe_value.int64b0);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    int64b1.fbe_offset(fbe_current_offset);
-    fbe_field_size = int64b1.set(fbe_value.int64b1);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    int64b2.fbe_offset(fbe_current_offset);
-    fbe_field_size = int64b2.set(fbe_value.int64b2);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    int64b3.fbe_offset(fbe_current_offset);
-    fbe_field_size = int64b3.set(fbe_value.int64b3);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    int64b4.fbe_offset(fbe_current_offset);
-    fbe_field_size = int64b4.set(fbe_value.int64b4);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    int64b5.fbe_offset(fbe_current_offset);
-    fbe_field_size = int64b5.set(fbe_value.int64b5);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    uint64b0.fbe_offset(fbe_current_offset);
-    fbe_field_size = uint64b0.set(fbe_value.uint64b0);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    uint64b1.fbe_offset(fbe_current_offset);
-    fbe_field_size = uint64b1.set(fbe_value.uint64b1);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    uint64b2.fbe_offset(fbe_current_offset);
-    fbe_field_size = uint64b2.set(fbe_value.uint64b2);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    uint64b3.fbe_offset(fbe_current_offset);
-    fbe_field_size = uint64b3.set(fbe_value.uint64b3);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    uint64b4.fbe_offset(fbe_current_offset);
-    fbe_field_size = uint64b4.set(fbe_value.uint64b4);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    uint64b5.fbe_offset(fbe_current_offset);
-    fbe_field_size = uint64b5.set(fbe_value.uint64b5);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
-
-    return fbe_current_size;
+    // All fields are fixed-size - optimized batch write (216 bytes)
+    size_t fbe_base_offset = _buffer.offset();
+    assert(((fbe_base_offset + 216) <= _buffer.size()) && "Model is broken!");
+    if ((fbe_base_offset + 216) > _buffer.size())
+        return 0;
+    uint8_t* fbe_data = _buffer.data() + fbe_base_offset;
+    unaligned_store<uint8_t>(fbe_data + 0, static_cast<uint8_t>(fbe_value.byte0));
+    unaligned_store<uint8_t>(fbe_data + 1, static_cast<uint8_t>(fbe_value.byte1));
+    unaligned_store<uint8_t>(fbe_data + 2, static_cast<uint8_t>(fbe_value.byte2));
+    unaligned_store<uint8_t>(fbe_data + 3, static_cast<uint8_t>(fbe_value.byte3));
+    unaligned_store<uint8_t>(fbe_data + 4, static_cast<uint8_t>(fbe_value.byte4));
+    unaligned_store<uint8_t>(fbe_data + 5, static_cast<uint8_t>(fbe_value.byte5));
+    unaligned_store<uint8_t>(fbe_data + 6, static_cast<uint8_t>(fbe_value.char0));
+    unaligned_store<uint8_t>(fbe_data + 7, static_cast<uint8_t>(fbe_value.char1));
+    unaligned_store<uint8_t>(fbe_data + 8, static_cast<uint8_t>(fbe_value.char2));
+    unaligned_store<uint8_t>(fbe_data + 9, static_cast<uint8_t>(fbe_value.char3));
+    unaligned_store<uint8_t>(fbe_data + 10, static_cast<uint8_t>(fbe_value.char4));
+    unaligned_store<uint8_t>(fbe_data + 11, static_cast<uint8_t>(fbe_value.char5));
+    unaligned_store<uint32_t>(fbe_data + 12, static_cast<uint32_t>(fbe_value.wchar0));
+    unaligned_store<uint32_t>(fbe_data + 16, static_cast<uint32_t>(fbe_value.wchar1));
+    unaligned_store<uint32_t>(fbe_data + 20, static_cast<uint32_t>(fbe_value.wchar2));
+    unaligned_store<uint32_t>(fbe_data + 24, static_cast<uint32_t>(fbe_value.wchar3));
+    unaligned_store<uint32_t>(fbe_data + 28, static_cast<uint32_t>(fbe_value.wchar4));
+    unaligned_store<uint32_t>(fbe_data + 32, static_cast<uint32_t>(fbe_value.wchar5));
+    unaligned_store<int8_t>(fbe_data + 36, static_cast<int8_t>(fbe_value.int8b0));
+    unaligned_store<int8_t>(fbe_data + 37, static_cast<int8_t>(fbe_value.int8b1));
+    unaligned_store<int8_t>(fbe_data + 38, static_cast<int8_t>(fbe_value.int8b2));
+    unaligned_store<int8_t>(fbe_data + 39, static_cast<int8_t>(fbe_value.int8b3));
+    unaligned_store<int8_t>(fbe_data + 40, static_cast<int8_t>(fbe_value.int8b4));
+    unaligned_store<int8_t>(fbe_data + 41, static_cast<int8_t>(fbe_value.int8b5));
+    unaligned_store<uint8_t>(fbe_data + 42, static_cast<uint8_t>(fbe_value.uint8b0));
+    unaligned_store<uint8_t>(fbe_data + 43, static_cast<uint8_t>(fbe_value.uint8b1));
+    unaligned_store<uint8_t>(fbe_data + 44, static_cast<uint8_t>(fbe_value.uint8b2));
+    unaligned_store<uint8_t>(fbe_data + 45, static_cast<uint8_t>(fbe_value.uint8b3));
+    unaligned_store<uint8_t>(fbe_data + 46, static_cast<uint8_t>(fbe_value.uint8b4));
+    unaligned_store<uint8_t>(fbe_data + 47, static_cast<uint8_t>(fbe_value.uint8b5));
+    unaligned_store<int16_t>(fbe_data + 48, static_cast<int16_t>(fbe_value.int16b0));
+    unaligned_store<int16_t>(fbe_data + 50, static_cast<int16_t>(fbe_value.int16b1));
+    unaligned_store<int16_t>(fbe_data + 52, static_cast<int16_t>(fbe_value.int16b2));
+    unaligned_store<int16_t>(fbe_data + 54, static_cast<int16_t>(fbe_value.int16b3));
+    unaligned_store<int16_t>(fbe_data + 56, static_cast<int16_t>(fbe_value.int16b4));
+    unaligned_store<int16_t>(fbe_data + 58, static_cast<int16_t>(fbe_value.int16b5));
+    unaligned_store<uint16_t>(fbe_data + 60, static_cast<uint16_t>(fbe_value.uint16b0));
+    unaligned_store<uint16_t>(fbe_data + 62, static_cast<uint16_t>(fbe_value.uint16b1));
+    unaligned_store<uint16_t>(fbe_data + 64, static_cast<uint16_t>(fbe_value.uint16b2));
+    unaligned_store<uint16_t>(fbe_data + 66, static_cast<uint16_t>(fbe_value.uint16b3));
+    unaligned_store<uint16_t>(fbe_data + 68, static_cast<uint16_t>(fbe_value.uint16b4));
+    unaligned_store<uint16_t>(fbe_data + 70, static_cast<uint16_t>(fbe_value.uint16b5));
+    unaligned_store<int32_t>(fbe_data + 72, static_cast<int32_t>(fbe_value.int32b0));
+    unaligned_store<int32_t>(fbe_data + 76, static_cast<int32_t>(fbe_value.int32b1));
+    unaligned_store<int32_t>(fbe_data + 80, static_cast<int32_t>(fbe_value.int32b2));
+    unaligned_store<int32_t>(fbe_data + 84, static_cast<int32_t>(fbe_value.int32b3));
+    unaligned_store<int32_t>(fbe_data + 88, static_cast<int32_t>(fbe_value.int32b4));
+    unaligned_store<int32_t>(fbe_data + 92, static_cast<int32_t>(fbe_value.int32b5));
+    unaligned_store<uint32_t>(fbe_data + 96, static_cast<uint32_t>(fbe_value.uint32b0));
+    unaligned_store<uint32_t>(fbe_data + 100, static_cast<uint32_t>(fbe_value.uint32b1));
+    unaligned_store<uint32_t>(fbe_data + 104, static_cast<uint32_t>(fbe_value.uint32b2));
+    unaligned_store<uint32_t>(fbe_data + 108, static_cast<uint32_t>(fbe_value.uint32b3));
+    unaligned_store<uint32_t>(fbe_data + 112, static_cast<uint32_t>(fbe_value.uint32b4));
+    unaligned_store<uint32_t>(fbe_data + 116, static_cast<uint32_t>(fbe_value.uint32b5));
+    unaligned_store<int64_t>(fbe_data + 120, static_cast<int64_t>(fbe_value.int64b0));
+    unaligned_store<int64_t>(fbe_data + 128, static_cast<int64_t>(fbe_value.int64b1));
+    unaligned_store<int64_t>(fbe_data + 136, static_cast<int64_t>(fbe_value.int64b2));
+    unaligned_store<int64_t>(fbe_data + 144, static_cast<int64_t>(fbe_value.int64b3));
+    unaligned_store<int64_t>(fbe_data + 152, static_cast<int64_t>(fbe_value.int64b4));
+    unaligned_store<int64_t>(fbe_data + 160, static_cast<int64_t>(fbe_value.int64b5));
+    unaligned_store<uint64_t>(fbe_data + 168, static_cast<uint64_t>(fbe_value.uint64b0));
+    unaligned_store<uint64_t>(fbe_data + 176, static_cast<uint64_t>(fbe_value.uint64b1));
+    unaligned_store<uint64_t>(fbe_data + 184, static_cast<uint64_t>(fbe_value.uint64b2));
+    unaligned_store<uint64_t>(fbe_data + 192, static_cast<uint64_t>(fbe_value.uint64b3));
+    unaligned_store<uint64_t>(fbe_data + 200, static_cast<uint64_t>(fbe_value.uint64b4));
+    unaligned_store<uint64_t>(fbe_data + 208, static_cast<uint64_t>(fbe_value.uint64b5));
+    return 216;
 }
 
 namespace enums {

@@ -958,7 +958,7 @@ struct ValueReader<TJson, FastVec<T>>
             #if defined(USING_STD_VECTOR)
             values.emplace_back(temp);
             #else
-            values.template emplace_back<Safety::Unsafe>(temp);
+            values.template emplace_back(temp);
             #endif
         }
         return true;
