@@ -35,11 +35,7 @@
 #include <vector>
 
 template <typename T>
-#if defined(USING_STD_VECTOR)
 using FastVec = std::vector<T>;
-#else
-using FastVec = stdb::container::vectra<T>;
-#endif
 
 TEST_CASE("Serialization (simple self-reference)", "[Ptr-based FBE]")
 {

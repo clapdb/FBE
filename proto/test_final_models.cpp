@@ -120,7 +120,7 @@ size_t FinalModel<::test::StructSimple>::verify() const noexcept
 size_t FinalModel<::test::StructSimple>::verify_fields() const noexcept
 {
     size_t fbe_current_offset = 0;
-    size_t fbe_field_size;
+    [[maybe_unused]] size_t fbe_field_size;
 
     // Batch verify 29 fixed-size fields (102 bytes)
     {
@@ -211,7 +211,7 @@ size_t FinalModel<::test::StructSimple>::get_fields([[maybe_unused]] ::test::Str
 {
     size_t fbe_current_offset = 0;
     size_t fbe_current_size = 0;
-    size_t fbe_field_size;
+    [[maybe_unused]] size_t fbe_field_size;
 
     // Batch read 29 fixed-size fields (102 bytes)
     {
@@ -333,7 +333,7 @@ size_t FinalModel<::test::StructSimple>::set_fields([[maybe_unused]] const ::tes
 {
     size_t fbe_current_offset = 0;
     size_t fbe_current_size = 0;
-    size_t fbe_field_size;
+    [[maybe_unused]] size_t fbe_field_size;
 
     // Batch write 29 fixed-size fields (102 bytes)
     {
@@ -652,7 +652,7 @@ size_t FinalModel<::test::StructOptional>::verify() const noexcept
 size_t FinalModel<::test::StructOptional>::verify_fields() const noexcept
 {
     size_t fbe_current_offset = 0;
-    size_t fbe_field_size;
+    [[maybe_unused]] size_t fbe_field_size;
 
     parent.fbe_offset(fbe_current_offset);
     fbe_field_size = parent.verify_fields();
@@ -1071,7 +1071,7 @@ size_t FinalModel<::test::StructOptional>::get_fields([[maybe_unused]] ::test::S
 {
     size_t fbe_current_offset = 0;
     size_t fbe_current_size = 0;
-    size_t fbe_field_size;
+    [[maybe_unused]] size_t fbe_field_size;
 
     parent.fbe_offset(fbe_current_offset);
     fbe_field_size = parent.get_fields(fbe_value);
@@ -1423,7 +1423,7 @@ size_t FinalModel<::test::StructOptional>::set_fields([[maybe_unused]] const ::t
 {
     size_t fbe_current_offset = 0;
     size_t fbe_current_size = 0;
-    size_t fbe_field_size;
+    [[maybe_unused]] size_t fbe_field_size;
 
     parent.fbe_offset(fbe_current_offset);
     fbe_field_size = parent.set_fields(fbe_value);
@@ -1862,7 +1862,7 @@ size_t FinalModel<::test::StructNested>::verify() const noexcept
 size_t FinalModel<::test::StructNested>::verify_fields() const noexcept
 {
     size_t fbe_current_offset = 0;
-    size_t fbe_field_size;
+    [[maybe_unused]] size_t fbe_field_size;
 
     parent.fbe_offset(fbe_current_offset);
     fbe_field_size = parent.verify_fields();
@@ -1953,7 +1953,7 @@ size_t FinalModel<::test::StructNested>::get_fields([[maybe_unused]] ::test::Str
 {
     size_t fbe_current_offset = 0;
     size_t fbe_current_size = 0;
-    size_t fbe_field_size;
+    [[maybe_unused]] size_t fbe_field_size;
 
     parent.fbe_offset(fbe_current_offset);
     fbe_field_size = parent.get_fields(fbe_value);
@@ -2055,7 +2055,7 @@ size_t FinalModel<::test::StructNested>::set_fields([[maybe_unused]] const ::tes
 {
     size_t fbe_current_offset = 0;
     size_t fbe_current_size = 0;
-    size_t fbe_field_size;
+    [[maybe_unused]] size_t fbe_field_size;
 
     parent.fbe_offset(fbe_current_offset);
     fbe_field_size = parent.set_fields(fbe_value);
@@ -2228,7 +2228,7 @@ size_t FinalModel<::test::StructBytes>::verify() const noexcept
 size_t FinalModel<::test::StructBytes>::verify_fields() const noexcept
 {
     size_t fbe_current_offset = 0;
-    size_t fbe_field_size;
+    [[maybe_unused]] size_t fbe_field_size;
 
     f1.fbe_offset(fbe_current_offset);
     fbe_field_size = f1.verify();
@@ -2263,7 +2263,7 @@ size_t FinalModel<::test::StructBytes>::get_fields([[maybe_unused]] ::test::Stru
 {
     size_t fbe_current_offset = 0;
     size_t fbe_current_size = 0;
-    size_t fbe_field_size;
+    [[maybe_unused]] size_t fbe_field_size;
 
     f1.fbe_offset(fbe_current_offset);
     fbe_field_size = f1.get(fbe_value.f1);
@@ -2295,7 +2295,7 @@ size_t FinalModel<::test::StructBytes>::set_fields([[maybe_unused]] const ::test
 {
     size_t fbe_current_offset = 0;
     size_t fbe_current_size = 0;
-    size_t fbe_field_size;
+    [[maybe_unused]] size_t fbe_field_size;
 
     f1.fbe_offset(fbe_current_offset);
     fbe_field_size = f1.set(fbe_value.f1);
@@ -2408,7 +2408,7 @@ size_t FinalModel<::test::StructArray>::verify() const noexcept
 size_t FinalModel<::test::StructArray>::verify_fields() const noexcept
 {
     size_t fbe_current_offset = 0;
-    size_t fbe_field_size;
+    [[maybe_unused]] size_t fbe_field_size;
 
     f1.fbe_offset(fbe_current_offset);
     fbe_field_size = f1.verify();
@@ -2485,7 +2485,7 @@ size_t FinalModel<::test::StructArray>::get_fields([[maybe_unused]] ::test::Stru
 {
     size_t fbe_current_offset = 0;
     size_t fbe_current_size = 0;
-    size_t fbe_field_size;
+    [[maybe_unused]] size_t fbe_field_size;
 
     f1.fbe_offset(fbe_current_offset);
     fbe_field_size = f1.get(fbe_value.f1);
@@ -2552,7 +2552,7 @@ size_t FinalModel<::test::StructArray>::set_fields([[maybe_unused]] const ::test
 {
     size_t fbe_current_offset = 0;
     size_t fbe_current_size = 0;
-    size_t fbe_field_size;
+    [[maybe_unused]] size_t fbe_field_size;
 
     f1.fbe_offset(fbe_current_offset);
     fbe_field_size = f1.set(fbe_value.f1);
@@ -2700,7 +2700,7 @@ size_t FinalModel<::test::StructVector>::verify() const noexcept
 size_t FinalModel<::test::StructVector>::verify_fields() const noexcept
 {
     size_t fbe_current_offset = 0;
-    size_t fbe_field_size;
+    [[maybe_unused]] size_t fbe_field_size;
 
     f1.fbe_offset(fbe_current_offset);
     fbe_field_size = f1.verify();
@@ -2777,7 +2777,7 @@ size_t FinalModel<::test::StructVector>::get_fields([[maybe_unused]] ::test::Str
 {
     size_t fbe_current_offset = 0;
     size_t fbe_current_size = 0;
-    size_t fbe_field_size;
+    [[maybe_unused]] size_t fbe_field_size;
 
     f1.fbe_offset(fbe_current_offset);
     fbe_field_size = f1.get(fbe_value.f1);
@@ -2844,7 +2844,7 @@ size_t FinalModel<::test::StructVector>::set_fields([[maybe_unused]] const ::tes
 {
     size_t fbe_current_offset = 0;
     size_t fbe_current_size = 0;
-    size_t fbe_field_size;
+    [[maybe_unused]] size_t fbe_field_size;
 
     f1.fbe_offset(fbe_current_offset);
     fbe_field_size = f1.set(fbe_value.f1);
@@ -2992,7 +2992,7 @@ size_t FinalModel<::test::StructList>::verify() const noexcept
 size_t FinalModel<::test::StructList>::verify_fields() const noexcept
 {
     size_t fbe_current_offset = 0;
-    size_t fbe_field_size;
+    [[maybe_unused]] size_t fbe_field_size;
 
     f1.fbe_offset(fbe_current_offset);
     fbe_field_size = f1.verify();
@@ -3069,7 +3069,7 @@ size_t FinalModel<::test::StructList>::get_fields([[maybe_unused]] ::test::Struc
 {
     size_t fbe_current_offset = 0;
     size_t fbe_current_size = 0;
-    size_t fbe_field_size;
+    [[maybe_unused]] size_t fbe_field_size;
 
     f1.fbe_offset(fbe_current_offset);
     fbe_field_size = f1.get(fbe_value.f1);
@@ -3136,7 +3136,7 @@ size_t FinalModel<::test::StructList>::set_fields([[maybe_unused]] const ::test:
 {
     size_t fbe_current_offset = 0;
     size_t fbe_current_size = 0;
-    size_t fbe_field_size;
+    [[maybe_unused]] size_t fbe_field_size;
 
     f1.fbe_offset(fbe_current_offset);
     fbe_field_size = f1.set(fbe_value.f1);
@@ -3272,7 +3272,7 @@ size_t FinalModel<::test::StructSet>::verify() const noexcept
 size_t FinalModel<::test::StructSet>::verify_fields() const noexcept
 {
     size_t fbe_current_offset = 0;
-    size_t fbe_field_size;
+    [[maybe_unused]] size_t fbe_field_size;
 
     f1.fbe_offset(fbe_current_offset);
     fbe_field_size = f1.verify();
@@ -3313,7 +3313,7 @@ size_t FinalModel<::test::StructSet>::get_fields([[maybe_unused]] ::test::Struct
 {
     size_t fbe_current_offset = 0;
     size_t fbe_current_size = 0;
-    size_t fbe_field_size;
+    [[maybe_unused]] size_t fbe_field_size;
 
     f1.fbe_offset(fbe_current_offset);
     fbe_field_size = f1.get(fbe_value.f1);
@@ -3350,7 +3350,7 @@ size_t FinalModel<::test::StructSet>::set_fields([[maybe_unused]] const ::test::
 {
     size_t fbe_current_offset = 0;
     size_t fbe_current_size = 0;
-    size_t fbe_field_size;
+    [[maybe_unused]] size_t fbe_field_size;
 
     f1.fbe_offset(fbe_current_offset);
     fbe_field_size = f1.set(fbe_value.f1);
@@ -3468,7 +3468,7 @@ size_t FinalModel<::test::StructMap>::verify() const noexcept
 size_t FinalModel<::test::StructMap>::verify_fields() const noexcept
 {
     size_t fbe_current_offset = 0;
-    size_t fbe_field_size;
+    [[maybe_unused]] size_t fbe_field_size;
 
     f1.fbe_offset(fbe_current_offset);
     fbe_field_size = f1.verify();
@@ -3545,7 +3545,7 @@ size_t FinalModel<::test::StructMap>::get_fields([[maybe_unused]] ::test::Struct
 {
     size_t fbe_current_offset = 0;
     size_t fbe_current_size = 0;
-    size_t fbe_field_size;
+    [[maybe_unused]] size_t fbe_field_size;
 
     f1.fbe_offset(fbe_current_offset);
     fbe_field_size = f1.get(fbe_value.f1);
@@ -3612,7 +3612,7 @@ size_t FinalModel<::test::StructMap>::set_fields([[maybe_unused]] const ::test::
 {
     size_t fbe_current_offset = 0;
     size_t fbe_current_size = 0;
-    size_t fbe_field_size;
+    [[maybe_unused]] size_t fbe_field_size;
 
     f1.fbe_offset(fbe_current_offset);
     fbe_field_size = f1.set(fbe_value.f1);
@@ -3760,7 +3760,7 @@ size_t FinalModel<::test::StructHash>::verify() const noexcept
 size_t FinalModel<::test::StructHash>::verify_fields() const noexcept
 {
     size_t fbe_current_offset = 0;
-    size_t fbe_field_size;
+    [[maybe_unused]] size_t fbe_field_size;
 
     f1.fbe_offset(fbe_current_offset);
     fbe_field_size = f1.verify();
@@ -3837,7 +3837,7 @@ size_t FinalModel<::test::StructHash>::get_fields([[maybe_unused]] ::test::Struc
 {
     size_t fbe_current_offset = 0;
     size_t fbe_current_size = 0;
-    size_t fbe_field_size;
+    [[maybe_unused]] size_t fbe_field_size;
 
     f1.fbe_offset(fbe_current_offset);
     fbe_field_size = f1.get(fbe_value.f1);
@@ -3904,7 +3904,7 @@ size_t FinalModel<::test::StructHash>::set_fields([[maybe_unused]] const ::test:
 {
     size_t fbe_current_offset = 0;
     size_t fbe_current_size = 0;
-    size_t fbe_field_size;
+    [[maybe_unused]] size_t fbe_field_size;
 
     f1.fbe_offset(fbe_current_offset);
     fbe_field_size = f1.set(fbe_value.f1);
@@ -4036,7 +4036,7 @@ size_t FinalModel<::test::StructHashEx>::verify() const noexcept
 size_t FinalModel<::test::StructHashEx>::verify_fields() const noexcept
 {
     size_t fbe_current_offset = 0;
-    size_t fbe_field_size;
+    [[maybe_unused]] size_t fbe_field_size;
 
     f1.fbe_offset(fbe_current_offset);
     fbe_field_size = f1.verify();
@@ -4065,7 +4065,7 @@ size_t FinalModel<::test::StructHashEx>::get_fields([[maybe_unused]] ::test::Str
 {
     size_t fbe_current_offset = 0;
     size_t fbe_current_size = 0;
-    size_t fbe_field_size;
+    [[maybe_unused]] size_t fbe_field_size;
 
     f1.fbe_offset(fbe_current_offset);
     fbe_field_size = f1.get(fbe_value.f1);
@@ -4092,7 +4092,7 @@ size_t FinalModel<::test::StructHashEx>::set_fields([[maybe_unused]] const ::tes
 {
     size_t fbe_current_offset = 0;
     size_t fbe_current_size = 0;
-    size_t fbe_field_size;
+    [[maybe_unused]] size_t fbe_field_size;
 
     f1.fbe_offset(fbe_current_offset);
     fbe_field_size = f1.set(fbe_value.f1);
@@ -4283,7 +4283,7 @@ size_t FinalModel<::test::StructFieldNamedString>::verify() const noexcept
 size_t FinalModel<::test::StructFieldNamedString>::verify_fields() const noexcept
 {
     size_t fbe_current_offset = 0;
-    size_t fbe_field_size;
+    [[maybe_unused]] size_t fbe_field_size;
 
     string.fbe_offset(fbe_current_offset);
     fbe_field_size = string.verify();
@@ -4306,7 +4306,7 @@ size_t FinalModel<::test::StructFieldNamedString>::get_fields([[maybe_unused]] :
 {
     size_t fbe_current_offset = 0;
     size_t fbe_current_size = 0;
-    size_t fbe_field_size;
+    [[maybe_unused]] size_t fbe_field_size;
 
     string.fbe_offset(fbe_current_offset);
     fbe_field_size = string.get(fbe_value.string);
@@ -4328,7 +4328,7 @@ size_t FinalModel<::test::StructFieldNamedString>::set_fields([[maybe_unused]] c
 {
     size_t fbe_current_offset = 0;
     size_t fbe_current_size = 0;
-    size_t fbe_field_size;
+    [[maybe_unused]] size_t fbe_field_size;
 
     string.fbe_offset(fbe_current_offset);
     fbe_field_size = string.set(fbe_value.string);
@@ -4413,7 +4413,7 @@ size_t FinalModel<::test::StringFieldNamedString>::verify() const noexcept
 size_t FinalModel<::test::StringFieldNamedString>::verify_fields() const noexcept
 {
     size_t fbe_current_offset = 0;
-    size_t fbe_field_size;
+    [[maybe_unused]] size_t fbe_field_size;
 
     string.fbe_offset(fbe_current_offset);
     fbe_field_size = string.verify();
@@ -4436,7 +4436,7 @@ size_t FinalModel<::test::StringFieldNamedString>::get_fields([[maybe_unused]] :
 {
     size_t fbe_current_offset = 0;
     size_t fbe_current_size = 0;
-    size_t fbe_field_size;
+    [[maybe_unused]] size_t fbe_field_size;
 
     string.fbe_offset(fbe_current_offset);
     fbe_field_size = string.get(fbe_value.string);
@@ -4458,7 +4458,7 @@ size_t FinalModel<::test::StringFieldNamedString>::set_fields([[maybe_unused]] c
 {
     size_t fbe_current_offset = 0;
     size_t fbe_current_size = 0;
-    size_t fbe_field_size;
+    [[maybe_unused]] size_t fbe_field_size;
 
     string.fbe_offset(fbe_current_offset);
     fbe_field_size = string.set(fbe_value.string);
@@ -4543,7 +4543,7 @@ size_t FinalModel<::test::OptionalFieldNamedString>::verify() const noexcept
 size_t FinalModel<::test::OptionalFieldNamedString>::verify_fields() const noexcept
 {
     size_t fbe_current_offset = 0;
-    size_t fbe_field_size;
+    [[maybe_unused]] size_t fbe_field_size;
 
     string.fbe_offset(fbe_current_offset);
     fbe_field_size = string.verify();
@@ -4566,7 +4566,7 @@ size_t FinalModel<::test::OptionalFieldNamedString>::get_fields([[maybe_unused]]
 {
     size_t fbe_current_offset = 0;
     size_t fbe_current_size = 0;
-    size_t fbe_field_size;
+    [[maybe_unused]] size_t fbe_field_size;
 
     string.fbe_offset(fbe_current_offset);
     fbe_field_size = string.get(fbe_value.string);
@@ -4588,7 +4588,7 @@ size_t FinalModel<::test::OptionalFieldNamedString>::set_fields([[maybe_unused]]
 {
     size_t fbe_current_offset = 0;
     size_t fbe_current_size = 0;
-    size_t fbe_field_size;
+    [[maybe_unused]] size_t fbe_field_size;
 
     string.fbe_offset(fbe_current_offset);
     fbe_field_size = string.set(fbe_value.string);
@@ -4673,7 +4673,7 @@ size_t FinalModel<::test::ArrayFieldNamedString>::verify() const noexcept
 size_t FinalModel<::test::ArrayFieldNamedString>::verify_fields() const noexcept
 {
     size_t fbe_current_offset = 0;
-    size_t fbe_field_size;
+    [[maybe_unused]] size_t fbe_field_size;
 
     string.fbe_offset(fbe_current_offset);
     fbe_field_size = string.verify();
@@ -4696,7 +4696,7 @@ size_t FinalModel<::test::ArrayFieldNamedString>::get_fields([[maybe_unused]] ::
 {
     size_t fbe_current_offset = 0;
     size_t fbe_current_size = 0;
-    size_t fbe_field_size;
+    [[maybe_unused]] size_t fbe_field_size;
 
     string.fbe_offset(fbe_current_offset);
     fbe_field_size = string.get(fbe_value.string);
@@ -4718,7 +4718,7 @@ size_t FinalModel<::test::ArrayFieldNamedString>::set_fields([[maybe_unused]] co
 {
     size_t fbe_current_offset = 0;
     size_t fbe_current_size = 0;
-    size_t fbe_field_size;
+    [[maybe_unused]] size_t fbe_field_size;
 
     string.fbe_offset(fbe_current_offset);
     fbe_field_size = string.set(fbe_value.string);
@@ -4803,7 +4803,7 @@ size_t FinalModel<::test::VectorFieldNamedString>::verify() const noexcept
 size_t FinalModel<::test::VectorFieldNamedString>::verify_fields() const noexcept
 {
     size_t fbe_current_offset = 0;
-    size_t fbe_field_size;
+    [[maybe_unused]] size_t fbe_field_size;
 
     string.fbe_offset(fbe_current_offset);
     fbe_field_size = string.verify();
@@ -4826,7 +4826,7 @@ size_t FinalModel<::test::VectorFieldNamedString>::get_fields([[maybe_unused]] :
 {
     size_t fbe_current_offset = 0;
     size_t fbe_current_size = 0;
-    size_t fbe_field_size;
+    [[maybe_unused]] size_t fbe_field_size;
 
     string.fbe_offset(fbe_current_offset);
     fbe_field_size = string.get(fbe_value.string);
@@ -4848,7 +4848,7 @@ size_t FinalModel<::test::VectorFieldNamedString>::set_fields([[maybe_unused]] c
 {
     size_t fbe_current_offset = 0;
     size_t fbe_current_size = 0;
-    size_t fbe_field_size;
+    [[maybe_unused]] size_t fbe_field_size;
 
     string.fbe_offset(fbe_current_offset);
     fbe_field_size = string.set(fbe_value.string);
@@ -4933,7 +4933,7 @@ size_t FinalModel<::test::BytesFieldNamedString>::verify() const noexcept
 size_t FinalModel<::test::BytesFieldNamedString>::verify_fields() const noexcept
 {
     size_t fbe_current_offset = 0;
-    size_t fbe_field_size;
+    [[maybe_unused]] size_t fbe_field_size;
 
     string.fbe_offset(fbe_current_offset);
     fbe_field_size = string.verify();
@@ -4956,7 +4956,7 @@ size_t FinalModel<::test::BytesFieldNamedString>::get_fields([[maybe_unused]] ::
 {
     size_t fbe_current_offset = 0;
     size_t fbe_current_size = 0;
-    size_t fbe_field_size;
+    [[maybe_unused]] size_t fbe_field_size;
 
     string.fbe_offset(fbe_current_offset);
     fbe_field_size = string.get(fbe_value.string);
@@ -4978,7 +4978,7 @@ size_t FinalModel<::test::BytesFieldNamedString>::set_fields([[maybe_unused]] co
 {
     size_t fbe_current_offset = 0;
     size_t fbe_current_size = 0;
-    size_t fbe_field_size;
+    [[maybe_unused]] size_t fbe_field_size;
 
     string.fbe_offset(fbe_current_offset);
     fbe_field_size = string.set(fbe_value.string);

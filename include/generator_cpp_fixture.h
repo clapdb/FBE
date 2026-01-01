@@ -52,7 +52,6 @@ namespace std { namespace pmr = ::std::experimental::pmr; }
 #endif
 #include <utility>
 #include <variant>
-#include "container/vectra.hpp"
 #if defined(USING_BTREE_MAP)
 #include "container/btree_map.hpp"
 #endif
@@ -69,12 +68,7 @@ namespace std { namespace pmr = ::std::experimental::pmr; }
 
 namespace FBE {
     template <typename T>
-    #if defined(USING_STD_VECTOR)
     using FastVec = std::vector<T>;
-    #else
-    using FastVec = stdb::container::vectra<T>;
-    #endif
-    using Safety = stdb::container::Safety;
 
     #if defined(USING_SEASTAR_STRING)
     using FBEString = seastar::sstring;
@@ -3135,7 +3129,7 @@ inline void FieldModelArray<T, N>::get(FastVec<T>& values, std::pmr::memory_reso
             #if defined(USING_STD_VECTOR)
             values.emplace_back(std::move(value));
             #else
-            values.template emplace_back<Safety::Unsafe>(std::move(value));
+            values.template emplace_back(std::move(value));
             #endif
             fbe_model.fbe_shift(fbe_model.fbe_size());
         }
@@ -5369,7 +5363,7 @@ inline size_t FinalModelArray<T, N>::get(FastVec<T>& values) const noexcept
             #if defined(USING_STD_VECTOR)
             values.emplace_back(std::move(value));
             #else
-            values.template emplace_back<Safety::Unsafe>(std::move(value));
+            values.template emplace_back(std::move(value));
             #endif
             fbe_model.fbe_shift(offset);
             size += offset;
@@ -7432,7 +7426,7 @@ struct ValueReader<TJson, FastVec<T>>
             #if defined(USING_STD_VECTOR)
             values.emplace_back(temp);
             #else
-            values.template emplace_back<Safety::Unsafe>(temp);
+            values.template emplace_back(temp);
             #endif
         }
         return true;
@@ -8149,7 +8143,7 @@ inline void FieldModelCustomArray<T, TStruct, N>::get(FastVec<TStruct>& values, 
         #if defined(USING_STD_VECTOR)
         values.emplace_back(std::move(value));
         #else
-        values.template emplace_back<Safety::Unsafe>(std::move(value));
+        values.template emplace_back(std::move(value));
         #endif
         fbe_model.fbe_shift(fbe_model.fbe_size());
     }
@@ -8169,7 +8163,7 @@ inline void FieldModelCustomArray<T, TStruct, N>::get(FastVec<TStruct*>& values,
         #if defined(USING_STD_VECTOR)
         values.emplace_back(std::move(value));
         #else
-        values.template emplace_back<Safety::Unsafe>(std::move(value));
+        values.template emplace_back(std::move(value));
         #endif
         fbe_model.fbe_shift(fbe_model.fbe_size());
     }
@@ -8208,7 +8202,7 @@ inline void FieldModelCustomArray<T, TStruct, N>::set(const FastVec<TStruct*>& v
       code += code_extra;
 
       code_extra = std::regex_replace(code_extra, std::regex("FastVec"), "std::pmr::vector");
-      code_extra = std::regex_replace(code_extra, std::regex("values.template emplace_back<Safety::Unsafe>"), "values.emplace_back");
+      code_extra = std::regex_replace(code_extra, std::regex("values.template emplace_back"), "values.emplace_back");
       code_extra = std::regex_replace(code_extra, std::regex("std::list"), "std::pmr::list");
       code += code_extra;
       return code;
@@ -8415,7 +8409,7 @@ inline void FieldModelCustomVector<T, TStruct>::get(FastVec<TStruct>& values, st
             #if defined(USING_STD_VECTOR)
             values.emplace_back(std::move(value));
             #else
-            values.template emplace_back<Safety::Unsafe>(std::move(value));
+            values.template emplace_back(std::move(value));
             #endif
         } else {
             TStruct value = TStruct();
@@ -8423,7 +8417,7 @@ inline void FieldModelCustomVector<T, TStruct>::get(FastVec<TStruct>& values, st
             #if defined(USING_STD_VECTOR)
             values.emplace_back(std::move(value));
             #else
-            values.template emplace_back<Safety::Unsafe>(std::move(value));
+            values.template emplace_back(std::move(value));
             #endif
         }
         fbe_model.fbe_shift(fbe_model.fbe_size());
@@ -8449,7 +8443,7 @@ inline void FieldModelCustomVector<T, TStruct>::get(FastVec<TStruct*>& values, s
         #if defined(USING_STD_VECTOR)
         values.emplace_back(value);
         #else
-        values.template emplace_back<Safety::Unsafe>(value);
+        values.template emplace_back(value);
         #endif
         fbe_model.fbe_shift(fbe_model.fbe_size());
     }
@@ -8628,7 +8622,7 @@ inline void FieldModelCustomVector<T, TStruct>::set(const std::set<TStruct*>& va
       code += code_extra;
 
       code_extra = std::regex_replace(code_extra, std::regex("FastVec"), "std::pmr::vector");
-      code_extra = std::regex_replace(code_extra, std::regex("values.template emplace_back<Safety::Unsafe>"), "values.emplace_back");
+      code_extra = std::regex_replace(code_extra, std::regex("values.template emplace_back"), "values.emplace_back");
       code_extra = std::regex_replace(code_extra, std::regex("std::list"), "std::pmr::list");
       code_extra = std::regex_replace(code_extra, std::regex("std::set"), "std::pmr::set");
       code += code_extra;

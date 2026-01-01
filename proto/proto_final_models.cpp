@@ -42,7 +42,7 @@ size_t FinalModel<::proto::Order>::verify() const noexcept
 size_t FinalModel<::proto::Order>::verify_fields() const noexcept
 {
     size_t fbe_current_offset = 0;
-    size_t fbe_field_size;
+    [[maybe_unused]] size_t fbe_field_size;
 
     // Inline verify of int32 field id (4 bytes)
     if ((_buffer.offset() + fbe_current_offset + 4) > _buffer.size())
@@ -77,7 +77,7 @@ size_t FinalModel<::proto::Order>::get_fields([[maybe_unused]] ::proto::Order& f
 {
     size_t fbe_current_offset = 0;
     size_t fbe_current_size = 0;
-    size_t fbe_field_size;
+    [[maybe_unused]] size_t fbe_field_size;
 
     // Inline read of int32 field id (4 bytes)
     {
@@ -123,7 +123,7 @@ size_t FinalModel<::proto::Order>::set_fields([[maybe_unused]] const ::proto::Or
 {
     size_t fbe_current_offset = 0;
     size_t fbe_current_size = 0;
-    size_t fbe_field_size;
+    [[maybe_unused]] size_t fbe_field_size;
 
     // Inline write of int32 field id (4 bytes)
     {
@@ -236,7 +236,7 @@ size_t FinalModel<::proto::Balance>::verify() const noexcept
 size_t FinalModel<::proto::Balance>::verify_fields() const noexcept
 {
     size_t fbe_current_offset = 0;
-    size_t fbe_field_size;
+    [[maybe_unused]] size_t fbe_field_size;
 
     currency.fbe_offset(fbe_current_offset);
     fbe_field_size = currency.verify();
@@ -264,7 +264,7 @@ size_t FinalModel<::proto::Balance>::get_fields([[maybe_unused]] ::proto::Balanc
 {
     size_t fbe_current_offset = 0;
     size_t fbe_current_size = 0;
-    size_t fbe_field_size;
+    [[maybe_unused]] size_t fbe_field_size;
 
     currency.fbe_offset(fbe_current_offset);
     fbe_field_size = currency.get(fbe_value.currency);
@@ -296,7 +296,7 @@ size_t FinalModel<::proto::Balance>::set_fields([[maybe_unused]] const ::proto::
 {
     size_t fbe_current_offset = 0;
     size_t fbe_current_size = 0;
-    size_t fbe_field_size;
+    [[maybe_unused]] size_t fbe_field_size;
 
     currency.fbe_offset(fbe_current_offset);
     fbe_field_size = currency.set(fbe_value.currency);
@@ -402,7 +402,7 @@ size_t FinalModel<::proto::Account>::verify() const noexcept
 size_t FinalModel<::proto::Account>::verify_fields() const noexcept
 {
     size_t fbe_current_offset = 0;
-    size_t fbe_field_size;
+    [[maybe_unused]] size_t fbe_field_size;
 
     // Inline verify of int32 field id (4 bytes)
     if ((_buffer.offset() + fbe_current_offset + 4) > _buffer.size())
@@ -453,7 +453,7 @@ size_t FinalModel<::proto::Account>::get_fields([[maybe_unused]] ::proto::Accoun
 {
     size_t fbe_current_offset = 0;
     size_t fbe_current_size = 0;
-    size_t fbe_field_size;
+    [[maybe_unused]] size_t fbe_field_size;
 
     // Inline read of int32 field id (4 bytes)
     {
@@ -510,7 +510,7 @@ size_t FinalModel<::proto::Account>::set_fields([[maybe_unused]] const ::proto::
 {
     size_t fbe_current_offset = 0;
     size_t fbe_current_size = 0;
-    size_t fbe_field_size;
+    [[maybe_unused]] size_t fbe_field_size;
 
     // Inline write of int32 field id (4 bytes)
     {
@@ -632,7 +632,7 @@ size_t FinalModel<::proto::CharMap>::verify() const noexcept
 size_t FinalModel<::proto::CharMap>::verify_fields() const noexcept
 {
     size_t fbe_current_offset = 0;
-    size_t fbe_field_size;
+    [[maybe_unused]] size_t fbe_field_size;
 
     abbr.fbe_offset(fbe_current_offset);
     fbe_field_size = abbr.verify();
@@ -655,7 +655,7 @@ size_t FinalModel<::proto::CharMap>::get_fields([[maybe_unused]] ::proto::CharMa
 {
     size_t fbe_current_offset = 0;
     size_t fbe_current_size = 0;
-    size_t fbe_field_size;
+    [[maybe_unused]] size_t fbe_field_size;
 
     abbr.fbe_offset(fbe_current_offset);
     fbe_field_size = abbr.get(fbe_value.abbr);
@@ -677,7 +677,7 @@ size_t FinalModel<::proto::CharMap>::set_fields([[maybe_unused]] const ::proto::
 {
     size_t fbe_current_offset = 0;
     size_t fbe_current_size = 0;
-    size_t fbe_field_size;
+    [[maybe_unused]] size_t fbe_field_size;
 
     abbr.fbe_offset(fbe_current_offset);
     fbe_field_size = abbr.set(fbe_value.abbr);
@@ -762,7 +762,7 @@ size_t FinalModel<::proto::OrderMessage>::verify() const noexcept
 size_t FinalModel<::proto::OrderMessage>::verify_fields() const noexcept
 {
     size_t fbe_current_offset = 0;
-    size_t fbe_field_size;
+    [[maybe_unused]] size_t fbe_field_size;
 
     body.fbe_offset(fbe_current_offset);
     fbe_field_size = body.verify();
@@ -785,7 +785,7 @@ size_t FinalModel<::proto::OrderMessage>::get_fields([[maybe_unused]] ::proto::O
 {
     size_t fbe_current_offset = 0;
     size_t fbe_current_size = 0;
-    size_t fbe_field_size;
+    [[maybe_unused]] size_t fbe_field_size;
 
     body.fbe_offset(fbe_current_offset);
     fbe_field_size = body.get(fbe_value.body);
@@ -807,7 +807,7 @@ size_t FinalModel<::proto::OrderMessage>::set_fields([[maybe_unused]] const ::pr
 {
     size_t fbe_current_offset = 0;
     size_t fbe_current_size = 0;
-    size_t fbe_field_size;
+    [[maybe_unused]] size_t fbe_field_size;
 
     body.fbe_offset(fbe_current_offset);
     fbe_field_size = body.set(fbe_value.body);
@@ -892,7 +892,7 @@ size_t FinalModel<::proto::BalanceMessage>::verify() const noexcept
 size_t FinalModel<::proto::BalanceMessage>::verify_fields() const noexcept
 {
     size_t fbe_current_offset = 0;
-    size_t fbe_field_size;
+    [[maybe_unused]] size_t fbe_field_size;
 
     body.fbe_offset(fbe_current_offset);
     fbe_field_size = body.verify();
@@ -915,7 +915,7 @@ size_t FinalModel<::proto::BalanceMessage>::get_fields([[maybe_unused]] ::proto:
 {
     size_t fbe_current_offset = 0;
     size_t fbe_current_size = 0;
-    size_t fbe_field_size;
+    [[maybe_unused]] size_t fbe_field_size;
 
     body.fbe_offset(fbe_current_offset);
     fbe_field_size = body.get(fbe_value.body);
@@ -937,7 +937,7 @@ size_t FinalModel<::proto::BalanceMessage>::set_fields([[maybe_unused]] const ::
 {
     size_t fbe_current_offset = 0;
     size_t fbe_current_size = 0;
-    size_t fbe_field_size;
+    [[maybe_unused]] size_t fbe_field_size;
 
     body.fbe_offset(fbe_current_offset);
     fbe_field_size = body.set(fbe_value.body);
@@ -1022,7 +1022,7 @@ size_t FinalModel<::proto::AccountMessage>::verify() const noexcept
 size_t FinalModel<::proto::AccountMessage>::verify_fields() const noexcept
 {
     size_t fbe_current_offset = 0;
-    size_t fbe_field_size;
+    [[maybe_unused]] size_t fbe_field_size;
 
     body.fbe_offset(fbe_current_offset);
     fbe_field_size = body.verify();
@@ -1045,7 +1045,7 @@ size_t FinalModel<::proto::AccountMessage>::get_fields([[maybe_unused]] ::proto:
 {
     size_t fbe_current_offset = 0;
     size_t fbe_current_size = 0;
-    size_t fbe_field_size;
+    [[maybe_unused]] size_t fbe_field_size;
 
     body.fbe_offset(fbe_current_offset);
     fbe_field_size = body.get(fbe_value.body);
@@ -1067,7 +1067,7 @@ size_t FinalModel<::proto::AccountMessage>::set_fields([[maybe_unused]] const ::
 {
     size_t fbe_current_offset = 0;
     size_t fbe_current_size = 0;
-    size_t fbe_field_size;
+    [[maybe_unused]] size_t fbe_field_size;
 
     body.fbe_offset(fbe_current_offset);
     fbe_field_size = body.set(fbe_value.body);
@@ -1162,7 +1162,7 @@ size_t FinalModel<::proto::PremiumAccount>::verify() const noexcept
 size_t FinalModel<::proto::PremiumAccount>::verify_fields() const noexcept
 {
     size_t fbe_current_offset = 0;
-    size_t fbe_field_size;
+    [[maybe_unused]] size_t fbe_field_size;
 
     // Inline verify of int32 field id (4 bytes)
     if ((_buffer.offset() + fbe_current_offset + 4) > _buffer.size())
@@ -1213,7 +1213,7 @@ size_t FinalModel<::proto::PremiumAccount>::get_fields([[maybe_unused]] ::proto:
 {
     size_t fbe_current_offset = 0;
     size_t fbe_current_size = 0;
-    size_t fbe_field_size;
+    [[maybe_unused]] size_t fbe_field_size;
 
     // Inline read of int32 field id (4 bytes)
     {
@@ -1270,7 +1270,7 @@ size_t FinalModel<::proto::PremiumAccount>::set_fields([[maybe_unused]] const ::
 {
     size_t fbe_current_offset = 0;
     size_t fbe_current_size = 0;
-    size_t fbe_field_size;
+    [[maybe_unused]] size_t fbe_field_size;
 
     // Inline write of int32 field id (4 bytes)
     {

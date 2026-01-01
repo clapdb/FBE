@@ -6443,16 +6443,7 @@ void GeneratorCpp::GeneratePtrStruct_Source(const std::shared_ptr<Package>& p, c
                         WriteLineIndent(*field->name + ".reserve(arg_" + *field->name + ".size());");
                         WriteLineIndent("for (auto& it : arg_" + *field->name + ")");
                         Indent(1);
-                        // #if defined(USING_STD_VECTOR)
-                        // values.emplace_back(std::move(value));
-                        // #else
-                        // values.template emplace_back<Safety::Unsafe>(std::move(value));
-                        // #endif
-                        WriteLineIndent("#if defined(USING_STD_VECTOR)");
                         WriteLineIndent(*field->name + ".emplace_back(it.release());");
-                        WriteLineIndent("#else");
-                        WriteLineIndent(*field->name + ".emplace_back" + (Arena() ? "" : "<Safety::Unsafe>") + "(it.release());");
-                        WriteLineIndent("#endif");
                         Indent(-1);
                     } else if (field->list) {
                         WriteLineIndent("for (auto& it : arg_" + *field->name + ")");

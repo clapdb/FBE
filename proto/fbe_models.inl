@@ -296,7 +296,7 @@ inline void FieldModelArray<T, N>::get(FastVec<T>& values, std::pmr::memory_reso
             #if defined(USING_STD_VECTOR)
             values.emplace_back(std::move(value));
             #else
-            values.template emplace_back<Safety::Unsafe>(std::move(value));
+            values.template emplace_back(std::move(value));
             #endif
             fbe_model.fbe_shift(fbe_model.fbe_size());
         }

@@ -18,14 +18,8 @@
 #include "variants.h"
 #include <cstdint>
 #include <limits>
-#include "containa/container/vectra.hpp"
-
 template <typename T>
-#if defined(USING_STD_VECTOR)
 using FastVec = std::vector<T>;
-#else
-using FastVec = stdb::container::vectra<T>;
-#endif
 
 TEST_CASE("Serialization: domain", "[FBE]")
 {
@@ -1692,5 +1686,382 @@ TEST_CASE("Serialization: int128 and uint128", "[FBE]")
     REQUIRE(struct2.f2.value() <  std::numeric_limits<int64_t>::min());
     REQUIRE(struct2.f3 >  std::numeric_limits<uint64_t>::max());
     REQUIRE(struct2.f4.value() >  std::numeric_limits<uint64_t>::max());
+    REQUIRE(struct1 == struct2);
+}
+
+TEST_CASE("Serialization: empty vector", "[FBE][Vector]")
+{
+    // Test empty vectors serialize and deserialize correctly
+    test::StructVector struct1;
+    // All vectors are empty by default
+
+    FBE::test::StructVectorModel writer;
+    size_t serialized = writer.serialize(struct1, nullptr);
+    REQUIRE(serialized == writer.buffer().size());
+    REQUIRE(writer.verify());
+
+    test::StructVector struct2;
+    FBE::test::StructVectorModel reader;
+    reader.attach(writer.buffer());
+    REQUIRE(reader.verify());
+    size_t deserialized = reader.deserialize(struct2, nullptr);
+    REQUIRE(deserialized == reader.buffer().size());
+
+    REQUIRE(struct2.f1.empty());
+    REQUIRE(struct2.f2.empty());
+    REQUIRE(struct2.f3.empty());
+    REQUIRE(struct2.f4.empty());
+    REQUIRE(struct2.f5.empty());
+    REQUIRE(struct2.f6.empty());
+    REQUIRE(struct2.f7.empty());
+    REQUIRE(struct2.f8.empty());
+    REQUIRE(struct2.f9.empty());
+    REQUIRE(struct2.f10.empty());
+    REQUIRE(struct1 == struct2);
+}
+
+TEST_CASE("Serialization: large vector", "[FBE][Vector]")
+{
+    // Test large vectors (stress test for emplace_back)
+    test::StructVector struct1;
+
+    // Add 1000 elements to byte vector
+    for (int i = 0; i < 1000; ++i) {
+        struct1.f1.emplace_back(static_cast<uint8_t>(i % 256));
+    }
+
+    // Add 500 elements to optional byte vector
+    for (int i = 0; i < 500; ++i) {
+        if (i % 3 == 0) {
+            struct1.f2.emplace_back(std::nullopt);
+        } else {
+            struct1.f2.emplace_back(static_cast<uint8_t>(i % 256));
+        }
+    }
+
+    // Add 100 structs
+    for (int i = 0; i < 100; ++i) {
+        test::StructSimple s;
+        s.id = i;
+        s.f32 = "String " + std::to_string(i);
+        struct1.f9.emplace_back(std::move(s));
+    }
+
+    FBE::test::StructVectorModel writer;
+    size_t serialized = writer.serialize(struct1, nullptr);
+    REQUIRE(serialized == writer.buffer().size());
+    REQUIRE(writer.verify());
+
+    test::StructVector struct2;
+    FBE::test::StructVectorModel reader;
+    reader.attach(writer.buffer());
+    REQUIRE(reader.verify());
+    size_t deserialized = reader.deserialize(struct2, nullptr);
+    REQUIRE(deserialized == reader.buffer().size());
+
+    REQUIRE(struct2.f1.size() == 1000);
+    for (int i = 0; i < 1000; ++i) {
+        REQUIRE(struct2.f1[i] == static_cast<uint8_t>(i % 256));
+    }
+
+    REQUIRE(struct2.f2.size() == 500);
+    for (int i = 0; i < 500; ++i) {
+        if (i % 3 == 0) {
+            REQUIRE(struct2.f2[i] == std::nullopt);
+        } else {
+            REQUIRE(struct2.f2[i].value() == static_cast<uint8_t>(i % 256));
+        }
+    }
+
+    REQUIRE(struct2.f9.size() == 100);
+    for (int i = 0; i < 100; ++i) {
+        REQUIRE(struct2.f9[i].id == i);
+        REQUIRE(struct2.f9[i].f32 == "String " + std::to_string(i));
+    }
+
+    REQUIRE(struct1 == struct2);
+}
+
+TEST_CASE("Serialization: vector with nested vectors", "[FBE][Vector]")
+{
+    // Test vectors of bytes (nested structure)
+    test::StructVector struct1;
+
+    // Add varying size byte vectors
+    for (int i = 0; i < 50; ++i) {
+        FastVec<uint8_t> inner;
+        for (int j = 0; j <= i; ++j) {
+            inner.emplace_back(static_cast<uint8_t>((i + j) % 256));
+        }
+        struct1.f3.emplace_back(std::move(inner));
+    }
+
+    // Add optional byte vectors with nulls
+    for (int i = 0; i < 30; ++i) {
+        if (i % 4 == 0) {
+            struct1.f4.emplace_back(std::nullopt);
+        } else {
+            FastVec<uint8_t> inner;
+            for (int j = 0; j < i; ++j) {
+                inner.emplace_back(static_cast<uint8_t>(j));
+            }
+            struct1.f4.emplace_back(std::move(inner));
+        }
+    }
+
+    FBE::test::StructVectorModel writer;
+    size_t serialized = writer.serialize(struct1, nullptr);
+    REQUIRE(serialized == writer.buffer().size());
+    REQUIRE(writer.verify());
+
+    test::StructVector struct2;
+    FBE::test::StructVectorModel reader;
+    reader.attach(writer.buffer());
+    REQUIRE(reader.verify());
+    size_t deserialized = reader.deserialize(struct2, nullptr);
+    REQUIRE(deserialized == reader.buffer().size());
+
+    REQUIRE(struct2.f3.size() == 50);
+    for (int i = 0; i < 50; ++i) {
+        REQUIRE(struct2.f3[i].size() == static_cast<size_t>(i + 1));
+        for (int j = 0; j <= i; ++j) {
+            REQUIRE(struct2.f3[i][j] == static_cast<uint8_t>((i + j) % 256));
+        }
+    }
+
+    REQUIRE(struct2.f4.size() == 30);
+    for (int i = 0; i < 30; ++i) {
+        if (i % 4 == 0) {
+            REQUIRE(struct2.f4[i] == std::nullopt);
+        } else {
+            REQUIRE(struct2.f4[i].has_value());
+            REQUIRE(struct2.f4[i].value().size() == static_cast<size_t>(i));
+        }
+    }
+
+    REQUIRE(struct1 == struct2);
+}
+
+TEST_CASE("Serialization: multiple round trips", "[FBE][Vector]")
+{
+    // Test that multiple serialize/deserialize cycles preserve data
+    test::StructVector original;
+    for (int i = 0; i < 100; ++i) {
+        original.f1.emplace_back(static_cast<uint8_t>(i));
+        test::StructSimple s;
+        s.id = i * 10;
+        s.f32 = "Test" + std::to_string(i);
+        original.f9.emplace_back(std::move(s));
+    }
+
+    test::StructVector current = original;
+
+    // Do 5 round trips
+    for (int round = 0; round < 5; ++round) {
+        FBE::test::StructVectorModel writer;
+        size_t serialized = writer.serialize(current, nullptr);
+        REQUIRE(writer.verify());
+
+        test::StructVector next;
+        FBE::test::StructVectorModel reader;
+        reader.attach(writer.buffer());
+        REQUIRE(reader.verify());
+        size_t deserialized = reader.deserialize(next, nullptr);
+        REQUIRE(deserialized == serialized);
+
+        REQUIRE(current == next);
+        current = std::move(next);
+    }
+
+    // Final result should equal original
+    REQUIRE(original == current);
+}
+
+TEST_CASE("Serialization: map large", "[FBE][Map]")
+{
+    // Test large maps
+    test::StructMap struct1;
+
+    for (int i = 0; i < 500; ++i) {
+        struct1.f1.emplace(i, static_cast<uint8_t>(i % 256));
+    }
+
+    for (int i = 0; i < 200; ++i) {
+        if (i % 5 == 0) {
+            struct1.f2.emplace(i, std::nullopt);
+        } else {
+            struct1.f2.emplace(i, static_cast<uint8_t>(i % 256));
+        }
+    }
+
+    for (int i = 0; i < 100; ++i) {
+        test::StructSimple s;
+        s.id = i;
+        s.f32 = "MapValue" + std::to_string(i);
+        struct1.f9.emplace(i, std::move(s));
+    }
+
+    FBE::test::StructMapModel writer;
+    size_t serialized = writer.serialize(struct1, nullptr);
+    REQUIRE(serialized == writer.buffer().size());
+    REQUIRE(writer.verify());
+
+    test::StructMap struct2;
+    FBE::test::StructMapModel reader;
+    reader.attach(writer.buffer());
+    REQUIRE(reader.verify());
+    size_t deserialized = reader.deserialize(struct2, nullptr);
+    REQUIRE(deserialized == reader.buffer().size());
+
+    REQUIRE(struct2.f1.size() == 500);
+    for (int i = 0; i < 500; ++i) {
+        REQUIRE(struct2.f1.at(i) == static_cast<uint8_t>(i % 256));
+    }
+
+    REQUIRE(struct2.f2.size() == 200);
+    for (int i = 0; i < 200; ++i) {
+        if (i % 5 == 0) {
+            REQUIRE(struct2.f2.at(i) == std::nullopt);
+        } else {
+            REQUIRE(struct2.f2.at(i).value() == static_cast<uint8_t>(i % 256));
+        }
+    }
+
+    REQUIRE(struct2.f9.size() == 100);
+    for (int i = 0; i < 100; ++i) {
+        REQUIRE(struct2.f9.at(i).id == i);
+        REQUIRE(struct2.f9.at(i).f32 == "MapValue" + std::to_string(i));
+    }
+
+    REQUIRE(struct1 == struct2);
+}
+
+TEST_CASE("Serialization: hash large", "[FBE][Hash]")
+{
+    // Test large hash maps
+    test::StructHash struct1;
+
+    for (int i = 0; i < 500; ++i) {
+        struct1.f1.emplace("key" + std::to_string(i), static_cast<uint8_t>(i % 256));
+    }
+
+    for (int i = 0; i < 100; ++i) {
+        test::StructSimple s;
+        s.id = i;
+        s.f32 = "HashValue" + std::to_string(i);
+        struct1.f9.emplace("struct" + std::to_string(i), std::move(s));
+    }
+
+    FBE::test::StructHashModel writer;
+    size_t serialized = writer.serialize(struct1, nullptr);
+    REQUIRE(serialized == writer.buffer().size());
+    REQUIRE(writer.verify());
+
+    test::StructHash struct2;
+    FBE::test::StructHashModel reader;
+    reader.attach(writer.buffer());
+    REQUIRE(reader.verify());
+    size_t deserialized = reader.deserialize(struct2, nullptr);
+    REQUIRE(deserialized == reader.buffer().size());
+
+    REQUIRE(struct2.f1.size() == 500);
+    for (int i = 0; i < 500; ++i) {
+        REQUIRE(struct2.f1.at("key" + std::to_string(i)) == static_cast<uint8_t>(i % 256));
+    }
+
+    REQUIRE(struct2.f9.size() == 100);
+    for (int i = 0; i < 100; ++i) {
+        REQUIRE(struct2.f9.at("struct" + std::to_string(i)).id == i);
+        REQUIRE(struct2.f9.at("struct" + std::to_string(i)).f32 == "HashValue" + std::to_string(i));
+    }
+
+    REQUIRE(struct1 == struct2);
+}
+
+TEST_CASE("Serialization: list large", "[FBE][List]")
+{
+    // Test large lists
+    test::StructList struct1;
+
+    for (int i = 0; i < 1000; ++i) {
+        struct1.f1.emplace_back(static_cast<uint8_t>(i % 256));
+    }
+
+    for (int i = 0; i < 100; ++i) {
+        test::StructSimple s;
+        s.id = i;
+        s.f32 = "ListValue" + std::to_string(i);
+        struct1.f9.emplace_back(std::move(s));
+    }
+
+    FBE::test::StructListModel writer;
+    size_t serialized = writer.serialize(struct1, nullptr);
+    REQUIRE(serialized == writer.buffer().size());
+    REQUIRE(writer.verify());
+
+    test::StructList struct2;
+    FBE::test::StructListModel reader;
+    reader.attach(writer.buffer());
+    REQUIRE(reader.verify());
+    size_t deserialized = reader.deserialize(struct2, nullptr);
+    REQUIRE(deserialized == reader.buffer().size());
+
+    REQUIRE(struct2.f1.size() == 1000);
+    int idx = 0;
+    for (const auto& v : struct2.f1) {
+        REQUIRE(v == static_cast<uint8_t>(idx % 256));
+        ++idx;
+    }
+
+    REQUIRE(struct2.f9.size() == 100);
+    idx = 0;
+    for (const auto& s : struct2.f9) {
+        REQUIRE(s.id == idx);
+        REQUIRE(s.f32 == "ListValue" + std::to_string(idx));
+        ++idx;
+    }
+
+    REQUIRE(struct1 == struct2);
+}
+
+TEST_CASE("Serialization: set large", "[FBE][Set]")
+{
+    // Test large sets
+    test::StructSet struct1;
+
+    for (int i = 0; i < 200; ++i) {
+        struct1.f1.emplace(static_cast<uint8_t>(i % 256));
+    }
+
+    for (int i = 0; i < 100; ++i) {
+        test::StructSimple s;
+        s.id = i;  // id is the key
+        s.f32 = "SetValue" + std::to_string(i);
+        struct1.f4.emplace(std::move(s));
+    }
+
+    FBE::test::StructSetModel writer;
+    size_t serialized = writer.serialize(struct1, nullptr);
+    REQUIRE(serialized == writer.buffer().size());
+    REQUIRE(writer.verify());
+
+    test::StructSet struct2;
+    FBE::test::StructSetModel reader;
+    reader.attach(writer.buffer());
+    REQUIRE(reader.verify());
+    size_t deserialized = reader.deserialize(struct2, nullptr);
+    REQUIRE(deserialized == reader.buffer().size());
+
+    // Set of bytes has max 256 unique values
+    REQUIRE(struct2.f1.size() == 200);
+
+    REQUIRE(struct2.f4.size() == 100);
+    for (int i = 0; i < 100; ++i) {
+        test::StructSimple key;
+        key.id = i;
+        auto it = struct2.f4.find(key);
+        REQUIRE(it != struct2.f4.end());
+    }
+
     REQUIRE(struct1 == struct2);
 }

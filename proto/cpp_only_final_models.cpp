@@ -44,13 +44,12 @@ size_t FinalModel<::cpp_only::Struct128>::verify() const noexcept
 size_t FinalModel<::cpp_only::Struct128>::verify_fields() const noexcept
 {
     size_t fbe_current_offset = 0;
-    size_t fbe_field_size;
+    [[maybe_unused]] size_t fbe_field_size;
 
-    f1.fbe_offset(fbe_current_offset);
-    fbe_field_size = f1.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
+    // Inline verify of int128 field f1 (16 bytes)
+    if ((_buffer.offset() + fbe_current_offset + 16) > _buffer.size())
         return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
+    fbe_current_offset += 16;
 
     f2.fbe_offset(fbe_current_offset);
     fbe_field_size = f2.verify();
@@ -58,11 +57,10 @@ size_t FinalModel<::cpp_only::Struct128>::verify_fields() const noexcept
         return std::numeric_limits<std::size_t>::max();
     fbe_current_offset += fbe_field_size;
 
-    f3.fbe_offset(fbe_current_offset);
-    fbe_field_size = f3.verify();
-    if (fbe_field_size == std::numeric_limits<std::size_t>::max())
+    // Inline verify of uint128 field f3 (16 bytes)
+    if ((_buffer.offset() + fbe_current_offset + 16) > _buffer.size())
         return std::numeric_limits<std::size_t>::max();
-    fbe_current_offset += fbe_field_size;
+    fbe_current_offset += 16;
 
     f4.fbe_offset(fbe_current_offset);
     fbe_field_size = f4.verify();
@@ -103,22 +101,32 @@ size_t FinalModel<::cpp_only::Struct128>::get_fields([[maybe_unused]] ::cpp_only
 {
     size_t fbe_current_offset = 0;
     size_t fbe_current_size = 0;
-    size_t fbe_field_size;
+    [[maybe_unused]] size_t fbe_field_size;
 
-    f1.fbe_offset(fbe_current_offset);
-    fbe_field_size = f1.get(fbe_value.f1);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
+    // Inline read of int128 field f1 (16 bytes)
+    {
+        size_t fbe_field_offset = _buffer.offset() + fbe_current_offset;
+        if ((fbe_field_offset + 16) > _buffer.size())
+            return 0;
+        fbe_value.f1 = unaligned_load<__int128_t>(_buffer.data() + fbe_field_offset);
+        fbe_current_offset += 16;
+        fbe_current_size += 16;
+    }
 
     f2.fbe_offset(fbe_current_offset);
     fbe_field_size = f2.get(fbe_value.f2);
     fbe_current_offset += fbe_field_size;
     fbe_current_size += fbe_field_size;
 
-    f3.fbe_offset(fbe_current_offset);
-    fbe_field_size = f3.get(fbe_value.f3);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
+    // Inline read of uint128 field f3 (16 bytes)
+    {
+        size_t fbe_field_offset = _buffer.offset() + fbe_current_offset;
+        if ((fbe_field_offset + 16) > _buffer.size())
+            return 0;
+        fbe_value.f3 = unaligned_load<__uint128_t>(_buffer.data() + fbe_field_offset);
+        fbe_current_offset += 16;
+        fbe_current_size += 16;
+    }
 
     f4.fbe_offset(fbe_current_offset);
     fbe_field_size = f4.get(fbe_value.f4);
@@ -155,22 +163,34 @@ size_t FinalModel<::cpp_only::Struct128>::set_fields([[maybe_unused]] const ::cp
 {
     size_t fbe_current_offset = 0;
     size_t fbe_current_size = 0;
-    size_t fbe_field_size;
+    [[maybe_unused]] size_t fbe_field_size;
 
-    f1.fbe_offset(fbe_current_offset);
-    fbe_field_size = f1.set(fbe_value.f1);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
+    // Inline write of int128 field f1 (16 bytes)
+    {
+        size_t fbe_field_offset = _buffer.offset() + fbe_current_offset;
+        assert(((fbe_field_offset + 16) <= _buffer.size()) && "Model is broken!");
+        if ((fbe_field_offset + 16) > _buffer.size())
+            return 0;
+        unaligned_store<__int128_t>(_buffer.data() + fbe_field_offset, fbe_value.f1);
+        fbe_current_offset += 16;
+        fbe_current_size += 16;
+    }
 
     f2.fbe_offset(fbe_current_offset);
     fbe_field_size = f2.set(fbe_value.f2);
     fbe_current_offset += fbe_field_size;
     fbe_current_size += fbe_field_size;
 
-    f3.fbe_offset(fbe_current_offset);
-    fbe_field_size = f3.set(fbe_value.f3);
-    fbe_current_offset += fbe_field_size;
-    fbe_current_size += fbe_field_size;
+    // Inline write of uint128 field f3 (16 bytes)
+    {
+        size_t fbe_field_offset = _buffer.offset() + fbe_current_offset;
+        assert(((fbe_field_offset + 16) <= _buffer.size()) && "Model is broken!");
+        if ((fbe_field_offset + 16) > _buffer.size())
+            return 0;
+        unaligned_store<__uint128_t>(_buffer.data() + fbe_field_offset, fbe_value.f3);
+        fbe_current_offset += 16;
+        fbe_current_size += 16;
+    }
 
     f4.fbe_offset(fbe_current_offset);
     fbe_field_size = f4.set(fbe_value.f4);

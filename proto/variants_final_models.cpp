@@ -32,7 +32,7 @@ size_t FinalModel<::variants::Simple>::verify() const noexcept
 size_t FinalModel<::variants::Simple>::verify_fields() const noexcept
 {
     size_t fbe_current_offset = 0;
-    size_t fbe_field_size;
+    [[maybe_unused]] size_t fbe_field_size;
 
     name.fbe_offset(fbe_current_offset);
     fbe_field_size = name.verify();
@@ -55,7 +55,7 @@ size_t FinalModel<::variants::Simple>::get_fields([[maybe_unused]] ::variants::S
 {
     size_t fbe_current_offset = 0;
     size_t fbe_current_size = 0;
-    size_t fbe_field_size;
+    [[maybe_unused]] size_t fbe_field_size;
 
     name.fbe_offset(fbe_current_offset);
     fbe_field_size = name.get(fbe_value.name);
@@ -77,7 +77,7 @@ size_t FinalModel<::variants::Simple>::set_fields([[maybe_unused]] const ::varia
 {
     size_t fbe_current_offset = 0;
     size_t fbe_current_size = 0;
-    size_t fbe_field_size;
+    [[maybe_unused]] size_t fbe_field_size;
 
     name.fbe_offset(fbe_current_offset);
     fbe_field_size = name.set(fbe_value.name);
@@ -162,7 +162,7 @@ size_t FinalModel<::variants::Value>::verify() const noexcept
 size_t FinalModel<::variants::Value>::verify_fields() const noexcept
 {
     size_t fbe_current_offset = 0;
-    size_t fbe_field_size;
+    [[maybe_unused]] size_t fbe_field_size;
 
     v.fbe_offset(fbe_current_offset);
     fbe_field_size = v.verify();
@@ -185,7 +185,7 @@ size_t FinalModel<::variants::Value>::get_fields([[maybe_unused]] ::variants::Va
 {
     size_t fbe_current_offset = 0;
     size_t fbe_current_size = 0;
-    size_t fbe_field_size;
+    [[maybe_unused]] size_t fbe_field_size;
 
     v.fbe_offset(fbe_current_offset);
     fbe_field_size = v.get(fbe_value.v);
@@ -207,7 +207,7 @@ size_t FinalModel<::variants::Value>::set_fields([[maybe_unused]] const ::varian
 {
     size_t fbe_current_offset = 0;
     size_t fbe_current_size = 0;
-    size_t fbe_field_size;
+    [[maybe_unused]] size_t fbe_field_size;
 
     v.fbe_offset(fbe_current_offset);
     fbe_field_size = v.set(fbe_value.v);

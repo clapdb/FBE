@@ -55,7 +55,6 @@ namespace std { namespace pmr = ::std::experimental::pmr; }
 #endif
 #include <utility>
 #include <variant>
-#include "container/vectra.hpp"
 #if defined(USING_BTREE_MAP)
 #include "container/btree_map.hpp"
 #endif
@@ -72,12 +71,7 @@ namespace std { namespace pmr = ::std::experimental::pmr; }
 
 namespace FBE {
     template <typename T>
-    #if defined(USING_STD_VECTOR)
     using FastVec = std::vector<T>;
-    #else
-    using FastVec = stdb::container::vectra<T>;
-    #endif
-    using Safety = stdb::container::Safety;
 
     #if defined(USING_SEASTAR_STRING)
     using FBEString = seastar::sstring;
