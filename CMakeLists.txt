@@ -56,6 +56,11 @@ include_directories("modules/arena/include")
 include_directories("modules/containa")
 include_directories("modules/smallstring/include")
 
+# When building as FBEC_MODULE, find fmt from parent project before arena
+# This prevents arena from building its own fmt (which causes duplicate symbols)
+if(FBEC_MODULE)
+    find_package(fmt REQUIRED)
+endif()
 
 # Modules
 add_subdirectory("modules/arena")
