@@ -146,8 +146,12 @@ private:
     void GenerateFBEFinalModelUUID_Source();
     void GenerateFBEFinalModelBytes_Header();
     void GenerateFBEFinalModelBytes_Source();
+    void GenerateFBEFinalModelPMRBytes_Header();
+    void GenerateFBEFinalModelPMRBytes_Source();
     void GenerateFBEFinalModelString_Header();
     void GenerateFBEFinalModelString_Source();
+    void GenerateFBEFinalModelArenaString_Header();
+    void GenerateFBEFinalModelArenaString_Source();
     void GenerateFBEFinalModelOptional_Header();
     void GenerateFBEFinalModelOptional_Inline();
     void GenerateFBEFinalModelArray_Header();
