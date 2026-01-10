@@ -148,6 +148,8 @@ private:
     void GenerateFBEFinalModelBytes_Source();
     void GenerateFBEFinalModelString_Header();
     void GenerateFBEFinalModelString_Source();
+    void GenerateFBEFinalModelArenaString_Header();
+    void GenerateFBEFinalModelArenaString_Source();
     void GenerateFBEFinalModelOptional_Header();
     void GenerateFBEFinalModelOptional_Inline();
     void GenerateFBEFinalModelArray_Header();
