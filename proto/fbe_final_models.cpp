@@ -395,6 +395,100 @@ size_t FinalModel<buffer_t>::set(const void* data, size_t size)
     return 4 + fbe_bytes_size;
 }
 
+size_t FinalModel<pmr_buffer_t>::verify() const noexcept
+{
+    size_t fbe_full_offset = _buffer.offset() + fbe_offset();
+    size_t buffer_size = _buffer.size();
+    if ((fbe_full_offset + 4) > buffer_size)
+        return std::numeric_limits<std::size_t>::max();
+
+    uint32_t fbe_bytes_size = unaligned_load<uint32_t>(_buffer.data() + fbe_full_offset);
+    if ((fbe_full_offset + 4 + fbe_bytes_size) > buffer_size)
+        return std::numeric_limits<std::size_t>::max();
+
+    return 4 + fbe_bytes_size;
+}
+
+size_t FinalModel<pmr_buffer_t>::get(void* data, size_t size) const noexcept
+{
+    assert(((size == 0) || (data != nullptr)) && "Invalid buffer!");
+    if ((size > 0) && (data == nullptr))
+        return 0;
+
+    size_t fbe_full_offset = _buffer.offset() + fbe_offset();
+    const uint8_t* buffer_data = _buffer.data();
+    size_t buffer_size = _buffer.size();
+
+    assert(((fbe_full_offset + 4) <= buffer_size) && "Model is broken!");
+    if ((fbe_full_offset + 4) > buffer_size)
+        return 0;
+
+    uint32_t fbe_bytes_size = unaligned_load<uint32_t>(buffer_data + fbe_full_offset);
+    assert(((fbe_full_offset + 4 + fbe_bytes_size) <= buffer_size) && "Model is broken!");
+    if ((fbe_full_offset + 4 + fbe_bytes_size) > buffer_size)
+        return 4;
+
+    size_t result = std::min(size, (size_t)fbe_bytes_size);
+    memcpy(data, buffer_data + fbe_full_offset + 4, result);
+    return 4 + fbe_bytes_size;
+}
+
+size_t FinalModel<pmr_buffer_t>::get(std::pmr::vector<uint8_t>& value, std::pmr::memory_resource* resource) const noexcept
+{
+    value.clear();
+
+    size_t fbe_full_offset = _buffer.offset() + fbe_offset();
+    const uint8_t* buffer_data = _buffer.data();
+    size_t buffer_size = _buffer.size();
+
+    assert(((fbe_full_offset + 4) <= buffer_size) && "Model is broken!");
+    if ((fbe_full_offset + 4) > buffer_size)
+        return 0;
+
+    uint32_t fbe_bytes_size = unaligned_load<uint32_t>(buffer_data + fbe_full_offset);
+    assert(((fbe_full_offset + 4 + fbe_bytes_size) <= buffer_size) && "Model is broken!");
+    if ((fbe_full_offset + 4 + fbe_bytes_size) > buffer_size)
+        return 4;
+
+    // Allocate and assign using the provided memory resource if available
+    if (resource != nullptr && value.get_allocator().resource() != resource) {
+        std::pmr::vector<uint8_t> temp(resource);
+        const uint8_t* fbe_bytes = buffer_data + fbe_full_offset + 4;
+        temp.assign(fbe_bytes, fbe_bytes + fbe_bytes_size);
+        value = std::move(temp);
+    } else {
+        const uint8_t* fbe_bytes = buffer_data + fbe_full_offset + 4;
+        value.assign(fbe_bytes, fbe_bytes + fbe_bytes_size);
+    }
+    return 4 + fbe_bytes_size;
+}
+
+size_t FinalModel<pmr_buffer_t>::set(const void* data, size_t size)
+{
+    assert(((size == 0) || (data != nullptr)) && "Invalid buffer!");
+    if ((size > 0) && (data == nullptr))
+        return 0;
+
+    size_t fbe_full_offset = _buffer.offset() + fbe_offset();
+    uint8_t* buffer_data = _buffer.data();
+    size_t buffer_size = _buffer.size();
+
+    assert(((fbe_full_offset + 4) <= buffer_size) && "Model is broken!");
+    if ((fbe_full_offset + 4) > buffer_size)
+        return 0;
+
+    uint32_t fbe_bytes_size = (uint32_t)size;
+    assert(((fbe_full_offset + 4 + fbe_bytes_size) <= buffer_size) && "Model is broken!");
+    if ((fbe_full_offset + 4 + fbe_bytes_size) > buffer_size)
+        return 4;
+
+    unaligned_store<uint32_t>(buffer_data + fbe_full_offset, fbe_bytes_size);
+
+    if (fbe_bytes_size > 0)
+        memcpy((char*)(buffer_data + fbe_full_offset + 4), data, fbe_bytes_size);
+    return 4 + fbe_bytes_size;
+}
+
 size_t FinalModel<FBEString>::verify() const noexcept
 {
     size_t fbe_full_offset = _buffer.offset() + fbe_offset();

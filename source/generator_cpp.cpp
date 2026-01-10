@@ -814,6 +814,26 @@ void GeneratorCpp::GenerateFBEFinalModelBytes_Source()
     Write(code);
 }
 
+void GeneratorCpp::GenerateFBEFinalModelPMRBytes_Header()
+{
+    std::string code = GeneratorCPPFixture::GenerateFBEFinalModelPMRBytes_Header();
+
+    // Prepare code template
+    code = std::regex_replace(code, std::regex("\n"), EndLine());
+
+    Write(code);
+}
+
+void GeneratorCpp::GenerateFBEFinalModelPMRBytes_Source()
+{
+    std::string code = GeneratorCPPFixture::GenerateFBEFinalModelPMRBytes_Source();
+
+    // Prepare code template
+    code = std::regex_replace(code, std::regex("\n"), EndLine());
+
+    Write(code);
+}
+
 void GeneratorCpp::GenerateFBEFinalModelString_Header()
 {
     std::string code = GeneratorCPPFixture::GenerateFBEFinalModelString_Header();
@@ -1218,6 +1238,7 @@ void GeneratorCpp::GenerateFBEFinalModels_Header(const fs::path& path)
     GenerateFBEFinalModelDecimal_Header();
     GenerateFBEFinalModelUUID_Header();
     GenerateFBEFinalModelBytes_Header();
+    GenerateFBEFinalModelPMRBytes_Header();
     GenerateFBEFinalModelString_Header();
     GenerateFBEFinalModelArenaString_Header();
     GenerateFBEFinalModelOptional_Header();
@@ -1298,6 +1319,7 @@ void GeneratorCpp::GenerateFBEFinalModels_Source(const fs::path& path)
     GenerateFBEFinalModelDecimal_Source();
     GenerateFBEFinalModelUUID_Source();
     GenerateFBEFinalModelBytes_Source();
+    GenerateFBEFinalModelPMRBytes_Source();
     GenerateFBEFinalModelString_Source();
     GenerateFBEFinalModelArenaString_Source();
 
@@ -1746,7 +1768,7 @@ void GeneratorCpp::GeneratePackageFinalModels_Header(const std::shared_ptr<Packa
     GenerateHeader(fs::path(_input).filename().string());
 
     // Generate imports
-    GenerateImports(Arena() ? "fbe_final_models_pmr.h" : "fbe_final_models.h");
+    GenerateImports("fbe_final_models.h");
     GenerateImportsModels(p, true, false);
 
     // Generate namespace begin

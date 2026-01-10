@@ -668,17 +668,13 @@ inline size_t FinalModelVector<T>::get(std::pmr::vector<T>& values, std::pmr::me
         memcpy(values.data(), _buffer.data() + fbe_full_offset + 4, data_size);
         return 4 + data_size;
     } else {
-        values.reserve(fbe_vector_size);
+        // Pre-allocate and deserialize directly into elements
+        values.resize(fbe_vector_size);
         size_t size = 4;
         FinalModel<T> fbe_model(_buffer, fbe_offset() + 4);
         for (size_t i = 0; i < fbe_vector_size; ++i)
         {
-            if constexpr (std::is_constructible_v<T, std::pmr::memory_resource*>) {
-                values.emplace_back(resource);
-            } else {
-                values.emplace_back();
-            }
-            size_t offset = fbe_model.get(values.back(), resource);
+            size_t offset = fbe_model.get(values[i], resource);
             fbe_model.fbe_shift(offset);
             size += offset;
         }
@@ -700,16 +696,14 @@ inline size_t FinalModelVector<T>::get(std::pmr::list<T>& values, std::pmr::memo
     if (fbe_vector_size == 0)
         return 4;
 
+    // Pre-allocate and deserialize directly into elements
+    values.resize(fbe_vector_size);
     size_t size = 4;
     FinalModel<T> fbe_model(_buffer, fbe_offset() + 4);
-    for (size_t i = 0; i < fbe_vector_size; ++i)
+    auto it = values.begin();
+    for (size_t i = 0; i < fbe_vector_size; ++i, ++it)
     {
-        if constexpr (std::is_constructible_v<T, std::pmr::memory_resource*>) {
-            values.emplace_back(resource);
-        } else {
-            values.emplace_back();
-        }
-        size_t offset = fbe_model.get(values.back(), resource);
+        size_t offset = fbe_model.get(*it, resource);
         fbe_model.fbe_shift(offset);
         size += offset;
     }

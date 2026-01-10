@@ -290,3 +290,189 @@ TEST_CASE_METHOD(ArenaTest, "Arena (pmr::bytes)", "[ptr-based FBE]") {
         REQUIRE(*line2 == copy_line);
     });
 }
+
+// ============================================================================
+// Final Mode + Arena Tests
+// Note: Item2 is used because Item contains variants which are not supported
+// in Final mode. Item2 only has a bytes field which is fully supported.
+// ============================================================================
+
+#include "../proto/arena_final_pmr_models.h"
+#include "../proto/arena_common_final_pmr_models.h"
+
+TEST_CASE_METHOD(ArenaTest, "Arena Final (pmr::bytes)", "[final-based FBE]") {
+    test_fn_with_allocs([](Arena& arena) {
+        auto* item2 = arena.Create<::arena_pmr::Item2>();
+
+        std::pmr::vector<uint8_t> bytes_v{{65, 66, 67, 68, 69}, arena.get_memory_resource()};
+        FBE::pmr_buffer_t buffer(std::move(bytes_v));
+        item2->bytes_v = std::move(buffer);
+
+        REQUIRE(arena.check(reinterpret_cast<char*>(&item2->bytes_v)) == ArenaContainStatus::BlockUsed);
+        REQUIRE(arena.check(reinterpret_cast<char*>(item2->bytes_v.data())) == ArenaContainStatus::BlockUsed);
+
+        // Serialize using Final model
+        FBE::arena_pmr::Item2FinalModel writer;
+        size_t serialized = writer.serialize(*item2);
+        REQUIRE(serialized == writer.buffer().size());
+        REQUIRE(writer.verify());
+        writer.next(serialized);
+
+        // Deserialize using Final model with memory resource
+        FBE::arena_pmr::Item2FinalModel reader;
+        reader.attach(writer.buffer());
+        REQUIRE(reader.verify());
+
+        ::arena_pmr::Item2 copy;
+        size_t deserialized = reader.deserialize(copy, arena.get_memory_resource());
+        REQUIRE(deserialized == reader.buffer().size());
+
+        REQUIRE(item2->bytes_v.string() == "ABCDE");
+        REQUIRE(copy.bytes_v.string() == "ABCDE");
+        REQUIRE(*item2 == copy);
+    });
+}
+
+TEST_CASE_METHOD(ArenaTest, "Arena Final vs Regular comparison (Item2)", "[final-based FBE]") {
+    // Test that Final and Regular mode produce equivalent results for Item2
+    test_fn_with_allocs([](Arena& arena) {
+        // Create test data
+        auto* item2 = arena.Create<::arena_pmr::Item2>();
+        std::pmr::vector<uint8_t> bytes_v{{72, 101, 108, 108, 111}, arena.get_memory_resource()};
+        item2->bytes_v = FBE::pmr_buffer_t(std::move(bytes_v));
+
+        // Serialize with Final model
+        FBE::arena_pmr::Item2FinalModel final_writer;
+        size_t final_serialized = final_writer.serialize(*item2);
+        REQUIRE(final_writer.verify());
+
+        // Serialize with Regular model
+        FBE::arena_pmr::Item2Model regular_writer;
+        size_t regular_serialized = regular_writer.serialize(*item2, arena.get_memory_resource());
+        REQUIRE(regular_writer.verify());
+
+        // Deserialize from Final model
+        FBE::arena_pmr::Item2FinalModel final_reader;
+        final_reader.attach(final_writer.buffer());
+        ::arena_pmr::Item2 final_copy;
+        final_reader.deserialize(final_copy, arena.get_memory_resource());
+
+        // Deserialize from Regular model
+        FBE::arena_pmr::Item2Model regular_reader;
+        regular_reader.attach(regular_writer.buffer());
+        ::arena_pmr::Item2 regular_copy;
+        regular_reader.deserialize(regular_copy, arena.get_memory_resource());
+
+        // Both should equal the original
+        REQUIRE(item2->bytes_v.string() == "Hello");
+        REQUIRE(final_copy.bytes_v.string() == "Hello");
+        REQUIRE(regular_copy.bytes_v.string() == "Hello");
+        REQUIRE(*item2 == final_copy);
+        REQUIRE(*item2 == regular_copy);
+        REQUIRE(final_copy == regular_copy);
+
+        // Final model should typically be more compact
+        REQUIRE(final_serialized <= regular_serialized);
+    });
+}
+
+TEST_CASE_METHOD(ArenaTest, "Arena Final empty bytes", "[final-based FBE]") {
+    test_fn_with_allocs([](Arena& arena) {
+        // Test with empty bytes
+        auto* item2 = arena.Create<::arena_pmr::Item2>();
+        // bytes_v is empty by default
+
+        // Serialize
+        FBE::arena_pmr::Item2FinalModel writer;
+        [[maybe_unused]] size_t serialized = writer.serialize(*item2);
+        REQUIRE(writer.verify());
+
+        // Deserialize
+        FBE::arena_pmr::Item2FinalModel reader;
+        reader.attach(writer.buffer());
+        REQUIRE(reader.verify());
+
+        ::arena_pmr::Item2 copy;
+        reader.deserialize(copy, arena.get_memory_resource());
+
+        REQUIRE(copy.bytes_v.empty());
+        REQUIRE(*item2 == copy);
+    });
+}
+
+TEST_CASE_METHOD(ArenaTest, "Arena Final multiple Item2", "[final-based FBE]") {
+    test_fn_with_allocs([](Arena& arena) {
+        // Serialize multiple Item2 in sequence
+        FBE::arena_pmr::Item2FinalModel writer;
+
+        // First item
+        auto* item1 = arena.Create<::arena_pmr::Item2>();
+        std::pmr::vector<uint8_t> bytes1{{1, 2, 3}, arena.get_memory_resource()};
+        item1->bytes_v = FBE::pmr_buffer_t(std::move(bytes1));
+        size_t size1 = writer.serialize(*item1);
+        REQUIRE(writer.verify());
+        writer.next(size1);
+
+        // Second item
+        auto* item2 = arena.Create<::arena_pmr::Item2>();
+        std::pmr::vector<uint8_t> bytes2{{4, 5, 6, 7, 8}, arena.get_memory_resource()};
+        item2->bytes_v = FBE::pmr_buffer_t(std::move(bytes2));
+        size_t size2 = writer.serialize(*item2);
+        REQUIRE(writer.verify());
+
+        // Deserialize both
+        FBE::arena_pmr::Item2FinalModel reader;
+        reader.attach(writer.buffer());
+
+        ::arena_pmr::Item2 copy1;
+        size_t deser1 = reader.deserialize(copy1, arena.get_memory_resource());
+        REQUIRE(deser1 == size1);
+        reader.next(deser1);
+
+        ::arena_pmr::Item2 copy2;
+        size_t deser2 = reader.deserialize(copy2, arena.get_memory_resource());
+        REQUIRE(deser2 == size2);
+
+        REQUIRE(*item1 == copy1);
+        REQUIRE(*item2 == copy2);
+        REQUIRE(copy1.bytes_v.size() == 3);
+        REQUIRE(copy2.bytes_v.size() == 5);
+    });
+}
+
+TEST_CASE_METHOD(ArenaTest, "Arena Final large bytes", "[final-based FBE]") {
+    test_fn_with_allocs([](Arena& arena) {
+        // Test with larger bytes buffer
+        auto* item2 = arena.Create<::arena_pmr::Item2>();
+
+        // Create a larger buffer (1KB)
+        std::pmr::vector<uint8_t> bytes_v(arena.get_memory_resource());
+        bytes_v.reserve(1024);
+        for (int i = 0; i < 1024; ++i) {
+            bytes_v.push_back(static_cast<uint8_t>(i % 256));
+        }
+        item2->bytes_v = FBE::pmr_buffer_t(std::move(bytes_v));
+
+        // Serialize
+        FBE::arena_pmr::Item2FinalModel writer;
+        size_t serialized = writer.serialize(*item2);
+        REQUIRE(serialized == writer.buffer().size());
+        REQUIRE(writer.verify());
+
+        // Deserialize
+        FBE::arena_pmr::Item2FinalModel reader;
+        reader.attach(writer.buffer());
+        REQUIRE(reader.verify());
+
+        ::arena_pmr::Item2 copy;
+        reader.deserialize(copy, arena.get_memory_resource());
+
+        REQUIRE(copy.bytes_v.size() == 1024);
+        REQUIRE(*item2 == copy);
+
+        // Verify content
+        for (int i = 0; i < 1024; ++i) {
+            REQUIRE(copy.bytes_v[i] == static_cast<uint8_t>(i % 256));
+        }
+    });
+}

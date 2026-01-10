@@ -51,6 +51,8 @@ public:
 
     // Get the field value
     size_t get(T& value) const noexcept;
+    // Get the field value (with memory resource, ignored for primitives)
+    size_t get(T& value, [[maybe_unused]] std::pmr::memory_resource* resource) const noexcept { return get(value); }
     // Set the field value
     size_t set(T value) noexcept;
 
@@ -227,6 +229,68 @@ private:
     mutable size_t _offset;
 };
 
+// Fast Binary Encoding final model pmr_buffer_t specialization
+template <>
+class FinalModel<pmr_buffer_t>
+{
+public:
+    FinalModel(FBEBuffer& buffer, size_t offset) noexcept : _buffer(buffer), _offset(offset) {}
+
+    // Get the allocation size
+    size_t fbe_allocation_size(const void* data, size_t size) const noexcept { return 4 + size; }
+    template <size_t N>
+    size_t fbe_allocation_size(const uint8_t (&data)[N]) const noexcept { return 4 + N; }
+    template <size_t N>
+    size_t fbe_allocation_size(const std::array<uint8_t, N>& data) const noexcept { return 4 + N; }
+    size_t fbe_allocation_size(const std::pmr::vector<uint8_t>& value) const noexcept { return 4 + value.size(); }
+    size_t fbe_allocation_size(const pmr_buffer_t& value) const noexcept { return 4 + value.size(); }
+
+    // Get the field offset
+    size_t fbe_offset() const noexcept { return _offset; }
+    // Set the field offset
+    size_t fbe_offset(size_t offset) const noexcept { return _offset = offset; }
+
+    // Shift the current field offset
+    void fbe_shift(size_t size) noexcept { _offset += size; }
+    // Unshift the current field offset
+    void fbe_unshift(size_t size) noexcept { _offset -= size; }
+
+    // Check if the bytes value is valid
+    size_t verify() const noexcept;
+
+    // Get the bytes value
+    size_t get(void* data, size_t size) const noexcept;
+    // Get the bytes value
+    template <size_t N>
+    size_t get(uint8_t (&data)[N]) const noexcept { return get(data, N); }
+    // Get the bytes value
+    template <size_t N>
+    size_t get(std::array<uint8_t, N>& data) const noexcept { return get(data.data(), data.size()); }
+    // Get the bytes value (with optional memory resource)
+    size_t get(std::pmr::vector<uint8_t>& value) const noexcept { return get(value, nullptr); }
+    size_t get(std::pmr::vector<uint8_t>& value, std::pmr::memory_resource* resource) const noexcept;
+    // Get the bytes value (with optional memory resource)
+    size_t get(pmr_buffer_t& value) const noexcept { return get(value.buffer(), nullptr); }
+    size_t get(pmr_buffer_t& value, std::pmr::memory_resource* resource) const noexcept { return get(value.buffer(), resource); }
+
+    // Set the bytes value
+    size_t set(const void* data, size_t size);
+    // Set the bytes value
+    template <size_t N>
+    size_t set(const uint8_t (&data)[N]) { return set(data, N); }
+    // Set the bytes value
+    template <size_t N>
+    size_t set(const std::array<uint8_t, N>& data) { return set(data.data(), data.size()); }
+    // Set the bytes value
+    size_t set(const std::pmr::vector<uint8_t>& value) { return set(value.data(), value.size()); }
+    // Set the bytes value
+    size_t set(const pmr_buffer_t& value) { return set(value.buffer()); }
+
+private:
+    FBEBuffer& _buffer;
+    mutable size_t _offset;
+};
+
 // Fast Binary Encoding final model string specialization
 template <>
 class FinalModel<FBEString>
@@ -318,7 +382,8 @@ public:
     // Get the string value
     template <size_t N>
     size_t get(std::array<char, N>& data) const noexcept { return get(data.data(), data.size()); }
-    // Get the ArenaString value
+    // Get the ArenaString value (with optional resource)
+    size_t get(ArenaString& value) const noexcept { return get(value, nullptr); }
     size_t get(ArenaString& value, std::pmr::memory_resource* resource) const noexcept;
 
     // Set the string value
@@ -464,11 +529,14 @@ public:
 
     // Get the vector as FastVec with memory resource
     size_t get(FastVec<T>& values, std::pmr::memory_resource* resource) const noexcept;
-    // Get the vector as std::pmr::vector
+    // Get the vector as std::pmr::vector (with optional resource)
+    size_t get(std::pmr::vector<T>& values) const noexcept { return get(values, nullptr); }
     size_t get(std::pmr::vector<T>& values, std::pmr::memory_resource* resource) const noexcept;
-    // Get the vector as std::pmr::list
+    // Get the vector as std::pmr::list (with optional resource)
+    size_t get(std::pmr::list<T>& values) const noexcept { return get(values, nullptr); }
     size_t get(std::pmr::list<T>& values, std::pmr::memory_resource* resource) const noexcept;
-    // Get the vector as std::pmr::set
+    // Get the vector as std::pmr::set (with optional resource)
+    size_t get(std::pmr::set<T>& values) const noexcept { return get(values, nullptr); }
     size_t get(std::pmr::set<T>& values, std::pmr::memory_resource* resource) const noexcept;
 
     // Set the vector as FastVec
@@ -499,7 +567,8 @@ public:
     size_t fbe_allocation_size(const FBE::pmr::set<T>& values) const noexcept;
     // Get the vector as FBE::set (btree_set)
     size_t get(FBE::set<T>& values) const noexcept;
-    // Get the vector as FBE::pmr::set (btree_set with pmr allocator)
+    // Get the vector as FBE::pmr::set (btree_set with pmr allocator, optional resource)
+    size_t get(FBE::pmr::set<T>& values) const noexcept { return get(values, nullptr); }
     size_t get(FBE::pmr::set<T>& values, std::pmr::memory_resource* resource) const noexcept;
     // Set the vector as FBE::set (btree_set)
     size_t set(const FBE::set<T>& values) noexcept;
@@ -543,9 +612,11 @@ public:
 
     // Get the map as std::map with memory resource
     size_t get(std::map<TKey, TValue>& values, std::pmr::memory_resource* resource) const noexcept;
-    // Get the map as std::pmr::map
+    // Get the map as std::pmr::map (with optional resource)
+    size_t get(std::pmr::map<TKey, TValue>& values) const noexcept { return get(values, nullptr); }
     size_t get(std::pmr::map<TKey, TValue>& values, std::pmr::memory_resource* resource) const noexcept;
-    // Get the map as std::pmr::unordered_map
+    // Get the map as std::pmr::unordered_map (with optional resource)
+    size_t get(std::pmr::unordered_map<TKey, TValue>& values) const noexcept { return get(values, nullptr); }
     size_t get(std::pmr::unordered_map<TKey, TValue>& values, std::pmr::memory_resource* resource) const noexcept;
 
     // Set the map as std::map
@@ -570,7 +641,8 @@ public:
     size_t fbe_allocation_size(const FBE::pmr::map<TKey, TValue>& values) const noexcept;
     // Get the map as FBE::map (btree_map)
     size_t get(FBE::map<TKey, TValue>& values) const noexcept;
-    // Get the map as FBE::pmr::map (btree_map with pmr allocator)
+    // Get the map as FBE::pmr::map (btree_map with pmr allocator, optional resource)
+    size_t get(FBE::pmr::map<TKey, TValue>& values) const noexcept { return get(values, nullptr); }
     size_t get(FBE::pmr::map<TKey, TValue>& values, std::pmr::memory_resource* resource) const noexcept;
     // Set the map as FBE::map (btree_map)
     size_t set(const FBE::map<TKey, TValue>& values) noexcept;
