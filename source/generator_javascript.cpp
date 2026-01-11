@@ -3,7 +3,7 @@
     \brief Fast binary encoding JavaScript generator implementation
     \author Ivan Shynkarenka
     \date 28.06.2018
-    \copyright MIT License
+    \copyright AGPL-3.0-or-later
 */
 
 #include "generator_javascript.h"

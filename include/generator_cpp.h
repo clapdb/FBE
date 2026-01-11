@@ -10,7 +10,7 @@
     \brief Fast binary encoding C++ generator definition
     \author Ivan Shynkarenka
     \date 20.04.2018
-    \copyright MIT License
+    \copyright AGPL-3.0-or-later
 */
 
 #ifndef GENERATOR_CPP_H

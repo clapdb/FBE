@@ -10,7 +10,7 @@
     \brief Fast binary encoding C++ generator implementation
     \author Ivan Shynkarenka
     \date 20.04.2018
-    \copyright MIT License
+    \copyright AGPL-3.0-or-later
 */
 #include "generator_cpp.h"
 #include "fbe.h"
