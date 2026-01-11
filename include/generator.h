@@ -1,15 +1,28 @@
 /*
-* Copyright (C) 2020 Beijing Jinyi Data Technology Co., Ltd. All rights reserved.
-*
-* This source code is licensed under the MIT license found in the
-* LICENSE file in the root directory of this source tree.
-*/
+ * Copyright (C) STDB Holdings Limited
+ * SPDX-License-Identifier: AGPL-3.0-or-later
+ *
+ * This file is part of FBE (Fast Binary Encoding).
+ *
+ * FBE is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * FBE is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with FBE. If not, see <https://www.gnu.org/licenses/>.
+ */
 /*!
     \file generator.h
     \brief Fast binary encoding generator definition
     \author Ivan Shynkarenka
     \date 20.04.2018
-    \copyright MIT License
+    \copyright AGPL-3.0-or-later
 */
 
 #ifndef GENERATOR_H
