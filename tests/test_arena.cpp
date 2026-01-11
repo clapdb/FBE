@@ -877,3 +877,178 @@ TEST_CASE_METHOD(ArenaTest,
     REQUIRE(*item == copy);
   });
 }
+
+// ============================================================================
+// Benchmark: Regular+PMR vs Final+PMR
+// Using arena_common_pmr::Expression (complex struct with vectors, maps, variants)
+//
+// Note: Full 4-way benchmark (Regular vs Final vs Regular+PMR vs Final+PMR)
+// cannot be done in same binary due to duplicate symbol conflict between
+// arena_common_models.cpp and variants_models.cpp (both define same Expr variant).
+// See test_benchmark.cpp for Regular vs Final comparison.
+// ============================================================================
+
+#include <chrono>
+#include <iomanip>
+#include <iostream>
+
+template <typename Func>
+double run_benchmark(const char *name, int iterations, Func &&func) {
+  // Warmup
+  for (int i = 0; i < 100; i++) {
+    func();
+  }
+
+  auto start = std::chrono::high_resolution_clock::now();
+  for (int i = 0; i < iterations; i++) {
+    func();
+  }
+  auto end = std::chrono::high_resolution_clock::now();
+  auto duration =
+      std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count();
+  return static_cast<double>(duration) / iterations;
+}
+
+// Create complex Expression for PMR modes
+static ::arena_common_pmr::Expression
+CreateComplexExpressionPmr(std::pmr::memory_resource *resource) {
+  ::arena_common_pmr::Expression expr(resource);
+  expr.keys.reserve(10);
+  expr.aliases.reserve(5);
+
+  // Add keys
+  for (int j = 0; j < 10; ++j) {
+    std::string key = "key_" + std::to_string(j) + "_with_longer_name";
+    expr.keys.emplace_back(FBE::ArenaString(key.c_str(), resource));
+  }
+
+  // Add aliases with different variant types
+  for (int j = 0; j < 5; ++j) {
+    ::arena_common_pmr::Alias alias(resource);
+    std::string name = "nested_alias_" + std::to_string(j) + "_with_description";
+    alias.name.assign(name.c_str());
+    alias.optr = static_cast<::arena_common_pmr::Optr>(j % 6);
+
+    switch (j % 4) {
+      case 0: alias.expr.emplace<bool>(j % 2 == 0); break;
+      case 1: alias.expr.emplace<int32_t>(j * 100); break;
+      case 2: {
+        std::string val = "string_variant_value_" + std::to_string(j);
+        alias.expr.emplace<FBE::ArenaString>(FBE::ArenaString(val.c_str(), resource));
+        break;
+      }
+      case 3: break; // monostate
+    }
+    expr.aliases.emplace_back(std::move(alias));
+  }
+
+  // Add alias_int map entries
+  for (int j = 0; j < 5; ++j) {
+    ::arena_common_pmr::Alias map_alias(resource);
+    std::string name = "map_alias_" + std::to_string(j);
+    map_alias.name.assign(name.c_str());
+    map_alias.optr = ::arena_common_pmr::Optr::GT;
+    map_alias.expr.emplace<int32_t>(j * 10);
+    expr.alias_int.emplace(j * 100, std::move(map_alias));
+  }
+
+  return expr;
+}
+
+TEST_CASE("Benchmark: Regular+PMR vs Final+PMR", "[Benchmark]") {
+  constexpr int ITERATIONS = 10000;
+
+  // Create Arena for PMR modes
+  Arena::Options arena_opts;
+  arena_opts.normal_block_size = 64 * 1024;
+  arena_opts.huge_block_size = 1024 * 1024;
+  arena_opts.suggested_init_block_size = 64 * 1024;
+  arena_opts.block_alloc = [](std::size_t size) -> void* { return std::malloc(size); };
+  arena_opts.block_dealloc = [](void* ptr) { std::free(ptr); };
+  Arena arena(arena_opts);
+
+  // Create test data
+  auto expr_pmr = CreateComplexExpressionPmr(arena.get_memory_resource());
+
+  // ==================== SERIALIZE BENCHMARKS ====================
+
+  // Regular+PMR serialize
+  double regular_pmr_serialize = run_benchmark("Regular+PMR serialize", ITERATIONS, [&]() {
+    FBE::arena_common_pmr::ExpressionModel writer;
+    writer.serialize(expr_pmr, arena.get_memory_resource());
+  });
+
+  // Final+PMR serialize
+  double final_pmr_serialize = run_benchmark("Final+PMR serialize", ITERATIONS, [&]() {
+    FBE::arena_common_pmr::ExpressionFinalModel writer;
+    writer.serialize(expr_pmr);
+  });
+
+  // Create serialized buffers for deserialize benchmarks
+  FBE::arena_common_pmr::ExpressionModel regular_pmr_writer;
+  regular_pmr_writer.serialize(expr_pmr, arena.get_memory_resource());
+  size_t regular_pmr_size = regular_pmr_writer.buffer().size();
+
+  FBE::arena_common_pmr::ExpressionFinalModel final_pmr_writer;
+  final_pmr_writer.serialize(expr_pmr);
+  size_t final_pmr_size = final_pmr_writer.buffer().size();
+
+  // ==================== DESERIALIZE BENCHMARKS ====================
+
+  // Regular+PMR deserialize
+  double regular_pmr_deserialize = run_benchmark("Regular+PMR deserialize", ITERATIONS, [&]() {
+    FBE::arena_common_pmr::ExpressionModel reader;
+    reader.attach(regular_pmr_writer.buffer());
+    ::arena_common_pmr::Expression copy(std::pmr::get_default_resource());
+    reader.deserialize(copy, std::pmr::get_default_resource());
+  });
+
+  // Final+PMR deserialize
+  double final_pmr_deserialize = run_benchmark("Final+PMR deserialize", ITERATIONS, [&]() {
+    FBE::arena_common_pmr::ExpressionFinalModel reader;
+    reader.attach(final_pmr_writer.buffer());
+    ::arena_common_pmr::Expression copy(std::pmr::get_default_resource());
+    reader.deserialize(copy, std::pmr::get_default_resource());
+  });
+
+  // ==================== PRINT RESULTS ====================
+  std::cout << "\n";
+  std::cout << "========================================================================\n";
+  std::cout << "Benchmark: Regular+PMR vs Final+PMR\n";
+  std::cout << "Schema: arena_common_pmr::Expression (" << ITERATIONS << " iterations)\n";
+  std::cout << "------------------------------------------------------------------------\n";
+  std::cout << "Expression structure:\n";
+  std::cout << "  - 10 keys (ArenaStrings)\n";
+  std::cout << "  - 5 aliases (with variant types: bool/int/ArenaString/monostate)\n";
+  std::cout << "  - 5 alias_int map entries\n";
+  std::cout << "========================================================================\n";
+  std::cout << std::fixed << std::setprecision(2);
+
+  std::cout << "\n--- Serialized Size (bytes) ---\n";
+  std::cout << "Regular+PMR:     " << std::setw(6) << regular_pmr_size << "      (baseline)\n";
+  std::cout << "Final+PMR:       " << std::setw(6) << final_pmr_size << "      "
+            << std::setw(5) << (100.0 * (double)final_pmr_size / regular_pmr_size) << "% ("
+            << std::setw(5) << (100.0 - 100.0 * (double)final_pmr_size / regular_pmr_size) << "% smaller)\n";
+
+  std::cout << "\n--- Serialize (ns/op) ---\n";
+  std::cout << "Regular+PMR:     " << std::setw(8) << regular_pmr_serialize << "   (baseline)\n";
+  std::cout << "Final+PMR:       " << std::setw(8) << final_pmr_serialize << "   "
+            << std::setw(5) << (regular_pmr_serialize / final_pmr_serialize) << "x faster\n";
+
+  std::cout << "\n--- Deserialize (ns/op) ---\n";
+  std::cout << "Regular+PMR:     " << std::setw(8) << regular_pmr_deserialize << "   (baseline)\n";
+  std::cout << "Final+PMR:       " << std::setw(8) << final_pmr_deserialize << "   "
+            << std::setw(5) << (regular_pmr_deserialize / final_pmr_deserialize) << "x faster\n";
+
+  std::cout << "\n--- Summary: Final+PMR vs Regular+PMR ---\n";
+  std::cout << "  Serialize:     " << std::setw(5) << (regular_pmr_serialize / final_pmr_serialize) << "x faster\n";
+  std::cout << "  Deserialize:   " << std::setw(5) << (regular_pmr_deserialize / final_pmr_deserialize) << "x faster\n";
+  std::cout << "  Size:          " << std::setw(5) << (100.0 - 100.0 * (double)final_pmr_size / regular_pmr_size) << "% smaller\n";
+  std::cout << "========================================================================\n";
+  std::cout << "\nNote: For Regular vs Final (non-PMR) comparison, see test_benchmark.cpp\n";
+  std::cout << "========================================================================\n";
+
+  // Sanity checks
+  REQUIRE(final_pmr_serialize <= regular_pmr_serialize * 1.5);
+  REQUIRE(final_pmr_deserialize <= regular_pmr_deserialize * 1.5);
+}
