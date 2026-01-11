@@ -25,6 +25,72 @@
 
 namespace FBE {
 
+// Fast Binary Encoding ::variants::Expr final model
+template <>
+class FinalModel<::variants::Expr>
+{
+public:
+    FinalModel(FBEBuffer& buffer, size_t offset) noexcept : _buffer(buffer), _offset(offset) {}
+
+    // Get the allocation size
+    size_t fbe_allocation_size(const ::variants::Expr& fbe_value) const noexcept;
+    // Get the final offset
+    size_t fbe_offset() const noexcept { return _offset; }
+    // Set the final offset
+    size_t fbe_offset(size_t offset) const noexcept { return _offset = offset; }
+
+    // Shift the current final offset
+    void fbe_shift(size_t size) noexcept { _offset += size; }
+    // Unshift the current final offset
+    void fbe_unshift(size_t size) noexcept { _offset -= size; }
+
+    // Check if the variant value is valid
+    size_t verify() const noexcept;
+
+    // Get the variant value
+    size_t get(::variants::Expr& fbe_value) const noexcept;
+
+    // Set the variant value
+    size_t set(const ::variants::Expr& fbe_value) noexcept;
+
+private:
+    FBEBuffer& _buffer;
+    mutable size_t _offset;
+};
+
+// Fast Binary Encoding ::variants::V final model
+template <>
+class FinalModel<::variants::V>
+{
+public:
+    FinalModel(FBEBuffer& buffer, size_t offset) noexcept : _buffer(buffer), _offset(offset) {}
+
+    // Get the allocation size
+    size_t fbe_allocation_size(const ::variants::V& fbe_value) const noexcept;
+    // Get the final offset
+    size_t fbe_offset() const noexcept { return _offset; }
+    // Set the final offset
+    size_t fbe_offset(size_t offset) const noexcept { return _offset = offset; }
+
+    // Shift the current final offset
+    void fbe_shift(size_t size) noexcept { _offset += size; }
+    // Unshift the current final offset
+    void fbe_unshift(size_t size) noexcept { _offset -= size; }
+
+    // Check if the variant value is valid
+    size_t verify() const noexcept;
+
+    // Get the variant value
+    size_t get(::variants::V& fbe_value) const noexcept;
+
+    // Set the variant value
+    size_t set(const ::variants::V& fbe_value) noexcept;
+
+private:
+    FBEBuffer& _buffer;
+    mutable size_t _offset;
+};
+
 // Fast Binary Encoding ::variants::Simple final model
 template <>
 class FinalModel<::variants::Simple>
