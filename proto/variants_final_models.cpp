@@ -9,6 +9,547 @@
 
 namespace FBE {
 
+size_t FinalModel<::variants::Expr>::fbe_allocation_size(const ::variants::Expr& fbe_value) const noexcept
+{
+    size_t fbe_result = 4; // variant type index size
+    std::visit(
+        overloaded
+        {
+            [](std::monostate) { },
+            [this, &fbe_result](bool v) {
+                FinalModel<bool> fbe_model(_buffer, 0);
+                fbe_result += fbe_model.fbe_allocation_size(v);
+            },
+            [this, &fbe_result](int32_t v) {
+                FinalModel<int32_t> fbe_model(_buffer, 0);
+                fbe_result += fbe_model.fbe_allocation_size(v);
+            },
+            [this, &fbe_result](const FBEString& v) {
+                FinalModel<FBEString> fbe_model(_buffer, 0);
+                fbe_result += fbe_model.fbe_allocation_size(v);
+            },
+        },
+        fbe_value
+    );
+    return fbe_result;
+}
+
+size_t FinalModel<::variants::Expr>::verify() const noexcept
+{
+    size_t fbe_full_offset = _buffer.offset() + fbe_offset();
+    if ((fbe_full_offset + 4) > _buffer.size())
+        return std::numeric_limits<std::size_t>::max();
+
+    uint32_t fbe_variant_type = unaligned_load<uint32_t>(_buffer.data() + fbe_full_offset);
+    if (fbe_variant_type > 3)
+        return std::numeric_limits<std::size_t>::max();
+
+    _buffer.shift(fbe_offset() + 4);
+    size_t fbe_result = 4;
+    switch (fbe_variant_type) {
+        case 0: // std::monostate
+            break;
+        case 1: {
+            FinalModel<bool> fbe_model(_buffer, 0);
+            size_t fbe_field_size = fbe_model.verify();
+            if (fbe_field_size == std::numeric_limits<std::size_t>::max()) {
+                _buffer.unshift(fbe_offset() + 4);
+                return std::numeric_limits<std::size_t>::max();
+            }
+            fbe_result += fbe_field_size;
+            break;
+        }
+        case 2: {
+            FinalModel<int32_t> fbe_model(_buffer, 0);
+            size_t fbe_field_size = fbe_model.verify();
+            if (fbe_field_size == std::numeric_limits<std::size_t>::max()) {
+                _buffer.unshift(fbe_offset() + 4);
+                return std::numeric_limits<std::size_t>::max();
+            }
+            fbe_result += fbe_field_size;
+            break;
+        }
+        case 3: {
+            FinalModel<FBEString> fbe_model(_buffer, 0);
+            size_t fbe_field_size = fbe_model.verify();
+            if (fbe_field_size == std::numeric_limits<std::size_t>::max()) {
+                _buffer.unshift(fbe_offset() + 4);
+                return std::numeric_limits<std::size_t>::max();
+            }
+            fbe_result += fbe_field_size;
+            break;
+        }
+        default:
+            _buffer.unshift(fbe_offset() + 4);
+            return std::numeric_limits<std::size_t>::max();
+    }
+    _buffer.unshift(fbe_offset() + 4);
+    return fbe_result;
+}
+
+size_t FinalModel<::variants::Expr>::get(::variants::Expr& fbe_value) const noexcept
+{
+    size_t fbe_full_offset = _buffer.offset() + fbe_offset();
+    assert(((fbe_full_offset + 4) <= _buffer.size()) && "Model is broken!");
+    if ((fbe_full_offset + 4) > _buffer.size())
+        return 0;
+
+    uint32_t fbe_variant_type = unaligned_load<uint32_t>(_buffer.data() + fbe_full_offset);
+    assert(fbe_variant_type <= 3 && "Model is broken!");
+
+    _buffer.shift(fbe_offset() + 4);
+    size_t fbe_result = 4;
+    switch (fbe_variant_type) {
+        case 0:
+            fbe_value.emplace<std::monostate>();
+            break;
+        case 1: {
+            FinalModel<bool> fbe_model(_buffer, 0);
+            fbe_value.emplace<bool>();
+            auto& value = std::get<1>(fbe_value);
+            fbe_result += fbe_model.get(value);
+            break;
+        }
+        case 2: {
+            FinalModel<int32_t> fbe_model(_buffer, 0);
+            fbe_value.emplace<int32_t>();
+            auto& value = std::get<2>(fbe_value);
+            fbe_result += fbe_model.get(value);
+            break;
+        }
+        case 3: {
+            FinalModel<FBEString> fbe_model(_buffer, 0);
+            fbe_value.emplace<FBEString>();
+            auto& value = std::get<3>(fbe_value);
+            fbe_result += fbe_model.get(value);
+            break;
+        }
+        default:
+            break;
+    }
+    _buffer.unshift(fbe_offset() + 4);
+    return fbe_result;
+}
+
+size_t FinalModel<::variants::Expr>::set(const ::variants::Expr& fbe_value) noexcept
+{
+    size_t fbe_full_offset = _buffer.offset() + fbe_offset();
+    assert(((fbe_full_offset + 4) <= _buffer.size()) && "Model is broken!");
+    if ((fbe_full_offset + 4) > _buffer.size())
+        return 0;
+
+    size_t fbe_result = 4;
+    uint32_t fbe_variant_type = static_cast<uint32_t>(fbe_value.index());
+    unaligned_store<uint32_t>(_buffer.data() + fbe_full_offset, fbe_variant_type);
+
+    _buffer.shift(fbe_offset() + 4);
+    std::visit(
+        overloaded
+        {
+            [](std::monostate) { },
+            [this, &fbe_result](bool v) {
+                FinalModel<bool> fbe_model(_buffer, 0);
+                fbe_result += fbe_model.set(v);
+            },
+            [this, &fbe_result](int32_t v) {
+                FinalModel<int32_t> fbe_model(_buffer, 0);
+                fbe_result += fbe_model.set(v);
+            },
+            [this, &fbe_result](const FBEString& v) {
+                FinalModel<FBEString> fbe_model(_buffer, 0);
+                fbe_result += fbe_model.set(v);
+            },
+        },
+        fbe_value
+    );
+    _buffer.unshift(fbe_offset() + 4);
+    return fbe_result;
+}
+
+
+size_t FinalModel<::variants::V>::fbe_allocation_size(const ::variants::V& fbe_value) const noexcept
+{
+    size_t fbe_result = 4; // variant type index size
+    std::visit(
+        overloaded
+        {
+            [](std::monostate) { },
+            [this, &fbe_result](const FBEString& v) {
+                FinalModel<FBEString> fbe_model(_buffer, 0);
+                fbe_result += fbe_model.fbe_allocation_size(v);
+            },
+            [this, &fbe_result](int32_t v) {
+                FinalModel<int32_t> fbe_model(_buffer, 0);
+                fbe_result += fbe_model.fbe_allocation_size(v);
+            },
+            [this, &fbe_result](double v) {
+                FinalModel<double> fbe_model(_buffer, 0);
+                fbe_result += fbe_model.fbe_allocation_size(v);
+            },
+            [this, &fbe_result](const ::variants::Simple& v) {
+                FinalModel<::variants::Simple> fbe_model(_buffer, 0);
+                fbe_result += fbe_model.fbe_allocation_size(v);
+            },
+            [this, &fbe_result](const FastVec<::variants::Simple>& v) {
+                FinalModelVector<::variants::Simple> fbe_model(_buffer, 0);
+                fbe_result += fbe_model.fbe_allocation_size(v);
+            },
+            [this, &fbe_result](const FastVec<int32_t>& v) {
+                FinalModelVector<int32_t> fbe_model(_buffer, 0);
+                fbe_result += fbe_model.fbe_allocation_size(v);
+            },
+            [this, &fbe_result](const std::unordered_map<int32_t, ::variants::Simple>& v) {
+                FinalModelMap<int32_t, ::variants::Simple> fbe_model(_buffer, 0);
+                fbe_result += fbe_model.fbe_allocation_size(v);
+            },
+            [this, &fbe_result](const FastVec<FBE::buffer_t>& v) {
+                FinalModelVector<FBE::buffer_t> fbe_model(_buffer, 0);
+                fbe_result += fbe_model.fbe_allocation_size(v);
+            },
+            [this, &fbe_result](const FastVec<FBEString>& v) {
+                FinalModelVector<FBEString> fbe_model(_buffer, 0);
+                fbe_result += fbe_model.fbe_allocation_size(v);
+            },
+            [this, &fbe_result](const std::unordered_map<int32_t, FBE::buffer_t>& v) {
+                FinalModelMap<int32_t, FBE::buffer_t> fbe_model(_buffer, 0);
+                fbe_result += fbe_model.fbe_allocation_size(v);
+            },
+            [this, &fbe_result](const std::unordered_map<FBEString, FBE::buffer_t>& v) {
+                FinalModelMap<FBEString, FBE::buffer_t> fbe_model(_buffer, 0);
+                fbe_result += fbe_model.fbe_allocation_size(v);
+            },
+            [this, &fbe_result](const ::variants::Expr& v) {
+                FinalModel<::variants::Expr> fbe_model(_buffer, 0);
+                fbe_result += fbe_model.fbe_allocation_size(v);
+            },
+        },
+        fbe_value
+    );
+    return fbe_result;
+}
+
+size_t FinalModel<::variants::V>::verify() const noexcept
+{
+    size_t fbe_full_offset = _buffer.offset() + fbe_offset();
+    if ((fbe_full_offset + 4) > _buffer.size())
+        return std::numeric_limits<std::size_t>::max();
+
+    uint32_t fbe_variant_type = unaligned_load<uint32_t>(_buffer.data() + fbe_full_offset);
+    if (fbe_variant_type > 12)
+        return std::numeric_limits<std::size_t>::max();
+
+    _buffer.shift(fbe_offset() + 4);
+    size_t fbe_result = 4;
+    switch (fbe_variant_type) {
+        case 0: // std::monostate
+            break;
+        case 1: {
+            FinalModel<FBEString> fbe_model(_buffer, 0);
+            size_t fbe_field_size = fbe_model.verify();
+            if (fbe_field_size == std::numeric_limits<std::size_t>::max()) {
+                _buffer.unshift(fbe_offset() + 4);
+                return std::numeric_limits<std::size_t>::max();
+            }
+            fbe_result += fbe_field_size;
+            break;
+        }
+        case 2: {
+            FinalModel<int32_t> fbe_model(_buffer, 0);
+            size_t fbe_field_size = fbe_model.verify();
+            if (fbe_field_size == std::numeric_limits<std::size_t>::max()) {
+                _buffer.unshift(fbe_offset() + 4);
+                return std::numeric_limits<std::size_t>::max();
+            }
+            fbe_result += fbe_field_size;
+            break;
+        }
+        case 3: {
+            FinalModel<double> fbe_model(_buffer, 0);
+            size_t fbe_field_size = fbe_model.verify();
+            if (fbe_field_size == std::numeric_limits<std::size_t>::max()) {
+                _buffer.unshift(fbe_offset() + 4);
+                return std::numeric_limits<std::size_t>::max();
+            }
+            fbe_result += fbe_field_size;
+            break;
+        }
+        case 4: {
+            FinalModel<::variants::Simple> fbe_model(_buffer, 0);
+            size_t fbe_field_size = fbe_model.verify();
+            if (fbe_field_size == std::numeric_limits<std::size_t>::max()) {
+                _buffer.unshift(fbe_offset() + 4);
+                return std::numeric_limits<std::size_t>::max();
+            }
+            fbe_result += fbe_field_size;
+            break;
+        }
+        case 5: {
+            FinalModelVector<::variants::Simple> fbe_model(_buffer, 0);
+            size_t fbe_field_size = fbe_model.verify();
+            if (fbe_field_size == std::numeric_limits<std::size_t>::max()) {
+                _buffer.unshift(fbe_offset() + 4);
+                return std::numeric_limits<std::size_t>::max();
+            }
+            fbe_result += fbe_field_size;
+            break;
+        }
+        case 6: {
+            FinalModelVector<int32_t> fbe_model(_buffer, 0);
+            size_t fbe_field_size = fbe_model.verify();
+            if (fbe_field_size == std::numeric_limits<std::size_t>::max()) {
+                _buffer.unshift(fbe_offset() + 4);
+                return std::numeric_limits<std::size_t>::max();
+            }
+            fbe_result += fbe_field_size;
+            break;
+        }
+        case 7: {
+            FinalModelMap<int32_t, ::variants::Simple> fbe_model(_buffer, 0);
+            size_t fbe_field_size = fbe_model.verify();
+            if (fbe_field_size == std::numeric_limits<std::size_t>::max()) {
+                _buffer.unshift(fbe_offset() + 4);
+                return std::numeric_limits<std::size_t>::max();
+            }
+            fbe_result += fbe_field_size;
+            break;
+        }
+        case 8: {
+            FinalModelVector<FBE::buffer_t> fbe_model(_buffer, 0);
+            size_t fbe_field_size = fbe_model.verify();
+            if (fbe_field_size == std::numeric_limits<std::size_t>::max()) {
+                _buffer.unshift(fbe_offset() + 4);
+                return std::numeric_limits<std::size_t>::max();
+            }
+            fbe_result += fbe_field_size;
+            break;
+        }
+        case 9: {
+            FinalModelVector<FBEString> fbe_model(_buffer, 0);
+            size_t fbe_field_size = fbe_model.verify();
+            if (fbe_field_size == std::numeric_limits<std::size_t>::max()) {
+                _buffer.unshift(fbe_offset() + 4);
+                return std::numeric_limits<std::size_t>::max();
+            }
+            fbe_result += fbe_field_size;
+            break;
+        }
+        case 10: {
+            FinalModelMap<int32_t, FBE::buffer_t> fbe_model(_buffer, 0);
+            size_t fbe_field_size = fbe_model.verify();
+            if (fbe_field_size == std::numeric_limits<std::size_t>::max()) {
+                _buffer.unshift(fbe_offset() + 4);
+                return std::numeric_limits<std::size_t>::max();
+            }
+            fbe_result += fbe_field_size;
+            break;
+        }
+        case 11: {
+            FinalModelMap<FBEString, FBE::buffer_t> fbe_model(_buffer, 0);
+            size_t fbe_field_size = fbe_model.verify();
+            if (fbe_field_size == std::numeric_limits<std::size_t>::max()) {
+                _buffer.unshift(fbe_offset() + 4);
+                return std::numeric_limits<std::size_t>::max();
+            }
+            fbe_result += fbe_field_size;
+            break;
+        }
+        case 12: {
+            FinalModel<::variants::Expr> fbe_model(_buffer, 0);
+            size_t fbe_field_size = fbe_model.verify();
+            if (fbe_field_size == std::numeric_limits<std::size_t>::max()) {
+                _buffer.unshift(fbe_offset() + 4);
+                return std::numeric_limits<std::size_t>::max();
+            }
+            fbe_result += fbe_field_size;
+            break;
+        }
+        default:
+            _buffer.unshift(fbe_offset() + 4);
+            return std::numeric_limits<std::size_t>::max();
+    }
+    _buffer.unshift(fbe_offset() + 4);
+    return fbe_result;
+}
+
+size_t FinalModel<::variants::V>::get(::variants::V& fbe_value) const noexcept
+{
+    size_t fbe_full_offset = _buffer.offset() + fbe_offset();
+    assert(((fbe_full_offset + 4) <= _buffer.size()) && "Model is broken!");
+    if ((fbe_full_offset + 4) > _buffer.size())
+        return 0;
+
+    uint32_t fbe_variant_type = unaligned_load<uint32_t>(_buffer.data() + fbe_full_offset);
+    assert(fbe_variant_type <= 12 && "Model is broken!");
+
+    _buffer.shift(fbe_offset() + 4);
+    size_t fbe_result = 4;
+    switch (fbe_variant_type) {
+        case 0:
+            fbe_value.emplace<std::monostate>();
+            break;
+        case 1: {
+            FinalModel<FBEString> fbe_model(_buffer, 0);
+            fbe_value.emplace<FBEString>();
+            auto& value = std::get<1>(fbe_value);
+            fbe_result += fbe_model.get(value);
+            break;
+        }
+        case 2: {
+            FinalModel<int32_t> fbe_model(_buffer, 0);
+            fbe_value.emplace<int32_t>();
+            auto& value = std::get<2>(fbe_value);
+            fbe_result += fbe_model.get(value);
+            break;
+        }
+        case 3: {
+            FinalModel<double> fbe_model(_buffer, 0);
+            fbe_value.emplace<double>();
+            auto& value = std::get<3>(fbe_value);
+            fbe_result += fbe_model.get(value);
+            break;
+        }
+        case 4: {
+            FinalModel<::variants::Simple> fbe_model(_buffer, 0);
+            fbe_value.emplace<::variants::Simple>();
+            auto& value = std::get<4>(fbe_value);
+            fbe_result += fbe_model.get(value);
+            break;
+        }
+        case 5: {
+            FinalModelVector<::variants::Simple> fbe_model(_buffer, 0);
+            fbe_value.emplace<FastVec<::variants::Simple>>();
+            auto& value = std::get<5>(fbe_value);
+            fbe_result += fbe_model.get(value);
+            break;
+        }
+        case 6: {
+            FinalModelVector<int32_t> fbe_model(_buffer, 0);
+            fbe_value.emplace<FastVec<int32_t>>();
+            auto& value = std::get<6>(fbe_value);
+            fbe_result += fbe_model.get(value);
+            break;
+        }
+        case 7: {
+            FinalModelMap<int32_t, ::variants::Simple> fbe_model(_buffer, 0);
+            fbe_value.emplace<std::unordered_map<int32_t, ::variants::Simple>>();
+            auto& value = std::get<7>(fbe_value);
+            fbe_result += fbe_model.get(value);
+            break;
+        }
+        case 8: {
+            FinalModelVector<FBE::buffer_t> fbe_model(_buffer, 0);
+            fbe_value.emplace<FastVec<FBE::buffer_t>>();
+            auto& value = std::get<8>(fbe_value);
+            fbe_result += fbe_model.get(value);
+            break;
+        }
+        case 9: {
+            FinalModelVector<FBEString> fbe_model(_buffer, 0);
+            fbe_value.emplace<FastVec<FBEString>>();
+            auto& value = std::get<9>(fbe_value);
+            fbe_result += fbe_model.get(value);
+            break;
+        }
+        case 10: {
+            FinalModelMap<int32_t, FBE::buffer_t> fbe_model(_buffer, 0);
+            fbe_value.emplace<std::unordered_map<int32_t, FBE::buffer_t>>();
+            auto& value = std::get<10>(fbe_value);
+            fbe_result += fbe_model.get(value);
+            break;
+        }
+        case 11: {
+            FinalModelMap<FBEString, FBE::buffer_t> fbe_model(_buffer, 0);
+            fbe_value.emplace<std::unordered_map<FBEString, FBE::buffer_t>>();
+            auto& value = std::get<11>(fbe_value);
+            fbe_result += fbe_model.get(value);
+            break;
+        }
+        case 12: {
+            FinalModel<::variants::Expr> fbe_model(_buffer, 0);
+            fbe_value.emplace<::variants::Expr>();
+            auto& value = std::get<12>(fbe_value);
+            fbe_result += fbe_model.get(value);
+            break;
+        }
+        default:
+            break;
+    }
+    _buffer.unshift(fbe_offset() + 4);
+    return fbe_result;
+}
+
+size_t FinalModel<::variants::V>::set(const ::variants::V& fbe_value) noexcept
+{
+    size_t fbe_full_offset = _buffer.offset() + fbe_offset();
+    assert(((fbe_full_offset + 4) <= _buffer.size()) && "Model is broken!");
+    if ((fbe_full_offset + 4) > _buffer.size())
+        return 0;
+
+    size_t fbe_result = 4;
+    uint32_t fbe_variant_type = static_cast<uint32_t>(fbe_value.index());
+    unaligned_store<uint32_t>(_buffer.data() + fbe_full_offset, fbe_variant_type);
+
+    _buffer.shift(fbe_offset() + 4);
+    std::visit(
+        overloaded
+        {
+            [](std::monostate) { },
+            [this, &fbe_result](const FBEString& v) {
+                FinalModel<FBEString> fbe_model(_buffer, 0);
+                fbe_result += fbe_model.set(v);
+            },
+            [this, &fbe_result](int32_t v) {
+                FinalModel<int32_t> fbe_model(_buffer, 0);
+                fbe_result += fbe_model.set(v);
+            },
+            [this, &fbe_result](double v) {
+                FinalModel<double> fbe_model(_buffer, 0);
+                fbe_result += fbe_model.set(v);
+            },
+            [this, &fbe_result](const ::variants::Simple& v) {
+                FinalModel<::variants::Simple> fbe_model(_buffer, 0);
+                fbe_result += fbe_model.set(v);
+            },
+            [this, &fbe_result](const FastVec<::variants::Simple>& v) {
+                FinalModelVector<::variants::Simple> fbe_model(_buffer, 0);
+                fbe_result += fbe_model.set(v);
+            },
+            [this, &fbe_result](const FastVec<int32_t>& v) {
+                FinalModelVector<int32_t> fbe_model(_buffer, 0);
+                fbe_result += fbe_model.set(v);
+            },
+            [this, &fbe_result](const std::unordered_map<int32_t, ::variants::Simple>& v) {
+                FinalModelMap<int32_t, ::variants::Simple> fbe_model(_buffer, 0);
+                fbe_result += fbe_model.set(v);
+            },
+            [this, &fbe_result](const FastVec<FBE::buffer_t>& v) {
+                FinalModelVector<FBE::buffer_t> fbe_model(_buffer, 0);
+                fbe_result += fbe_model.set(v);
+            },
+            [this, &fbe_result](const FastVec<FBEString>& v) {
+                FinalModelVector<FBEString> fbe_model(_buffer, 0);
+                fbe_result += fbe_model.set(v);
+            },
+            [this, &fbe_result](const std::unordered_map<int32_t, FBE::buffer_t>& v) {
+                FinalModelMap<int32_t, FBE::buffer_t> fbe_model(_buffer, 0);
+                fbe_result += fbe_model.set(v);
+            },
+            [this, &fbe_result](const std::unordered_map<FBEString, FBE::buffer_t>& v) {
+                FinalModelMap<FBEString, FBE::buffer_t> fbe_model(_buffer, 0);
+                fbe_result += fbe_model.set(v);
+            },
+            [this, &fbe_result](const ::variants::Expr& v) {
+                FinalModel<::variants::Expr> fbe_model(_buffer, 0);
+                fbe_result += fbe_model.set(v);
+            },
+        },
+        fbe_value
+    );
+    _buffer.unshift(fbe_offset() + 4);
+    return fbe_result;
+}
+
+
 FinalModel<::variants::Simple>::FinalModel(FBEBuffer& buffer, size_t offset) noexcept : _buffer(buffer), _offset(offset)
     , name(buffer, 0)
 {}
