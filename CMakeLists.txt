@@ -379,6 +379,39 @@ if(NOT FBEC_MODULE)
   enable_testing()
   add_test(fbe-tests fbe-tests --durations yes --order lex)
 
+  # Arena modes benchmark (standalone to avoid symbol conflicts with variants)
+  set(ARENA_BENCHMARK_SOURCES
+    performance/benchmark_arena_modes.cpp
+    proto/arena_common.cpp
+    proto/arena_common_pmr.cpp
+    proto/arena_common_models.cpp
+    proto/arena_common_pmr_models.cpp
+    proto/arena_common_final_models.cpp
+    proto/arena_common_final_pmr_models.cpp
+    proto/arena.cpp
+    proto/arena_pmr.cpp
+    proto/arena_models.cpp
+    proto/arena_pmr_models.cpp
+    proto/arena_final_models.cpp
+    proto/arena_final_pmr_models.cpp
+    proto/fbe.cpp
+    proto/fbe_models.cpp
+    proto/fbe_final_models.cpp
+  )
+  add_executable(fbe-benchmark-arena-modes ${ARENA_BENCHMARK_SOURCES})
+  add_dependencies(fbe-benchmark-arena-modes ${PROTO_DEPENDENCIES})
+  set_target_properties(fbe-benchmark-arena-modes PROPERTIES COMPILE_FLAGS "${PEDANTIC_COMPILE_FLAGS}" FOLDER "performance")
+  target_include_directories(fbe-benchmark-arena-modes PRIVATE
+    "${CMAKE_CURRENT_SOURCE_DIR}"
+    "${CMAKE_CURRENT_SOURCE_DIR}/proto"
+    ${memory_path}
+  )
+  if (UNIX AND NOT APPLE)
+    target_link_libraries(fbe-benchmark-arena-modes arena xxHash::xxHash ${LIBUUID_LIBRARY})
+  else()
+    target_link_libraries(fbe-benchmark-arena-modes arena xxHash::xxHash)
+  endif()
+
   # Install *.pdb files
   if(MSVC)
     foreach(INSTALL_TARGET_PDB ${INSTALL_TARGETS_PDB})
