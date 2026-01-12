@@ -9,6 +9,214 @@
 
 namespace FBE {
 
+size_t FinalModel<::cpp_only::LargeNum>::fbe_allocation_size(const ::cpp_only::LargeNum& fbe_value) const noexcept
+{
+    size_t fbe_result = 4; // variant type index size
+    std::visit(
+        overloaded
+        {
+            [](std::monostate) { },
+            [this, &fbe_result](int64_t v) {
+                FinalModel<int64_t> fbe_model(_buffer, 0);
+                fbe_result += fbe_model.fbe_allocation_size(v);
+            },
+            [this, &fbe_result](__int128_t v) {
+                FinalModel<__int128_t> fbe_model(_buffer, 0);
+                fbe_result += fbe_model.fbe_allocation_size(v);
+            },
+            [this, &fbe_result](__uint128_t v) {
+                FinalModel<__uint128_t> fbe_model(_buffer, 0);
+                fbe_result += fbe_model.fbe_allocation_size(v);
+            },
+            [this, &fbe_result](const FastVec<__int128_t>& v) {
+                FinalModelVector<__int128_t> fbe_model(_buffer, 0);
+                fbe_result += fbe_model.fbe_allocation_size(v);
+            },
+            [this, &fbe_result](const HashMap<__uint128_t, __int128_t>& v) {
+                FinalModelMap<__uint128_t, __int128_t> fbe_model(_buffer, 0);
+                fbe_result += fbe_model.fbe_allocation_size(v);
+            },
+        },
+        fbe_value
+    );
+    return fbe_result;
+}
+
+size_t FinalModel<::cpp_only::LargeNum>::verify() const noexcept
+{
+    size_t fbe_full_offset = _buffer.offset() + fbe_offset();
+    if ((fbe_full_offset + 4) > _buffer.size())
+        return std::numeric_limits<std::size_t>::max();
+
+    uint32_t fbe_variant_type = unaligned_load<uint32_t>(_buffer.data() + fbe_full_offset);
+    if (fbe_variant_type > 5)
+        return std::numeric_limits<std::size_t>::max();
+
+    _buffer.shift(fbe_offset() + 4);
+    size_t fbe_result = 4;
+    switch (fbe_variant_type) {
+        case 0: // std::monostate
+            break;
+        case 1: {
+            FinalModel<int64_t> fbe_model(_buffer, 0);
+            size_t fbe_field_size = fbe_model.verify();
+            if (fbe_field_size == std::numeric_limits<std::size_t>::max()) {
+                _buffer.unshift(fbe_offset() + 4);
+                return std::numeric_limits<std::size_t>::max();
+            }
+            fbe_result += fbe_field_size;
+            break;
+        }
+        case 2: {
+            FinalModel<__int128_t> fbe_model(_buffer, 0);
+            size_t fbe_field_size = fbe_model.verify();
+            if (fbe_field_size == std::numeric_limits<std::size_t>::max()) {
+                _buffer.unshift(fbe_offset() + 4);
+                return std::numeric_limits<std::size_t>::max();
+            }
+            fbe_result += fbe_field_size;
+            break;
+        }
+        case 3: {
+            FinalModel<__uint128_t> fbe_model(_buffer, 0);
+            size_t fbe_field_size = fbe_model.verify();
+            if (fbe_field_size == std::numeric_limits<std::size_t>::max()) {
+                _buffer.unshift(fbe_offset() + 4);
+                return std::numeric_limits<std::size_t>::max();
+            }
+            fbe_result += fbe_field_size;
+            break;
+        }
+        case 4: {
+            FinalModelVector<__int128_t> fbe_model(_buffer, 0);
+            size_t fbe_field_size = fbe_model.verify();
+            if (fbe_field_size == std::numeric_limits<std::size_t>::max()) {
+                _buffer.unshift(fbe_offset() + 4);
+                return std::numeric_limits<std::size_t>::max();
+            }
+            fbe_result += fbe_field_size;
+            break;
+        }
+        case 5: {
+            FinalModelMap<__uint128_t, __int128_t> fbe_model(_buffer, 0);
+            size_t fbe_field_size = fbe_model.verify();
+            if (fbe_field_size == std::numeric_limits<std::size_t>::max()) {
+                _buffer.unshift(fbe_offset() + 4);
+                return std::numeric_limits<std::size_t>::max();
+            }
+            fbe_result += fbe_field_size;
+            break;
+        }
+        default:
+            _buffer.unshift(fbe_offset() + 4);
+            return std::numeric_limits<std::size_t>::max();
+    }
+    _buffer.unshift(fbe_offset() + 4);
+    return fbe_result;
+}
+
+size_t FinalModel<::cpp_only::LargeNum>::get(::cpp_only::LargeNum& fbe_value) const noexcept
+{
+    size_t fbe_full_offset = _buffer.offset() + fbe_offset();
+    assert(((fbe_full_offset + 4) <= _buffer.size()) && "Model is broken!");
+    if ((fbe_full_offset + 4) > _buffer.size())
+        return 0;
+
+    uint32_t fbe_variant_type = unaligned_load<uint32_t>(_buffer.data() + fbe_full_offset);
+    assert(fbe_variant_type <= 5 && "Model is broken!");
+
+    _buffer.shift(fbe_offset() + 4);
+    size_t fbe_result = 4;
+    switch (fbe_variant_type) {
+        case 0:
+            fbe_value.emplace<std::monostate>();
+            break;
+        case 1: {
+            FinalModel<int64_t> fbe_model(_buffer, 0);
+            fbe_value.emplace<int64_t>();
+            auto& value = std::get<1>(fbe_value);
+            fbe_result += fbe_model.get(value);
+            break;
+        }
+        case 2: {
+            FinalModel<__int128_t> fbe_model(_buffer, 0);
+            fbe_value.emplace<__int128_t>();
+            auto& value = std::get<2>(fbe_value);
+            fbe_result += fbe_model.get(value);
+            break;
+        }
+        case 3: {
+            FinalModel<__uint128_t> fbe_model(_buffer, 0);
+            fbe_value.emplace<__uint128_t>();
+            auto& value = std::get<3>(fbe_value);
+            fbe_result += fbe_model.get(value);
+            break;
+        }
+        case 4: {
+            FinalModelVector<__int128_t> fbe_model(_buffer, 0);
+            fbe_value.emplace<FastVec<__int128_t>>();
+            auto& value = std::get<4>(fbe_value);
+            fbe_result += fbe_model.get(value);
+            break;
+        }
+        case 5: {
+            FinalModelMap<__uint128_t, __int128_t> fbe_model(_buffer, 0);
+            fbe_value.emplace<HashMap<__uint128_t, __int128_t>>();
+            auto& value = std::get<5>(fbe_value);
+            fbe_result += fbe_model.get(value);
+            break;
+        }
+        default:
+            break;
+    }
+    _buffer.unshift(fbe_offset() + 4);
+    return fbe_result;
+}
+
+size_t FinalModel<::cpp_only::LargeNum>::set(const ::cpp_only::LargeNum& fbe_value) noexcept
+{
+    size_t fbe_full_offset = _buffer.offset() + fbe_offset();
+    assert(((fbe_full_offset + 4) <= _buffer.size()) && "Model is broken!");
+    if ((fbe_full_offset + 4) > _buffer.size())
+        return 0;
+
+    size_t fbe_result = 4;
+    uint32_t fbe_variant_type = static_cast<uint32_t>(fbe_value.index());
+    unaligned_store<uint32_t>(_buffer.data() + fbe_full_offset, fbe_variant_type);
+
+    _buffer.shift(fbe_offset() + 4);
+    std::visit(
+        overloaded
+        {
+            [](std::monostate) { },
+            [this, &fbe_result](int64_t v) {
+                FinalModel<int64_t> fbe_model(_buffer, 0);
+                fbe_result += fbe_model.set(v);
+            },
+            [this, &fbe_result](__int128_t v) {
+                FinalModel<__int128_t> fbe_model(_buffer, 0);
+                fbe_result += fbe_model.set(v);
+            },
+            [this, &fbe_result](__uint128_t v) {
+                FinalModel<__uint128_t> fbe_model(_buffer, 0);
+                fbe_result += fbe_model.set(v);
+            },
+            [this, &fbe_result](const FastVec<__int128_t>& v) {
+                FinalModelVector<__int128_t> fbe_model(_buffer, 0);
+                fbe_result += fbe_model.set(v);
+            },
+            [this, &fbe_result](const HashMap<__uint128_t, __int128_t>& v) {
+                FinalModelMap<__uint128_t, __int128_t> fbe_model(_buffer, 0);
+                fbe_result += fbe_model.set(v);
+            },
+        },
+        fbe_value
+    );
+    _buffer.unshift(fbe_offset() + 4);
+    return fbe_result;
+}
+
+
 FinalModel<::cpp_only::Struct128>::FinalModel(FBEBuffer& buffer, size_t offset) noexcept : _buffer(buffer), _offset(offset)
     , f1(buffer, 0)
     , f2(buffer, 0)

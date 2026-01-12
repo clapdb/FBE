@@ -443,6 +443,8 @@ public:
 
     // Get the optional value
     size_t get(std::optional<T>& opt) const noexcept;
+    // Get the optional value (PMR version)
+    size_t get(std::optional<T>& opt, std::pmr::memory_resource* resource) const noexcept;
     // Set the optional value
     size_t set(const std::optional<T>& opt);
 
@@ -490,6 +492,15 @@ public:
     size_t get(std::array<T, S>& values) const noexcept;
     // Get the array as FastVec
     size_t get(FastVec<T>& values) const noexcept;
+
+    // Get the array as C-array (PMR version)
+    template <size_t S>
+    size_t get(T (&values)[S], std::pmr::memory_resource* resource) const noexcept;
+    // Get the array as std::array (PMR version)
+    template <size_t S>
+    size_t get(std::array<T, S>& values, std::pmr::memory_resource* resource) const noexcept;
+    // Get the array as FastVec (PMR version)
+    size_t get(FastVec<T>& values, std::pmr::memory_resource* resource) const noexcept;
 
     // Set the array as C-array
     template <size_t S>
@@ -570,21 +581,19 @@ public:
     // Get the allocation size for std::pmr::set
     size_t fbe_allocation_size(const std::pmr::set<T>& values) const noexcept;
 
-#if defined(USING_BTREE_MAP)
-    // Get the allocation size for FBE::set (btree_set)
+    // Get the allocation size for FBE::set (dense_set)
     size_t fbe_allocation_size(const FBE::set<T>& values) const noexcept;
-    // Get the allocation size for FBE::pmr::set (btree_set with pmr allocator)
+    // Get the allocation size for FBE::pmr::set (dense_set with pmr allocator)
     size_t fbe_allocation_size(const FBE::pmr::set<T>& values) const noexcept;
-    // Get the vector as FBE::set (btree_set)
+    // Get the vector as FBE::set (dense_set)
     size_t get(FBE::set<T>& values) const noexcept;
-    // Get the vector as FBE::pmr::set (btree_set with pmr allocator, optional resource)
+    // Get the vector as FBE::pmr::set (dense_set with pmr allocator, optional resource)
     size_t get(FBE::pmr::set<T>& values) const noexcept { return get(values, nullptr); }
     size_t get(FBE::pmr::set<T>& values, std::pmr::memory_resource* resource) const noexcept;
-    // Set the vector as FBE::set (btree_set)
+    // Set the vector as FBE::set (dense_set)
     size_t set(const FBE::set<T>& values) noexcept;
-    // Set the vector as FBE::pmr::set (btree_set with pmr allocator)
+    // Set the vector as FBE::pmr::set (dense_set with pmr allocator)
     size_t set(const FBE::pmr::set<T>& values) noexcept;
-#endif
 
 private:
     FBEBuffer& _buffer;
@@ -600,7 +609,7 @@ public:
 
     // Get the allocation size
     size_t fbe_allocation_size(const std::map<TKey, TValue>& values) const noexcept;
-    size_t fbe_allocation_size(const std::unordered_map<TKey, TValue>& values) const noexcept;
+    size_t fbe_allocation_size(const HashMap<TKey, TValue>& values) const noexcept;
 
     // Get the field offset
     size_t fbe_offset() const noexcept { return _offset; }
@@ -617,32 +626,32 @@ public:
 
     // Get the map as std::map
     size_t get(std::map<TKey, TValue>& values) const noexcept;
-    // Get the map as std::unordered_map
-    size_t get(std::unordered_map<TKey, TValue>& values) const noexcept;
+    // Get the map as HashMap
+    size_t get(HashMap<TKey, TValue>& values) const noexcept;
 
     // Get the map as std::map with memory resource
     size_t get(std::map<TKey, TValue>& values, std::pmr::memory_resource* resource) const noexcept;
     // Get the map as std::pmr::map (with optional resource)
     size_t get(std::pmr::map<TKey, TValue>& values) const noexcept { return get(values, nullptr); }
     size_t get(std::pmr::map<TKey, TValue>& values, std::pmr::memory_resource* resource) const noexcept;
-    // Get the map as std::pmr::unordered_map (with optional resource)
-    size_t get(std::pmr::unordered_map<TKey, TValue>& values) const noexcept { return get(values, nullptr); }
-    size_t get(std::pmr::unordered_map<TKey, TValue>& values, std::pmr::memory_resource* resource) const noexcept;
+    // Get the map as FBE::pmr::HashMap (with optional resource)
+    size_t get(FBE::pmr::HashMap<TKey, TValue>& values) const noexcept { return get(values, nullptr); }
+    size_t get(FBE::pmr::HashMap<TKey, TValue>& values, std::pmr::memory_resource* resource) const noexcept;
 
     // Set the map as std::map
     size_t set(const std::map<TKey, TValue>& values) noexcept;
-    // Set the map as std::unordered_map
-    size_t set(const std::unordered_map<TKey, TValue>& values) noexcept;
+    // Set the map as HashMap
+    size_t set(const HashMap<TKey, TValue>& values) noexcept;
 
     // Set the map as std::pmr::map
     size_t set(const std::pmr::map<TKey, TValue>& values) noexcept;
-    // Set the map as std::pmr::unordered_map
-    size_t set(const std::pmr::unordered_map<TKey, TValue>& values) noexcept;
+    // Set the map as FBE::pmr::HashMap
+    size_t set(const FBE::pmr::HashMap<TKey, TValue>& values) noexcept;
 
     // Get the allocation size for std::pmr::map
     size_t fbe_allocation_size(const std::pmr::map<TKey, TValue>& values) const noexcept;
-    // Get the allocation size for std::pmr::unordered_map
-    size_t fbe_allocation_size(const std::pmr::unordered_map<TKey, TValue>& values) const noexcept;
+    // Get the allocation size for FBE::pmr::HashMap
+    size_t fbe_allocation_size(const FBE::pmr::HashMap<TKey, TValue>& values) const noexcept;
 
 #if defined(USING_BTREE_MAP)
     // Get the allocation size for FBE::map (btree_map)

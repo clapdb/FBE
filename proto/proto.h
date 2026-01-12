@@ -232,12 +232,12 @@ namespace proto {
 
 struct CharMap
 {
-    std::unordered_map<char, FBEString> abbr;
+    HashMap<char, FBEString> abbr;
 
     size_t fbe_type() const noexcept { return 1; }
 
     CharMap();
-    explicit CharMap(const std::unordered_map<char, FBEString>& arg_abbr);
+    explicit CharMap(const HashMap<char, FBEString>& arg_abbr);
     CharMap(const CharMap& other) = default;
     CharMap(CharMap&& other) = default;
     ~CharMap() = default;

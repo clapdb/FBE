@@ -40,13 +40,13 @@ struct Line : FBE::Base
 {
     ::variants::V v;
     FastVec<::variants::V> vv;
-    std::unordered_map<FBEString, ::variants::V> vm;
+    HashMap<FBEString, ::variants::V> vm;
     std::optional<::variants::V> vo;
 
     size_t fbe_type() const noexcept { return 1; }
 
     Line();
-    Line(::variants::V arg_v, FastVec<::variants::V> arg_vv, std::unordered_map<FBEString, ::variants::V> arg_vm, std::optional<::variants::V> arg_vo);
+    Line(::variants::V arg_v, FastVec<::variants::V> arg_vv, HashMap<FBEString, ::variants::V> arg_vm, std::optional<::variants::V> arg_vo);
     Line(const Line& other) = default;
     Line(Line&& other) noexcept;
     ~Line() override;
@@ -88,12 +88,12 @@ namespace template_variant {
 
 struct Line2 : FBE::Base
 {
-    std::unordered_map<::enums::EnumInt8, ::variants::V> vm;
+    HashMap<::enums::EnumInt8, ::variants::V> vm;
 
     size_t fbe_type() const noexcept { return 2; }
 
     Line2();
-    explicit Line2(std::unordered_map<::enums::EnumInt8, ::variants::V> arg_vm);
+    explicit Line2(HashMap<::enums::EnumInt8, ::variants::V> arg_vm);
     Line2(const Line2& other) = default;
     Line2(Line2&& other) noexcept;
     ~Line2() override;

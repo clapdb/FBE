@@ -39,7 +39,7 @@ struct Value;
 using Expr = std::variant<std::monostate, bool, int32_t, ArenaString>;
 std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const Expr& value);
 
-using V = std::variant<std::monostate, ArenaString, int32_t, double, ::variants_pmr::Simple, std::pmr::vector<::variants_pmr::Simple>, std::pmr::vector<int32_t>, std::pmr::unordered_map<int32_t, ::variants_pmr::Simple>, std::pmr::vector<FBE::pmr_buffer_t>, std::pmr::vector<ArenaString>, std::pmr::unordered_map<int32_t, FBE::pmr_buffer_t>, std::pmr::unordered_map<ArenaString, FBE::pmr_buffer_t>, ::variants_pmr::Expr>;
+using V = std::variant<std::monostate, ArenaString, int32_t, double, ::variants_pmr::Simple, std::pmr::vector<::variants_pmr::Simple>, std::pmr::vector<int32_t>, FBE::pmr::HashMap<int32_t, ::variants_pmr::Simple>, std::pmr::vector<FBE::pmr_buffer_t>, std::pmr::vector<ArenaString>, FBE::pmr::HashMap<int32_t, FBE::pmr_buffer_t>, FBE::pmr::HashMap<ArenaString, FBE::pmr_buffer_t>, ::variants_pmr::Expr>;
 std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const V& value);
 
 struct Simple

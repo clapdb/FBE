@@ -257,30 +257,30 @@ public:
     // Get the map as std::map
     void get(std::map<TKStruct, TValueStruct>& values, std::pmr::memory_resource* resource = nullptr) const noexcept;
     void get(std::map<TKStruct, TValueStruct*>& values, std::pmr::memory_resource* resource = nullptr) const noexcept;
-    // Get the map as std::unordered_map
-    void get(std::unordered_map<TKStruct, TValueStruct>& values, std::pmr::memory_resource* resource = nullptr) const noexcept;
-    void get(std::unordered_map<TKStruct, TValueStruct*>& values, std::pmr::memory_resource* resource = nullptr) const noexcept;
+    // Get the map as HashMap
+    void get(HashMap<TKStruct, TValueStruct>& values, std::pmr::memory_resource* resource = nullptr) const noexcept;
+    void get(HashMap<TKStruct, TValueStruct*>& values, std::pmr::memory_resource* resource = nullptr) const noexcept;
 
     // Set the map as std::map
     void set(const std::map<TKStruct, TValueStruct>& values, std::pmr::memory_resource* resource) noexcept;
     void set(const std::map<TKStruct, TValueStruct*>& values, std::pmr::memory_resource* resource) noexcept;
-    // Set the map as std::unordered_map
-    void set(const std::unordered_map<TKStruct, TValueStruct>& values, std::pmr::memory_resource* resource) noexcept;
-    void set(const std::unordered_map<TKStruct, TValueStruct*>& values, std::pmr::memory_resource* resource) noexcept;
+    // Set the map as HashMap
+    void set(const HashMap<TKStruct, TValueStruct>& values, std::pmr::memory_resource* resource) noexcept;
+    void set(const HashMap<TKStruct, TValueStruct*>& values, std::pmr::memory_resource* resource) noexcept;
 
     // Get the map as std::pmr::map
     void get(std::pmr::map<TKStruct, TValueStruct>& values, std::pmr::memory_resource* resource = nullptr) const noexcept;
     void get(std::pmr::map<TKStruct, TValueStruct*>& values, std::pmr::memory_resource* resource = nullptr) const noexcept;
-    // Get the map as std::pmr::unordered_map
-    void get(std::pmr::unordered_map<TKStruct, TValueStruct>& values, std::pmr::memory_resource* resource = nullptr) const noexcept;
-    void get(std::pmr::unordered_map<TKStruct, TValueStruct*>& values, std::pmr::memory_resource* resource = nullptr) const noexcept;
+    // Get the map as FBE::pmr::HashMap
+    void get(FBE::pmr::HashMap<TKStruct, TValueStruct>& values, std::pmr::memory_resource* resource = nullptr) const noexcept;
+    void get(FBE::pmr::HashMap<TKStruct, TValueStruct*>& values, std::pmr::memory_resource* resource = nullptr) const noexcept;
 
     // Set the map as std::pmr::map
     void set(const std::pmr::map<TKStruct, TValueStruct>& values, std::pmr::memory_resource* resource) noexcept;
     void set(const std::pmr::map<TKStruct, TValueStruct*>& values, std::pmr::memory_resource* resource) noexcept;
-    // Set the map as std::pmr::unordered_map
-    void set(const std::pmr::unordered_map<TKStruct, TValueStruct>& values, std::pmr::memory_resource* resource) noexcept;
-    void set(const std::pmr::unordered_map<TKStruct, TValueStruct*>& values, std::pmr::memory_resource* resource) noexcept;
+    // Set the map as FBE::pmr::HashMap
+    void set(const FBE::pmr::HashMap<TKStruct, TValueStruct>& values, std::pmr::memory_resource* resource) noexcept;
+    void set(const FBE::pmr::HashMap<TKStruct, TValueStruct*>& values, std::pmr::memory_resource* resource) noexcept;
 
 #if defined(USING_BTREE_MAP)
     // Get the map as FBE::map (btree_map with std allocator)

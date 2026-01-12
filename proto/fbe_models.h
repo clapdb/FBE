@@ -569,16 +569,14 @@ public:
     // Set the vector as std::pmr::set
     void set(const std::pmr::set<T>& values, std::pmr::memory_resource* resource) noexcept;
 
-#if defined(USING_BTREE_MAP)
-    // Get the vector as FBE::set (btree_set with std allocator)
+    // Get the vector as FBE::set (dense_set (hash-based))
     void get(FBE::set<T>& values, std::pmr::memory_resource* resource) const noexcept;
-    // Get the vector as FBE::pmr::set (btree_set with pmr allocator)
+    // Get the vector as FBE::pmr::set (dense_set with pmr allocator)
     void get(FBE::pmr::set<T>& values, std::pmr::memory_resource* resource) const noexcept;
-    // Set the vector as FBE::set (btree_set with std allocator)
+    // Set the vector as FBE::set (dense_set (hash-based))
     void set(const FBE::set<T>& values, std::pmr::memory_resource* resource) noexcept;
-    // Set the vector as FBE::pmr::set (btree_set with pmr allocator)
+    // Set the vector as FBE::pmr::set (dense_set with pmr allocator)
     void set(const FBE::pmr::set<T>& values, std::pmr::memory_resource* resource) noexcept;
-#endif
 
 private:
     FBEBuffer& _buffer;
@@ -620,13 +618,13 @@ public:
 
     // Get the map as std::map
     void get(std::map<TKey, TValue>& values, std::pmr::memory_resource* resource = nullptr) const noexcept;
-    // Get the map as std::unordered_map
-    void get(std::unordered_map<TKey, TValue>& values, std::pmr::memory_resource* resource = nullptr) const noexcept;
+    // Get the map as HashMap
+    void get(HashMap<TKey, TValue>& values, std::pmr::memory_resource* resource = nullptr) const noexcept;
 
     // Get the map as std::pmr::map
     void get(std::pmr::map<TKey, TValue>& values, std::pmr::memory_resource* resource) const noexcept;
-    // Get the map as std::pmr::unordered_map
-    void get(std::pmr::unordered_map<TKey, TValue>& values, std::pmr::memory_resource* resource) const noexcept;
+    // Get the map as FBE::pmr::HashMap
+    void get(FBE::pmr::HashMap<TKey, TValue>& values, std::pmr::memory_resource* resource) const noexcept;
 
 #if defined(USING_BTREE_MAP)
     // Get the map as FBE::map (btree_map with std allocator)
@@ -637,13 +635,13 @@ public:
 
     // Set the map as std::map
     void set(const std::map<TKey, TValue>& values, std::pmr::memory_resource* resource) noexcept;
-    // Set the map as std::unordered_map
-    void set(const std::unordered_map<TKey, TValue>& values, std::pmr::memory_resource* resource) noexcept;
+    // Set the map as HashMap
+    void set(const HashMap<TKey, TValue>& values, std::pmr::memory_resource* resource) noexcept;
 
     // Set the map as std::pmr::map
     void set(const std::pmr::map<TKey, TValue>& values, std::pmr::memory_resource* resource) noexcept;
-    // Set the map as std::pmr::unordered_map
-    void set(const std::pmr::unordered_map<TKey, TValue>& values, std::pmr::memory_resource* resource) noexcept;
+    // Set the map as FBE::pmr::HashMap
+    void set(const FBE::pmr::HashMap<TKey, TValue>& values, std::pmr::memory_resource* resource) noexcept;
 
 #if defined(USING_BTREE_MAP)
     // Set the map as FBE::map (btree_map with std allocator)

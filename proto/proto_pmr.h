@@ -245,13 +245,13 @@ struct CharMap
 {
     ArenaManagedCreateOnlyTag;
 
-    std::pmr::unordered_map<char, ArenaString> abbr;
+    FBE::pmr::HashMap<char, ArenaString> abbr;
 
     size_t fbe_type() const noexcept { return 1; }
 
     CharMap();
     explicit CharMap(allocator_type alloc);
-    explicit CharMap(const std::pmr::unordered_map<char, ArenaString>& arg_abbr);
+    explicit CharMap(const FBE::pmr::HashMap<char, ArenaString>& arg_abbr);
     CharMap(const CharMap& other) = default;
     CharMap(CharMap&& other) = default;
     ~CharMap() = default;

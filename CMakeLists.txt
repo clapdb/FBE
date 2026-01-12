@@ -69,11 +69,6 @@ add_subdirectory("optparse")
 # Link libraries
 #list(APPEND LINKLIBS cppcommon)
 
-option(FBE_USING_STD_VECTOR "using std vector" OFF)
-if (FBE_USING_STD_VECTOR)
-  add_definitions(-DUSING_STD_VECTOR)
-endif()
-
 option(FBE_USING_SEASTAR_STRING "using seastar string" OFF)
 option(FBE_USING_SMALL_STRING "using small string" OFF)
 if (FBE_USING_SEASTAR_STRING)
@@ -346,22 +341,6 @@ if(NOT FBEC_MODULE)
   endforeach()
 
   add_custom_target(fbec_all DEPENDS fbec ${PROTO_FILES})
-
-  # Benchmarks
-  file(GLOB BENCHMARK_HEADER_FILES "performance/*.h")
-  file(GLOB BENCHMARK_INLINE_FILES "performance/*.inl")
-  file(GLOB BENCHMARK_SOURCE_FILES RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}/performance" "performance/*.cpp")
-  foreach(BENCHMARK_SOURCE_FILE ${BENCHMARK_SOURCE_FILES})
-    string(REGEX REPLACE "(.*)\\.cpp" "\\1" BENCHMARK_NAME ${BENCHMARK_SOURCE_FILE})
-    set(BENCHMARK_TARGET "fbe-performance-${BENCHMARK_NAME}")
-    add_executable(${BENCHMARK_TARGET} ${BENCHMARK_HEADER_FILES} ${BENCHMARK_INLINE_FILES} "performance/${BENCHMARK_SOURCE_FILE}")
-    add_dependencies(${BENCHMARK_TARGET} ${PROTO_DEPENDENCIES})
-    set_target_properties(${BENCHMARK_TARGET} PROPERTIES COMPILE_FLAGS "${PEDANTIC_COMPILE_FLAGS}" FOLDER "performance")
-    target_include_directories(${BENCHMARK_TARGET} PUBLIC ${rapidjson})
-    target_link_libraries(${BENCHMARK_TARGET} ${LINKLIBS} cppbenchmark)
-    list(APPEND INSTALL_TARGETS ${BENCHMARK_TARGET})
-    list(APPEND INSTALL_TARGETS_PDB ${BENCHMARK_TARGET})
-  endforeach()
 
   # Tests
   file(GLOB TESTS_HEADER_FILES "tests/*.h")

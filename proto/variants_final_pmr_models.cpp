@@ -203,7 +203,7 @@ size_t FinalModel<::variants_pmr::V>::fbe_allocation_size(const ::variants_pmr::
                 FinalModelVector<int32_t> fbe_model(_buffer, 0);
                 fbe_result += fbe_model.fbe_allocation_size(v);
             },
-            [this, &fbe_result](const std::pmr::unordered_map<int32_t, ::variants_pmr::Simple>& v) {
+            [this, &fbe_result](const FBE::pmr::HashMap<int32_t, ::variants_pmr::Simple>& v) {
                 FinalModelMap<int32_t, ::variants_pmr::Simple> fbe_model(_buffer, 0);
                 fbe_result += fbe_model.fbe_allocation_size(v);
             },
@@ -215,11 +215,11 @@ size_t FinalModel<::variants_pmr::V>::fbe_allocation_size(const ::variants_pmr::
                 FinalModelVector<ArenaString> fbe_model(_buffer, 0);
                 fbe_result += fbe_model.fbe_allocation_size(v);
             },
-            [this, &fbe_result](const std::pmr::unordered_map<int32_t, FBE::pmr_buffer_t>& v) {
+            [this, &fbe_result](const FBE::pmr::HashMap<int32_t, FBE::pmr_buffer_t>& v) {
                 FinalModelMap<int32_t, FBE::pmr_buffer_t> fbe_model(_buffer, 0);
                 fbe_result += fbe_model.fbe_allocation_size(v);
             },
-            [this, &fbe_result](const std::pmr::unordered_map<ArenaString, FBE::pmr_buffer_t>& v) {
+            [this, &fbe_result](const FBE::pmr::HashMap<ArenaString, FBE::pmr_buffer_t>& v) {
                 FinalModelMap<ArenaString, FBE::pmr_buffer_t> fbe_model(_buffer, 0);
                 fbe_result += fbe_model.fbe_allocation_size(v);
             },
@@ -441,7 +441,7 @@ size_t FinalModel<::variants_pmr::V>::get(::variants_pmr::V& fbe_value, std::pmr
         }
         case 7: {
             FinalModelMap<int32_t, ::variants_pmr::Simple> fbe_model(_buffer, 0);
-            final_variant_emplace_value<::variants_pmr::V, std::pmr::unordered_map<int32_t, ::variants_pmr::Simple>>(fbe_value, resource);
+            final_variant_emplace_value<::variants_pmr::V, FBE::pmr::HashMap<int32_t, ::variants_pmr::Simple>>(fbe_value, resource);
             auto& value = std::get<7>(fbe_value);
             fbe_result += fbe_model.get(value, resource);
             break;
@@ -462,14 +462,14 @@ size_t FinalModel<::variants_pmr::V>::get(::variants_pmr::V& fbe_value, std::pmr
         }
         case 10: {
             FinalModelMap<int32_t, FBE::pmr_buffer_t> fbe_model(_buffer, 0);
-            final_variant_emplace_value<::variants_pmr::V, std::pmr::unordered_map<int32_t, FBE::pmr_buffer_t>>(fbe_value, resource);
+            final_variant_emplace_value<::variants_pmr::V, FBE::pmr::HashMap<int32_t, FBE::pmr_buffer_t>>(fbe_value, resource);
             auto& value = std::get<10>(fbe_value);
             fbe_result += fbe_model.get(value, resource);
             break;
         }
         case 11: {
             FinalModelMap<ArenaString, FBE::pmr_buffer_t> fbe_model(_buffer, 0);
-            final_variant_emplace_value<::variants_pmr::V, std::pmr::unordered_map<ArenaString, FBE::pmr_buffer_t>>(fbe_value, resource);
+            final_variant_emplace_value<::variants_pmr::V, FBE::pmr::HashMap<ArenaString, FBE::pmr_buffer_t>>(fbe_value, resource);
             auto& value = std::get<11>(fbe_value);
             fbe_result += fbe_model.get(value, resource);
             break;
@@ -528,7 +528,7 @@ size_t FinalModel<::variants_pmr::V>::set(const ::variants_pmr::V& fbe_value) no
                 FinalModelVector<int32_t> fbe_model(_buffer, 0);
                 fbe_result += fbe_model.set(v);
             },
-            [this, &fbe_result](const std::pmr::unordered_map<int32_t, ::variants_pmr::Simple>& v) {
+            [this, &fbe_result](const FBE::pmr::HashMap<int32_t, ::variants_pmr::Simple>& v) {
                 FinalModelMap<int32_t, ::variants_pmr::Simple> fbe_model(_buffer, 0);
                 fbe_result += fbe_model.set(v);
             },
@@ -540,11 +540,11 @@ size_t FinalModel<::variants_pmr::V>::set(const ::variants_pmr::V& fbe_value) no
                 FinalModelVector<ArenaString> fbe_model(_buffer, 0);
                 fbe_result += fbe_model.set(v);
             },
-            [this, &fbe_result](const std::pmr::unordered_map<int32_t, FBE::pmr_buffer_t>& v) {
+            [this, &fbe_result](const FBE::pmr::HashMap<int32_t, FBE::pmr_buffer_t>& v) {
                 FinalModelMap<int32_t, FBE::pmr_buffer_t> fbe_model(_buffer, 0);
                 fbe_result += fbe_model.set(v);
             },
-            [this, &fbe_result](const std::pmr::unordered_map<ArenaString, FBE::pmr_buffer_t>& v) {
+            [this, &fbe_result](const FBE::pmr::HashMap<ArenaString, FBE::pmr_buffer_t>& v) {
                 FinalModelMap<ArenaString, FBE::pmr_buffer_t> fbe_model(_buffer, 0);
                 fbe_result += fbe_model.set(v);
             },

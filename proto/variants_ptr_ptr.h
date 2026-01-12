@@ -43,7 +43,7 @@ using Expr = std::variant<std::monostate, bool, FBEString, int32_t, FastVec<uint
 std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const Expr& value);
 auto is_equal(const Expr& lhs, const Expr& rhs) -> bool;
 
-using V = std::variant<std::monostate, int32_t, FBEString, double, ::variants_ptr::Simple, ::variants_ptr::Simple*, FastVec<::variants_ptr::Simple>, FastVec<int32_t>, std::unordered_map<int32_t, ::variants_ptr::Simple>, FastVec<FBE::buffer_t>, FastVec<FBEString>, std::unordered_map<int32_t, FBE::buffer_t>, std::unordered_map<FBEString, FBE::buffer_t>, FastVec<::variants_ptr::Simple*>, ::variants_ptr::Expr>;
+using V = std::variant<std::monostate, int32_t, FBEString, double, ::variants_ptr::Simple, ::variants_ptr::Simple*, FastVec<::variants_ptr::Simple>, FastVec<int32_t>, HashMap<int32_t, ::variants_ptr::Simple>, FastVec<FBE::buffer_t>, FastVec<FBEString>, HashMap<int32_t, FBE::buffer_t>, HashMap<FBEString, FBE::buffer_t>, FastVec<::variants_ptr::Simple*>, ::variants_ptr::Expr>;
 std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const V& value);
 auto is_equal(const V& lhs, const V& rhs) -> bool;
 
@@ -199,12 +199,12 @@ namespace variants_ptr {
 struct ValueContainer : FBE::Base
 {
     FastVec<::variants_ptr::V> vv;
-    std::unordered_map<int32_t, ::variants_ptr::V> vm;
+    HashMap<int32_t, ::variants_ptr::V> vm;
 
     size_t fbe_type() const noexcept { return 4; }
 
     ValueContainer();
-    ValueContainer(FastVec<::variants_ptr::V> arg_vv, std::unordered_map<int32_t, ::variants_ptr::V> arg_vm);
+    ValueContainer(FastVec<::variants_ptr::V> arg_vv, HashMap<int32_t, ::variants_ptr::V> arg_vm);
     ValueContainer(const ValueContainer& other) = default;
     ValueContainer(ValueContainer&& other) noexcept;
     ~ValueContainer() override;
@@ -246,12 +246,12 @@ namespace variants_ptr {
 
 struct Scalar1Container : FBE::Base
 {
-    std::unordered_map<::variants_ptr::Scalar1, ::variants_ptr::Expr> s;
+    HashMap<::variants_ptr::Scalar1, ::variants_ptr::Expr> s;
 
     size_t fbe_type() const noexcept { return 5; }
 
     Scalar1Container();
-    explicit Scalar1Container(std::unordered_map<::variants_ptr::Scalar1, ::variants_ptr::Expr> arg_s);
+    explicit Scalar1Container(HashMap<::variants_ptr::Scalar1, ::variants_ptr::Expr> arg_s);
     Scalar1Container(const Scalar1Container& other) = default;
     Scalar1Container(Scalar1Container&& other) noexcept;
     ~Scalar1Container() override;

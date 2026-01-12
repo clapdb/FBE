@@ -58,6 +58,8 @@ namespace std { namespace pmr = ::std::experimental::pmr; }
 #if defined(USING_BTREE_MAP)
 #include "container/btree_map.hpp"
 #endif
+#include "container/dense_map.hpp"
+#include "container/dense_set.hpp"
 
 #if defined(USING_SEASTAR_STRING)
 #include <seastar/core/sstring.hh>
@@ -70,8 +72,24 @@ namespace std { namespace pmr = ::std::experimental::pmr; }
 #endif
 
 namespace FBE {
+    // Key-based equality comparator that uses operator< to compare only key fields
+    // This matches the behavior of std::set (which uses operator<) for hash containers
+    template <typename T>
+    struct key_equal {
+        bool operator()(const T& a, const T& b) const noexcept {
+            // Two elements are equal if neither is less than the other (based on key fields only)
+            return !(a < b) && !(b < a);
+        }
+    };
+
     template <typename T>
     using FastVec = std::vector<T>;
+
+    template <typename Key, typename Value, typename Hash = std::hash<Key>, typename KeyEqual = key_equal<Key>>
+    using HashMap = stdb::container::dense_map<Key, Value, Hash, KeyEqual>;
+
+    template <typename Key, typename Hash = std::hash<Key>, typename KeyEqual = key_equal<Key>>
+    using FastSet = stdb::container::dense_set<Key, Hash, KeyEqual>;
 
     #if defined(USING_SEASTAR_STRING)
     using FBEString = seastar::sstring;
@@ -87,14 +105,11 @@ namespace FBE {
     using ArenaString = std::pmr::string;
     #endif
 
-    template <typename Key, typename Compare = std::less<Key>, typename Allocator = std::allocator<Key>>
-    #if defined(USING_BTREE_MAP)
-    // Use fixed 256-byte node size to support forward-declared types (ptr-based FBE)
-    using set = stdb::container::btree_set<Key, Compare, Allocator, 256>;
-    #else
-    using set = std::set<Key, Compare, Allocator>;
-    #endif
+    // Unordered set using dense_set (hash-based, uses std::hash for FBE-generated types)
+    template <typename Key, typename Hash = std::hash<Key>, typename KeyEqual = key_equal<Key>>
+    using set = stdb::container::dense_set<Key, Hash, KeyEqual>;
 
+    // Ordered map (kept for ordered key iteration)
     template <typename Key, typename Value, typename Compare = std::less<Key>, typename Allocator = std::allocator<std::pair<const Key, Value>>>
     #if defined(USING_BTREE_MAP)
     // Use fixed 256-byte node size to support forward-declared types (ptr-based FBE)
@@ -105,19 +120,20 @@ namespace FBE {
 
     // PMR namespace for arena allocator support
     namespace pmr {
-        template <typename Key, typename Compare = std::less<Key>>
-        #if defined(USING_BTREE_MAP)
-        using set = stdb::pmr::btree_set_compact<Key, Compare>;
-        #else
-        using set = std::pmr::set<Key, Compare>;
-        #endif
+        // Unordered set using dense_set (hash-based, uses std::hash for FBE-generated types)
+        template <typename Key, typename Hash = std::hash<Key>, typename KeyEqual = key_equal<Key>>
+        using set = stdb::container::pmr::dense_map<Key, void, Hash, KeyEqual>;
 
+        // Ordered map (kept for ordered key iteration)
         template <typename Key, typename Value, typename Compare = std::less<Key>>
         #if defined(USING_BTREE_MAP)
         using map = stdb::pmr::btree_map_compact<Key, Value, Compare>;
         #else
         using map = std::pmr::map<Key, Value, Compare>;
         #endif
+
+        template <typename Key, typename Value, typename Hash = std::hash<Key>, typename KeyEqual = key_equal<Key>>
+        using HashMap = stdb::container::pmr::dense_map<Key, Value, Hash, KeyEqual>;
     } // namespace pmr
 
     // Type trait to detect primitive types that can be bulk-copied with memcpy

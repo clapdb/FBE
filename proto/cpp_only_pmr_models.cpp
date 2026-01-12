@@ -146,7 +146,7 @@ void FieldModel<::cpp_only_pmr::LargeNum>::get(::cpp_only_pmr::LargeNum& fbe_val
         }
         case 5: {
             FieldModelMap<__uint128_t, __int128_t> fbe_model(_buffer, 4);
-            variant_emplace_value<::cpp_only_pmr::LargeNum, std::pmr::unordered_map<__uint128_t, __int128_t>>(fbe_value, resource);
+            variant_emplace_value<::cpp_only_pmr::LargeNum, FBE::pmr::HashMap<__uint128_t, __int128_t>>(fbe_value, resource);
             auto& value = std::get<5>(fbe_value);
             variant_get_value(fbe_model, value, resource);
             break;
@@ -232,7 +232,7 @@ void FieldModel<::cpp_only_pmr::LargeNum>::set(const ::cpp_only_pmr::LargeNum& f
                 fbe_model.set(v, resource);
                 set_end(fbe_begin);
             }
-            , [this, fbe_variant_index = fbe_value.index(), resource](const std::pmr::unordered_map<__uint128_t, __int128_t>& v) {
+            , [this, fbe_variant_index = fbe_value.index(), resource](const FBE::pmr::HashMap<__uint128_t, __int128_t>& v) {
                 FieldModelMap<__uint128_t, __int128_t> fbe_model(_buffer, 4);
                 size_t fbe_begin = set_begin(fbe_model.fbe_size(), fbe_variant_index);
                 if (fbe_begin == 0)

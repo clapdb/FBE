@@ -198,7 +198,7 @@ size_t FinalModel<::variants::V>::fbe_allocation_size(const ::variants::V& fbe_v
                 FinalModelVector<int32_t> fbe_model(_buffer, 0);
                 fbe_result += fbe_model.fbe_allocation_size(v);
             },
-            [this, &fbe_result](const std::unordered_map<int32_t, ::variants::Simple>& v) {
+            [this, &fbe_result](const HashMap<int32_t, ::variants::Simple>& v) {
                 FinalModelMap<int32_t, ::variants::Simple> fbe_model(_buffer, 0);
                 fbe_result += fbe_model.fbe_allocation_size(v);
             },
@@ -210,11 +210,11 @@ size_t FinalModel<::variants::V>::fbe_allocation_size(const ::variants::V& fbe_v
                 FinalModelVector<FBEString> fbe_model(_buffer, 0);
                 fbe_result += fbe_model.fbe_allocation_size(v);
             },
-            [this, &fbe_result](const std::unordered_map<int32_t, FBE::buffer_t>& v) {
+            [this, &fbe_result](const HashMap<int32_t, FBE::buffer_t>& v) {
                 FinalModelMap<int32_t, FBE::buffer_t> fbe_model(_buffer, 0);
                 fbe_result += fbe_model.fbe_allocation_size(v);
             },
-            [this, &fbe_result](const std::unordered_map<FBEString, FBE::buffer_t>& v) {
+            [this, &fbe_result](const HashMap<FBEString, FBE::buffer_t>& v) {
                 FinalModelMap<FBEString, FBE::buffer_t> fbe_model(_buffer, 0);
                 fbe_result += fbe_model.fbe_allocation_size(v);
             },
@@ -431,7 +431,7 @@ size_t FinalModel<::variants::V>::get(::variants::V& fbe_value) const noexcept
         }
         case 7: {
             FinalModelMap<int32_t, ::variants::Simple> fbe_model(_buffer, 0);
-            fbe_value.emplace<std::unordered_map<int32_t, ::variants::Simple>>();
+            fbe_value.emplace<HashMap<int32_t, ::variants::Simple>>();
             auto& value = std::get<7>(fbe_value);
             fbe_result += fbe_model.get(value);
             break;
@@ -452,14 +452,14 @@ size_t FinalModel<::variants::V>::get(::variants::V& fbe_value) const noexcept
         }
         case 10: {
             FinalModelMap<int32_t, FBE::buffer_t> fbe_model(_buffer, 0);
-            fbe_value.emplace<std::unordered_map<int32_t, FBE::buffer_t>>();
+            fbe_value.emplace<HashMap<int32_t, FBE::buffer_t>>();
             auto& value = std::get<10>(fbe_value);
             fbe_result += fbe_model.get(value);
             break;
         }
         case 11: {
             FinalModelMap<FBEString, FBE::buffer_t> fbe_model(_buffer, 0);
-            fbe_value.emplace<std::unordered_map<FBEString, FBE::buffer_t>>();
+            fbe_value.emplace<HashMap<FBEString, FBE::buffer_t>>();
             auto& value = std::get<11>(fbe_value);
             fbe_result += fbe_model.get(value);
             break;
@@ -518,7 +518,7 @@ size_t FinalModel<::variants::V>::set(const ::variants::V& fbe_value) noexcept
                 FinalModelVector<int32_t> fbe_model(_buffer, 0);
                 fbe_result += fbe_model.set(v);
             },
-            [this, &fbe_result](const std::unordered_map<int32_t, ::variants::Simple>& v) {
+            [this, &fbe_result](const HashMap<int32_t, ::variants::Simple>& v) {
                 FinalModelMap<int32_t, ::variants::Simple> fbe_model(_buffer, 0);
                 fbe_result += fbe_model.set(v);
             },
@@ -530,11 +530,11 @@ size_t FinalModel<::variants::V>::set(const ::variants::V& fbe_value) noexcept
                 FinalModelVector<FBEString> fbe_model(_buffer, 0);
                 fbe_result += fbe_model.set(v);
             },
-            [this, &fbe_result](const std::unordered_map<int32_t, FBE::buffer_t>& v) {
+            [this, &fbe_result](const HashMap<int32_t, FBE::buffer_t>& v) {
                 FinalModelMap<int32_t, FBE::buffer_t> fbe_model(_buffer, 0);
                 fbe_result += fbe_model.set(v);
             },
-            [this, &fbe_result](const std::unordered_map<FBEString, FBE::buffer_t>& v) {
+            [this, &fbe_result](const HashMap<FBEString, FBE::buffer_t>& v) {
                 FinalModelMap<FBEString, FBE::buffer_t> fbe_model(_buffer, 0);
                 fbe_result += fbe_model.set(v);
             },

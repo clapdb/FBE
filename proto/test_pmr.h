@@ -747,22 +747,22 @@ struct StructHash
 {
     ArenaManagedCreateOnlyTag;
 
-    std::pmr::unordered_map<ArenaString, uint8_t> f1;
-    std::pmr::unordered_map<ArenaString, std::optional<uint8_t>> f2;
-    std::pmr::unordered_map<ArenaString, FBE::pmr_buffer_t> f3;
-    std::pmr::unordered_map<ArenaString, std::optional<FBE::pmr_buffer_t>> f4;
-    std::pmr::unordered_map<ArenaString, ::test_pmr::EnumSimple> f5;
-    std::pmr::unordered_map<ArenaString, std::optional<::test_pmr::EnumSimple>> f6;
-    std::pmr::unordered_map<ArenaString, ::test_pmr::FlagsSimple> f7;
-    std::pmr::unordered_map<ArenaString, std::optional<::test_pmr::FlagsSimple>> f8;
-    std::pmr::unordered_map<ArenaString, ::test_pmr::StructSimple> f9;
-    std::pmr::unordered_map<ArenaString, std::optional<::test_pmr::StructSimple>> f10;
+    FBE::pmr::HashMap<ArenaString, uint8_t> f1;
+    FBE::pmr::HashMap<ArenaString, std::optional<uint8_t>> f2;
+    FBE::pmr::HashMap<ArenaString, FBE::pmr_buffer_t> f3;
+    FBE::pmr::HashMap<ArenaString, std::optional<FBE::pmr_buffer_t>> f4;
+    FBE::pmr::HashMap<ArenaString, ::test_pmr::EnumSimple> f5;
+    FBE::pmr::HashMap<ArenaString, std::optional<::test_pmr::EnumSimple>> f6;
+    FBE::pmr::HashMap<ArenaString, ::test_pmr::FlagsSimple> f7;
+    FBE::pmr::HashMap<ArenaString, std::optional<::test_pmr::FlagsSimple>> f8;
+    FBE::pmr::HashMap<ArenaString, ::test_pmr::StructSimple> f9;
+    FBE::pmr::HashMap<ArenaString, std::optional<::test_pmr::StructSimple>> f10;
 
     size_t fbe_type() const noexcept { return 141; }
 
     StructHash();
     explicit StructHash(allocator_type alloc);
-    StructHash(const std::pmr::unordered_map<ArenaString, uint8_t>& arg_f1, const std::pmr::unordered_map<ArenaString, std::optional<uint8_t>>& arg_f2, const std::pmr::unordered_map<ArenaString, FBE::pmr_buffer_t>& arg_f3, const std::pmr::unordered_map<ArenaString, std::optional<FBE::pmr_buffer_t>>& arg_f4, const std::pmr::unordered_map<ArenaString, ::test_pmr::EnumSimple>& arg_f5, const std::pmr::unordered_map<ArenaString, std::optional<::test_pmr::EnumSimple>>& arg_f6, const std::pmr::unordered_map<ArenaString, ::test_pmr::FlagsSimple>& arg_f7, const std::pmr::unordered_map<ArenaString, std::optional<::test_pmr::FlagsSimple>>& arg_f8, const std::pmr::unordered_map<ArenaString, ::test_pmr::StructSimple>& arg_f9, const std::pmr::unordered_map<ArenaString, std::optional<::test_pmr::StructSimple>>& arg_f10);
+    StructHash(const FBE::pmr::HashMap<ArenaString, uint8_t>& arg_f1, const FBE::pmr::HashMap<ArenaString, std::optional<uint8_t>>& arg_f2, const FBE::pmr::HashMap<ArenaString, FBE::pmr_buffer_t>& arg_f3, const FBE::pmr::HashMap<ArenaString, std::optional<FBE::pmr_buffer_t>>& arg_f4, const FBE::pmr::HashMap<ArenaString, ::test_pmr::EnumSimple>& arg_f5, const FBE::pmr::HashMap<ArenaString, std::optional<::test_pmr::EnumSimple>>& arg_f6, const FBE::pmr::HashMap<ArenaString, ::test_pmr::FlagsSimple>& arg_f7, const FBE::pmr::HashMap<ArenaString, std::optional<::test_pmr::FlagsSimple>>& arg_f8, const FBE::pmr::HashMap<ArenaString, ::test_pmr::StructSimple>& arg_f9, const FBE::pmr::HashMap<ArenaString, std::optional<::test_pmr::StructSimple>>& arg_f10);
     StructHash(const StructHash& other) = default;
     StructHash(StructHash&& other) = default;
     ~StructHash() = default;
@@ -806,14 +806,14 @@ struct StructHashEx
 {
     ArenaManagedCreateOnlyTag;
 
-    std::pmr::unordered_map<::test_pmr::StructSimple, ::test_pmr::StructNested> f1;
-    std::pmr::unordered_map<::test_pmr::StructSimple, std::optional<::test_pmr::StructNested>> f2;
+    FBE::pmr::HashMap<::test_pmr::StructSimple, ::test_pmr::StructNested> f1;
+    FBE::pmr::HashMap<::test_pmr::StructSimple, std::optional<::test_pmr::StructNested>> f2;
 
     size_t fbe_type() const noexcept { return 142; }
 
     StructHashEx();
     explicit StructHashEx(allocator_type alloc);
-    StructHashEx(const std::pmr::unordered_map<::test_pmr::StructSimple, ::test_pmr::StructNested>& arg_f1, const std::pmr::unordered_map<::test_pmr::StructSimple, std::optional<::test_pmr::StructNested>>& arg_f2);
+    StructHashEx(const FBE::pmr::HashMap<::test_pmr::StructSimple, ::test_pmr::StructNested>& arg_f1, const FBE::pmr::HashMap<::test_pmr::StructSimple, std::optional<::test_pmr::StructNested>>& arg_f2);
     StructHashEx(const StructHashEx& other) = default;
     StructHashEx(StructHashEx&& other) = default;
     ~StructHashEx() = default;

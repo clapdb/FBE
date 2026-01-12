@@ -5841,7 +5841,7 @@ void GeneratorCpp::GenerateClient_Header(const std::shared_ptr<Package> &p,
       std::string response_field = response;
       replace_all(response_field, ".", "");
 
-      WriteLineIndent("std::unordered_map<FBE::uuid_t, std::tuple<uint64_t, "
+      WriteLineIndent("HashMap<FBE::uuid_t, std::tuple<uint64_t, "
                       "uint64_t, std::promise<" +
                       response_name + ">>> _requests_by_id_" + response_field +
                       ";");
@@ -9661,7 +9661,7 @@ std::string GeneratorCpp::ConvertTypeName(const std::string &package,
            ConvertTypeName(package, *field.key, false) + ", " +
            ConvertTypeName(package, *field.type, field.optional) + ">";
   else if (field.hash)
-    return prefix + "::unordered_map<" +
+    return (Arena() ? "FBE::pmr::HashMap<" : "HashMap<") +
            ConvertTypeName(package, *field.key, false) + ", " +
            ConvertTypeName(package, *field.type, field.optional) + ">";
 
@@ -10050,7 +10050,7 @@ std::string GeneratorCpp::ConvertPtrTypeName(const std::string &package,
                               as_argument) +
            ">";
   else if (field.hash)
-    return prefix + "::unordered_map<" +
+    return (Arena() ? "FBE::pmr::HashMap<" : "HashMap<") +
            ConvertPtrTypeName(package, *field.key, false, false, as_argument) +
            ", " +
            ConvertPtrTypeName(package, *field.type, field.optional, typeptr,
@@ -10085,7 +10085,7 @@ std::string GeneratorCpp::ConvertVariantTypeName(const std::string &package,
                               false) +
            ">";
   else if (variant.hash)
-    return prefix + "::unordered_map<" +
+    return (Arena() ? "FBE::pmr::HashMap<" : "HashMap<") +
            ConvertPtrTypeName(package, *variant.key, false, false, false) +
            ", " +
            ConvertPtrTypeName(package, *variant.type, false, variant.ptr,

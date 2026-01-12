@@ -45,7 +45,7 @@ using Expr = std::variant<std::monostate, bool, ArenaString, int32_t, std::pmr::
 std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const Expr& value);
 auto is_equal(const Expr& lhs, const Expr& rhs) -> bool;
 
-using V = std::variant<std::monostate, int32_t, ArenaString, double, ::variants_ptr_pmr::Simple, ::variants_ptr_pmr::Simple*, std::pmr::vector<::variants_ptr_pmr::Simple>, std::pmr::vector<int32_t>, std::pmr::unordered_map<int32_t, ::variants_ptr_pmr::Simple>, std::pmr::vector<FBE::pmr_buffer_t>, std::pmr::vector<ArenaString>, std::pmr::unordered_map<int32_t, FBE::pmr_buffer_t>, std::pmr::unordered_map<ArenaString, FBE::pmr_buffer_t>, std::pmr::vector<::variants_ptr_pmr::Simple*>, ::variants_ptr_pmr::Expr>;
+using V = std::variant<std::monostate, int32_t, ArenaString, double, ::variants_ptr_pmr::Simple, ::variants_ptr_pmr::Simple*, std::pmr::vector<::variants_ptr_pmr::Simple>, std::pmr::vector<int32_t>, FBE::pmr::HashMap<int32_t, ::variants_ptr_pmr::Simple>, std::pmr::vector<FBE::pmr_buffer_t>, std::pmr::vector<ArenaString>, FBE::pmr::HashMap<int32_t, FBE::pmr_buffer_t>, FBE::pmr::HashMap<ArenaString, FBE::pmr_buffer_t>, std::pmr::vector<::variants_ptr_pmr::Simple*>, ::variants_ptr_pmr::Expr>;
 std::ostream& operator<<(std::ostream& stream, [[maybe_unused]] const V& value);
 auto is_equal(const V& lhs, const V& rhs) -> bool;
 
@@ -212,13 +212,13 @@ struct ValueContainer : FBE::Base
     ArenaManagedCreateOnlyTag;
 
     std::pmr::vector<::variants_ptr_pmr::V> vv;
-    std::pmr::unordered_map<int32_t, ::variants_ptr_pmr::V> vm;
+    FBE::pmr::HashMap<int32_t, ::variants_ptr_pmr::V> vm;
 
     size_t fbe_type() const noexcept { return 4; }
 
     ValueContainer();
     explicit ValueContainer(allocator_type alloc);
-    ValueContainer(std::pmr::vector<::variants_ptr_pmr::V> arg_vv, std::pmr::unordered_map<int32_t, ::variants_ptr_pmr::V> arg_vm);
+    ValueContainer(std::pmr::vector<::variants_ptr_pmr::V> arg_vv, FBE::pmr::HashMap<int32_t, ::variants_ptr_pmr::V> arg_vm);
     ValueContainer(const ValueContainer& other) = default;
     ValueContainer(ValueContainer&& other) noexcept;
     ~ValueContainer() override;
@@ -262,13 +262,13 @@ struct Scalar1Container : FBE::Base
 {
     ArenaManagedCreateOnlyTag;
 
-    std::pmr::unordered_map<::variants_ptr_pmr::Scalar1, ::variants_ptr_pmr::Expr> s;
+    FBE::pmr::HashMap<::variants_ptr_pmr::Scalar1, ::variants_ptr_pmr::Expr> s;
 
     size_t fbe_type() const noexcept { return 5; }
 
     Scalar1Container();
     explicit Scalar1Container(allocator_type alloc);
-    explicit Scalar1Container(std::pmr::unordered_map<::variants_ptr_pmr::Scalar1, ::variants_ptr_pmr::Expr> arg_s);
+    explicit Scalar1Container(FBE::pmr::HashMap<::variants_ptr_pmr::Scalar1, ::variants_ptr_pmr::Expr> arg_s);
     Scalar1Container(const Scalar1Container& other) = default;
     Scalar1Container(Scalar1Container&& other) noexcept;
     ~Scalar1Container() override;
