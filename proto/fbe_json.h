@@ -109,7 +109,7 @@ struct KeyWriter<TWriter, char[N]>
     }
 };
 
-template <class TWriter, typename T>
+template <class TWriter, typename T, typename Enable = void>
 struct ValueWriter
 {
     static bool to_json(TWriter& writer, const T& value, bool scope = true)
@@ -393,9 +393,9 @@ struct ValueWriter<TWriter, std::map<TKey, TValue>>
 };
 
 template <class TWriter, typename TKey, typename TValue>
-struct ValueWriter<TWriter, std::unordered_map<TKey, TValue>>
+struct ValueWriter<TWriter, HashMap<TKey, TValue>, std::enable_if_t<!std::is_void_v<TValue>>>
 {
-    static bool to_json(TWriter& writer, const std::unordered_map<TKey, TValue>& values, bool scope = true)
+    static bool to_json(TWriter& writer, const HashMap<TKey, TValue>& values, bool scope = true)
     {
         writer.StartObject();
         for (const auto& value : values)
@@ -410,7 +410,6 @@ struct ValueWriter<TWriter, std::unordered_map<TKey, TValue>>
     }
 };
 
-#if defined(USING_BTREE_MAP)
 template <class TWriter, typename T>
 struct ValueWriter<TWriter, FBE::set<T>>
 {
@@ -425,6 +424,7 @@ struct ValueWriter<TWriter, FBE::set<T>>
     }
 };
 
+#if defined(USING_BTREE_MAP)
 template <class TWriter, typename TKey, typename TValue>
 struct ValueWriter<TWriter, FBE::map<TKey, TValue>>
 {
@@ -444,7 +444,7 @@ struct ValueWriter<TWriter, FBE::map<TKey, TValue>>
 };
 #endif
 
-template <class TJson, typename T>
+template <class TJson, typename T, typename Enable = void>
 struct ValueReader
 {
     static bool from_json(const TJson& json, T& value)
@@ -955,11 +955,7 @@ struct ValueReader<TJson, FastVec<T>>
             T temp = T();
             if (!FBE::JSON::from_json(item, temp))
                 return false;
-            #if defined(USING_STD_VECTOR)
             values.emplace_back(temp);
-            #else
-            values.template emplace_back(temp);
-            #endif
         }
         return true;
     }
@@ -1038,9 +1034,9 @@ struct ValueReader<TJson, std::map<TKey, TValue>>
 };
 
 template <class TJson, typename TKey, typename TValue>
-struct ValueReader<TJson, std::unordered_map<TKey, TValue>>
+struct ValueReader<TJson, HashMap<TKey, TValue>, std::enable_if_t<!std::is_void_v<TValue>>>
 {
-    static bool from_json(const TJson& json, std::unordered_map<TKey, TValue>& values)
+    static bool from_json(const TJson& json, HashMap<TKey, TValue>& values)
     {
         values.clear();
 
@@ -1063,7 +1059,6 @@ struct ValueReader<TJson, std::unordered_map<TKey, TValue>>
     }
 };
 
-#if defined(USING_BTREE_MAP)
 template <class TJson, typename T>
 struct ValueReader<TJson, FBE::set<T>>
 {
@@ -1087,6 +1082,7 @@ struct ValueReader<TJson, FBE::set<T>>
     }
 };
 
+#if defined(USING_BTREE_MAP)
 template <class TJson, typename TKey, typename TValue>
 struct ValueReader<TJson, FBE::map<TKey, TValue>>
 {

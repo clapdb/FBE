@@ -397,7 +397,7 @@ void FieldModel<::variants::V>::get(::variants::V& fbe_value, std::pmr::memory_r
         }
         case 7: {
             FieldModelMap<int32_t, ::variants::Simple> fbe_model(_buffer, 4);
-            variant_emplace_value<::variants::V, std::unordered_map<int32_t, ::variants::Simple>>(fbe_value, resource);
+            variant_emplace_value<::variants::V, HashMap<int32_t, ::variants::Simple>>(fbe_value, resource);
             auto& value = std::get<7>(fbe_value);
             variant_get_value(fbe_model, value, resource);
             break;
@@ -418,14 +418,14 @@ void FieldModel<::variants::V>::get(::variants::V& fbe_value, std::pmr::memory_r
         }
         case 10: {
             FieldModelMap<int32_t, FBE::buffer_t> fbe_model(_buffer, 4);
-            variant_emplace_value<::variants::V, std::unordered_map<int32_t, FBE::buffer_t>>(fbe_value, resource);
+            variant_emplace_value<::variants::V, HashMap<int32_t, FBE::buffer_t>>(fbe_value, resource);
             auto& value = std::get<10>(fbe_value);
             variant_get_value(fbe_model, value, resource);
             break;
         }
         case 11: {
             FieldModelMap<FBEString, FBE::buffer_t> fbe_model(_buffer, 4);
-            variant_emplace_value<::variants::V, std::unordered_map<FBEString, FBE::buffer_t>>(fbe_value, resource);
+            variant_emplace_value<::variants::V, HashMap<FBEString, FBE::buffer_t>>(fbe_value, resource);
             auto& value = std::get<11>(fbe_value);
             variant_get_value(fbe_model, value, resource);
             break;
@@ -534,7 +534,7 @@ void FieldModel<::variants::V>::set(const ::variants::V& fbe_value, std::pmr::me
                 fbe_model.set(v, resource);
                 set_end(fbe_begin);
             }
-            , [this, fbe_variant_index = fbe_value.index(), resource](const std::unordered_map<int32_t, ::variants::Simple>& v) {
+            , [this, fbe_variant_index = fbe_value.index(), resource](const HashMap<int32_t, ::variants::Simple>& v) {
                 FieldModelMap<int32_t, ::variants::Simple> fbe_model(_buffer, 4);
                 size_t fbe_begin = set_begin(fbe_model.fbe_size(), fbe_variant_index);
                 if (fbe_begin == 0)
@@ -558,7 +558,7 @@ void FieldModel<::variants::V>::set(const ::variants::V& fbe_value, std::pmr::me
                 fbe_model.set(v, resource);
                 set_end(fbe_begin);
             }
-            , [this, fbe_variant_index = fbe_value.index(), resource](const std::unordered_map<int32_t, FBE::buffer_t>& v) {
+            , [this, fbe_variant_index = fbe_value.index(), resource](const HashMap<int32_t, FBE::buffer_t>& v) {
                 FieldModelMap<int32_t, FBE::buffer_t> fbe_model(_buffer, 4);
                 size_t fbe_begin = set_begin(fbe_model.fbe_size(), fbe_variant_index);
                 if (fbe_begin == 0)
@@ -566,7 +566,7 @@ void FieldModel<::variants::V>::set(const ::variants::V& fbe_value, std::pmr::me
                 fbe_model.set(v, resource);
                 set_end(fbe_begin);
             }
-            , [this, fbe_variant_index = fbe_value.index(), resource](const std::unordered_map<FBEString, FBE::buffer_t>& v) {
+            , [this, fbe_variant_index = fbe_value.index(), resource](const HashMap<FBEString, FBE::buffer_t>& v) {
                 FieldModelMap<FBEString, FBE::buffer_t> fbe_model(_buffer, 4);
                 size_t fbe_begin = set_begin(fbe_model.fbe_size(), fbe_variant_index);
                 if (fbe_begin == 0)

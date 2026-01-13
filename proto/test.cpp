@@ -1740,7 +1740,7 @@ StructHash::StructHash()
     , f10()
 {}
 
-StructHash::StructHash(const std::unordered_map<FBEString, uint8_t>& arg_f1, const std::unordered_map<FBEString, std::optional<uint8_t>>& arg_f2, const std::unordered_map<FBEString, FBE::buffer_t>& arg_f3, const std::unordered_map<FBEString, std::optional<FBE::buffer_t>>& arg_f4, const std::unordered_map<FBEString, ::test::EnumSimple>& arg_f5, const std::unordered_map<FBEString, std::optional<::test::EnumSimple>>& arg_f6, const std::unordered_map<FBEString, ::test::FlagsSimple>& arg_f7, const std::unordered_map<FBEString, std::optional<::test::FlagsSimple>>& arg_f8, const std::unordered_map<FBEString, ::test::StructSimple>& arg_f9, const std::unordered_map<FBEString, std::optional<::test::StructSimple>>& arg_f10)
+StructHash::StructHash(const HashMap<FBEString, uint8_t>& arg_f1, const HashMap<FBEString, std::optional<uint8_t>>& arg_f2, const HashMap<FBEString, FBE::buffer_t>& arg_f3, const HashMap<FBEString, std::optional<FBE::buffer_t>>& arg_f4, const HashMap<FBEString, ::test::EnumSimple>& arg_f5, const HashMap<FBEString, std::optional<::test::EnumSimple>>& arg_f6, const HashMap<FBEString, ::test::FlagsSimple>& arg_f7, const HashMap<FBEString, std::optional<::test::FlagsSimple>>& arg_f8, const HashMap<FBEString, ::test::StructSimple>& arg_f9, const HashMap<FBEString, std::optional<::test::StructSimple>>& arg_f10)
     : f1(arg_f1)
     , f2(arg_f2)
     , f3(arg_f3)
@@ -1926,7 +1926,7 @@ StructHashEx::StructHashEx()
     , f2()
 {}
 
-StructHashEx::StructHashEx(const std::unordered_map<::test::StructSimple, ::test::StructNested>& arg_f1, const std::unordered_map<::test::StructSimple, std::optional<::test::StructNested>>& arg_f2)
+StructHashEx::StructHashEx(const HashMap<::test::StructSimple, ::test::StructNested>& arg_f1, const HashMap<::test::StructSimple, std::optional<::test::StructNested>>& arg_f2)
     : f1(arg_f1)
     , f2(arg_f2)
 {}

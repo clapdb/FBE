@@ -67,7 +67,7 @@ Struct128::Struct128()
     , f7()
 {}
 
-Struct128::Struct128(__int128_t arg_f1, const std::optional<__int128_t>& arg_f2, __uint128_t arg_f3, const std::optional<__uint128_t>& arg_f4, const FastVec<__int128_t>& arg_f5, const std::unordered_map<__uint128_t, __int128_t>& arg_f6, const ::cpp_only::LargeNum& arg_f7)
+Struct128::Struct128(__int128_t arg_f1, const std::optional<__int128_t>& arg_f2, __uint128_t arg_f3, const std::optional<__uint128_t>& arg_f4, const FastVec<__int128_t>& arg_f5, const HashMap<__uint128_t, __int128_t>& arg_f6, const ::cpp_only::LargeNum& arg_f7)
     : f1(arg_f1)
     , f2(arg_f2)
     , f3(arg_f3)

@@ -651,7 +651,7 @@ ValueContainer::ValueContainer()
     , vm()
 {}
 
-ValueContainer::ValueContainer(FastVec<::variants_ptr::V> arg_vv, std::unordered_map<int32_t, ::variants_ptr::V> arg_vm)
+ValueContainer::ValueContainer(FastVec<::variants_ptr::V> arg_vv, HashMap<int32_t, ::variants_ptr::V> arg_vm)
     : vv(std::move(arg_vv))
     , vm(std::move(arg_vm))
 {}
@@ -748,7 +748,7 @@ Scalar1Container::Scalar1Container()
     : s()
 {}
 
-Scalar1Container::Scalar1Container(std::unordered_map<::variants_ptr::Scalar1, ::variants_ptr::Expr> arg_s)
+Scalar1Container::Scalar1Container(HashMap<::variants_ptr::Scalar1, ::variants_ptr::Expr> arg_s)
     : s(std::move(arg_s))
 {}
 

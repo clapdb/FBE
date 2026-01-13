@@ -293,11 +293,7 @@ inline void FieldModelArray<T, N>::get(FastVec<T>& values, std::pmr::memory_reso
         {
             T value = T();
             fbe_model.get(value, resource);
-            #if defined(USING_STD_VECTOR)
             values.emplace_back(std::move(value));
-            #else
-            values.template emplace_back(std::move(value));
-            #endif
             fbe_model.fbe_shift(fbe_model.fbe_size());
         }
     }
@@ -557,7 +553,7 @@ inline void FieldModelVector<T>::get(std::set<T>& values, std::pmr::memory_resou
     {
         T value = T();
         fbe_model.get(value, resource);
-        hint = values.emplace_hint(hint, std::move(value));
+        values.emplace(std::move(value));
         fbe_model.fbe_shift(fbe_model.fbe_size());
     }
 }
@@ -642,11 +638,11 @@ inline void FieldModelVector<T>::get(std::pmr::set<T>& values, std::pmr::memory_
         if constexpr (std::is_constructible_v<T, std::pmr::polymorphic_allocator<char>> and not is_variant_v<T>) {
             T value{resource};
             fbe_model.get(value, resource);
-            hint = values.emplace_hint(hint, std::move(value));
+            values.emplace(std::move(value));
         } else {
             T value = T();
             fbe_model.get(value, resource);
-            hint = values.emplace_hint(hint, std::move(value));
+            values.emplace(std::move(value));
         }
         fbe_model.fbe_shift(fbe_model.fbe_size());
     }
@@ -766,7 +762,7 @@ inline void FieldModelVector<T>::get(FBE::set<T>& values, std::pmr::memory_resou
     {
         T value = T();
         fbe_model.get(value, resource);
-        hint = values.emplace_hint(hint, std::move(value));
+        values.emplace(std::move(value));
         fbe_model.fbe_shift(fbe_model.fbe_size());
     }
 }
@@ -787,7 +783,7 @@ inline void FieldModelVector<T>::get(FBE::pmr::set<T>& values, std::pmr::memory_
     {
         T value = T();
         fbe_model.get(value, resource);
-        hint = values.emplace_hint(hint, std::move(value));
+        values.emplace(std::move(value));
         fbe_model.fbe_shift(fbe_model.fbe_size());
     }
 }
@@ -959,14 +955,14 @@ inline void FieldModelMap<TKey, TValue>::get(std::map<TKey, TValue>& values, std
         TValue value;
         fbe_model.first.get(key, resource);
         fbe_model.second.get(value, resource);
-        hint = values.emplace_hint(hint, std::move(key), std::move(value));
+        values.emplace(std::move(key), std::move(value));
         fbe_model.first.fbe_shift(fbe_model_stride);
         fbe_model.second.fbe_shift(fbe_model_stride);
     }
 }
 
 template <typename TKey, typename TValue>
-inline void FieldModelMap<TKey, TValue>::get(std::unordered_map<TKey, TValue>& values, std::pmr::memory_resource* resource) const noexcept
+inline void FieldModelMap<TKey, TValue>::get(FastMap<TKey, TValue>& values, std::pmr::memory_resource* resource) const noexcept
 {
     values.clear();
 
@@ -1008,14 +1004,14 @@ inline void FieldModelMap<TKey, TValue>::get(std::pmr::map<TKey, TValue>& values
         TValue value;
         fbe_model.first.get(key, resource);
         fbe_model.second.get(value, resource);
-        hint = values.emplace_hint(hint, std::move(key), std::move(value));
+        values.emplace(std::move(key), std::move(value));
         fbe_model.first.fbe_shift(fbe_model_stride);
         fbe_model.second.fbe_shift(fbe_model_stride);
     }
 }
 
 template <typename TKey, typename TValue>
-inline void FieldModelMap<TKey, TValue>::get(std::pmr::unordered_map<TKey, TValue>& values, std::pmr::memory_resource* resource) const noexcept
+inline void FieldModelMap<TKey, TValue>::get(FBE::pmr::FastMap<TKey, TValue>& values, std::pmr::memory_resource* resource) const noexcept
 {
     values.clear();
 
@@ -1058,7 +1054,7 @@ inline void FieldModelMap<TKey, TValue>::get(FBE::map<TKey, TValue>& values, std
         TValue value;
         fbe_model.first.get(key, resource);
         fbe_model.second.get(value, resource);
-        hint = values.emplace_hint(hint, std::move(key), std::move(value));
+        values.emplace(std::move(key), std::move(value));
         fbe_model.first.fbe_shift(fbe_model_stride);
         fbe_model.second.fbe_shift(fbe_model_stride);
     }
@@ -1083,7 +1079,7 @@ inline void FieldModelMap<TKey, TValue>::get(FBE::pmr::map<TKey, TValue>& values
         TValue value;
         fbe_model.first.get(key, resource);
         fbe_model.second.get(value, resource);
-        hint = values.emplace_hint(hint, std::move(key), std::move(value));
+        values.emplace(std::move(key), std::move(value));
         fbe_model.first.fbe_shift(fbe_model_stride);
         fbe_model.second.fbe_shift(fbe_model_stride);
     }
@@ -1108,7 +1104,7 @@ inline void FieldModelMap<TKey, TValue>::set(const std::map<TKey, TValue>& value
 }
 
 template <typename TKey, typename TValue>
-inline void FieldModelMap<TKey, TValue>::set(const std::unordered_map<TKey, TValue>& values, std::pmr::memory_resource* resource) noexcept
+inline void FieldModelMap<TKey, TValue>::set(const FastMap<TKey, TValue>& values, std::pmr::memory_resource* resource) noexcept
 {
     assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
     if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
@@ -1142,7 +1138,7 @@ inline void FieldModelMap<TKey, TValue>::set(const std::pmr::map<TKey, TValue>& 
 }
 
 template <typename TKey, typename TValue>
-inline void FieldModelMap<TKey, TValue>::set(const std::pmr::unordered_map<TKey, TValue>& values, std::pmr::memory_resource* resource) noexcept
+inline void FieldModelMap<TKey, TValue>::set(const FBE::pmr::FastMap<TKey, TValue>& values, std::pmr::memory_resource* resource) noexcept
 {
     assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
     if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())

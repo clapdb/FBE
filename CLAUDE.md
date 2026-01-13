@@ -108,7 +108,6 @@ fbec --cpp --go --final --json --proto --input=./schema.fbe --output=./generated
 ## Configuration Options
 
 ### CMake Options
-- `FBE_USING_STD_VECTOR=ON`: Use std::vector instead of custom containers
 - `FBE_USING_SEASTAR_STRING=ON`: Use Seastar string implementation
 - `FBE_USING_SMALL_STRING=ON`: Use small string optimization
 - `FBE_USING_SMALL_ARENA_STRING=ON`: Use small arena string optimization

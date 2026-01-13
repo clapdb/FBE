@@ -643,7 +643,7 @@ Final model map properties:
 Represents an associative hash table of the given type.
 
 *Implementation of the hash type depends on equivalent type in each
-programming language (e.g. std::unordered_map<K, V> in C++, Dictionary<K, V>
+programming language (e.g. FastMap<K, V> / dense_map<K, V> in C++, Dictionary<K, V>
 in C#, HashMap<K, V> in Java).*
 
 ![hash](https://github.com/chronoxor/FastBinaryEncoding/raw/master/images/hash.png)

@@ -68,6 +68,8 @@ namespace std { namespace pmr = ::std::experimental::pmr; }
 #if defined(USING_BTREE_MAP)
 #include "container/btree_map.hpp"
 #endif
+#include "container/dense_map.hpp"
+#include "container/dense_set.hpp"
 
 #if defined(USING_SEASTAR_STRING)
 #include <seastar/core/sstring.hh>
@@ -80,8 +82,24 @@ namespace std { namespace pmr = ::std::experimental::pmr; }
 #endif
 
 namespace FBE {
+    // Key-based equality comparator that uses operator< to compare only key fields
+    // This matches the behavior of std::set (which uses operator<) for hash containers
+    template <typename T>
+    struct key_equal {
+        bool operator()(const T& a, const T& b) const noexcept {
+            // Two elements are equal if neither is less than the other (based on key fields only)
+            return !(a < b) && !(b < a);
+        }
+    };
+
     template <typename T>
     using FastVec = std::vector<T>;
+
+    template <typename Key, typename Value, typename Hash = std::hash<Key>, typename KeyEqual = key_equal<Key>>
+    using HashMap = stdb::container::dense_map<Key, Value, Hash, KeyEqual>;
+
+    template <typename Key, typename Hash = std::hash<Key>, typename KeyEqual = key_equal<Key>>
+    using FastSet = stdb::container::dense_set<Key, Hash, KeyEqual>;
 
     #if defined(USING_SEASTAR_STRING)
     using FBEString = seastar::sstring;
@@ -97,14 +115,11 @@ namespace FBE {
     using ArenaString = std::pmr::string;
     #endif
 
-    template <typename Key, typename Compare = std::less<Key>, typename Allocator = std::allocator<Key>>
-    #if defined(USING_BTREE_MAP)
-    // Use fixed 256-byte node size to support forward-declared types (ptr-based FBE)
-    using set = stdb::container::btree_set<Key, Compare, Allocator, 256>;
-    #else
-    using set = std::set<Key, Compare, Allocator>;
-    #endif
+    // Unordered set using dense_set (hash-based, uses std::hash for FBE-generated types)
+    template <typename Key, typename Hash = std::hash<Key>, typename KeyEqual = key_equal<Key>>
+    using set = stdb::container::dense_set<Key, Hash, KeyEqual>;
 
+    // Ordered map (kept for ordered key iteration)
     template <typename Key, typename Value, typename Compare = std::less<Key>, typename Allocator = std::allocator<std::pair<const Key, Value>>>
     #if defined(USING_BTREE_MAP)
     // Use fixed 256-byte node size to support forward-declared types (ptr-based FBE)
@@ -115,19 +130,20 @@ namespace FBE {
 
     // PMR namespace for arena allocator support
     namespace pmr {
-        template <typename Key, typename Compare = std::less<Key>>
-        #if defined(USING_BTREE_MAP)
-        using set = stdb::pmr::btree_set_compact<Key, Compare>;
-        #else
-        using set = std::pmr::set<Key, Compare>;
-        #endif
+        // Unordered set using dense_set (hash-based, uses std::hash for FBE-generated types)
+        template <typename Key, typename Hash = std::hash<Key>, typename KeyEqual = key_equal<Key>>
+        using set = stdb::container::pmr::dense_map<Key, void, Hash, KeyEqual>;
 
+        // Ordered map (kept for ordered key iteration)
         template <typename Key, typename Value, typename Compare = std::less<Key>>
         #if defined(USING_BTREE_MAP)
         using map = stdb::pmr::btree_map_compact<Key, Value, Compare>;
         #else
         using map = std::pmr::map<Key, Value, Compare>;
         #endif
+
+        template <typename Key, typename Value, typename Hash = std::hash<Key>, typename KeyEqual = key_equal<Key>>
+        using HashMap = stdb::container::pmr::dense_map<Key, Value, Hash, KeyEqual>;
     } // namespace pmr
 
     // Type trait to detect primitive types that can be bulk-copied with memcpy
@@ -3139,11 +3155,7 @@ inline void FieldModelArray<T, N>::get(FastVec<T>& values, std::pmr::memory_reso
         {
             T value = T();
             fbe_model.get(value, resource);
-            #if defined(USING_STD_VECTOR)
             values.emplace_back(std::move(value));
-            #else
-            values.template emplace_back(std::move(value));
-            #endif
             fbe_model.fbe_shift(fbe_model.fbe_size());
         }
     }
@@ -3285,16 +3297,14 @@ public:
     // Set the vector as std::pmr::set
     void set(const std::pmr::set<T>& values, std::pmr::memory_resource* resource) noexcept;
 
-#if defined(USING_BTREE_MAP)
-    // Get the vector as FBE::set (btree_set with std allocator)
+    // Get the vector as FBE::set (dense_set (hash-based))
     void get(FBE::set<T>& values, std::pmr::memory_resource* resource) const noexcept;
-    // Get the vector as FBE::pmr::set (btree_set with pmr allocator)
+    // Get the vector as FBE::pmr::set (dense_set with pmr allocator)
     void get(FBE::pmr::set<T>& values, std::pmr::memory_resource* resource) const noexcept;
-    // Set the vector as FBE::set (btree_set with std allocator)
+    // Set the vector as FBE::set (dense_set (hash-based))
     void set(const FBE::set<T>& values, std::pmr::memory_resource* resource) noexcept;
-    // Set the vector as FBE::pmr::set (btree_set with pmr allocator)
+    // Set the vector as FBE::pmr::set (dense_set with pmr allocator)
     void set(const FBE::pmr::set<T>& values, std::pmr::memory_resource* resource) noexcept;
-#endif
 
 private:
     FBEBuffer& _buffer;
@@ -3488,7 +3498,7 @@ inline void FieldModelVector<T>::get(std::set<T>& values, std::pmr::memory_resou
     {
         T value = T();
         fbe_model.get(value, resource);
-        hint = values.emplace_hint(hint, std::move(value));
+        values.emplace(std::move(value));
         fbe_model.fbe_shift(fbe_model.fbe_size());
     }
 }
@@ -3573,11 +3583,11 @@ inline void FieldModelVector<T>::get(std::pmr::set<T>& values, std::pmr::memory_
         if constexpr (std::is_constructible_v<T, std::pmr::polymorphic_allocator<char>> and not is_variant_v<T>) {
             T value{resource};
             fbe_model.get(value, resource);
-            hint = values.emplace_hint(hint, std::move(value));
+            values.emplace(std::move(value));
         } else {
             T value = T();
             fbe_model.get(value, resource);
-            hint = values.emplace_hint(hint, std::move(value));
+            values.emplace(std::move(value));
         }
         fbe_model.fbe_shift(fbe_model.fbe_size());
     }
@@ -3680,7 +3690,6 @@ inline void FieldModelVector<T>::set(const std::pmr::set<T>& values, std::pmr::m
     }
 }
 
-#if defined(USING_BTREE_MAP)
 template <typename T>
 inline void FieldModelVector<T>::get(FBE::set<T>& values, std::pmr::memory_resource* resource) const noexcept
 {
@@ -3697,7 +3706,7 @@ inline void FieldModelVector<T>::get(FBE::set<T>& values, std::pmr::memory_resou
     {
         T value = T();
         fbe_model.get(value, resource);
-        hint = values.emplace_hint(hint, std::move(value));
+        values.emplace(std::move(value));
         fbe_model.fbe_shift(fbe_model.fbe_size());
     }
 }
@@ -3718,7 +3727,7 @@ inline void FieldModelVector<T>::get(FBE::pmr::set<T>& values, std::pmr::memory_
     {
         T value = T();
         fbe_model.get(value, resource);
-        hint = values.emplace_hint(hint, std::move(value));
+        values.emplace(std::move(value));
         fbe_model.fbe_shift(fbe_model.fbe_size());
     }
 }
@@ -3752,7 +3761,6 @@ inline void FieldModelVector<T>::set(const FBE::pmr::set<T>& values, std::pmr::m
         fbe_model.fbe_shift(fbe_model.fbe_size());
     }
 }
-#endif
 )CODE";
   }
 
@@ -3793,13 +3801,13 @@ public:
 
     // Get the map as std::map
     void get(std::map<TKey, TValue>& values, std::pmr::memory_resource* resource = nullptr) const noexcept;
-    // Get the map as std::unordered_map
-    void get(std::unordered_map<TKey, TValue>& values, std::pmr::memory_resource* resource = nullptr) const noexcept;
+    // Get the map as HashMap
+    void get(HashMap<TKey, TValue>& values, std::pmr::memory_resource* resource = nullptr) const noexcept;
 
     // Get the map as std::pmr::map
     void get(std::pmr::map<TKey, TValue>& values, std::pmr::memory_resource* resource) const noexcept;
-    // Get the map as std::pmr::unordered_map
-    void get(std::pmr::unordered_map<TKey, TValue>& values, std::pmr::memory_resource* resource) const noexcept;
+    // Get the map as FBE::pmr::HashMap
+    void get(FBE::pmr::HashMap<TKey, TValue>& values, std::pmr::memory_resource* resource) const noexcept;
 
 #if defined(USING_BTREE_MAP)
     // Get the map as FBE::map (btree_map with std allocator)
@@ -3810,13 +3818,13 @@ public:
 
     // Set the map as std::map
     void set(const std::map<TKey, TValue>& values, std::pmr::memory_resource* resource) noexcept;
-    // Set the map as std::unordered_map
-    void set(const std::unordered_map<TKey, TValue>& values, std::pmr::memory_resource* resource) noexcept;
+    // Set the map as HashMap
+    void set(const HashMap<TKey, TValue>& values, std::pmr::memory_resource* resource) noexcept;
 
     // Set the map as std::pmr::map
     void set(const std::pmr::map<TKey, TValue>& values, std::pmr::memory_resource* resource) noexcept;
-    // Set the map as std::pmr::unordered_map
-    void set(const std::pmr::unordered_map<TKey, TValue>& values, std::pmr::memory_resource* resource) noexcept;
+    // Set the map as FBE::pmr::HashMap
+    void set(const FBE::pmr::HashMap<TKey, TValue>& values, std::pmr::memory_resource* resource) noexcept;
 
 #if defined(USING_BTREE_MAP)
     // Set the map as FBE::map (btree_map with std allocator)
@@ -3970,14 +3978,14 @@ inline void FieldModelMap<TKey, TValue>::get(std::map<TKey, TValue>& values, std
         TValue value;
         fbe_model.first.get(key, resource);
         fbe_model.second.get(value, resource);
-        hint = values.emplace_hint(hint, std::move(key), std::move(value));
+        values.emplace(std::move(key), std::move(value));
         fbe_model.first.fbe_shift(fbe_model_stride);
         fbe_model.second.fbe_shift(fbe_model_stride);
     }
 }
 
 template <typename TKey, typename TValue>
-inline void FieldModelMap<TKey, TValue>::get(std::unordered_map<TKey, TValue>& values, std::pmr::memory_resource* resource) const noexcept
+inline void FieldModelMap<TKey, TValue>::get(HashMap<TKey, TValue>& values, std::pmr::memory_resource* resource) const noexcept
 {
     values.clear();
 
@@ -4019,14 +4027,14 @@ inline void FieldModelMap<TKey, TValue>::get(std::pmr::map<TKey, TValue>& values
         TValue value;
         fbe_model.first.get(key, resource);
         fbe_model.second.get(value, resource);
-        hint = values.emplace_hint(hint, std::move(key), std::move(value));
+        values.emplace(std::move(key), std::move(value));
         fbe_model.first.fbe_shift(fbe_model_stride);
         fbe_model.second.fbe_shift(fbe_model_stride);
     }
 }
 
 template <typename TKey, typename TValue>
-inline void FieldModelMap<TKey, TValue>::get(std::pmr::unordered_map<TKey, TValue>& values, std::pmr::memory_resource* resource) const noexcept
+inline void FieldModelMap<TKey, TValue>::get(FBE::pmr::HashMap<TKey, TValue>& values, std::pmr::memory_resource* resource) const noexcept
 {
     values.clear();
 
@@ -4069,7 +4077,7 @@ inline void FieldModelMap<TKey, TValue>::get(FBE::map<TKey, TValue>& values, std
         TValue value;
         fbe_model.first.get(key, resource);
         fbe_model.second.get(value, resource);
-        hint = values.emplace_hint(hint, std::move(key), std::move(value));
+        values.emplace(std::move(key), std::move(value));
         fbe_model.first.fbe_shift(fbe_model_stride);
         fbe_model.second.fbe_shift(fbe_model_stride);
     }
@@ -4094,7 +4102,7 @@ inline void FieldModelMap<TKey, TValue>::get(FBE::pmr::map<TKey, TValue>& values
         TValue value;
         fbe_model.first.get(key, resource);
         fbe_model.second.get(value, resource);
-        hint = values.emplace_hint(hint, std::move(key), std::move(value));
+        values.emplace(std::move(key), std::move(value));
         fbe_model.first.fbe_shift(fbe_model_stride);
         fbe_model.second.fbe_shift(fbe_model_stride);
     }
@@ -4119,7 +4127,7 @@ inline void FieldModelMap<TKey, TValue>::set(const std::map<TKey, TValue>& value
 }
 
 template <typename TKey, typename TValue>
-inline void FieldModelMap<TKey, TValue>::set(const std::unordered_map<TKey, TValue>& values, std::pmr::memory_resource* resource) noexcept
+inline void FieldModelMap<TKey, TValue>::set(const HashMap<TKey, TValue>& values, std::pmr::memory_resource* resource) noexcept
 {
     assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
     if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
@@ -4153,7 +4161,7 @@ inline void FieldModelMap<TKey, TValue>::set(const std::pmr::map<TKey, TValue>& 
 }
 
 template <typename TKey, typename TValue>
-inline void FieldModelMap<TKey, TValue>::set(const std::pmr::unordered_map<TKey, TValue>& values, std::pmr::memory_resource* resource) noexcept
+inline void FieldModelMap<TKey, TValue>::set(const FBE::pmr::HashMap<TKey, TValue>& values, std::pmr::memory_resource* resource) noexcept
 {
     assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
     if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
@@ -4358,6 +4366,8 @@ public:
 
     // Get the decimal value
     size_t get(decimal_t& value) const noexcept;
+    // Get the decimal value (PMR version, resource ignored)
+    size_t get(decimal_t& value, [[maybe_unused]] std::pmr::memory_resource* resource) const noexcept { return get(value); }
     // Set the decimal value
     size_t set(decimal_t value) noexcept;
 
@@ -4679,6 +4689,8 @@ public:
 
     // Get the UUID value
     size_t get(uuid_t& value) const noexcept;
+    // Get the UUID value (PMR version, resource ignored)
+    size_t get(uuid_t& value, [[maybe_unused]] std::pmr::memory_resource* resource) const noexcept { return get(value); }
     // Set the UUID value
     size_t set(uuid_t value) noexcept;
 
@@ -4763,6 +4775,15 @@ public:
     size_t get(FastVec<uint8_t>& value) const noexcept;
     // Get the bytes value
     size_t get(buffer_t& value) const noexcept { return get(value.buffer()); }
+
+    // PMR versions (resource ignored for bytes)
+    size_t get(void* data, size_t size, [[maybe_unused]] std::pmr::memory_resource* resource) const noexcept { return get(data, size); }
+    template <size_t N>
+    size_t get(uint8_t (&data)[N], [[maybe_unused]] std::pmr::memory_resource* resource) const noexcept { return get(data, N); }
+    template <size_t N>
+    size_t get(std::array<uint8_t, N>& data, [[maybe_unused]] std::pmr::memory_resource* resource) const noexcept { return get(data.data(), data.size()); }
+    size_t get(FastVec<uint8_t>& value, [[maybe_unused]] std::pmr::memory_resource* resource) const noexcept { return get(value); }
+    size_t get(buffer_t& value, [[maybe_unused]] std::pmr::memory_resource* resource) const noexcept { return get(value.buffer()); }
 
     // Set the bytes value
     size_t set(const void* data, size_t size);
@@ -5078,6 +5099,14 @@ public:
     size_t get(std::array<char, N>& data) const noexcept { return get(data.data(), data.size()); }
     // Get the string value
     size_t get(FBEString& value) const noexcept;
+
+    // PMR versions (resource ignored for FBEString)
+    size_t get(char* data, size_t size, [[maybe_unused]] std::pmr::memory_resource* resource) const noexcept { return get(data, size); }
+    template <size_t N>
+    size_t get(char (&data)[N], [[maybe_unused]] std::pmr::memory_resource* resource) const noexcept { return get(data, N); }
+    template <size_t N>
+    size_t get(std::array<char, N>& data, [[maybe_unused]] std::pmr::memory_resource* resource) const noexcept { return get(data.data(), data.size()); }
+    size_t get(FBEString& value, [[maybe_unused]] std::pmr::memory_resource* resource) const noexcept { return get(value); }
 
     // Set the string value
     size_t set(const char* data, size_t size);
@@ -5418,6 +5447,8 @@ public:
 
     // Get the optional value
     size_t get(std::optional<T>& opt) const noexcept;
+    // Get the optional value (PMR version)
+    size_t get(std::optional<T>& opt, std::pmr::memory_resource* resource) const noexcept;
     // Set the optional value
     size_t set(const std::optional<T>& opt);
 
@@ -5485,6 +5516,31 @@ inline size_t FinalModel<std::optional<T>>::get(std::optional<T>& opt) const noe
 }
 
 template <typename T>
+inline size_t FinalModel<std::optional<T>>::get(std::optional<T>& opt, std::pmr::memory_resource* resource) const noexcept
+{
+    opt = std::nullopt;
+
+    size_t fbe_full_offset = _buffer.offset() + fbe_offset();
+    assert(((fbe_full_offset + 1) <= _buffer.size()) && "Model is broken!");
+    if ((fbe_full_offset + 1) > _buffer.size())
+        return 0;
+
+    uint8_t fbe_has_value = *((const uint8_t*)(_buffer.data() + fbe_full_offset));
+    if (fbe_has_value == 0)
+        return 1;
+
+    _buffer.shift(fbe_offset() + 1);
+    T temp{};
+    if constexpr (std::is_constructible_v<T, std::pmr::memory_resource*>) {
+        temp = T(resource);
+    }
+    size_t size = value.get(temp, resource);
+    opt.emplace(std::move(temp));
+    _buffer.unshift(fbe_offset() + 1);
+    return 1 + size;
+}
+
+template <typename T>
 inline size_t FinalModel<std::optional<T>>::set(const std::optional<T>& opt)
 {
     size_t fbe_full_offset = _buffer.offset() + fbe_offset();
@@ -5544,6 +5600,15 @@ public:
     size_t get(std::array<T, S>& values) const noexcept;
     // Get the array as FastVec
     size_t get(FastVec<T>& values) const noexcept;
+
+    // Get the array as C-array (PMR version)
+    template <size_t S>
+    size_t get(T (&values)[S], std::pmr::memory_resource* resource) const noexcept;
+    // Get the array as std::array (PMR version)
+    template <size_t S>
+    size_t get(std::array<T, S>& values, std::pmr::memory_resource* resource) const noexcept;
+    // Get the array as FastVec (PMR version)
+    size_t get(FastVec<T>& values, std::pmr::memory_resource* resource) const noexcept;
 
     // Set the array as C-array
     template <size_t S>
@@ -5720,11 +5785,99 @@ inline size_t FinalModelArray<T, N>::get(FastVec<T>& values) const noexcept
         {
             T value{};
             size_t offset = fbe_model.get(value);
-            #if defined(USING_STD_VECTOR)
             values.emplace_back(std::move(value));
-            #else
-            values.template emplace_back(std::move(value));
-            #endif
+            fbe_model.fbe_shift(offset);
+            size += offset;
+        }
+        return size;
+    }
+}
+
+// PMR versions of get methods
+template <typename T, size_t N>
+template <size_t S>
+inline size_t FinalModelArray<T, N>::get(T (&values)[S], std::pmr::memory_resource* resource) const noexcept
+{
+    size_t fbe_full_offset = _buffer.offset() + fbe_offset();
+    assert((fbe_full_offset <= _buffer.size()) && "Model is broken!");
+    if (fbe_full_offset > _buffer.size())
+        return 0;
+
+    constexpr size_t count = (S < N) ? S : N;
+
+    if constexpr (is_fbe_final_primitive_v<T>) {
+        constexpr size_t total_size = count * sizeof(T);
+        memcpy(values, _buffer.data() + fbe_full_offset, total_size);
+        return total_size;
+    } else {
+        size_t size = 0;
+        FinalModel<T> fbe_model(_buffer, fbe_offset());
+        for (size_t i = 0; i < count; ++i)
+        {
+            size_t offset = fbe_model.get(values[i], resource);
+            fbe_model.fbe_shift(offset);
+            size += offset;
+        }
+        return size;
+    }
+}
+
+template <typename T, size_t N>
+template <size_t S>
+inline size_t FinalModelArray<T, N>::get(std::array<T, S>& values, std::pmr::memory_resource* resource) const noexcept
+{
+    size_t fbe_full_offset = _buffer.offset() + fbe_offset();
+    assert((fbe_full_offset <= _buffer.size()) && "Model is broken!");
+    if (fbe_full_offset > _buffer.size())
+        return 0;
+
+    constexpr size_t count = (S < N) ? S : N;
+
+    if constexpr (is_fbe_final_primitive_v<T>) {
+        constexpr size_t total_size = count * sizeof(T);
+        memcpy(values.data(), _buffer.data() + fbe_full_offset, total_size);
+        return total_size;
+    } else {
+        size_t size = 0;
+        FinalModel<T> fbe_model(_buffer, fbe_offset());
+        for (size_t i = 0; i < count; ++i)
+        {
+            size_t offset = fbe_model.get(values[i], resource);
+            fbe_model.fbe_shift(offset);
+            size += offset;
+        }
+        return size;
+    }
+}
+
+template <typename T, size_t N>
+inline size_t FinalModelArray<T, N>::get(FastVec<T>& values, std::pmr::memory_resource* resource) const noexcept
+{
+    values.clear();
+
+    size_t fbe_full_offset = _buffer.offset() + fbe_offset();
+    assert((fbe_full_offset <= _buffer.size()) && "Model is broken!");
+    if (fbe_full_offset > _buffer.size())
+        return 0;
+
+    values.reserve(N);
+
+    if constexpr (is_fbe_final_primitive_v<T>) {
+        constexpr size_t total_size = N * sizeof(T);
+        values.resize(N);
+        memcpy(values.data(), _buffer.data() + fbe_full_offset, total_size);
+        return total_size;
+    } else {
+        size_t size = 0;
+        FinalModel<T> fbe_model(_buffer, fbe_offset());
+        for (size_t i = 0; i < N; ++i)
+        {
+            T value{};
+            if constexpr (std::is_constructible_v<T, std::pmr::memory_resource*>) {
+                value = T(resource);
+            }
+            size_t offset = fbe_model.get(value, resource);
+            values.emplace_back(std::move(value));
             fbe_model.fbe_shift(offset);
             size += offset;
         }
@@ -5887,21 +6040,19 @@ public:
     // Get the allocation size for std::pmr::set
     size_t fbe_allocation_size(const std::pmr::set<T>& values) const noexcept;
 
-#if defined(USING_BTREE_MAP)
-    // Get the allocation size for FBE::set (btree_set)
+    // Get the allocation size for FBE::set (dense_set)
     size_t fbe_allocation_size(const FBE::set<T>& values) const noexcept;
-    // Get the allocation size for FBE::pmr::set (btree_set with pmr allocator)
+    // Get the allocation size for FBE::pmr::set (dense_set with pmr allocator)
     size_t fbe_allocation_size(const FBE::pmr::set<T>& values) const noexcept;
-    // Get the vector as FBE::set (btree_set)
+    // Get the vector as FBE::set (dense_set)
     size_t get(FBE::set<T>& values) const noexcept;
-    // Get the vector as FBE::pmr::set (btree_set with pmr allocator, optional resource)
+    // Get the vector as FBE::pmr::set (dense_set with pmr allocator, optional resource)
     size_t get(FBE::pmr::set<T>& values) const noexcept { return get(values, nullptr); }
     size_t get(FBE::pmr::set<T>& values, std::pmr::memory_resource* resource) const noexcept;
-    // Set the vector as FBE::set (btree_set)
+    // Set the vector as FBE::set (dense_set)
     size_t set(const FBE::set<T>& values) noexcept;
-    // Set the vector as FBE::pmr::set (btree_set with pmr allocator)
+    // Set the vector as FBE::pmr::set (dense_set with pmr allocator)
     size_t set(const FBE::pmr::set<T>& values) noexcept;
-#endif
 
 private:
     FBEBuffer& _buffer;
@@ -6074,7 +6225,7 @@ inline size_t FinalModelVector<T>::get(std::set<T>& values) const noexcept
     {
         T value{};
         size_t offset = fbe_model.get(value);
-        hint = values.emplace_hint(hint, std::move(value));
+        values.emplace(std::move(value));
         fbe_model.fbe_shift(offset);
         size += offset;
     }
@@ -6280,7 +6431,7 @@ inline size_t FinalModelVector<T>::get(std::pmr::set<T>& values, std::pmr::memor
             value = T(resource);
         }
         size_t offset = fbe_model.get(value, resource);
-        hint = values.emplace_hint(hint, std::move(value));
+        values.emplace(std::move(value));
         fbe_model.fbe_shift(offset);
         size += offset;
     }
@@ -6357,7 +6508,6 @@ inline size_t FinalModelVector<T>::set(const std::pmr::set<T>& values) noexcept
     return size;
 }
 
-#if defined(USING_BTREE_MAP)
 template <typename T>
 inline size_t FinalModelVector<T>::fbe_allocation_size(const FBE::set<T>& values) const noexcept
 {
@@ -6387,7 +6537,7 @@ inline size_t FinalModelVector<T>::get(FBE::set<T>& values) const noexcept
     {
         T value = T();
         size_t offset = fbe_model.get(value);
-        hint = values.emplace_hint(hint, std::move(value));
+        values.emplace(std::move(value));
         fbe_model.fbe_shift(offset);
         size += offset;
     }
@@ -6447,7 +6597,7 @@ inline size_t FinalModelVector<T>::get(FBE::pmr::set<T>& values, std::pmr::memor
             value = T(resource);
         }
         size_t offset = fbe_model.get(value, resource);
-        hint = values.emplace_hint(hint, std::move(value));
+        values.emplace(std::move(value));
         fbe_model.fbe_shift(offset);
         size += offset;
     }
@@ -6474,7 +6624,6 @@ inline size_t FinalModelVector<T>::set(const FBE::pmr::set<T>& values) noexcept
     }
     return size;
 }
-#endif
 )CODE";
   }
 
@@ -6489,7 +6638,7 @@ public:
 
     // Get the allocation size
     size_t fbe_allocation_size(const std::map<TKey, TValue>& values) const noexcept;
-    size_t fbe_allocation_size(const std::unordered_map<TKey, TValue>& values) const noexcept;
+    size_t fbe_allocation_size(const HashMap<TKey, TValue>& values) const noexcept;
 
     // Get the field offset
     size_t fbe_offset() const noexcept { return _offset; }
@@ -6506,32 +6655,32 @@ public:
 
     // Get the map as std::map
     size_t get(std::map<TKey, TValue>& values) const noexcept;
-    // Get the map as std::unordered_map
-    size_t get(std::unordered_map<TKey, TValue>& values) const noexcept;
+    // Get the map as HashMap
+    size_t get(HashMap<TKey, TValue>& values) const noexcept;
 
     // Get the map as std::map with memory resource
     size_t get(std::map<TKey, TValue>& values, std::pmr::memory_resource* resource) const noexcept;
     // Get the map as std::pmr::map (with optional resource)
     size_t get(std::pmr::map<TKey, TValue>& values) const noexcept { return get(values, nullptr); }
     size_t get(std::pmr::map<TKey, TValue>& values, std::pmr::memory_resource* resource) const noexcept;
-    // Get the map as std::pmr::unordered_map (with optional resource)
-    size_t get(std::pmr::unordered_map<TKey, TValue>& values) const noexcept { return get(values, nullptr); }
-    size_t get(std::pmr::unordered_map<TKey, TValue>& values, std::pmr::memory_resource* resource) const noexcept;
+    // Get the map as FBE::pmr::HashMap (with optional resource)
+    size_t get(FBE::pmr::HashMap<TKey, TValue>& values) const noexcept { return get(values, nullptr); }
+    size_t get(FBE::pmr::HashMap<TKey, TValue>& values, std::pmr::memory_resource* resource) const noexcept;
 
     // Set the map as std::map
     size_t set(const std::map<TKey, TValue>& values) noexcept;
-    // Set the map as std::unordered_map
-    size_t set(const std::unordered_map<TKey, TValue>& values) noexcept;
+    // Set the map as HashMap
+    size_t set(const HashMap<TKey, TValue>& values) noexcept;
 
     // Set the map as std::pmr::map
     size_t set(const std::pmr::map<TKey, TValue>& values) noexcept;
-    // Set the map as std::pmr::unordered_map
-    size_t set(const std::pmr::unordered_map<TKey, TValue>& values) noexcept;
+    // Set the map as FBE::pmr::HashMap
+    size_t set(const FBE::pmr::HashMap<TKey, TValue>& values) noexcept;
 
     // Get the allocation size for std::pmr::map
     size_t fbe_allocation_size(const std::pmr::map<TKey, TValue>& values) const noexcept;
-    // Get the allocation size for std::pmr::unordered_map
-    size_t fbe_allocation_size(const std::pmr::unordered_map<TKey, TValue>& values) const noexcept;
+    // Get the allocation size for FBE::pmr::HashMap
+    size_t fbe_allocation_size(const FBE::pmr::HashMap<TKey, TValue>& values) const noexcept;
 
 #if defined(USING_BTREE_MAP)
     // Get the allocation size for FBE::map (btree_map)
@@ -6573,7 +6722,7 @@ inline size_t FinalModelMap<TKey, TValue>::fbe_allocation_size(const std::map<TK
 }
 
 template <typename TKey, typename TValue>
-inline size_t FinalModelMap<TKey, TValue>::fbe_allocation_size(const std::unordered_map<TKey, TValue>& values) const noexcept
+inline size_t FinalModelMap<TKey, TValue>::fbe_allocation_size(const HashMap<TKey, TValue>& values) const noexcept
 {
     size_t size = 4;
     FinalModel<TKey> fbe_model_key(_buffer, fbe_offset() + 4);
@@ -6649,7 +6798,7 @@ inline size_t FinalModelMap<TKey, TValue>::get(std::map<TKey, TValue>& values) c
 }
 
 template <typename TKey, typename TValue>
-inline size_t FinalModelMap<TKey, TValue>::get(std::unordered_map<TKey, TValue>& values) const noexcept
+inline size_t FinalModelMap<TKey, TValue>::get(HashMap<TKey, TValue>& values) const noexcept
 {
     values.clear();
 
@@ -6709,7 +6858,7 @@ inline size_t FinalModelMap<TKey, TValue>::set(const std::map<TKey, TValue>& val
 }
 
 template <typename TKey, typename TValue>
-inline size_t FinalModelMap<TKey, TValue>::set(const std::unordered_map<TKey, TValue>& values) noexcept
+inline size_t FinalModelMap<TKey, TValue>::set(const HashMap<TKey, TValue>& values) noexcept
 {
     size_t fbe_full_offset = _buffer.offset() + fbe_offset();
     assert(((fbe_full_offset + 4) <= _buffer.size()) && "Model is broken!");
@@ -6750,7 +6899,7 @@ inline size_t FinalModelMap<TKey, TValue>::fbe_allocation_size(const std::pmr::m
 }
 
 template <typename TKey, typename TValue>
-inline size_t FinalModelMap<TKey, TValue>::fbe_allocation_size(const std::pmr::unordered_map<TKey, TValue>& values) const noexcept
+inline size_t FinalModelMap<TKey, TValue>::fbe_allocation_size(const FBE::pmr::HashMap<TKey, TValue>& values) const noexcept
 {
     size_t size = 4;
     FinalModel<TKey> fbe_model_key(_buffer, fbe_offset() + 4);
@@ -6811,7 +6960,7 @@ inline size_t FinalModelMap<TKey, TValue>::get(std::pmr::map<TKey, TValue>& valu
 }
 
 template <typename TKey, typename TValue>
-inline size_t FinalModelMap<TKey, TValue>::get(std::pmr::unordered_map<TKey, TValue>& values, std::pmr::memory_resource* resource) const noexcept
+inline size_t FinalModelMap<TKey, TValue>::get(FBE::pmr::HashMap<TKey, TValue>& values, std::pmr::memory_resource* resource) const noexcept
 {
     values.clear();
 
@@ -6878,7 +7027,7 @@ inline size_t FinalModelMap<TKey, TValue>::set(const std::pmr::map<TKey, TValue>
 }
 
 template <typename TKey, typename TValue>
-inline size_t FinalModelMap<TKey, TValue>::set(const std::pmr::unordered_map<TKey, TValue>& values) noexcept
+inline size_t FinalModelMap<TKey, TValue>::set(const FBE::pmr::HashMap<TKey, TValue>& values) noexcept
 {
     size_t fbe_full_offset = _buffer.offset() + fbe_offset();
     assert(((fbe_full_offset + 4) <= _buffer.size()) && "Model is broken!");
@@ -7505,7 +7654,7 @@ struct KeyWriter<TWriter, char[N]>
     }
 };
 
-template <class TWriter, typename T>
+template <class TWriter, typename T, typename Enable = void>
 struct ValueWriter
 {
     static bool to_json(TWriter& writer, const T& value, bool scope = true)
@@ -7789,9 +7938,9 @@ struct ValueWriter<TWriter, std::map<TKey, TValue>>
 };
 
 template <class TWriter, typename TKey, typename TValue>
-struct ValueWriter<TWriter, std::unordered_map<TKey, TValue>>
+struct ValueWriter<TWriter, HashMap<TKey, TValue>, std::enable_if_t<!std::is_void_v<TValue>>>
 {
-    static bool to_json(TWriter& writer, const std::unordered_map<TKey, TValue>& values, bool scope = true)
+    static bool to_json(TWriter& writer, const HashMap<TKey, TValue>& values, bool scope = true)
     {
         writer.StartObject();
         for (const auto& value : values)
@@ -7806,7 +7955,6 @@ struct ValueWriter<TWriter, std::unordered_map<TKey, TValue>>
     }
 };
 
-#if defined(USING_BTREE_MAP)
 template <class TWriter, typename T>
 struct ValueWriter<TWriter, FBE::set<T>>
 {
@@ -7821,6 +7969,7 @@ struct ValueWriter<TWriter, FBE::set<T>>
     }
 };
 
+#if defined(USING_BTREE_MAP)
 template <class TWriter, typename TKey, typename TValue>
 struct ValueWriter<TWriter, FBE::map<TKey, TValue>>
 {
@@ -7840,7 +7989,7 @@ struct ValueWriter<TWriter, FBE::map<TKey, TValue>>
 };
 #endif
 
-template <class TJson, typename T>
+template <class TJson, typename T, typename Enable = void>
 struct ValueReader
 {
     static bool from_json(const TJson& json, T& value)
@@ -8351,11 +8500,7 @@ struct ValueReader<TJson, FastVec<T>>
             T temp = T();
             if (!FBE::JSON::from_json(item, temp))
                 return false;
-            #if defined(USING_STD_VECTOR)
             values.emplace_back(temp);
-            #else
-            values.template emplace_back(temp);
-            #endif
         }
         return true;
     }
@@ -8434,9 +8579,9 @@ struct ValueReader<TJson, std::map<TKey, TValue>>
 };
 
 template <class TJson, typename TKey, typename TValue>
-struct ValueReader<TJson, std::unordered_map<TKey, TValue>>
+struct ValueReader<TJson, HashMap<TKey, TValue>, std::enable_if_t<!std::is_void_v<TValue>>>
 {
-    static bool from_json(const TJson& json, std::unordered_map<TKey, TValue>& values)
+    static bool from_json(const TJson& json, HashMap<TKey, TValue>& values)
     {
         values.clear();
 
@@ -8459,7 +8604,6 @@ struct ValueReader<TJson, std::unordered_map<TKey, TValue>>
     }
 };
 
-#if defined(USING_BTREE_MAP)
 template <class TJson, typename T>
 struct ValueReader<TJson, FBE::set<T>>
 {
@@ -8483,6 +8627,7 @@ struct ValueReader<TJson, FBE::set<T>>
     }
 };
 
+#if defined(USING_BTREE_MAP)
 template <class TJson, typename TKey, typename TValue>
 struct ValueReader<TJson, FBE::map<TKey, TValue>>
 {
@@ -9070,11 +9215,7 @@ inline void FieldModelCustomArray<T, TStruct, N>::get(FastVec<TStruct>& values, 
     {
         TStruct value;
         fbe_model.get(value, resource);
-        #if defined(USING_STD_VECTOR)
         values.emplace_back(std::move(value));
-        #else
-        values.template emplace_back(std::move(value));
-        #endif
         fbe_model.fbe_shift(fbe_model.fbe_size());
     }
 }
@@ -9090,11 +9231,7 @@ inline void FieldModelCustomArray<T, TStruct, N>::get(FastVec<TStruct*>& values,
     {
         TStruct* value = nullptr;
         fbe_model.get(&value, resource);
-        #if defined(USING_STD_VECTOR)
         values.emplace_back(std::move(value));
-        #else
-        values.template emplace_back(std::move(value));
-        #endif
         fbe_model.fbe_shift(fbe_model.fbe_size());
     }
 }
@@ -9342,19 +9479,11 @@ inline void FieldModelCustomVector<T, TStruct>::get(FastVec<TStruct>& values, st
         if constexpr(std::is_constructible_v<TStruct, std::pmr::memory_resource*> and not is_variant_v<TStruct>) {
             TStruct value = TStruct(resource);
             fbe_model.get(value, resource);
-            #if defined(USING_STD_VECTOR)
             values.emplace_back(std::move(value));
-            #else
-            values.template emplace_back(std::move(value));
-            #endif
         } else {
             TStruct value = TStruct();
             fbe_model.get(value, resource);
-            #if defined(USING_STD_VECTOR)
             values.emplace_back(std::move(value));
-            #else
-            values.template emplace_back(std::move(value));
-            #endif
         }
         fbe_model.fbe_shift(fbe_model.fbe_size());
     }
@@ -9376,11 +9505,7 @@ inline void FieldModelCustomVector<T, TStruct>::get(FastVec<TStruct*>& values, s
     {
         TStruct* value = nullptr;
         fbe_model.get(&value, resource);
-        #if defined(USING_STD_VECTOR)
         values.emplace_back(value);
-        #else
-        values.template emplace_back(value);
-        #endif
         fbe_model.fbe_shift(fbe_model.fbe_size());
     }
 }
@@ -9439,7 +9564,7 @@ inline void FieldModelCustomVector<T, TStruct>::get(std::set<TStruct>& values, s
     {
         TStruct value = TStruct();
         fbe_model.get(value, resource);
-        hint = values.emplace_hint(hint, std::move(value));
+        values.emplace(std::move(value));
         fbe_model.fbe_shift(fbe_model.fbe_size());
     }
 }
@@ -9609,25 +9734,24 @@ public:
     // Get the map as std::map
     void get(std::map<TKStruct, TValueStruct>& values, std::pmr::memory_resource* resource = nullptr) const noexcept;
     void get(std::map<TKStruct, TValueStruct*>& values, std::pmr::memory_resource* resource = nullptr) const noexcept;
-    // Get the map as std::unordered_map
-    void get(std::unordered_map<TKStruct, TValueStruct>& values, std::pmr::memory_resource* resource = nullptr) const noexcept;
-    void get(std::unordered_map<TKStruct, TValueStruct*>& values, std::pmr::memory_resource* resource = nullptr) const noexcept;
+    // Get the map as HashMap
+    void get(HashMap<TKStruct, TValueStruct>& values, std::pmr::memory_resource* resource = nullptr) const noexcept;
+    void get(HashMap<TKStruct, TValueStruct*>& values, std::pmr::memory_resource* resource = nullptr) const noexcept;
 
     // Set the map as std::map
     void set(const std::map<TKStruct, TValueStruct>& values, std::pmr::memory_resource* resource) noexcept;
     void set(const std::map<TKStruct, TValueStruct*>& values, std::pmr::memory_resource* resource) noexcept;
-    // Set the map as std::unordered_map
-    void set(const std::unordered_map<TKStruct, TValueStruct>& values, std::pmr::memory_resource* resource) noexcept;
-    void set(const std::unordered_map<TKStruct, TValueStruct*>& values, std::pmr::memory_resource* resource) noexcept;
+    // Set the map as HashMap
+    void set(const HashMap<TKStruct, TValueStruct>& values, std::pmr::memory_resource* resource) noexcept;
+    void set(const HashMap<TKStruct, TValueStruct*>& values, std::pmr::memory_resource* resource) noexcept;
 )CODE";
 
     code += code_extra;
 
     code_extra =
         std::regex_replace(code_extra, std::regex("std::map"), "std::pmr::map");
-    code_extra =
-        std::regex_replace(code_extra, std::regex("std::unordered_map"),
-                           "std::pmr::unordered_map");
+    code_extra = std::regex_replace(code_extra, std::regex("HashMap"),
+                                    "FBE::pmr::HashMap");
     code += code_extra;
 
     code += R"CODE(
@@ -9818,7 +9942,7 @@ inline void FieldModelCustomMap<TKey, TValue, TKStruct, TValueStruct>::get(std::
 }
 
 template <typename TKey, typename TValue, typename TKStruct, typename TValueStruct>
-inline void FieldModelCustomMap<TKey, TValue, TKStruct, TValueStruct>::get(std::unordered_map<TKStruct, TValueStruct>& values, std::pmr::memory_resource* resource) const noexcept
+inline void FieldModelCustomMap<TKey, TValue, TKStruct, TValueStruct>::get(HashMap<TKStruct, TValueStruct>& values, std::pmr::memory_resource* resource) const noexcept
 {
     values.clear();
 
@@ -9840,7 +9964,7 @@ inline void FieldModelCustomMap<TKey, TValue, TKStruct, TValueStruct>::get(std::
 }
 
 template <typename TKey, typename TValue, typename TKStruct, typename TValueStruct>
-inline void FieldModelCustomMap<TKey, TValue, TKStruct, TValueStruct>::get(std::unordered_map<TKStruct, TValueStruct*>& values, std::pmr::memory_resource* resource) const noexcept
+inline void FieldModelCustomMap<TKey, TValue, TKStruct, TValueStruct>::get(HashMap<TKStruct, TValueStruct*>& values, std::pmr::memory_resource* resource) const noexcept
 {
     values.clear();
 
@@ -9896,7 +10020,7 @@ inline void FieldModelCustomMap<TKey, TValue, TKStruct, TValueStruct>::set(const
 }
 
 template <typename TKey, typename TValue, typename TKStruct, typename TValueStruct>
-inline void FieldModelCustomMap<TKey, TValue, TKStruct, TValueStruct>::set(const std::unordered_map<TKStruct, TValueStruct>& values, std::pmr::memory_resource* resource) noexcept
+inline void FieldModelCustomMap<TKey, TValue, TKStruct, TValueStruct>::set(const HashMap<TKStruct, TValueStruct>& values, std::pmr::memory_resource* resource) noexcept
 {
     assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
     if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
@@ -9913,7 +10037,7 @@ inline void FieldModelCustomMap<TKey, TValue, TKStruct, TValueStruct>::set(const
 }
 
 template <typename TKey, typename TValue, typename TKStruct, typename TValueStruct>
-inline void FieldModelCustomMap<TKey, TValue, TKStruct, TValueStruct>::set(const std::unordered_map<TKStruct, TValueStruct*>& values, std::pmr::memory_resource* resource) noexcept
+inline void FieldModelCustomMap<TKey, TValue, TKStruct, TValueStruct>::set(const HashMap<TKStruct, TValueStruct*>& values, std::pmr::memory_resource* resource) noexcept
 {
     assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
     if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
@@ -9934,9 +10058,8 @@ inline void FieldModelCustomMap<TKey, TValue, TKStruct, TValueStruct>::set(const
 
     code_extra =
         std::regex_replace(code_extra, std::regex("std::map"), "std::pmr::map");
-    code_extra =
-        std::regex_replace(code_extra, std::regex("std::unordered_map"),
-                           "std::pmr::unordered_map");
+    code_extra = std::regex_replace(code_extra, std::regex("HashMap"),
+                                    "FBE::pmr::HashMap");
     code += code_extra;
 
     code += R"CODE(

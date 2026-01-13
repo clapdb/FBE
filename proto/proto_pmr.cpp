@@ -289,7 +289,7 @@ CharMap::CharMap([[maybe_unused]] allocator_type alloc)
     : abbr(alloc)
 {}
 
-CharMap::CharMap(const std::pmr::unordered_map<char, ArenaString>& arg_abbr)
+CharMap::CharMap(const FBE::pmr::HashMap<char, ArenaString>& arg_abbr)
     : abbr(arg_abbr)
 {}
 

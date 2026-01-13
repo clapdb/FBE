@@ -437,7 +437,7 @@ void FieldModel<::variants_ptr_pmr::V>::get(::variants_ptr_pmr::V& fbe_value, st
         }
         case 8: {
             FieldModelCustomMap<FieldModel<int32_t>, FieldModelPMR_variants_ptr_Simple, int32_t, ::variants_ptr_pmr::Simple> fbe_model(_buffer, 4);
-            variant_emplace_value<::variants_ptr_pmr::V, std::pmr::unordered_map<int32_t, ::variants_ptr_pmr::Simple>>(fbe_value, resource);
+            variant_emplace_value<::variants_ptr_pmr::V, FBE::pmr::HashMap<int32_t, ::variants_ptr_pmr::Simple>>(fbe_value, resource);
             auto& value = std::get<8>(fbe_value);
             variant_get_value(fbe_model, value, resource);
             break;
@@ -458,14 +458,14 @@ void FieldModel<::variants_ptr_pmr::V>::get(::variants_ptr_pmr::V& fbe_value, st
         }
         case 11: {
             FieldModelMap<int32_t, FBE::pmr_buffer_t> fbe_model(_buffer, 4);
-            variant_emplace_value<::variants_ptr_pmr::V, std::pmr::unordered_map<int32_t, FBE::pmr_buffer_t>>(fbe_value, resource);
+            variant_emplace_value<::variants_ptr_pmr::V, FBE::pmr::HashMap<int32_t, FBE::pmr_buffer_t>>(fbe_value, resource);
             auto& value = std::get<11>(fbe_value);
             variant_get_value(fbe_model, value, resource);
             break;
         }
         case 12: {
             FieldModelMap<ArenaString, FBE::pmr_buffer_t> fbe_model(_buffer, 4);
-            variant_emplace_value<::variants_ptr_pmr::V, std::pmr::unordered_map<ArenaString, FBE::pmr_buffer_t>>(fbe_value, resource);
+            variant_emplace_value<::variants_ptr_pmr::V, FBE::pmr::HashMap<ArenaString, FBE::pmr_buffer_t>>(fbe_value, resource);
             auto& value = std::get<12>(fbe_value);
             variant_get_value(fbe_model, value, resource);
             break;
@@ -589,7 +589,7 @@ void FieldModel<::variants_ptr_pmr::V>::set(const ::variants_ptr_pmr::V& fbe_val
                 fbe_model.set(v, resource);
                 set_end(fbe_begin);
             }
-            , [this, fbe_variant_index = fbe_value.index(), resource](const std::pmr::unordered_map<int32_t, ::variants_ptr_pmr::Simple>& v) {
+            , [this, fbe_variant_index = fbe_value.index(), resource](const FBE::pmr::HashMap<int32_t, ::variants_ptr_pmr::Simple>& v) {
                 FieldModelCustomMap<FieldModel<int32_t>, FieldModelPMR_variants_ptr_Simple, int32_t, ::variants_ptr_pmr::Simple> fbe_model(_buffer, 4);
                 size_t fbe_begin = set_begin(fbe_model.fbe_size(), fbe_variant_index);
                 if (fbe_begin == 0)
@@ -613,7 +613,7 @@ void FieldModel<::variants_ptr_pmr::V>::set(const ::variants_ptr_pmr::V& fbe_val
                 fbe_model.set(v, resource);
                 set_end(fbe_begin);
             }
-            , [this, fbe_variant_index = fbe_value.index(), resource](const std::pmr::unordered_map<int32_t, FBE::pmr_buffer_t>& v) {
+            , [this, fbe_variant_index = fbe_value.index(), resource](const FBE::pmr::HashMap<int32_t, FBE::pmr_buffer_t>& v) {
                 FieldModelMap<int32_t, FBE::pmr_buffer_t> fbe_model(_buffer, 4);
                 size_t fbe_begin = set_begin(fbe_model.fbe_size(), fbe_variant_index);
                 if (fbe_begin == 0)
@@ -621,7 +621,7 @@ void FieldModel<::variants_ptr_pmr::V>::set(const ::variants_ptr_pmr::V& fbe_val
                 fbe_model.set(v, resource);
                 set_end(fbe_begin);
             }
-            , [this, fbe_variant_index = fbe_value.index(), resource](const std::pmr::unordered_map<ArenaString, FBE::pmr_buffer_t>& v) {
+            , [this, fbe_variant_index = fbe_value.index(), resource](const FBE::pmr::HashMap<ArenaString, FBE::pmr_buffer_t>& v) {
                 FieldModelMap<ArenaString, FBE::pmr_buffer_t> fbe_model(_buffer, 4);
                 size_t fbe_begin = set_begin(fbe_model.fbe_size(), fbe_variant_index);
                 if (fbe_begin == 0)

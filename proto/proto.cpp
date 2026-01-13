@@ -262,7 +262,7 @@ CharMap::CharMap()
     : abbr()
 {}
 
-CharMap::CharMap(const std::unordered_map<char, FBEString>& arg_abbr)
+CharMap::CharMap(const HashMap<char, FBEString>& arg_abbr)
     : abbr(arg_abbr)
 {}
 

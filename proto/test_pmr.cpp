@@ -1952,7 +1952,7 @@ StructHash::StructHash([[maybe_unused]] allocator_type alloc)
     , f10(alloc)
 {}
 
-StructHash::StructHash(const std::pmr::unordered_map<ArenaString, uint8_t>& arg_f1, const std::pmr::unordered_map<ArenaString, std::optional<uint8_t>>& arg_f2, const std::pmr::unordered_map<ArenaString, FBE::pmr_buffer_t>& arg_f3, const std::pmr::unordered_map<ArenaString, std::optional<FBE::pmr_buffer_t>>& arg_f4, const std::pmr::unordered_map<ArenaString, ::test_pmr::EnumSimple>& arg_f5, const std::pmr::unordered_map<ArenaString, std::optional<::test_pmr::EnumSimple>>& arg_f6, const std::pmr::unordered_map<ArenaString, ::test_pmr::FlagsSimple>& arg_f7, const std::pmr::unordered_map<ArenaString, std::optional<::test_pmr::FlagsSimple>>& arg_f8, const std::pmr::unordered_map<ArenaString, ::test_pmr::StructSimple>& arg_f9, const std::pmr::unordered_map<ArenaString, std::optional<::test_pmr::StructSimple>>& arg_f10)
+StructHash::StructHash(const FBE::pmr::HashMap<ArenaString, uint8_t>& arg_f1, const FBE::pmr::HashMap<ArenaString, std::optional<uint8_t>>& arg_f2, const FBE::pmr::HashMap<ArenaString, FBE::pmr_buffer_t>& arg_f3, const FBE::pmr::HashMap<ArenaString, std::optional<FBE::pmr_buffer_t>>& arg_f4, const FBE::pmr::HashMap<ArenaString, ::test_pmr::EnumSimple>& arg_f5, const FBE::pmr::HashMap<ArenaString, std::optional<::test_pmr::EnumSimple>>& arg_f6, const FBE::pmr::HashMap<ArenaString, ::test_pmr::FlagsSimple>& arg_f7, const FBE::pmr::HashMap<ArenaString, std::optional<::test_pmr::FlagsSimple>>& arg_f8, const FBE::pmr::HashMap<ArenaString, ::test_pmr::StructSimple>& arg_f9, const FBE::pmr::HashMap<ArenaString, std::optional<::test_pmr::StructSimple>>& arg_f10)
     : f1(arg_f1)
     , f2(arg_f2)
     , f3(arg_f3)
@@ -2143,7 +2143,7 @@ StructHashEx::StructHashEx([[maybe_unused]] allocator_type alloc)
     , f2(alloc)
 {}
 
-StructHashEx::StructHashEx(const std::pmr::unordered_map<::test_pmr::StructSimple, ::test_pmr::StructNested>& arg_f1, const std::pmr::unordered_map<::test_pmr::StructSimple, std::optional<::test_pmr::StructNested>>& arg_f2)
+StructHashEx::StructHashEx(const FBE::pmr::HashMap<::test_pmr::StructSimple, ::test_pmr::StructNested>& arg_f1, const FBE::pmr::HashMap<::test_pmr::StructSimple, std::optional<::test_pmr::StructNested>>& arg_f2)
     : f1(arg_f1)
     , f2(arg_f2)
 {}

@@ -1549,7 +1549,7 @@ TEST_CASE("Serialization (Final): variant nested (Expr)", "[FBE]") {
 
 TEST_CASE("Serialization (Final): variant hash with primitive and struct",
           "[FBE]") {
-  std::unordered_map<int32_t, ::variants::Simple> m;
+  FBE::HashMap<int32_t, ::variants::Simple> m;
   m.emplace(1, ::variants::Simple{"simple1"});
   m.emplace(2, ::variants::Simple{"simple2"});
 
@@ -1633,7 +1633,7 @@ TEST_CASE("Serialization (Final): variant string[]", "[FBE]") {
 }
 
 TEST_CASE("Serialization (Final): variant bytes{int32}", "[FBE]") {
-  std::unordered_map<int32_t, FBE::buffer_t> m;
+  FBE::HashMap<int32_t, FBE::buffer_t> m;
   FBE::FastVec<uint8_t> v{65, 66, 67, 68, 69};
   m.emplace(42, FBE::buffer_t(v));
 
@@ -1661,7 +1661,7 @@ TEST_CASE("Serialization (Final): variant bytes{int32}", "[FBE]") {
 }
 
 TEST_CASE("Serialization (Final): variant bytes{string}", "[FBE]") {
-  std::unordered_map<FBE::FBEString, FBE::buffer_t> m;
+  FBE::HashMap<FBE::FBEString, FBE::buffer_t> m;
   FBE::FastVec<uint8_t> v{65, 66, 67, 68, 69};
   m.emplace("hello world", FBE::buffer_t(v));
 
