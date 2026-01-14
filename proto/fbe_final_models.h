@@ -131,6 +131,8 @@ public:
 
     // Get the decimal value
     size_t get(decimal_t& value) const noexcept;
+    // Get the decimal value (PMR version, resource ignored)
+    size_t get(decimal_t& value, [[maybe_unused]] std::pmr::memory_resource* resource) const noexcept { return get(value); }
     // Set the decimal value
     size_t set(decimal_t value) noexcept;
 
@@ -171,6 +173,8 @@ public:
 
     // Get the UUID value
     size_t get(uuid_t& value) const noexcept;
+    // Get the UUID value (PMR version, resource ignored)
+    size_t get(uuid_t& value, [[maybe_unused]] std::pmr::memory_resource* resource) const noexcept { return get(value); }
     // Set the UUID value
     size_t set(uuid_t value) noexcept;
 
@@ -220,6 +224,15 @@ public:
     size_t get(FastVec<uint8_t>& value) const noexcept;
     // Get the bytes value
     size_t get(buffer_t& value) const noexcept { return get(value.buffer()); }
+
+    // PMR versions (resource ignored for bytes)
+    size_t get(void* data, size_t size, [[maybe_unused]] std::pmr::memory_resource* resource) const noexcept { return get(data, size); }
+    template <size_t N>
+    size_t get(uint8_t (&data)[N], [[maybe_unused]] std::pmr::memory_resource* resource) const noexcept { return get(data, N); }
+    template <size_t N>
+    size_t get(std::array<uint8_t, N>& data, [[maybe_unused]] std::pmr::memory_resource* resource) const noexcept { return get(data.data(), data.size()); }
+    size_t get(FastVec<uint8_t>& value, [[maybe_unused]] std::pmr::memory_resource* resource) const noexcept { return get(value); }
+    size_t get(buffer_t& value, [[maybe_unused]] std::pmr::memory_resource* resource) const noexcept { return get(value.buffer()); }
 
     // Set the bytes value
     size_t set(const void* data, size_t size);
@@ -339,6 +352,14 @@ public:
     size_t get(std::array<char, N>& data) const noexcept { return get(data.data(), data.size()); }
     // Get the string value
     size_t get(FBEString& value) const noexcept;
+
+    // PMR versions (resource ignored for FBEString)
+    size_t get(char* data, size_t size, [[maybe_unused]] std::pmr::memory_resource* resource) const noexcept { return get(data, size); }
+    template <size_t N>
+    size_t get(char (&data)[N], [[maybe_unused]] std::pmr::memory_resource* resource) const noexcept { return get(data, N); }
+    template <size_t N>
+    size_t get(std::array<char, N>& data, [[maybe_unused]] std::pmr::memory_resource* resource) const noexcept { return get(data.data(), data.size()); }
+    size_t get(FBEString& value, [[maybe_unused]] std::pmr::memory_resource* resource) const noexcept { return get(value); }
 
     // Set the string value
     size_t set(const char* data, size_t size);

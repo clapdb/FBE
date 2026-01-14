@@ -91,6 +91,31 @@ inline size_t FinalModel<std::optional<T>>::get(std::optional<T>& opt) const noe
 }
 
 template <typename T>
+inline size_t FinalModel<std::optional<T>>::get(std::optional<T>& opt, std::pmr::memory_resource* resource) const noexcept
+{
+    opt = std::nullopt;
+
+    size_t fbe_full_offset = _buffer.offset() + fbe_offset();
+    assert(((fbe_full_offset + 1) <= _buffer.size()) && "Model is broken!");
+    if ((fbe_full_offset + 1) > _buffer.size())
+        return 0;
+
+    uint8_t fbe_has_value = *((const uint8_t*)(_buffer.data() + fbe_full_offset));
+    if (fbe_has_value == 0)
+        return 1;
+
+    _buffer.shift(fbe_offset() + 1);
+    T temp{};
+    if constexpr (std::is_constructible_v<T, std::pmr::memory_resource*>) {
+        temp = T(resource);
+    }
+    size_t size = value.get(temp, resource);
+    opt.emplace(std::move(temp));
+    _buffer.unshift(fbe_offset() + 1);
+    return 1 + size;
+}
+
+template <typename T>
 inline size_t FinalModel<std::optional<T>>::set(const std::optional<T>& opt)
 {
     size_t fbe_full_offset = _buffer.offset() + fbe_offset();
@@ -268,6 +293,98 @@ inline size_t FinalModelArray<T, N>::get(FastVec<T>& values) const noexcept
         {
             T value{};
             size_t offset = fbe_model.get(value);
+            values.emplace_back(std::move(value));
+            fbe_model.fbe_shift(offset);
+            size += offset;
+        }
+        return size;
+    }
+}
+
+// PMR versions of get methods
+template <typename T, size_t N>
+template <size_t S>
+inline size_t FinalModelArray<T, N>::get(T (&values)[S], std::pmr::memory_resource* resource) const noexcept
+{
+    size_t fbe_full_offset = _buffer.offset() + fbe_offset();
+    assert((fbe_full_offset <= _buffer.size()) && "Model is broken!");
+    if (fbe_full_offset > _buffer.size())
+        return 0;
+
+    constexpr size_t count = (S < N) ? S : N;
+
+    if constexpr (is_fbe_final_primitive_v<T>) {
+        constexpr size_t total_size = count * sizeof(T);
+        memcpy(values, _buffer.data() + fbe_full_offset, total_size);
+        return total_size;
+    } else {
+        size_t size = 0;
+        FinalModel<T> fbe_model(_buffer, fbe_offset());
+        for (size_t i = 0; i < count; ++i)
+        {
+            size_t offset = fbe_model.get(values[i], resource);
+            fbe_model.fbe_shift(offset);
+            size += offset;
+        }
+        return size;
+    }
+}
+
+template <typename T, size_t N>
+template <size_t S>
+inline size_t FinalModelArray<T, N>::get(std::array<T, S>& values, std::pmr::memory_resource* resource) const noexcept
+{
+    size_t fbe_full_offset = _buffer.offset() + fbe_offset();
+    assert((fbe_full_offset <= _buffer.size()) && "Model is broken!");
+    if (fbe_full_offset > _buffer.size())
+        return 0;
+
+    constexpr size_t count = (S < N) ? S : N;
+
+    if constexpr (is_fbe_final_primitive_v<T>) {
+        constexpr size_t total_size = count * sizeof(T);
+        memcpy(values.data(), _buffer.data() + fbe_full_offset, total_size);
+        return total_size;
+    } else {
+        size_t size = 0;
+        FinalModel<T> fbe_model(_buffer, fbe_offset());
+        for (size_t i = 0; i < count; ++i)
+        {
+            size_t offset = fbe_model.get(values[i], resource);
+            fbe_model.fbe_shift(offset);
+            size += offset;
+        }
+        return size;
+    }
+}
+
+template <typename T, size_t N>
+inline size_t FinalModelArray<T, N>::get(FastVec<T>& values, std::pmr::memory_resource* resource) const noexcept
+{
+    values.clear();
+
+    size_t fbe_full_offset = _buffer.offset() + fbe_offset();
+    assert((fbe_full_offset <= _buffer.size()) && "Model is broken!");
+    if (fbe_full_offset > _buffer.size())
+        return 0;
+
+    values.reserve(N);
+
+    if constexpr (is_fbe_final_primitive_v<T>) {
+        constexpr size_t total_size = N * sizeof(T);
+        values.resize(N);
+        memcpy(values.data(), _buffer.data() + fbe_full_offset, total_size);
+        return total_size;
+    } else {
+        size_t size = 0;
+        FinalModel<T> fbe_model(_buffer, fbe_offset());
+        for (size_t i = 0; i < N; ++i)
+        {
+            T value{};
+            if constexpr (std::is_constructible_v<T, std::pmr::memory_resource*>) {
+                value = T(resource);
+            }
+            size_t offset = fbe_model.get(value, resource);
             values.emplace_back(std::move(value));
             fbe_model.fbe_shift(offset);
             size += offset;
@@ -807,7 +924,6 @@ inline size_t FinalModelVector<T>::set(const std::pmr::set<T>& values) noexcept
     return size;
 }
 
-#if defined(USING_BTREE_MAP)
 template <typename T>
 inline size_t FinalModelVector<T>::fbe_allocation_size(const FBE::set<T>& values) const noexcept
 {
@@ -924,7 +1040,6 @@ inline size_t FinalModelVector<T>::set(const FBE::pmr::set<T>& values) noexcept
     }
     return size;
 }
-#endif
 
 template <typename TKey, typename TValue>
 inline size_t FinalModelMap<TKey, TValue>::fbe_allocation_size(const std::map<TKey, TValue>& values) const noexcept
@@ -941,7 +1056,7 @@ inline size_t FinalModelMap<TKey, TValue>::fbe_allocation_size(const std::map<TK
 }
 
 template <typename TKey, typename TValue>
-inline size_t FinalModelMap<TKey, TValue>::fbe_allocation_size(const FastMap<TKey, TValue>& values) const noexcept
+inline size_t FinalModelMap<TKey, TValue>::fbe_allocation_size(const HashMap<TKey, TValue>& values) const noexcept
 {
     size_t size = 4;
     FinalModel<TKey> fbe_model_key(_buffer, fbe_offset() + 4);
@@ -1017,7 +1132,7 @@ inline size_t FinalModelMap<TKey, TValue>::get(std::map<TKey, TValue>& values) c
 }
 
 template <typename TKey, typename TValue>
-inline size_t FinalModelMap<TKey, TValue>::get(FastMap<TKey, TValue>& values) const noexcept
+inline size_t FinalModelMap<TKey, TValue>::get(HashMap<TKey, TValue>& values) const noexcept
 {
     values.clear();
 
@@ -1077,7 +1192,7 @@ inline size_t FinalModelMap<TKey, TValue>::set(const std::map<TKey, TValue>& val
 }
 
 template <typename TKey, typename TValue>
-inline size_t FinalModelMap<TKey, TValue>::set(const FastMap<TKey, TValue>& values) noexcept
+inline size_t FinalModelMap<TKey, TValue>::set(const HashMap<TKey, TValue>& values) noexcept
 {
     size_t fbe_full_offset = _buffer.offset() + fbe_offset();
     assert(((fbe_full_offset + 4) <= _buffer.size()) && "Model is broken!");
@@ -1118,7 +1233,7 @@ inline size_t FinalModelMap<TKey, TValue>::fbe_allocation_size(const std::pmr::m
 }
 
 template <typename TKey, typename TValue>
-inline size_t FinalModelMap<TKey, TValue>::fbe_allocation_size(const FBE::pmr::FastMap<TKey, TValue>& values) const noexcept
+inline size_t FinalModelMap<TKey, TValue>::fbe_allocation_size(const FBE::pmr::HashMap<TKey, TValue>& values) const noexcept
 {
     size_t size = 4;
     FinalModel<TKey> fbe_model_key(_buffer, fbe_offset() + 4);
@@ -1179,7 +1294,7 @@ inline size_t FinalModelMap<TKey, TValue>::get(std::pmr::map<TKey, TValue>& valu
 }
 
 template <typename TKey, typename TValue>
-inline size_t FinalModelMap<TKey, TValue>::get(FBE::pmr::FastMap<TKey, TValue>& values, std::pmr::memory_resource* resource) const noexcept
+inline size_t FinalModelMap<TKey, TValue>::get(FBE::pmr::HashMap<TKey, TValue>& values, std::pmr::memory_resource* resource) const noexcept
 {
     values.clear();
 
@@ -1246,7 +1361,7 @@ inline size_t FinalModelMap<TKey, TValue>::set(const std::pmr::map<TKey, TValue>
 }
 
 template <typename TKey, typename TValue>
-inline size_t FinalModelMap<TKey, TValue>::set(const FBE::pmr::FastMap<TKey, TValue>& values) noexcept
+inline size_t FinalModelMap<TKey, TValue>::set(const FBE::pmr::HashMap<TKey, TValue>& values) noexcept
 {
     size_t fbe_full_offset = _buffer.offset() + fbe_offset();
     assert(((fbe_full_offset + 4) <= _buffer.size()) && "Model is broken!");

@@ -745,7 +745,6 @@ inline void FieldModelVector<T>::set(const std::pmr::set<T>& values, std::pmr::m
     }
 }
 
-#if defined(USING_BTREE_MAP)
 template <typename T>
 inline void FieldModelVector<T>::get(FBE::set<T>& values, std::pmr::memory_resource* resource) const noexcept
 {
@@ -817,7 +816,6 @@ inline void FieldModelVector<T>::set(const FBE::pmr::set<T>& values, std::pmr::m
         fbe_model.fbe_shift(fbe_model.fbe_size());
     }
 }
-#endif
 
 template <typename TKey, typename TValue>
 inline size_t FieldModelMap<TKey, TValue>::fbe_extra() const noexcept
@@ -962,7 +960,7 @@ inline void FieldModelMap<TKey, TValue>::get(std::map<TKey, TValue>& values, std
 }
 
 template <typename TKey, typename TValue>
-inline void FieldModelMap<TKey, TValue>::get(FastMap<TKey, TValue>& values, std::pmr::memory_resource* resource) const noexcept
+inline void FieldModelMap<TKey, TValue>::get(HashMap<TKey, TValue>& values, std::pmr::memory_resource* resource) const noexcept
 {
     values.clear();
 
@@ -1011,7 +1009,7 @@ inline void FieldModelMap<TKey, TValue>::get(std::pmr::map<TKey, TValue>& values
 }
 
 template <typename TKey, typename TValue>
-inline void FieldModelMap<TKey, TValue>::get(FBE::pmr::FastMap<TKey, TValue>& values, std::pmr::memory_resource* resource) const noexcept
+inline void FieldModelMap<TKey, TValue>::get(FBE::pmr::HashMap<TKey, TValue>& values, std::pmr::memory_resource* resource) const noexcept
 {
     values.clear();
 
@@ -1104,7 +1102,7 @@ inline void FieldModelMap<TKey, TValue>::set(const std::map<TKey, TValue>& value
 }
 
 template <typename TKey, typename TValue>
-inline void FieldModelMap<TKey, TValue>::set(const FastMap<TKey, TValue>& values, std::pmr::memory_resource* resource) noexcept
+inline void FieldModelMap<TKey, TValue>::set(const HashMap<TKey, TValue>& values, std::pmr::memory_resource* resource) noexcept
 {
     assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
     if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
@@ -1138,7 +1136,7 @@ inline void FieldModelMap<TKey, TValue>::set(const std::pmr::map<TKey, TValue>& 
 }
 
 template <typename TKey, typename TValue>
-inline void FieldModelMap<TKey, TValue>::set(const FBE::pmr::FastMap<TKey, TValue>& values, std::pmr::memory_resource* resource) noexcept
+inline void FieldModelMap<TKey, TValue>::set(const FBE::pmr::HashMap<TKey, TValue>& values, std::pmr::memory_resource* resource) noexcept
 {
     assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
     if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
