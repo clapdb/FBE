@@ -989,7 +989,7 @@ inline void FieldModelCustomMap<TKey, TValue, TKStruct, TValueStruct>::get(std::
 }
 
 template <typename TKey, typename TValue, typename TKStruct, typename TValueStruct>
-inline void FieldModelCustomMap<TKey, TValue, TKStruct, TValueStruct>::get(FastMap<TKStruct, TValueStruct>& values, std::pmr::memory_resource* resource) const noexcept
+inline void FieldModelCustomMap<TKey, TValue, TKStruct, TValueStruct>::get(HashMap<TKStruct, TValueStruct>& values, std::pmr::memory_resource* resource) const noexcept
 {
     values.clear();
 
@@ -1011,7 +1011,7 @@ inline void FieldModelCustomMap<TKey, TValue, TKStruct, TValueStruct>::get(FastM
 }
 
 template <typename TKey, typename TValue, typename TKStruct, typename TValueStruct>
-inline void FieldModelCustomMap<TKey, TValue, TKStruct, TValueStruct>::get(FastMap<TKStruct, TValueStruct*>& values, std::pmr::memory_resource* resource) const noexcept
+inline void FieldModelCustomMap<TKey, TValue, TKStruct, TValueStruct>::get(HashMap<TKStruct, TValueStruct*>& values, std::pmr::memory_resource* resource) const noexcept
 {
     values.clear();
 
@@ -1067,7 +1067,7 @@ inline void FieldModelCustomMap<TKey, TValue, TKStruct, TValueStruct>::set(const
 }
 
 template <typename TKey, typename TValue, typename TKStruct, typename TValueStruct>
-inline void FieldModelCustomMap<TKey, TValue, TKStruct, TValueStruct>::set(const FastMap<TKStruct, TValueStruct>& values, std::pmr::memory_resource* resource) noexcept
+inline void FieldModelCustomMap<TKey, TValue, TKStruct, TValueStruct>::set(const HashMap<TKStruct, TValueStruct>& values, std::pmr::memory_resource* resource) noexcept
 {
     assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
     if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
@@ -1084,7 +1084,7 @@ inline void FieldModelCustomMap<TKey, TValue, TKStruct, TValueStruct>::set(const
 }
 
 template <typename TKey, typename TValue, typename TKStruct, typename TValueStruct>
-inline void FieldModelCustomMap<TKey, TValue, TKStruct, TValueStruct>::set(const FastMap<TKStruct, TValueStruct*>& values, std::pmr::memory_resource* resource) noexcept
+inline void FieldModelCustomMap<TKey, TValue, TKStruct, TValueStruct>::set(const HashMap<TKStruct, TValueStruct*>& values, std::pmr::memory_resource* resource) noexcept
 {
     assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
     if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
@@ -1145,7 +1145,7 @@ inline void FieldModelCustomMap<TKey, TValue, TKStruct, TValueStruct>::get(std::
 }
 
 template <typename TKey, typename TValue, typename TKStruct, typename TValueStruct>
-inline void FieldModelCustomMap<TKey, TValue, TKStruct, TValueStruct>::get(FBE::pmr::FastMap<TKStruct, TValueStruct>& values, std::pmr::memory_resource* resource) const noexcept
+inline void FieldModelCustomMap<TKey, TValue, TKStruct, TValueStruct>::get(FBE::pmr::HashMap<TKStruct, TValueStruct>& values, std::pmr::memory_resource* resource) const noexcept
 {
     values.clear();
 
@@ -1167,7 +1167,7 @@ inline void FieldModelCustomMap<TKey, TValue, TKStruct, TValueStruct>::get(FBE::
 }
 
 template <typename TKey, typename TValue, typename TKStruct, typename TValueStruct>
-inline void FieldModelCustomMap<TKey, TValue, TKStruct, TValueStruct>::get(FBE::pmr::FastMap<TKStruct, TValueStruct*>& values, std::pmr::memory_resource* resource) const noexcept
+inline void FieldModelCustomMap<TKey, TValue, TKStruct, TValueStruct>::get(FBE::pmr::HashMap<TKStruct, TValueStruct*>& values, std::pmr::memory_resource* resource) const noexcept
 {
     values.clear();
 
@@ -1223,7 +1223,7 @@ inline void FieldModelCustomMap<TKey, TValue, TKStruct, TValueStruct>::set(const
 }
 
 template <typename TKey, typename TValue, typename TKStruct, typename TValueStruct>
-inline void FieldModelCustomMap<TKey, TValue, TKStruct, TValueStruct>::set(const FBE::pmr::FastMap<TKStruct, TValueStruct>& values, std::pmr::memory_resource* resource) noexcept
+inline void FieldModelCustomMap<TKey, TValue, TKStruct, TValueStruct>::set(const FBE::pmr::HashMap<TKStruct, TValueStruct>& values, std::pmr::memory_resource* resource) noexcept
 {
     assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
     if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
@@ -1240,7 +1240,7 @@ inline void FieldModelCustomMap<TKey, TValue, TKStruct, TValueStruct>::set(const
 }
 
 template <typename TKey, typename TValue, typename TKStruct, typename TValueStruct>
-inline void FieldModelCustomMap<TKey, TValue, TKStruct, TValueStruct>::set(const FBE::pmr::FastMap<TKStruct, TValueStruct*>& values, std::pmr::memory_resource* resource) noexcept
+inline void FieldModelCustomMap<TKey, TValue, TKStruct, TValueStruct>::set(const FBE::pmr::HashMap<TKStruct, TValueStruct*>& values, std::pmr::memory_resource* resource) noexcept
 {
     assert(((_buffer.offset() + fbe_offset() + fbe_size()) <= _buffer.size()) && "Model is broken!");
     if ((_buffer.offset() + fbe_offset() + fbe_size()) > _buffer.size())
