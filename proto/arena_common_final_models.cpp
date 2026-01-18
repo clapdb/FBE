@@ -320,8 +320,8 @@ size_t AliasFinalModel::serialize(const ::arena_common::Alias& value)
     fbe_struct_size = (uint32_t)(8 + _model.set(value));
     this->buffer().resize(fbe_initial_size + fbe_struct_size);
 
-    *((uint32_t*)(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 8)) = fbe_struct_size;
-    *((uint32_t*)(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 4)) = fbe_struct_type;
+    unaligned_store<uint32_t>(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 8, fbe_struct_size);
+    unaligned_store<uint32_t>(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 4, fbe_struct_type);
 
     return fbe_struct_size;
 }
@@ -486,8 +486,8 @@ size_t ExpressionFinalModel::serialize(const ::arena_common::Expression& value)
     fbe_struct_size = (uint32_t)(8 + _model.set(value));
     this->buffer().resize(fbe_initial_size + fbe_struct_size);
 
-    *((uint32_t*)(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 8)) = fbe_struct_size;
-    *((uint32_t*)(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 4)) = fbe_struct_type;
+    unaligned_store<uint32_t>(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 8, fbe_struct_size);
+    unaligned_store<uint32_t>(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 4, fbe_struct_type);
 
     return fbe_struct_size;
 }

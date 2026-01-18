@@ -596,8 +596,8 @@ size_t StructSimpleFinalModel::serialize(const ::test_pmr::StructSimple& value)
     fbe_struct_size = (uint32_t)(8 + _model.set(value));
     this->buffer().resize(fbe_initial_size + fbe_struct_size);
 
-    *((uint32_t*)(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 8)) = fbe_struct_size;
-    *((uint32_t*)(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 4)) = fbe_struct_type;
+    unaligned_store<uint32_t>(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 8, fbe_struct_size);
+    unaligned_store<uint32_t>(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 4, fbe_struct_type);
 
     return fbe_struct_size;
 }
@@ -2281,8 +2281,8 @@ size_t StructOptionalFinalModel::serialize(const ::test_pmr::StructOptional& val
     fbe_struct_size = (uint32_t)(8 + _model.set(value));
     this->buffer().resize(fbe_initial_size + fbe_struct_size);
 
-    *((uint32_t*)(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 8)) = fbe_struct_size;
-    *((uint32_t*)(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 4)) = fbe_struct_type;
+    unaligned_store<uint32_t>(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 8, fbe_struct_size);
+    unaligned_store<uint32_t>(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 4, fbe_struct_type);
 
     return fbe_struct_size;
 }
@@ -2784,8 +2784,8 @@ size_t StructNestedFinalModel::serialize(const ::test_pmr::StructNested& value)
     fbe_struct_size = (uint32_t)(8 + _model.set(value));
     this->buffer().resize(fbe_initial_size + fbe_struct_size);
 
-    *((uint32_t*)(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 8)) = fbe_struct_size;
-    *((uint32_t*)(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 4)) = fbe_struct_type;
+    unaligned_store<uint32_t>(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 8, fbe_struct_size);
+    unaligned_store<uint32_t>(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 4, fbe_struct_type);
 
     return fbe_struct_size;
 }
@@ -2997,8 +2997,8 @@ size_t StructBytesFinalModel::serialize(const ::test_pmr::StructBytes& value)
     fbe_struct_size = (uint32_t)(8 + _model.set(value));
     this->buffer().resize(fbe_initial_size + fbe_struct_size);
 
-    *((uint32_t*)(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 8)) = fbe_struct_size;
-    *((uint32_t*)(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 4)) = fbe_struct_type;
+    unaligned_store<uint32_t>(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 8, fbe_struct_size);
+    unaligned_store<uint32_t>(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 4, fbe_struct_type);
 
     return fbe_struct_size;
 }
@@ -3371,8 +3371,8 @@ size_t StructArrayFinalModel::serialize(const ::test_pmr::StructArray& value)
     fbe_struct_size = (uint32_t)(8 + _model.set(value));
     this->buffer().resize(fbe_initial_size + fbe_struct_size);
 
-    *((uint32_t*)(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 8)) = fbe_struct_size;
-    *((uint32_t*)(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 4)) = fbe_struct_type;
+    unaligned_store<uint32_t>(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 8, fbe_struct_size);
+    unaligned_store<uint32_t>(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 4, fbe_struct_type);
 
     return fbe_struct_size;
 }
@@ -3745,8 +3745,8 @@ size_t StructVectorFinalModel::serialize(const ::test_pmr::StructVector& value)
     fbe_struct_size = (uint32_t)(8 + _model.set(value));
     this->buffer().resize(fbe_initial_size + fbe_struct_size);
 
-    *((uint32_t*)(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 8)) = fbe_struct_size;
-    *((uint32_t*)(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 4)) = fbe_struct_type;
+    unaligned_store<uint32_t>(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 8, fbe_struct_size);
+    unaligned_store<uint32_t>(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 4, fbe_struct_type);
 
     return fbe_struct_size;
 }
@@ -4119,8 +4119,8 @@ size_t StructListFinalModel::serialize(const ::test_pmr::StructList& value)
     fbe_struct_size = (uint32_t)(8 + _model.set(value));
     this->buffer().resize(fbe_initial_size + fbe_struct_size);
 
-    *((uint32_t*)(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 8)) = fbe_struct_size;
-    *((uint32_t*)(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 4)) = fbe_struct_type;
+    unaligned_store<uint32_t>(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 8, fbe_struct_size);
+    unaligned_store<uint32_t>(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 4, fbe_struct_type);
 
     return fbe_struct_size;
 }
@@ -4355,8 +4355,8 @@ size_t StructSetFinalModel::serialize(const ::test_pmr::StructSet& value)
     fbe_struct_size = (uint32_t)(8 + _model.set(value));
     this->buffer().resize(fbe_initial_size + fbe_struct_size);
 
-    *((uint32_t*)(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 8)) = fbe_struct_size;
-    *((uint32_t*)(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 4)) = fbe_struct_type;
+    unaligned_store<uint32_t>(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 8, fbe_struct_size);
+    unaligned_store<uint32_t>(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 4, fbe_struct_type);
 
     return fbe_struct_size;
 }
@@ -4729,8 +4729,8 @@ size_t StructMapFinalModel::serialize(const ::test_pmr::StructMap& value)
     fbe_struct_size = (uint32_t)(8 + _model.set(value));
     this->buffer().resize(fbe_initial_size + fbe_struct_size);
 
-    *((uint32_t*)(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 8)) = fbe_struct_size;
-    *((uint32_t*)(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 4)) = fbe_struct_type;
+    unaligned_store<uint32_t>(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 8, fbe_struct_size);
+    unaligned_store<uint32_t>(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 4, fbe_struct_type);
 
     return fbe_struct_size;
 }
@@ -5103,8 +5103,8 @@ size_t StructHashFinalModel::serialize(const ::test_pmr::StructHash& value)
     fbe_struct_size = (uint32_t)(8 + _model.set(value));
     this->buffer().resize(fbe_initial_size + fbe_struct_size);
 
-    *((uint32_t*)(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 8)) = fbe_struct_size;
-    *((uint32_t*)(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 4)) = fbe_struct_type;
+    unaligned_store<uint32_t>(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 8, fbe_struct_size);
+    unaligned_store<uint32_t>(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 4, fbe_struct_type);
 
     return fbe_struct_size;
 }
@@ -5293,8 +5293,8 @@ size_t StructHashExFinalModel::serialize(const ::test_pmr::StructHashEx& value)
     fbe_struct_size = (uint32_t)(8 + _model.set(value));
     this->buffer().resize(fbe_initial_size + fbe_struct_size);
 
-    *((uint32_t*)(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 8)) = fbe_struct_size;
-    *((uint32_t*)(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 4)) = fbe_struct_type;
+    unaligned_store<uint32_t>(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 8, fbe_struct_size);
+    unaligned_store<uint32_t>(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 4, fbe_struct_type);
 
     return fbe_struct_size;
 }
@@ -5422,8 +5422,8 @@ size_t StructEmptyFinalModel::serialize(const ::test_pmr::StructEmpty& value)
     fbe_struct_size = (uint32_t)(8 + _model.set(value));
     this->buffer().resize(fbe_initial_size + fbe_struct_size);
 
-    *((uint32_t*)(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 8)) = fbe_struct_size;
-    *((uint32_t*)(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 4)) = fbe_struct_type;
+    unaligned_store<uint32_t>(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 8, fbe_struct_size);
+    unaligned_store<uint32_t>(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 4, fbe_struct_type);
 
     return fbe_struct_size;
 }
@@ -5589,8 +5589,8 @@ size_t StructFieldNamedStringFinalModel::serialize(const ::test_pmr::StructField
     fbe_struct_size = (uint32_t)(8 + _model.set(value));
     this->buffer().resize(fbe_initial_size + fbe_struct_size);
 
-    *((uint32_t*)(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 8)) = fbe_struct_size;
-    *((uint32_t*)(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 4)) = fbe_struct_type;
+    unaligned_store<uint32_t>(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 8, fbe_struct_size);
+    unaligned_store<uint32_t>(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 4, fbe_struct_type);
 
     return fbe_struct_size;
 }
@@ -5756,8 +5756,8 @@ size_t StringFieldNamedStringFinalModel::serialize(const ::test_pmr::StringField
     fbe_struct_size = (uint32_t)(8 + _model.set(value));
     this->buffer().resize(fbe_initial_size + fbe_struct_size);
 
-    *((uint32_t*)(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 8)) = fbe_struct_size;
-    *((uint32_t*)(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 4)) = fbe_struct_type;
+    unaligned_store<uint32_t>(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 8, fbe_struct_size);
+    unaligned_store<uint32_t>(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 4, fbe_struct_type);
 
     return fbe_struct_size;
 }
@@ -5923,8 +5923,8 @@ size_t OptionalFieldNamedStringFinalModel::serialize(const ::test_pmr::OptionalF
     fbe_struct_size = (uint32_t)(8 + _model.set(value));
     this->buffer().resize(fbe_initial_size + fbe_struct_size);
 
-    *((uint32_t*)(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 8)) = fbe_struct_size;
-    *((uint32_t*)(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 4)) = fbe_struct_type;
+    unaligned_store<uint32_t>(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 8, fbe_struct_size);
+    unaligned_store<uint32_t>(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 4, fbe_struct_type);
 
     return fbe_struct_size;
 }
@@ -6090,8 +6090,8 @@ size_t ArrayFieldNamedStringFinalModel::serialize(const ::test_pmr::ArrayFieldNa
     fbe_struct_size = (uint32_t)(8 + _model.set(value));
     this->buffer().resize(fbe_initial_size + fbe_struct_size);
 
-    *((uint32_t*)(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 8)) = fbe_struct_size;
-    *((uint32_t*)(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 4)) = fbe_struct_type;
+    unaligned_store<uint32_t>(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 8, fbe_struct_size);
+    unaligned_store<uint32_t>(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 4, fbe_struct_type);
 
     return fbe_struct_size;
 }
@@ -6257,8 +6257,8 @@ size_t VectorFieldNamedStringFinalModel::serialize(const ::test_pmr::VectorField
     fbe_struct_size = (uint32_t)(8 + _model.set(value));
     this->buffer().resize(fbe_initial_size + fbe_struct_size);
 
-    *((uint32_t*)(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 8)) = fbe_struct_size;
-    *((uint32_t*)(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 4)) = fbe_struct_type;
+    unaligned_store<uint32_t>(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 8, fbe_struct_size);
+    unaligned_store<uint32_t>(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 4, fbe_struct_type);
 
     return fbe_struct_size;
 }
@@ -6424,8 +6424,8 @@ size_t BytesFieldNamedStringFinalModel::serialize(const ::test_pmr::BytesFieldNa
     fbe_struct_size = (uint32_t)(8 + _model.set(value));
     this->buffer().resize(fbe_initial_size + fbe_struct_size);
 
-    *((uint32_t*)(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 8)) = fbe_struct_size;
-    *((uint32_t*)(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 4)) = fbe_struct_type;
+    unaligned_store<uint32_t>(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 8, fbe_struct_size);
+    unaligned_store<uint32_t>(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 4, fbe_struct_type);
 
     return fbe_struct_size;
 }

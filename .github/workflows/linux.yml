@@ -44,6 +44,10 @@ jobs:
         run: git submodule update --init --recursive
 
       - name: 'Build and test'
+        env:
+          # Make sanitizers abort on errors instead of just printing warnings
+          UBSAN_OPTIONS: halt_on_error=1:print_stacktrace=1
+          ASAN_OPTIONS: halt_on_error=1:print_stacktrace=1
         run: |
           export ${{matrix.env}}
           mkdir build.debug && cd build.debug

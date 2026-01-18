@@ -661,7 +661,9 @@ inline size_t FinalModelVector<T>::set(const FastVec<T>& values) noexcept
     if constexpr (is_fbe_final_primitive_v<T>) {
         // Bulk copy for primitive types
         const size_t data_size = values.size() * sizeof(T);
-        memcpy(_buffer.data() + fbe_full_offset + 4, values.data(), data_size);
+        if (!values.empty()) {
+            memcpy(_buffer.data() + fbe_full_offset + 4, values.data(), data_size);
+        }
         return 4 + data_size;
     } else {
         size_t size = 4;
@@ -867,7 +869,9 @@ inline size_t FinalModelVector<T>::set(const std::pmr::vector<T>& values) noexce
 
     if constexpr (is_fbe_final_primitive_v<T>) {
         const size_t data_size = values.size() * sizeof(T);
-        memcpy(_buffer.data() + fbe_full_offset + 4, values.data(), data_size);
+        if (!values.empty()) {
+            memcpy(_buffer.data() + fbe_full_offset + 4, values.data(), data_size);
+        }
         return 4 + data_size;
     } else {
         size_t size = 4;
