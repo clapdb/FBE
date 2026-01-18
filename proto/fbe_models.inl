@@ -358,8 +358,10 @@ inline void FieldModelArray<T, N>::set(const FastVec<T>& values, std::pmr::memor
 
     if constexpr (is_fbe_final_primitive_v<T>) {
         // Bulk copy for primitive types
-        uint8_t* dest = _buffer.data() + _buffer.offset() + fbe_offset();
-        memcpy(dest, values.data(), count * sizeof(T));
+        if (count > 0) {
+            uint8_t* dest = _buffer.data() + _buffer.offset() + fbe_offset();
+            memcpy(dest, values.data(), count * sizeof(T));
+        }
     } else {
         auto fbe_model = (*this)[0];
         for (size_t i = 0; i < count; ++i)
@@ -659,8 +661,10 @@ inline void FieldModelVector<T>::set(const FastVec<T>& values, std::pmr::memory_
     if constexpr (is_fbe_final_primitive_v<T>) {
         // Bulk copy for primitive types - resize() already zeroed the buffer
         // fbe_model points to fbe_vector_offset + 4
-        uint8_t* dest = _buffer.data() + _buffer.offset() + fbe_model.fbe_offset();
-        memcpy(dest, values.data(), values.size() * sizeof(T));
+        if (!values.empty()) {
+            uint8_t* dest = _buffer.data() + _buffer.offset() + fbe_model.fbe_offset();
+            memcpy(dest, values.data(), values.size() * sizeof(T));
+        }
     } else {
         for (const auto& value : values)
         {
