@@ -188,8 +188,8 @@ size_t OrderFinalModel::serialize(const ::proto::Order& value)
     fbe_struct_size = (uint32_t)(8 + _model.set(value));
     this->buffer().resize(fbe_initial_size + fbe_struct_size);
 
-    *((uint32_t*)(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 8)) = fbe_struct_size;
-    *((uint32_t*)(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 4)) = fbe_struct_type;
+    unaligned_store<uint32_t>(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 8, fbe_struct_size);
+    unaligned_store<uint32_t>(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 4, fbe_struct_type);
 
     return fbe_struct_size;
 }
@@ -346,8 +346,8 @@ size_t BalanceFinalModel::serialize(const ::proto::Balance& value)
     fbe_struct_size = (uint32_t)(8 + _model.set(value));
     this->buffer().resize(fbe_initial_size + fbe_struct_size);
 
-    *((uint32_t*)(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 8)) = fbe_struct_size;
-    *((uint32_t*)(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 4)) = fbe_struct_type;
+    unaligned_store<uint32_t>(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 8, fbe_struct_size);
+    unaligned_store<uint32_t>(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 4, fbe_struct_type);
 
     return fbe_struct_size;
 }
@@ -586,8 +586,8 @@ size_t AccountFinalModel::serialize(const ::proto::Account& value)
     fbe_struct_size = (uint32_t)(8 + _model.set(value));
     this->buffer().resize(fbe_initial_size + fbe_struct_size);
 
-    *((uint32_t*)(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 8)) = fbe_struct_size;
-    *((uint32_t*)(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 4)) = fbe_struct_type;
+    unaligned_store<uint32_t>(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 8, fbe_struct_size);
+    unaligned_store<uint32_t>(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 4, fbe_struct_type);
 
     return fbe_struct_size;
 }
@@ -716,8 +716,8 @@ size_t CharMapFinalModel::serialize(const ::proto::CharMap& value)
     fbe_struct_size = (uint32_t)(8 + _model.set(value));
     this->buffer().resize(fbe_initial_size + fbe_struct_size);
 
-    *((uint32_t*)(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 8)) = fbe_struct_size;
-    *((uint32_t*)(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 4)) = fbe_struct_type;
+    unaligned_store<uint32_t>(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 8, fbe_struct_size);
+    unaligned_store<uint32_t>(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 4, fbe_struct_type);
 
     return fbe_struct_size;
 }
@@ -846,8 +846,8 @@ size_t OrderMessageFinalModel::serialize(const ::proto::OrderMessage& value)
     fbe_struct_size = (uint32_t)(8 + _model.set(value));
     this->buffer().resize(fbe_initial_size + fbe_struct_size);
 
-    *((uint32_t*)(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 8)) = fbe_struct_size;
-    *((uint32_t*)(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 4)) = fbe_struct_type;
+    unaligned_store<uint32_t>(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 8, fbe_struct_size);
+    unaligned_store<uint32_t>(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 4, fbe_struct_type);
 
     return fbe_struct_size;
 }
@@ -976,8 +976,8 @@ size_t BalanceMessageFinalModel::serialize(const ::proto::BalanceMessage& value)
     fbe_struct_size = (uint32_t)(8 + _model.set(value));
     this->buffer().resize(fbe_initial_size + fbe_struct_size);
 
-    *((uint32_t*)(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 8)) = fbe_struct_size;
-    *((uint32_t*)(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 4)) = fbe_struct_type;
+    unaligned_store<uint32_t>(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 8, fbe_struct_size);
+    unaligned_store<uint32_t>(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 4, fbe_struct_type);
 
     return fbe_struct_size;
 }
@@ -1106,8 +1106,8 @@ size_t AccountMessageFinalModel::serialize(const ::proto::AccountMessage& value)
     fbe_struct_size = (uint32_t)(8 + _model.set(value));
     this->buffer().resize(fbe_initial_size + fbe_struct_size);
 
-    *((uint32_t*)(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 8)) = fbe_struct_size;
-    *((uint32_t*)(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 4)) = fbe_struct_type;
+    unaligned_store<uint32_t>(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 8, fbe_struct_size);
+    unaligned_store<uint32_t>(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 4, fbe_struct_type);
 
     return fbe_struct_size;
 }
@@ -1346,8 +1346,8 @@ size_t PremiumAccountFinalModel::serialize(const ::proto::PremiumAccount& value)
     fbe_struct_size = (uint32_t)(8 + _model.set(value));
     this->buffer().resize(fbe_initial_size + fbe_struct_size);
 
-    *((uint32_t*)(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 8)) = fbe_struct_size;
-    *((uint32_t*)(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 4)) = fbe_struct_type;
+    unaligned_store<uint32_t>(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 8, fbe_struct_size);
+    unaligned_store<uint32_t>(this->buffer().data() + this->buffer().offset() + _model.fbe_offset() - 4, fbe_struct_type);
 
     return fbe_struct_size;
 }

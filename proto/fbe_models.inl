@@ -659,10 +659,8 @@ inline void FieldModelVector<T>::set(const FastVec<T>& values, std::pmr::memory_
     if constexpr (is_fbe_final_primitive_v<T>) {
         // Bulk copy for primitive types - resize() already zeroed the buffer
         // fbe_model points to fbe_vector_offset + 4
-        if (!values.empty()) {
-            uint8_t* dest = _buffer.data() + _buffer.offset() + fbe_model.fbe_offset();
-            memcpy(dest, values.data(), values.size() * sizeof(T));
-        }
+        uint8_t* dest = _buffer.data() + _buffer.offset() + fbe_model.fbe_offset();
+        memcpy(dest, values.data(), values.size() * sizeof(T));
     } else {
         for (const auto& value : values)
         {

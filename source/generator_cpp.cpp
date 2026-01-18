@@ -5056,11 +5056,11 @@ void GeneratorCpp::GenerateStructModelFinal_Source(
   WriteLineIndent("this->buffer().resize(fbe_initial_size + fbe_struct_size);");
   WriteLine();
   WriteLineIndent(
-      "*((uint32_t*)(this->buffer().data() + this->buffer().offset() + "
-      "_model.fbe_offset() - 8)) = fbe_struct_size;");
+      "unaligned_store<uint32_t>(this->buffer().data() + this->buffer().offset() + "
+      "_model.fbe_offset() - 8, fbe_struct_size);");
   WriteLineIndent(
-      "*((uint32_t*)(this->buffer().data() + this->buffer().offset() + "
-      "_model.fbe_offset() - 4)) = fbe_struct_type;");
+      "unaligned_store<uint32_t>(this->buffer().data() + this->buffer().offset() + "
+      "_model.fbe_offset() - 4, fbe_struct_type);");
   WriteLine();
   WriteLineIndent("return fbe_struct_size;");
   Indent(-1);
@@ -9298,8 +9298,8 @@ void GeneratorCpp::GeneratePtrStructModel_Source(
   WriteLineIndent("size_t fbe_end = this->buffer().size();");
   WriteLineIndent("uint32_t fbe_full_size = (uint32_t)(fbe_end - fbe_begin);");
   WriteLineIndent(
-      "*((uint32_t*)(this->buffer().data() + this->buffer().offset() + "
-      "model.fbe_offset() - 4)) = fbe_full_size;");
+      "unaligned_store<uint32_t>(this->buffer().data() + this->buffer().offset() + "
+      "model.fbe_offset() - 4, fbe_full_size);");
   WriteLineIndent("return fbe_full_size;");
   Indent(-1);
   WriteLineIndent("}");
