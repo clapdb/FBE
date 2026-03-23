@@ -10217,10 +10217,24 @@ std::string GeneratorCpp::ConvertPtrVariantFieldModelType(
     const std::shared_ptr<VariantValue> &variant) {
   std::string variant_field_model_type;
   if (Ptr()) {
-    if (IsStructType(p, *variant->type) && !IsKnownType(*variant->type)) {
+    // Resolve package name and bare type name for cross-package types.
+    // For "pg_ast.Set", pkg_name="pg_ast", bare_type="Set".
+    // For "Set" (same package), pkg_name=*p->name, bare_type="Set".
+    std::string pkg_name = *p->name;
+    std::string bare_type = *variant->type;
+    auto dot_pos = variant->type->find('.');
+    if (dot_pos != std::string::npos) {
+      pkg_name = variant->type->substr(0, dot_pos);
+      bare_type = variant->type->substr(dot_pos + 1);
+    }
+    // Cross-package struct types (both pointer and non-pointer) need the
+    // specialized FieldModel from the source package, not the generic FieldModel<T>.
+    bool is_struct = IsStructType(p, *variant->type) ||
+                     (dot_pos != std::string::npos && !IsKnownType(bare_type));
+    if (is_struct && !IsKnownType(bare_type)) {
       std::string model_name =
           std::string("FieldModel") + (Arena() ? "PMR" : "") +
-          (variant->ptr ? "Ptr" : "") + "_" + *p->name + "_" + *variant->type;
+          (variant->ptr ? "Ptr" : "") + "_" + pkg_name + "_" + bare_type;
       if (IsContainerType(*variant)) {
         variant_field_model_type = "FieldModel";
         if (variant->vector || variant->list)
@@ -10232,7 +10246,7 @@ std::string GeneratorCpp::ConvertPtrVariantFieldModelType(
           if (IsKnownType(*variant->key)) {
             kType += "<" + ConvertPtrTypeName(*p->name, *variant->key) + ">";
           } else {
-            kType += "_" + *p->name + "_" + *variant->type;
+            kType += "_" + pkg_name + "_" + bare_type;
           }
           auto kStruct = ConvertPtrTypeName(*p->name, *variant->key);
           auto vStruct = ConvertPtrTypeName(*p->name, *variant->type);

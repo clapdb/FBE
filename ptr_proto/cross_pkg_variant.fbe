@@ -1,0 +1,30 @@
+// Test: cross-package pointer types in variants.
+// Verifies that variant members referencing types from imported packages
+// with pointer suffix (*) generate correct model class names.
+package cross_pkg_variant
+
+import extra
+
+// Variant with cross-package pointer, non-pointer, and primitive members
+variant MixedVariant {
+    extra.Extra*;
+    extra.Info;
+    int32;
+    string;
+}
+
+struct MixedContainer {
+    MixedVariant v;
+    MixedVariant? vo;
+}
+
+// Variant with only cross-package pointer members
+variant PtrOnlyVariant {
+    extra.Extra*;
+    extra.Info*;
+}
+
+struct PtrOnlyContainer {
+    PtrOnlyVariant v;
+    PtrOnlyVariant[] vv;
+}

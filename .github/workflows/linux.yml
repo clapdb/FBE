@@ -9,7 +9,7 @@ jobs:
   build:
     strategy:
       matrix:
-        compiler: [clangd, gcc]
+        compiler: [clang, gcc]
         include:
           - compiler: clang
             env: CC=clang-20 CXX=clang++-20

@@ -46,7 +46,7 @@ public:
     bool verify() const noexcept { return true; }
 
     // Get the field value
-    void get(T& value, std::pmr::memory_resource* resource, T defaults = (T)0) const noexcept;
+    void get(T& value, std::pmr::memory_resource* resource, T defaults = T{}) const noexcept;
     // Set the field value
     void set(T value, std::pmr::memory_resource* resource) noexcept;
 
