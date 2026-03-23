@@ -22,6 +22,8 @@
 //
 
 #include "catch2/catch.hpp"
+#include "cross_pkg_variant_ptr.h"
+#include "cross_pkg_variant_ptr_models.h"
 #include "enums.h"
 #include "extra_ptr.h"
 #include "osa.h"
@@ -1012,5 +1014,96 @@ TEST_CASE("Serialization (import template)", "[Ptr-based FBE]") {
     REQUIRE(v_copy.size() == 1);
     REQUIRE(v_copy.at(0).string() == "ABCDE");
     REQUIRE(line == line_copy);
+  }
+}
+
+TEST_CASE("Serialization (cross-package pointer variant)", "[Ptr-based FBE]") {
+  SECTION("cross-package pointer member") {
+    // Test variant with a pointer to a type from an imported package: extra.Extra*
+    ::cross_pkg_variant::MixedContainer container;
+    auto* extra = new ::extra::Extra();
+    extra->num = 42;
+    extra->data = "hello";
+    container.v.emplace<::extra::Extra*>(extra);
+
+    FBE::cross_pkg_variant::MixedContainerModel writer;
+    size_t serialized = writer.serialize(container, nullptr);
+    REQUIRE(serialized == writer.buffer().size());
+    REQUIRE(writer.verify());
+
+    FBE::cross_pkg_variant::MixedContainerModel reader;
+    reader.attach(writer.buffer());
+    REQUIRE(reader.verify());
+
+    ::cross_pkg_variant::MixedContainer copy;
+    size_t deserialized = reader.deserialize(copy, nullptr);
+    REQUIRE(deserialized == reader.buffer().size());
+
+    // Variant index 1 = extra.Extra* (index 0 = monostate)
+    REQUIRE(copy.v.index() == 1);
+    auto* extra_copy = std::get<::extra::Extra*>(copy.v);
+    REQUIRE(extra_copy != nullptr);
+    REQUIRE(extra_copy->num == 42);
+    REQUIRE(extra_copy->data == "hello");
+
+    delete extra;
+    delete extra_copy;
+  }
+
+  SECTION("cross-package non-pointer member") {
+    // Test variant with a non-pointer type from imported package: extra.Info
+    ::cross_pkg_variant::MixedContainer container;
+    ::extra::Info info;
+    info.info = "test_info";
+    container.v.emplace<::extra::Info>(info);
+
+    FBE::cross_pkg_variant::MixedContainerModel writer;
+    size_t serialized = writer.serialize(container, nullptr);
+    REQUIRE(serialized == writer.buffer().size());
+    REQUIRE(writer.verify());
+
+    FBE::cross_pkg_variant::MixedContainerModel reader;
+    reader.attach(writer.buffer());
+    REQUIRE(reader.verify());
+
+    ::cross_pkg_variant::MixedContainer copy;
+    size_t deserialized = reader.deserialize(copy, nullptr);
+    REQUIRE(deserialized == reader.buffer().size());
+
+    // Variant index 2 = extra.Info (non-pointer)
+    REQUIRE(copy.v.index() == 2);
+    auto& info_copy = std::get<::extra::Info>(copy.v);
+    REQUIRE(info_copy.info == "test_info");
+  }
+
+  SECTION("ptr-only variant") {
+    // Test variant with only cross-package pointer members
+    ::cross_pkg_variant::PtrOnlyContainer container;
+    auto* extra = new ::extra::Extra();
+    extra->num = 99;
+    extra->data = "ptr_only";
+    container.v.emplace<::extra::Extra*>(extra);
+
+    FBE::cross_pkg_variant::PtrOnlyContainerModel writer;
+    size_t serialized = writer.serialize(container, nullptr);
+    REQUIRE(serialized == writer.buffer().size());
+    REQUIRE(writer.verify());
+
+    FBE::cross_pkg_variant::PtrOnlyContainerModel reader;
+    reader.attach(writer.buffer());
+    REQUIRE(reader.verify());
+
+    ::cross_pkg_variant::PtrOnlyContainer copy;
+    size_t deserialized = reader.deserialize(copy, nullptr);
+    REQUIRE(deserialized == reader.buffer().size());
+
+    REQUIRE(copy.v.index() == 1);
+    auto* extra_copy = std::get<::extra::Extra*>(copy.v);
+    REQUIRE(extra_copy != nullptr);
+    REQUIRE(extra_copy->num == 99);
+    REQUIRE(extra_copy->data == "ptr_only");
+
+    delete extra;
+    delete extra_copy;
   }
 }
