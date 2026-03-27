@@ -242,7 +242,7 @@ void GeneratorCpp::GenerateImportsModels(const std::shared_ptr<Package> &p,
     for (const auto &import : p->import->imports)
       WriteLineIndent(
           "#include \"" +
-          ConvertFileName(*import, FileType::Model, true, ImportPtr(), final) +
+          ConvertFileName(*import, FileType::Model, true, ptr, final) +
           "\"");
   }
 }
