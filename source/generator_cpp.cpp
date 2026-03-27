@@ -203,12 +203,15 @@ void GeneratorCpp::GenerateImports(const std::shared_ptr<Package> &p) {
   }
 
   // Generate packages import
+  // When generating in --ptr mode, import the ptr version of dependent packages
+  // so that all types are consistently ptr-based (avoiding redefinition conflicts
+  // between ptr and non-ptr headers).
   if (p->import) {
     WriteLine();
     for (const auto &import : p->import->imports)
       WriteLineIndent(
           "#include \"" +
-          ConvertFileName(*import, FileType::Struct, true, ImportPtr()) + "\"");
+          ConvertFileName(*import, FileType::Struct, true, Ptr() || ImportPtr()) + "\"");
   }
 
   // Generate domain namespace using
