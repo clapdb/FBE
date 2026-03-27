@@ -242,7 +242,7 @@ void GeneratorCpp::GenerateImportsModels(const std::shared_ptr<Package> &p,
     for (const auto &import : p->import->imports)
       WriteLineIndent(
           "#include \"" +
-          ConvertFileName(*import, FileType::Model, true, ptr, final) +
+          ConvertFileName(*import, FileType::Model, true, ImportPtr(), final) +
           "\"");
   }
 }
@@ -10227,11 +10227,17 @@ std::string GeneratorCpp::ConvertPtrVariantFieldModelType(
       pkg_name = variant->type->substr(0, dot_pos);
       bare_type = variant->type->substr(dot_pos + 1);
     }
-    // Cross-package struct types (both pointer and non-pointer) need the
-    // specialized FieldModel from the source package, not the generic FieldModel<T>.
+    // Cross-package struct types need the specialized FieldModel from the
+    // source package. However, if the import is not ptr (--import-ptr not set),
+    // cross-package types use template-based FieldModel<T> from non-ptr models,
+    // so we only generate ptr-named FieldModel for same-package types or when
+    // the import is explicitly ptr.
+    bool is_cross_package = dot_pos != std::string::npos;
     bool is_struct = IsStructType(p, *variant->type) ||
-                     (dot_pos != std::string::npos && !IsKnownType(bare_type));
-    if (is_struct && !IsKnownType(bare_type)) {
+                     (is_cross_package && !IsKnownType(bare_type));
+    bool use_ptr_model = is_struct && !IsKnownType(bare_type) &&
+                         (!is_cross_package || ImportPtr());
+    if (use_ptr_model) {
       std::string model_name =
           std::string("FieldModel") + (Arena() ? "PMR" : "") +
           (variant->ptr ? "Ptr" : "") + "_" + pkg_name + "_" + bare_type;
