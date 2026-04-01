@@ -8,6 +8,7 @@ E [Ee][+-]?{D}+
 #include "fbe.h"
 #include "fbe-parser.hpp"
 #include "generator_cpp.h"
+#ifndef FBE_CPP_ONLY
 #include "generator_csharp.h"
 #include "generator_go.h"
 #include "generator_java.h"
@@ -16,6 +17,7 @@ E [Ee][+-]?{D}+
 #include "generator_python.h"
 #include "generator_ruby.h"
 #include "generator_swift.h"
+#endif
 
 #include <optparse/optparse.hpp>
 #include <iostream>
@@ -198,6 +200,7 @@ int main(int argc, const char** argv)
     parser.add_option("-t", "--tabs").dest("tabs").type(Type::Bool).action(Action::StoreTrue).default_value(0).help("Format with tabs. Default: off");
     parser.add_option("--cpp").dest("cpp").type(Type::Bool).action(Action::StoreTrue).default_value(0).help("Generate C++ code");
     parser.add_option("--cpp-logging").type(Type::Bool).dest("cpp-logging").action(Action::StoreTrue).default_value(0).help("Generate C++ logging code");
+#ifndef FBE_CPP_ONLY
     parser.add_option("--csharp").type(Type::Bool).dest("csharp").action(Action::StoreTrue).default_value(0).help("Generate C# code");
     parser.add_option("--go").type(Type::Bool).dest("go").action(Action::StoreTrue).default_value(0).help("Generate Go code");
     parser.add_option("--go-module-path").type(Type::String).dest("go-module-path").action(Action::Store).help("Set go module path. Default: ..");
@@ -209,6 +212,7 @@ int main(int argc, const char** argv)
     parser.add_option("--python").type(Type::Bool).dest("python").action(Action::StoreTrue).default_value(0).help("Generate Python code");
     parser.add_option("--ruby").type(Type::Bool).dest("ruby").action(Action::StoreTrue).default_value(0).help("Generate Ruby code");
     parser.add_option("--swift").type(Type::Bool).dest("swift").action(Action::StoreTrue).default_value(0).help("Generate Swift code");
+#endif
     parser.add_option("--final").type(Type::Bool).dest("final").action(Action::StoreTrue).default_value(0).help("Generate Final serialization code");
     parser.add_option("--json").type(Type::Bool).dest("json").action(Action::StoreTrue).default_value(0).help("Generate JSON serialization code");
     parser.add_option("--proto").type(Type::Bool).dest("proto").action(Action::StoreTrue).default_value(0).help("Generate Sender/Receiver protocol code");
@@ -240,6 +244,7 @@ int main(int argc, const char** argv)
     bool quiet = options.get<bool>("quiet").value_or(false);
     bool cpp = options.get<bool>("cpp").value_or(false);
     bool cpp_logging = options.get<bool>("cpp-logging").value_or(false);
+#ifndef FBE_CPP_ONLY
     bool csharp = options.get<bool>("csharp").value_or(false);
     bool go = options.get<bool>("go").value_or(false);
     bool java = options.get<bool>("java").value_or(false);
@@ -250,17 +255,22 @@ int main(int argc, const char** argv)
     bool python = options.get<bool>("python").value_or(false);
     bool ruby = options.get<bool>("ruby").value_or(false);
     bool swift = options.get<bool>("swift").value_or(false);
+#endif
     bool final = options.get<bool>("final").value_or(false);
     bool json = options.get<bool>("json").value_or(false);
     bool proto = options.get<bool>("proto").value_or(false);
     bool ptr = options.get<bool>("ptr").value_or(false);
     bool import_ptr = options.get<bool>("import-ptr").value_or(false);
+#ifndef FBE_CPP_ONLY
     auto go_module_path_opt = options.get<string>("go-module-path");
+#endif
     char space = tabs ? '\t' : ' ';
 
     std::string input{input_opt.value_or("")};
     std::string output{output_opt.value_or("")};
+#ifndef FBE_CPP_ONLY
     std::string go_module_path{go_module_path_opt.value_or("..")};
+#endif
     int indent = indent_opt.value_or(0);
 
     // Check for the input path
@@ -342,6 +352,7 @@ int main(int argc, const char** argv)
             .Generate(FBE::Package::root);
         if (!quiet) std::cout << "Done!" << std::endl;
     }
+#ifndef FBE_CPP_ONLY
     if (csharp)
     {
         if (!quiet) std::cout << "Generating C# code...";
@@ -390,6 +401,7 @@ int main(int argc, const char** argv)
         FBE::GeneratorSwift(input, output, indent ? indent : 4, space).Final(final).JSON(json).Proto(proto).Generate(FBE::Package::root);
         if (!quiet) std::cout << "Done!" << std::endl;
     }
+#endif
 
     // Destroy the lexical parser
     yylex_destroy();
