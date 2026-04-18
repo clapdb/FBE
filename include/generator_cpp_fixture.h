@@ -7865,7 +7865,8 @@ struct ValueWriter<TWriter, buffer_t>
 {
     static bool to_json(TWriter& writer, const buffer_t& values, bool scope = true)
     {
-        return writer.String(values.base64encode());
+        auto encoded = values.base64encode();
+        return writer.String(encoded.data(), static_cast<rapidjson::SizeType>(encoded.size()));
     }
 };
 
